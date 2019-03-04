@@ -1,4 +1,4 @@
-package org.deeplearning4j.solution.recurrent.character;
+package global.skymind.solution.recurrent.character;
 
 import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.conf.BackpropType;
