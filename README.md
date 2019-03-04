@@ -1,2 +1,1 @@
-# TrainingLabs
-DL4J Training Materials 
+Training Labs Materials
