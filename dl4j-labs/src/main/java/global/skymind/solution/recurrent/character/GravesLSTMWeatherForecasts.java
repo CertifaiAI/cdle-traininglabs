@@ -1,4 +1,4 @@
-package global.skymind.solution.recurrent.character;
+package org.deeplearning4j.solution.recurrent.character;
 
 import org.nd4j.linalg.io.ClassPathResource;
 import org.deeplearning4j.api.storage.StatsStorage;

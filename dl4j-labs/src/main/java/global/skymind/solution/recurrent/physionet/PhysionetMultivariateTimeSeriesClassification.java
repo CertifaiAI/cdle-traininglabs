@@ -1,4 +1,4 @@
-package global.skymind.solution.recurrent.physionet;
+package org.deeplearning4j.solution.recurrent.physionet;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.datavec.api.records.reader.SequenceRecordReader;

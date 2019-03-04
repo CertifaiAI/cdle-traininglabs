@@ -1,4 +1,4 @@
-package global.skymind.solution.dataexamples;
+package org.deeplearning4j.solution.dataexamples;
 
 import javafx.application.Application;
 import javafx.application.Platform;

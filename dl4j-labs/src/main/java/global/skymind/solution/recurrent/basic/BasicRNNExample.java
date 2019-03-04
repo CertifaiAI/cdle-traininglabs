@@ -1,4 +1,4 @@
-package global.skymind.solution.recurrent.basic;
+package org.deeplearning4j.solutions.recurrent.basic;
 
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
