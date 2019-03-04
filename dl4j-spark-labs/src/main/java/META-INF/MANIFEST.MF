@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Class-Path: /Users/wei/.m2/repository/org
+
