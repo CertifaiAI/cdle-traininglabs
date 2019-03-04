@@ -1,8 +1,8 @@
 When you added a new program / programs , tick the below OS that you have test it on
 
-[ ] Windows<br />
-[ ] Linux Ubuntu<br />
-[ ] Mac<br />
+[ ] Windows
+[ ] Linux Ubuntu
+[ ] Mac
 
 Assign a reviewer (other that yourself) to review your code.
 
