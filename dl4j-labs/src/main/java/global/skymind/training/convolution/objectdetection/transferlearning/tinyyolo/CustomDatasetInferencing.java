@@ -1,7 +1,7 @@
-package global.skymind.training.transferlearning.tinyyolo;
+package global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo;
 
-import global.skymind.training.transferlearning.tinyyolo.dataHelpers.NonMaxSuppression;
-import global.skymind.training.transferlearning.tinyyolo.dataHelpers.XmlLabelProvider;
+import global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.NonMaxSuppression;
+import global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.XmlLabelProvider;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_core.Mat;
 import org.bytedeco.javacpp.opencv_imgproc;
@@ -44,8 +44,8 @@ import static org.bytedeco.javacpp.opencv_videoio.CV_CAP_PROP_FRAME_WIDTH;
  *
  * @author saudet
  */
-public class TinyYOLOCustomDatasetInferencing {
-    private static final Logger log = LoggerFactory.getLogger(TinyYOLOCustomDatasetInferencing.class);
+public class CustomDatasetInferencing {
+    private static final Logger log = LoggerFactory.getLogger(CustomDatasetInferencing.class);
     private static final OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
     private static ComputationGraph model;
 

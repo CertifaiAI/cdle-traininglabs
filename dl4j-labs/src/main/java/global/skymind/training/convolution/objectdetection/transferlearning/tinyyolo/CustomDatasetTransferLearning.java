@@ -1,6 +1,6 @@
-package global.skymind.training.transferlearning.tinyyolo;
+package global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo;
 
-import global.skymind.training.transferlearning.tinyyolo.dataHelpers.XmlLabelProvider;
+import global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.XmlLabelProvider;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_core.Mat;
 import org.bytedeco.javacv.CanvasFrame;
@@ -53,8 +53,8 @@ import static org.bytedeco.javacpp.opencv_imgproc.*;
  *
  * @author saudet
  */
-public class TinyYOLOCustomDatasetTransferLearning {
-    private static final Logger log = LoggerFactory.getLogger(TinyYOLOCustomDatasetTransferLearning.class);
+public class CustomDatasetTransferLearning {
+    private static final Logger log = LoggerFactory.getLogger(CustomDatasetTransferLearning.class);
     private static final OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
     private static ComputationGraph model;
 
@@ -67,7 +67,7 @@ public class TinyYOLOCustomDatasetTransferLearning {
     private static List<String> labels;
 
     public static void main(String[] args) throws Exception {
-        int nClasses = 2;
+        int nClasses = 3;
 
         // parameters for the Yolo2OutputLayer
         int nBoxes = 5;
@@ -77,7 +77,7 @@ public class TinyYOLOCustomDatasetTransferLearning {
         double detectionThreshold = 0.08;
 
         // parameters for the training phase
-        int batchSize = 2;
+        int batchSize = 1;
         int nEpochs = 50;
         double learningRate = 1e-4;
         double lrMomentum = 0.9;
@@ -85,8 +85,8 @@ public class TinyYOLOCustomDatasetTransferLearning {
         int seed = 123;
         Random rng = new Random(seed);
 
-        File trainDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\train_custom_objects");
-        File testDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\train_custom_objects");
+        File trainDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\train_closer");
+        File testDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\train_closer");
 
         log.info("Load data...");
 
@@ -171,7 +171,7 @@ public class TinyYOLOCustomDatasetTransferLearning {
 
         // visualize results on the test set
         NativeImageLoader imageLoader = new NativeImageLoader();
-        CanvasFrame frame = new CanvasFrame("TinyYOLOCustomDatasetInferencing");
+        CanvasFrame frame = new CanvasFrame("CustomDatasetInferencing");
         OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
         org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout =
                         (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer)model.getOutputLayer(0);
@@ -205,7 +205,7 @@ public class TinyYOLOCustomDatasetTransferLearning {
                 rectangle(image, new opencv_core.Point(x1, y1), new opencv_core.Point(x2, y2), opencv_core.Scalar.RED);
                 putText(image, label, new opencv_core.Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, opencv_core.Scalar.GREEN);
             }
-            frame.setTitle(new File(metadata.getURI()).getName() + " - TinyYOLOCustomDatasetInferencing");
+            frame.setTitle(new File(metadata.getURI()).getName() + " - CustomDatasetInferencing");
             frame.setCanvasSize(w, h);
             frame.showImage(converter.convert(image));
             frame.waitKey();

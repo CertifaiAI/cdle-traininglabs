@@ -1,4 +1,4 @@
-package global.skymind.training.transferlearning.tinyyolo;
+package global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo;
 
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_core.Mat;

@@ -1,4 +1,4 @@
-package global.skymind.training.transferlearning.tinyyolo.dataHelpers;
+package global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers;
 
 import org.apache.commons.io.FilenameUtils;
 import org.datavec.image.recordreader.objdetect.ImageObject;

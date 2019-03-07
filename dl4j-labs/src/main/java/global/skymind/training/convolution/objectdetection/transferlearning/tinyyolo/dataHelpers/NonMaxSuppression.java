@@ -1,4 +1,4 @@
-package global.skymind.training.transferlearning.tinyyolo.dataHelpers;
+package global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers;
 
 import org.deeplearning4j.nn.layers.objdetect.DetectedObject;
 
