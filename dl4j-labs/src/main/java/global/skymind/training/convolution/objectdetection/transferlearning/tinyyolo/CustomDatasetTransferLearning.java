@@ -76,11 +76,11 @@ public class CustomDatasetTransferLearning {
         double lambdaNoObj = 0.5;
         double lambdaCoord = 1.0;
         double[][] priorBoxes = {{2, 5}, {2.5, 6}, {3, 7}, {3.5, 8}, {4, 9}};
-        double detectionThreshold = 0.5;
+        double detectionThreshold = 0.1;
 
         // parameters for the training phase
-        int batchSize = 3;
-        int nEpochs = 100;
+        int batchSize = 10;
+        int nEpochs = 50;
         double learningRate = 1e-4;
         double lrMomentum = 0.9;
 
