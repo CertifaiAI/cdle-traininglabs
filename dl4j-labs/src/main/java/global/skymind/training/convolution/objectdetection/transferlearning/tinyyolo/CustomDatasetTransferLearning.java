@@ -1,5 +1,6 @@
 package global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo;
 
+import global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.NonMaxSuppression;
 import global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.XmlLabelProvider;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_core.Mat;
@@ -34,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -74,19 +76,19 @@ public class CustomDatasetTransferLearning {
         double lambdaNoObj = 0.5;
         double lambdaCoord = 1.0;
         double[][] priorBoxes = {{2, 5}, {2.5, 6}, {3, 7}, {3.5, 8}, {4, 9}};
-        double detectionThreshold = 0.08;
+        double detectionThreshold = 0.5;
 
         // parameters for the training phase
-        int batchSize = 1;
-        int nEpochs = 50;
+        int batchSize = 3;
+        int nEpochs = 100;
         double learningRate = 1e-4;
         double lrMomentum = 0.9;
 
         int seed = 123;
         Random rng = new Random(seed);
 
-        File trainDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\train_closer");
-        File testDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\train_closer");
+        File trainDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\actors_416_train");
+        File testDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\actors_416_test");
 
         log.info("Load data...");
 
@@ -105,6 +107,9 @@ public class CustomDatasetTransferLearning {
         train.setPreProcessor(new ImagePreProcessingScaler(0, 1));
         RecordReaderDataSetIterator test = new RecordReaderDataSetIterator(recordReaderTest, 1, 1, 1, true);
         test.setPreProcessor(new ImagePreProcessingScaler(0, 1));
+
+        labels = train.getLabels();
+        System.out.println(Arrays.toString(labels.toArray()));
 
         String modelFilename = "model.zip";
 
@@ -175,7 +180,8 @@ public class CustomDatasetTransferLearning {
         OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
         org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout =
                         (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer)model.getOutputLayer(0);
-        labels = train.getLabels();
+
+
 
         test.setCollectMetaData(true);
         while (test.hasNext() && frame.isVisible()) {
@@ -184,8 +190,11 @@ public class CustomDatasetTransferLearning {
             INDArray features = ds.getFeatures();
             INDArray results = model.outputSingle(features);
             List<DetectedObject> objs = yout.getPredictedObjects(results, detectionThreshold);
+            List<DetectedObject> objects = NonMaxSuppression.getObjects(objs);
+
+
             File file = new File(metadata.getURI());
-            log.info(file.getName() + ": " + objs);
+            log.info(file.getName() + ": " + objects);
 
             Mat mat = imageLoader.asMat(features);
             Mat convertedMat = new Mat();
@@ -194,16 +203,18 @@ public class CustomDatasetTransferLearning {
             int h = metadata.getOrigH() * 2;
             Mat image = new Mat();
             resize(convertedMat, image, new opencv_core.Size(w, h));
-            for (DetectedObject obj : objs) {
+            for (DetectedObject obj : objects) {
                 double[] xy1 = obj.getTopLeftXY();
                 double[] xy2 = obj.getBottomRightXY();
                 String label = labels.get(obj.getPredictedClass());
+                double proba = obj.getConfidence();
+
                 int x1 = (int) Math.round(w * xy1[0] / gridWidth);
                 int y1 = (int) Math.round(h * xy1[1] / gridHeight);
                 int x2 = (int) Math.round(w * xy2[0] / gridWidth);
                 int y2 = (int) Math.round(h * xy2[1] / gridHeight);
                 rectangle(image, new opencv_core.Point(x1, y1), new opencv_core.Point(x2, y2), opencv_core.Scalar.RED);
-                putText(image, label, new opencv_core.Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, opencv_core.Scalar.GREEN);
+                putText(image, label+ " - " + proba, new opencv_core.Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, opencv_core.Scalar.GREEN);
             }
             frame.setTitle(new File(metadata.getURI()).getName() + " - CustomDatasetInferencing");
             frame.setCanvasSize(w, h);

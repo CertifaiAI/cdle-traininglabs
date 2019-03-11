@@ -33,7 +33,7 @@ public class XmlLabelProvider implements ImageObjectLabelProvider {
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document doc = builder.parse(listOfFiles[i]);
                 NodeList objects = doc.getElementsByTagName("object");
-                int m = (int)objects.getLength();
+                int m = objects.getLength();
                 ArrayList<ImageObject> list = new ArrayList(m);
                 for(int j = 0; j < m; ++j) {
                     Element el = (Element)objects.item(j);
