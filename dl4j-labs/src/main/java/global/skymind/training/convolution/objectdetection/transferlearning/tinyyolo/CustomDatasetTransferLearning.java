@@ -46,6 +46,7 @@ import static org.bytedeco.javacpp.opencv_imgproc.*;
 /**
  * Example transfer learning from a Tiny YOLO model pretrained on ImageNet and Pascal VOC
  * to perform face recognition with bounding boxes on Custom Dataset "https://drive.google.com/open?id=1MycUaI65HlI3NSMuLweVo4iYcrDE3tWk".
+ * Dataset resized by magick mogrify, and annotated manually with labelimg
  */
 public class CustomDatasetTransferLearning {
     private static final Logger log = LoggerFactory.getLogger(CustomDatasetTransferLearning.class);
