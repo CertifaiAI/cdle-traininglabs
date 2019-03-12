@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
@@ -34,15 +35,7 @@ import static org.bytedeco.javacpp.opencv_videoio.CV_CAP_PROP_FRAME_WIDTH;
 
 /**
  * Example transfer learning from a Tiny YOLO model pretrained on ImageNet and Pascal VOC
- * to perform object detection with bounding boxes on The Street View House Numbers (SVHN) Dataset.
- * <p>
- * References: <br>
- * - YOLO: Real-Time Object Detection: https://pjreddie.com/darknet/yolo/ <br>
- * - The Street View House Numbers (SVHN) Dataset: http://ufldl.stanford.edu/housenumbers/ <br>
- * <p>
- * Please note, cuDNN should be used to obtain reasonable performance: https://deeplearning4j.org/cudnn
- *
- * @author saudet
+ * to perform face recognition, model inference with model built in CustomDatasetTransferLearning.
  */
 public class CustomDatasetInferencing {
     private static final Logger log = LoggerFactory.getLogger(CustomDatasetInferencing.class);
@@ -58,15 +51,15 @@ public class CustomDatasetInferencing {
     private static Object[] labels;
 
     public static void main(String[] args) throws Exception {
-        // number classes (digits) for the SVHN datasets
-        int nClasses = 2;
+        // number classes for
+        int nClasses = 3;
 
         // parameters for the Yolo2OutputLayer
         int nBoxes = 5;
         double lambdaNoObj = 0.5;
         double lambdaCoord = 1.0;
         double[][] priorBoxes = {{2, 5}, {2.5, 6}, {3, 7}, {3.5, 8}, {4, 9}};
-        double detectionThreshold = 0.08;
+        double detectionThreshold = 0.1;
 
         // parameters for the training phase
         int batchSize = 1;
@@ -77,29 +70,19 @@ public class CustomDatasetInferencing {
         int seed = 123;
         Random rng = new Random(seed);
 
-        File trainDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\train_custom_objects");
-        File testDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\train_custom_objects");
-
-        log.info("Load data...");
-
+        log.info("Load labels...");
+        File trainDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\actors_416");
         FileSplit trainData = new FileSplit(trainDir, NativeImageLoader.ALLOWED_FORMATS, rng);
-        FileSplit testData = new FileSplit(testDir, NativeImageLoader.ALLOWED_FORMATS, rng);
-
         ObjectDetectionRecordReader recordReaderTrain = new ObjectDetectionRecordReader(height, width, nChannels,
                         gridHeight, gridWidth, new XmlLabelProvider(trainDir));
         recordReaderTrain.initialize(trainData);
-        ObjectDetectionRecordReader recordReaderTest = new ObjectDetectionRecordReader(height, width, nChannels,
-                        gridHeight, gridWidth, new XmlLabelProvider(testDir));
-        recordReaderTest.initialize(testData);
-
         // ObjectDetectionRecordReader performs regression, so we need to specify it here
         RecordReaderDataSetIterator train = new RecordReaderDataSetIterator(recordReaderTrain, batchSize, 1, 1, true);
         train.setPreProcessor(new ImagePreProcessingScaler(0, 1));
-        RecordReaderDataSetIterator test = new RecordReaderDataSetIterator(recordReaderTest, 1, 1, 1, true);
-        test.setPreProcessor(new ImagePreProcessingScaler(0, 1));
+        labels = train.getLabels().toArray();
+        System.out.println(Arrays.toString(labels));
 
         String modelFilename = "model.zip";
-
         if (new File(modelFilename).exists()) {
             log.info("Load model...");
 
@@ -108,10 +91,7 @@ public class CustomDatasetInferencing {
             log.info("Model not found.");
         }
 
-        labels = train.getLabels().toArray();
-
         // invoke webcam - inferencing
-
         final AtomicReference<opencv_videoio.VideoCapture> capture = new AtomicReference<>(new opencv_videoio.VideoCapture());
         capture.get().set(CV_CAP_PROP_FRAME_WIDTH, width);
         capture.get().set(CV_CAP_PROP_FRAME_HEIGHT, height);
@@ -121,7 +101,6 @@ public class CustomDatasetInferencing {
         }
 
         Mat colorimg = new Mat();
-
         CanvasFrame mainframe = new CanvasFrame("Real-time Detector", CanvasFrame.getDefaultGamma() / 2.2);
         mainframe.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         mainframe.setCanvasSize(width, height);
@@ -147,7 +126,7 @@ public class CustomDatasetInferencing {
         }
     }
 
-    public static void detect(Mat image, double detectionthreshold) {
+    public static void detect(Mat image, double threshold) {
         org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout =
             (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer) model.getOutputLayer(0);
         NativeImageLoader loader = new NativeImageLoader(width, height, nChannels);//, new ColorConversionTransform(COLOR_BGR2RGB)
@@ -161,7 +140,7 @@ public class CustomDatasetInferencing {
         scaler.transform(ds);
         INDArray results = model.outputSingle(ds);
 
-        List<DetectedObject> objs = yout.getPredictedObjects(results, detectionthreshold);
+        List<DetectedObject> objs = yout.getPredictedObjects(results, threshold);
         List<DetectedObject> objects = NonMaxSuppression.getObjects(objs);
 
         drawBoxes(image, objects);

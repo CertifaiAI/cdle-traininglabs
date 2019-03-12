@@ -45,15 +45,7 @@ import static org.bytedeco.javacpp.opencv_imgproc.*;
 
 /**
  * Example transfer learning from a Tiny YOLO model pretrained on ImageNet and Pascal VOC
- * to perform object detection with bounding boxes on The Street View House Numbers (SVHN) Dataset.
- * <p>
- * References: <br>
- * - YOLO: Real-Time Object Detection: https://pjreddie.com/darknet/yolo/ <br>
- * - The Street View House Numbers (SVHN) Dataset: http://ufldl.stanford.edu/housenumbers/ <br>
- * <p>
- * Please note, cuDNN should be used to obtain reasonable performance: https://deeplearning4j.org/cudnn
- *
- * @author saudet
+ * to perform face recognition with bounding boxes on Custom Dataset "https://drive.google.com/open?id=1MycUaI65HlI3NSMuLweVo4iYcrDE3tWk".
  */
 public class CustomDatasetTransferLearning {
     private static final Logger log = LoggerFactory.getLogger(CustomDatasetTransferLearning.class);
@@ -66,6 +58,7 @@ public class CustomDatasetTransferLearning {
     private static int nChannels = 3;
     private static int gridWidth = 13;
     private static int gridHeight = 13;
+
     private static List<String> labels;
 
     public static void main(String[] args) throws Exception {
@@ -87,11 +80,11 @@ public class CustomDatasetTransferLearning {
         int seed = 123;
         Random rng = new Random(seed);
 
+        // Directory for Custom train and test datasets
         File trainDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\actors_416_train");
         File testDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\actors_416_test");
 
         log.info("Load data...");
-
         FileSplit trainData = new FileSplit(trainDir, NativeImageLoader.ALLOWED_FORMATS, rng);
         FileSplit testData = new FileSplit(testDir, NativeImageLoader.ALLOWED_FORMATS, rng);
 
@@ -108,21 +101,22 @@ public class CustomDatasetTransferLearning {
         RecordReaderDataSetIterator test = new RecordReaderDataSetIterator(recordReaderTest, 1, 1, 1, true);
         test.setPreProcessor(new ImagePreProcessingScaler(0, 1));
 
+        // Print Labels
         labels = train.getLabels();
         System.out.println(Arrays.toString(labels.toArray()));
 
         String modelFilename = "model.zip";
-
         if (new File(modelFilename).exists()) {
+            // Load trained model from previous execution
             log.info("Load model...");
-
             model = ModelSerializer.restoreComputationGraph(modelFilename);
         } else {
+            // Transfer Learning steps - Load TinyYOLO prebuilt model.
             log.info("Build model...");
-
             ComputationGraph pretrained = (ComputationGraph)TinyYOLO.builder().build().initPretrained();
             INDArray priors = Nd4j.create(priorBoxes);
 
+            // Transfer Learning steps - Model Configurations.
             FineTuneConfiguration fineTuneConf = new FineTuneConfiguration.Builder()
                     .seed(seed)
                     .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
@@ -136,6 +130,7 @@ public class CustomDatasetTransferLearning {
                     .inferenceWorkspaceMode(WorkspaceMode.SEPARATE)
                     .build();
 
+            // Transfer Learning steps - Modify prebuilt model's architecture for current scenario
             model = new TransferLearning.GraphBuilder(pretrained)
                     .fineTuneConfiguration(fineTuneConf)
                     .removeVertexKeepConnections("conv2d_9")
@@ -163,7 +158,6 @@ public class CustomDatasetTransferLearning {
 
             log.info("Train model...");
             model.setListeners(new ScoreIterationListener(1));
-
             for (int i = 0; i < nEpochs; i++) {
                 train.reset();
                 while (train.hasNext()) {
@@ -181,8 +175,6 @@ public class CustomDatasetTransferLearning {
         org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout =
                         (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer)model.getOutputLayer(0);
 
-
-
         test.setCollectMetaData(true);
         while (test.hasNext() && frame.isVisible()) {
             org.nd4j.linalg.dataset.DataSet ds = test.next();
@@ -191,7 +183,6 @@ public class CustomDatasetTransferLearning {
             INDArray results = model.outputSingle(features);
             List<DetectedObject> objs = yout.getPredictedObjects(results, detectionThreshold);
             List<DetectedObject> objects = NonMaxSuppression.getObjects(objs);
-
 
             File file = new File(metadata.getURI());
             log.info(file.getName() + ": " + objects);
