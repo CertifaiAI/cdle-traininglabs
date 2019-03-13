@@ -60,30 +60,28 @@ public class CustomDatasetTransferLearning {
     private static int gridWidth = 13;
     private static int gridHeight = 13;
 
+    // parameters for the Yolo2OutputLayer
+    private static int nBoxes = 5;
+    private static double lambdaNoObj = 0.5;
+    private static double lambdaCoord = 1.0;
+    private static double[][] priorBoxes = {{2, 5}, {2.5, 6}, {3, 7}, {3.5, 8}, {4, 9}};
+    private static double detectionThreshold = 0.1;
+
+    // parameters for the training phase
+    private static int batchSize = 10;
+    private static int nEpochs = 50;
+    private static double learningRate = 1e-4;
+    private static int nClasses = 3;
     private static List<String> labels;
+    private static int seed = 123;
+    private static Random rng = new Random(seed);
+//    private static double lrMomentum = 0.9;
+
+    // Directory for Custom train and test datasets
+    private static File trainDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\actors_416_train");
+    private static File testDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\actors_416_test");
 
     public static void main(String[] args) throws Exception {
-        int nClasses = 3;
-
-        // parameters for the Yolo2OutputLayer
-        int nBoxes = 5;
-        double lambdaNoObj = 0.5;
-        double lambdaCoord = 1.0;
-        double[][] priorBoxes = {{2, 5}, {2.5, 6}, {3, 7}, {3.5, 8}, {4, 9}};
-        double detectionThreshold = 0.1;
-
-        // parameters for the training phase
-        int batchSize = 10;
-        int nEpochs = 50;
-        double learningRate = 1e-4;
-        double lrMomentum = 0.9;
-
-        int seed = 123;
-        Random rng = new Random(seed);
-
-        // Directory for Custom train and test datasets
-        File trainDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\actors_416_train");
-        File testDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\actors_416_test");
 
         log.info("Load data...");
         FileSplit trainData = new FileSplit(trainDir, NativeImageLoader.ALLOWED_FORMATS, rng);
@@ -108,53 +106,23 @@ public class CustomDatasetTransferLearning {
 
         String modelFilename = "model.zip";
         if (new File(modelFilename).exists()) {
+
             // Load trained model from previous execution
             log.info("Load model...");
             model = ModelSerializer.restoreComputationGraph(modelFilename);
+
         } else {
+
             // Transfer Learning steps - Load TinyYOLO prebuilt model.
             log.info("Build model...");
             ComputationGraph pretrained = (ComputationGraph)TinyYOLO.builder().build().initPretrained();
             INDArray priors = Nd4j.create(priorBoxes);
 
             // Transfer Learning steps - Model Configurations.
-            FineTuneConfiguration fineTuneConf = new FineTuneConfiguration.Builder()
-                    .seed(seed)
-                    .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-                    .gradientNormalization(GradientNormalization.RenormalizeL2PerLayer)
-                    .gradientNormalizationThreshold(1.0)
-                    .updater(new Adam.Builder().learningRate(learningRate).build())
-                    //.updater(new Nesterovs.Builder().learningRate(learningRate).momentum(lrMomentum).build())
-                    .l2(0.00001)
-                    .activation(Activation.IDENTITY)
-                    .trainingWorkspaceMode(WorkspaceMode.SEPARATE)
-                    .inferenceWorkspaceMode(WorkspaceMode.SEPARATE)
-                    .build();
+            FineTuneConfiguration fineTuneConf = getFineTuneConfiguration();
 
             // Transfer Learning steps - Modify prebuilt model's architecture for current scenario
-            model = new TransferLearning.GraphBuilder(pretrained)
-                    .fineTuneConfiguration(fineTuneConf)
-                    .removeVertexKeepConnections("conv2d_9")
-                    .removeVertexKeepConnections("outputs")
-                    .addLayer("convolution2d_9",
-                            new ConvolutionLayer.Builder(1,1)
-                                    .nIn(1024)
-                                    .nOut(nBoxes * (5 + nClasses))
-                                    .stride(1,1)
-                                    .convolutionMode(ConvolutionMode.Same)
-                                    .weightInit(WeightInit.XAVIER)
-                                    .activation(Activation.IDENTITY)
-                                    .build(),
-                            "leaky_re_lu_8")
-                    .addLayer("outputs",
-                            new Yolo2OutputLayer.Builder()
-                                    .lambbaNoObj(lambdaNoObj)
-                                    .lambdaCoord(lambdaCoord)
-                                    .boundingBoxPriors(priors)
-                                    .build(),
-                            "convolution2d_9")
-                    .setOutputs("outputs")
-                    .build();
+            model = getNewComputationGraph(pretrained, priors, fineTuneConf);
             System.out.println(model.summary(InputType.convolutional(height, width, nChannels)));
 
             log.info("Train model...");
@@ -169,12 +137,16 @@ public class CustomDatasetTransferLearning {
             ModelSerializer.writeModel(model, modelFilename, true);
         }
 
+        OfflineValidationWithTestDataset(test);
+    }
+
+    private static void OfflineValidationWithTestDataset(RecordReaderDataSetIterator test) throws InterruptedException {
+
         // visualize results on the test set
         NativeImageLoader imageLoader = new NativeImageLoader();
-        CanvasFrame frame = new CanvasFrame("CustomDatasetInferencing");
+        CanvasFrame frame = new CanvasFrame("Validate Test Dataset");
         OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
-        org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout =
-                        (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer)model.getOutputLayer(0);
+        org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout = (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer)model.getOutputLayer(0);
 
         test.setCollectMetaData(true);
         while (test.hasNext() && frame.isVisible()) {
@@ -195,24 +167,74 @@ public class CustomDatasetTransferLearning {
             int h = metadata.getOrigH() * 2;
             Mat image = new Mat();
             resize(convertedMat, image, new opencv_core.Size(w, h));
-            for (DetectedObject obj : objects) {
-                double[] xy1 = obj.getTopLeftXY();
-                double[] xy2 = obj.getBottomRightXY();
-                String label = labels.get(obj.getPredictedClass());
-                double proba = obj.getConfidence();
-
-                int x1 = (int) Math.round(w * xy1[0] / gridWidth);
-                int y1 = (int) Math.round(h * xy1[1] / gridHeight);
-                int x2 = (int) Math.round(w * xy2[0] / gridWidth);
-                int y2 = (int) Math.round(h * xy2[1] / gridHeight);
-                rectangle(image, new opencv_core.Point(x1, y1), new opencv_core.Point(x2, y2), opencv_core.Scalar.RED);
-                putText(image, label+ " - " + proba, new opencv_core.Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, opencv_core.Scalar.GREEN);
-            }
-            frame.setTitle(new File(metadata.getURI()).getName() + " - CustomDatasetInferencing");
+            drawBoxes(objects, w, h, image);
+            frame.setTitle(new File(metadata.getURI()).getName() + " - Validate Test Dataset");
             frame.setCanvasSize(w, h);
             frame.showImage(converter.convert(image));
             frame.waitKey();
         }
         frame.dispose();
+    }
+
+    private static ComputationGraph getNewComputationGraph(ComputationGraph pretrained, INDArray priors, FineTuneConfiguration fineTuneConf) {
+        ComputationGraph _ComputationGraph = new TransferLearning.GraphBuilder(pretrained)
+                .fineTuneConfiguration(fineTuneConf)
+                .removeVertexKeepConnections("conv2d_9")
+                .removeVertexKeepConnections("outputs")
+                .addLayer("convolution2d_9",
+                        new ConvolutionLayer.Builder(1, 1)
+                                .nIn(1024)
+                                .nOut(nBoxes * (5 + nClasses))
+                                .stride(1, 1)
+                                .convolutionMode(ConvolutionMode.Same)
+                                .weightInit(WeightInit.XAVIER)
+                                .activation(Activation.IDENTITY)
+                                .build(),
+                        "leaky_re_lu_8")
+                .addLayer("outputs",
+                        new Yolo2OutputLayer.Builder()
+                                .lambbaNoObj(lambdaNoObj)
+                                .lambdaCoord(lambdaCoord)
+                                .boundingBoxPriors(priors)
+                                .build(),
+                        "convolution2d_9")
+                .setOutputs("outputs")
+                .build();
+
+        return _ComputationGraph;
+    }
+
+    private static FineTuneConfiguration getFineTuneConfiguration() {
+
+        FineTuneConfiguration _FineTuneConfiguration = new FineTuneConfiguration.Builder()
+                .seed(seed)
+                .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
+                .gradientNormalization(GradientNormalization.RenormalizeL2PerLayer)
+                .gradientNormalizationThreshold(1.0)
+                .updater(new Adam.Builder().learningRate(learningRate).build())
+                //.updater(new Nesterovs.Builder().learningRate(learningRate).momentum(lrMomentum).build())
+                .l2(0.00001)
+                .activation(Activation.IDENTITY)
+                .trainingWorkspaceMode(WorkspaceMode.SEPARATE)
+                .inferenceWorkspaceMode(WorkspaceMode.SEPARATE)
+                .build();
+
+        return _FineTuneConfiguration;
+    }
+
+    private static void drawBoxes(List<DetectedObject> objects, int w, int h, Mat image) {
+        for (DetectedObject obj : objects) {
+            double[] xy1 = obj.getTopLeftXY();
+            double[] xy2 = obj.getBottomRightXY();
+            String label = labels.get(obj.getPredictedClass());
+            double proba = obj.getConfidence();
+
+            int x1 = (int) Math.round(w * xy1[0] / gridWidth);
+            int y1 = (int) Math.round(h * xy1[1] / gridHeight);
+            int x2 = (int) Math.round(w * xy2[0] / gridWidth);
+            int y2 = (int) Math.round(h * xy2[1] / gridHeight);
+            rectangle(image, new opencv_core.Point(x1, y1), new opencv_core.Point(x2, y2), opencv_core.Scalar.RED);
+            putText(image, label+ " - " + proba, new opencv_core.Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, opencv_core.Scalar.GREEN);
+        }
     }
 }
