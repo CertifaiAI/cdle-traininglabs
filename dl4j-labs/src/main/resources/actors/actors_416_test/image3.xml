@@ -1,0 +1,26 @@
+<annotation>
+	<folder>actors_416</folder>
+	<filename>image3.jpg</filename>
+	<path>C:\Users\PK Chuah\dl4jDataDir\CustomDataset\actors_416\image3.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>313</width>
+		<height>416</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Jason Momoa</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>83</xmin>
+			<ymin>68</ymin>
+			<xmax>241</xmax>
+			<ymax>281</ymax>
+		</bndbox>
+	</object>
+</annotation>

@@ -1,0 +1,26 @@
+<annotation>
+	<folder>actors_416_test</folder>
+	<filename>j4.jpg</filename>
+	<path>C:\Users\PK Chuah\dl4jDataDir\CustomDataset\actors_416_test\j4.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>264</width>
+		<height>416</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Jason Momoa</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>81</xmin>
+			<ymin>39</ymin>
+			<xmax>173</xmax>
+			<ymax>164</ymax>
+		</bndbox>
+	</object>
+</annotation>

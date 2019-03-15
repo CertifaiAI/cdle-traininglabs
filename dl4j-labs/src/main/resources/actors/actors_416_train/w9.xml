@@ -1,0 +1,26 @@
+<annotation>
+	<folder>actors_416_test</folder>
+	<filename>w9.jpg</filename>
+	<path>C:\Users\PK Chuah\dl4jDataDir\CustomDataset\actors_416_test\w9.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>242</width>
+		<height>416</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Patrick Wilson</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>48</xmin>
+			<ymin>56</ymin>
+			<xmax>159</xmax>
+			<ymax>199</ymax>
+		</bndbox>
+	</object>
+</annotation>

@@ -30,6 +30,7 @@ import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.io.ClassPathResource;
 import org.nd4j.linalg.learning.config.Adam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,11 +78,11 @@ public class CustomDatasetTransferLearning {
     private static Random rng = new Random(seed);
 //    private static double lrMomentum = 0.9;
 
-    // Directory for Custom train and test datasets
-    private static File trainDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\actors_416_train");
-    private static File testDir = new File("C:\\Users\\PK Chuah\\dl4jDataDir\\CustomDataset\\actors_416_test");
-
     public static void main(String[] args) throws Exception {
+
+        // Directory for Custom train and test datasets
+        File trainDir = new ClassPathResource("actors/actors_416_train").getFile();
+        File testDir = new ClassPathResource("actors/actors_416_test").getFile();
 
         log.info("Load data...");
         FileSplit trainData = new FileSplit(trainDir, NativeImageLoader.ALLOWED_FORMATS, rng);

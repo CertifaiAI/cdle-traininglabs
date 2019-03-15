@@ -1,0 +1,26 @@
+<annotation>
+	<folder>actors_416_train</folder>
+	<filename>a3.jpg</filename>
+	<path>C:\Users\PK Chuah\dl4jDataDir\CustomDataset\actors_416_train\a3.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>416</width>
+		<height>312</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Amber Heard</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>128</xmin>
+			<ymin>71</ymin>
+			<xmax>284</xmax>
+			<ymax>264</ymax>
+		</bndbox>
+	</object>
+</annotation>
