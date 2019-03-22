@@ -62,6 +62,11 @@
                 <artifactId>nd4j-cuda-10.0-platform</artifactId>
                 <version>${nd4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.nd4j</groupId>
+                <artifactId>nd4j-cuda-10.1-platform</artifactId>
+                <version>${nd4j.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -96,6 +101,25 @@
             <groupId>org.deeplearning4j</groupId>
             <artifactId>deeplearning4j-zoo</artifactId>
             <version>${dl4j.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-nn -->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-nn</artifactId>
+            <version>${dl4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-modelimport</artifactId>
+            <version>${dl4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-keras</artifactId>
+            <version>0.9.1</version>
         </dependency>
 
         <!-- deeplearning4j-ui is used for visualization: see http://deeplearning4j.org/visualization -->

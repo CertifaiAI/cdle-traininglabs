@@ -81,8 +81,8 @@ public class CustomDatasetTransferLearning {
     public static void main(String[] args) throws Exception {
 
         // Directory for Custom train and test datasets
-        File trainDir = new ClassPathResource("actors/actors_416_train").getFile();
-        File testDir = new ClassPathResource("actors/actors_416_test").getFile();
+        File trainDir = new ClassPathResource("actors/yolo_416/train").getFile();
+        File testDir = new ClassPathResource("actors/yolo_416/test").getFile();
 
         log.info("Load data...");
         FileSplit trainData = new FileSplit(trainDir, NativeImageLoader.ALLOWED_FORMATS, rng);
