@@ -125,8 +125,9 @@ public class ActorsVGG16TransferLearning {
         scaler.transform(image);
 
         INDArray[] output = model.output(false, image);
-        List<Prediction> predictions = decodePredictions(output[0], 1);
-        System.out.println("prediction: " + predictionsToString(predictions));
+        List<Prediction> predictions = decodePredictions(output[0], 3);
+        System.out.println("prediction: ");
+        System.out.println(predictionsToString(predictions));
     }
 
     private static String predictionsToString(List<Prediction> predictions) {
