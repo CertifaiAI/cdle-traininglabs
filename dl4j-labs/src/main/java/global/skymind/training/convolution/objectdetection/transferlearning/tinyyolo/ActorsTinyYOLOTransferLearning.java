@@ -49,8 +49,8 @@ import static org.bytedeco.javacpp.opencv_imgproc.*;
  * to perform face recognition with bounding boxes on Custom Dataset "https://drive.google.com/open?id=1MycUaI65HlI3NSMuLweVo4iYcrDE3tWk".
  * Dataset resized by magick mogrify, and annotated manually with labelimg
  */
-public class CustomDatasetTransferLearning {
-    private static final Logger log = LoggerFactory.getLogger(CustomDatasetTransferLearning.class);
+public class ActorsTinyYOLOTransferLearning {
+    private static final Logger log = LoggerFactory.getLogger(ActorsTinyYOLOTransferLearning.class);
     private static final OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
     private static ComputationGraph model;
 
@@ -81,8 +81,8 @@ public class CustomDatasetTransferLearning {
     public static void main(String[] args) throws Exception {
 
         // Directory for Custom train and test datasets
-        File trainDir = new ClassPathResource("actors/yolo_416/train").getFile();
-        File testDir = new ClassPathResource("actors/yolo_416/test").getFile();
+        File trainDir = new ClassPathResource("actors/tinyyolo_416/train").getFile();
+        File testDir = new ClassPathResource("actors/tinyyolo_416/test").getFile();
 
         log.info("Load data...");
         FileSplit trainData = new FileSplit(trainDir, NativeImageLoader.ALLOWED_FORMATS, rng);

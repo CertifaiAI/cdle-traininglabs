@@ -2,21 +2,14 @@ package global.skymind.training.convolution.objectdetection.transferlearning.vgg
 
 import com.google.common.primitives.Ints;
 import global.skymind.training.convolution.objectdetection.transferlearning.vgg16.dataHelpers.ActorsDatasetIterator;
-import org.bytedeco.javacpp.*;
-import org.bytedeco.javacpp.opencv_core.Mat;
-import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
-import org.datavec.api.records.metadata.RecordMetaDataImageURI;
 import org.datavec.api.records.metadata.RecordMetaDataURI;
-import org.datavec.image.loader.NativeImageLoader;
-import org.datavec.image.transform.ColorConversionTransform;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.GradientNormalization;
 import org.deeplearning4j.nn.conf.WorkspaceMode;
 import org.deeplearning4j.nn.conf.distribution.NormalDistribution;
-import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
@@ -29,16 +22,13 @@ import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
 import org.deeplearning4j.zoo.PretrainedType;
 import org.deeplearning4j.zoo.model.VGG16;
-import org.nd4j.jita.conf.CudaEnvironment;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
-import org.nd4j.linalg.dataset.api.preprocessor.NormalizerMinMaxScaler;
 import org.nd4j.linalg.dataset.api.preprocessor.VGG16ImagePreProcessor;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.io.ClassPathResource;
-import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
@@ -49,8 +39,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Arrays;
 
-public class CustomDatasetTransferLearning {
-    private static final Logger log = LoggerFactory.getLogger(CustomDatasetTransferLearning.class);
+public class ActorsVGG16TransferLearning {
+    private static final Logger log = LoggerFactory.getLogger(ActorsVGG16TransferLearning.class);
     private static final OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
     private static ComputationGraph model;
 
@@ -77,7 +67,7 @@ public class CustomDatasetTransferLearning {
         labels = trainIter.getLabels();
         System.out.println(Arrays.toString(labels.toArray()));
 
-        String modelFilename = "model.zip";
+        String modelFilename = "vgg16.zip";
         if (new File(modelFilename).exists()) {
 
             // Load trained model from previous execution
@@ -112,38 +102,22 @@ public class CustomDatasetTransferLearning {
             }
             ModelSerializer.writeModel(model, modelFilename, true);
         }
+
         validationTestDataset(testIter);
     }
 
     private static void validationTestDataset(RecordReaderDataSetIterator test) throws InterruptedException, IOException {
 
-//        NativeImageLoader imageLoader = new NativeImageLoader();
-//        CanvasFrame frame = new CanvasFrame("Validate Test Dataset");
-//        OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
-
         test.setCollectMetaData(true);
-        while (test.hasNext()
-//                && frame.isVisible()
-        ) {
+        while (test.hasNext()) {
             DataSet ds = test.next();
             RecordMetaDataURI metadata = (RecordMetaDataURI) ds.getExampleMetaData().get(0);
             INDArray image = ds.getFeatures();
 
             System.out.println("label: " + labels.get(Ints.asList(ds.getLabels().toIntVector()).indexOf(1)));
+            System.out.println(metadata.getURI());
             getPredictions(image);
-
-//            Mat image_mat = imageLoader.asMat(image);
-//            System.out.println(image_mat.size());
-//            Mat image_converted_mat = new Mat();
-//            image_mat.convertTo(image_converted_mat, CV_8U, 255, 0);
-//            Mat image_resize_mat = new Mat();
-//            resize(image_converted_mat, image_resize_mat, new opencv_core.Size(244*2, 244*2));
-//            frame.setTitle(new File(metadata.getURI()).getName() + " - Validate Test Dataset");
-//            frame.setCanvasSize(244*2, 244*2);
-//            frame.showImage(converter.convert(image_resize_mat));
-//            frame.waitKey();
         }
-//        frame.dispose();
     }
 
     private static void getPredictions(INDArray image) throws IOException {
@@ -192,10 +166,6 @@ public class CustomDatasetTransferLearning {
             this.label = label;
         }
 
-        public void setPercentage(final double percentage) {
-            this.percentage = percentage;
-        }
-
         public String toString() {
             return String.format("%s: %.2f ", this.label, this.percentage);
         }
@@ -228,7 +198,6 @@ public class CustomDatasetTransferLearning {
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .gradientNormalization(GradientNormalization.RenormalizeL2PerLayer)
                 .gradientNormalizationThreshold(1.0)
-//                .updater(new Adam.Builder().learningRate(learningRate).build())
                 .updater(new Nesterovs.Builder().learningRate(learningRate).momentum(Nesterovs.DEFAULT_NESTEROV_MOMENTUM).build())
                 .l2(0.00001)
                 .activation(Activation.IDENTITY)

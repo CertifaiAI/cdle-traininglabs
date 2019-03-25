@@ -29,10 +29,10 @@ import static org.bytedeco.javacpp.opencv_videoio.CV_CAP_PROP_FRAME_WIDTH;
 
 /**
  * Example transfer learning from a Tiny YOLO model pretrained on ImageNet and Pascal VOC
- * to perform face recognition, model inference with model built in CustomDatasetTransferLearning.
+ * to perform face recognition, model inference with model built in ActorsVGG16TransferLearning.
  */
-public class RealtimeInferencing {
-    private static final Logger log = LoggerFactory.getLogger(RealtimeInferencing.class);
+public class WebcamInferencing {
+    private static final Logger log = LoggerFactory.getLogger(WebcamInferencing.class);
     private static final OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
     private static ComputationGraph model;
 
