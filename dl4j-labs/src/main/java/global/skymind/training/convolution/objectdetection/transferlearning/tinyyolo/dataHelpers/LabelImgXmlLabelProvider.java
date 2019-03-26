@@ -19,10 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class XmlLabelProvider implements ImageObjectLabelProvider {
+public class LabelImgXmlLabelProvider implements ImageObjectLabelProvider {
     private Map<String, List<ImageObject>> labelMap = new HashMap();
 
-    public XmlLabelProvider(File dir) throws IOException, ParserConfigurationException, SAXException {
+    public LabelImgXmlLabelProvider(File dir) throws IOException, ParserConfigurationException, SAXException {
         File[] listOfFiles = dir.listFiles();
 
         for(int i = 0; i < listOfFiles.length; i++){

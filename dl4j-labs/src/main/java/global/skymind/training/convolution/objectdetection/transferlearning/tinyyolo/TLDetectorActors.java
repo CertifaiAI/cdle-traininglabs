@@ -1,7 +1,7 @@
 package global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo;
 
+import global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.LabelImgXmlLabelProvider;
 import global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.NonMaxSuppression;
-import global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.XmlLabelProvider;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_core.Mat;
 import org.bytedeco.javacv.CanvasFrame;
@@ -46,12 +46,11 @@ import static org.bytedeco.javacpp.opencv_imgproc.*;
 
 /**
  * Example transfer learning from a Tiny YOLO model pretrained on ImageNet and Pascal VOC
- * to perform face recognition with bounding boxes on Custom Dataset "https://drive.google.com/open?id=1MycUaI65HlI3NSMuLweVo4iYcrDE3tWk".
+ * to perform face recognition with bounding boxes on Actors Dataset
  * Dataset resized by magick mogrify, and annotated manually with labelimg
  */
-public class ActorsTinyYOLOTransferLearning {
-    private static final Logger log = LoggerFactory.getLogger(ActorsTinyYOLOTransferLearning.class);
-    private static final OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
+public class TLDetectorActors {
+    private static final Logger log = LoggerFactory.getLogger(TLDetectorActors.class);
     private static ComputationGraph model;
 
     // parameters matching the pretrained TinyYOLO model
@@ -70,17 +69,17 @@ public class ActorsTinyYOLOTransferLearning {
 
     // parameters for the training phase
     private static int batchSize = 10;
-    private static int nEpochs = 50;
+    private static int nEpochs = 20;
     private static double learningRate = 1e-4;
     private static int nClasses = 3;
     private static List<String> labels;
     private static int seed = 123;
     private static Random rng = new Random(seed);
-//    private static double lrMomentum = 0.9;
+    private static String modelFilename = "/generated-models/TinyYOLO_TLDetectorActors.zip";
 
     public static void main(String[] args) throws Exception {
 
-        // Directory for Custom train and test datasets
+        // Directory for Actors train and test datasets
         File trainDir = new ClassPathResource("actors/tinyyolo_416/train").getFile();
         File testDir = new ClassPathResource("actors/tinyyolo_416/test").getFile();
 
@@ -89,10 +88,10 @@ public class ActorsTinyYOLOTransferLearning {
         FileSplit testData = new FileSplit(testDir, NativeImageLoader.ALLOWED_FORMATS, rng);
 
         ObjectDetectionRecordReader recordReaderTrain = new ObjectDetectionRecordReader(height, width, nChannels,
-                        gridHeight, gridWidth, new XmlLabelProvider(trainDir));
+                        gridHeight, gridWidth, new LabelImgXmlLabelProvider(trainDir));
         recordReaderTrain.initialize(trainData);
         ObjectDetectionRecordReader recordReaderTest = new ObjectDetectionRecordReader(height, width, nChannels,
-                        gridHeight, gridWidth, new XmlLabelProvider(testDir));
+                        gridHeight, gridWidth, new LabelImgXmlLabelProvider(testDir));
         recordReaderTest.initialize(testData);
 
         // ObjectDetectionRecordReader performs regression, so we need to specify it here
@@ -105,7 +104,6 @@ public class ActorsTinyYOLOTransferLearning {
         labels = train.getLabels();
         System.out.println(Arrays.toString(labels.toArray()));
 
-        String modelFilename = "model.zip";
         if (new File(modelFilename).exists()) {
 
             // Load trained model from previous execution
@@ -113,19 +111,29 @@ public class ActorsTinyYOLOTransferLearning {
             model = ModelSerializer.restoreComputationGraph(modelFilename);
 
         } else {
-
-            // Transfer Learning steps - Load TinyYOLO prebuilt model.
-            log.info("Build model...");
-            ComputationGraph pretrained = (ComputationGraph)TinyYOLO.builder().build().initPretrained();
+            ComputationGraph pretrained = null;
+            FineTuneConfiguration fineTuneConf = null;
             INDArray priors = Nd4j.create(priorBoxes);
 
-            // Transfer Learning steps - Model Configurations.
-            FineTuneConfiguration fineTuneConf = getFineTuneConfiguration();
+            /* STEP 1: Transfer Learning steps - Load TinyYOLO prebuilt model. */
+            /*
+            log.info("Build model...");
+            pretrained = (ComputationGraph)TinyYOLO.builder().build().initPretrained();
+             */
 
-            // Transfer Learning steps - Modify prebuilt model's architecture for current scenario
+            /* STEP 2: Transfer Learning steps - Model Configurations. */
+            /*
+            fineTuneConf = getFineTuneConfiguration();
+             */
+
+            /* STEP 3: Transfer Learning steps - Modify prebuilt model's architecture for current scenario */
+            /*
             model = getNewComputationGraph(pretrained, priors, fineTuneConf);
             System.out.println(model.summary(InputType.convolutional(height, width, nChannels)));
+             */
 
+            /* STEP 4: Training and Save model. */
+            /*
             log.info("Train model...");
             model.setListeners(new ScoreIterationListener(1));
             for (int i = 0; i < nEpochs; i++) {
@@ -136,6 +144,7 @@ public class ActorsTinyYOLOTransferLearning {
                 log.info("*** Completed epoch {} ***", i);
             }
             ModelSerializer.writeModel(model, modelFilename, true);
+             */
         }
 
         OfflineValidationWithTestDataset(test);
@@ -213,7 +222,6 @@ public class ActorsTinyYOLOTransferLearning {
                 .gradientNormalization(GradientNormalization.RenormalizeL2PerLayer)
                 .gradientNormalizationThreshold(1.0)
                 .updater(new Adam.Builder().learningRate(learningRate).build())
-                //.updater(new Nesterovs.Builder().learningRate(learningRate).momentum(lrMomentum).build())
                 .l2(0.00001)
                 .activation(Activation.IDENTITY)
                 .trainingWorkspaceMode(WorkspaceMode.SEPARATE)
