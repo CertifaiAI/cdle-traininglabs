@@ -2,7 +2,6 @@ package global.skymind.training.convolution.objectdetection.transferlearning.vgg
 
 import com.google.common.primitives.Ints;
 import global.skymind.training.convolution.objectdetection.transferlearning.vgg16.dataHelpers.ActorsDatasetIterator;
-import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.datavec.api.records.metadata.RecordMetaDataURI;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
@@ -25,7 +24,6 @@ import org.deeplearning4j.zoo.model.VGG16;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
-import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.VGG16ImagePreProcessor;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.io.ClassPathResource;
@@ -39,6 +37,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Arrays;
 
+/*
+ * Another transfer learning example with VGG16 (VGGFace)
+ */
 public class TLDetectorActors {
     private static final Logger log = LoggerFactory.getLogger(TLDetectorActors.class);
     private static ComputationGraph model;
@@ -76,6 +77,7 @@ public class TLDetectorActors {
         } else {
 
             log.info("Build model...");
+            // Load pretrained VGG16 model
             ComputationGraph pretrained = (ComputationGraph) VGG16.builder().build().initPretrained(PretrainedType.VGGFACE);
             log.info(pretrained.summary());
 
@@ -112,7 +114,6 @@ public class TLDetectorActors {
             DataSet ds = test.next();
             RecordMetaDataURI metadata = (RecordMetaDataURI) ds.getExampleMetaData().get(0);
             INDArray image = ds.getFeatures();
-
             System.out.println("label: " + labels.get(Ints.asList(ds.getLabels().toIntVector()).indexOf(1)));
             System.out.println(metadata.getURI());
             getPredictions(image);
@@ -155,10 +156,12 @@ public class TLDetectorActors {
 
         private String label;
         private double percentage;
+
         public Prediction(String label, double percentage) {
             this.label = label;
             this.percentage = percentage;
         }
+
         public void setLabel(final String label) {
             this.label = label;
         }
@@ -166,7 +169,6 @@ public class TLDetectorActors {
         public String toString() {
             return String.format("%s: %.2f ", this.label, this.percentage);
         }
-
     }
 
     private static ComputationGraph buildComputationGraph(ComputationGraph pretrained, FineTuneConfiguration fineTuneConf) {
