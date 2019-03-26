@@ -69,7 +69,7 @@ public class TLDetectorActors {
 
     // parameters for the training phase
     private static int batchSize = 10;
-    private static int nEpochs = 20;
+    private static int nEpochs = 50;
     private static double learningRate = 1e-4;
     private static int nClasses = 3;
     private static List<String> labels;
@@ -122,7 +122,7 @@ public class TLDetectorActors {
             /* STEP 2: Transfer Learning steps - Model Configurations. */
 //            fineTuneConf = getFineTuneConfiguration();
 
-            /* STEP 3: Transfer Learning steps - Modify prebuilt model's architecture for current scenario */
+            /* STEP 3: Transfer Learning steps - Modify prebuilt model's architecture */
 //            model = getNewComputationGraph(pretrained, priors, fineTuneConf);
 //            System.out.println(model.summary(InputType.convolutional(height, width, nChannels)));
 
