@@ -35,7 +35,7 @@ public class WebcamInference {
     private static ComputationGraph model;
 
     // trained model file
-    private static String modelFilename = "/generated-models/TinyYOLO_TLDetectorActors.zip";
+    private static String modelFilename = new File(".").getAbsolutePath() + "/generated-models/TinyYOLO_TLDetectorActors.zip";
 
     // parameters matching the pretrained TinyYOLO model
     private static int width = 416;

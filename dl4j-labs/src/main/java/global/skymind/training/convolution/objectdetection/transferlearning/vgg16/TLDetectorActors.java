@@ -42,8 +42,7 @@ import java.util.Arrays;
 public class TLDetectorActors {
     private static final Logger log = LoggerFactory.getLogger(TLDetectorActors.class);
     private static ComputationGraph model;
-
-    private static String modelFilename = "/generated-models/VGG16_TLDetectorActors.zip";
+    private static String modelFilename = new File(".").getAbsolutePath() + "/generated-models/VGG16_TLDetectorActors.zip";
 
     // parameters for the training phase
     private static int batchSize = 5;
@@ -62,6 +61,7 @@ public class TLDetectorActors {
         trainIter.setPreProcessor( new VGG16ImagePreProcessor());
 
         RecordReaderDataSetIterator testIter = ActorsDatasetIterator.testIterator();
+        testIter.setPreProcessor( new VGG16ImagePreProcessor());
 
         // Print Labels
         labels = trainIter.getLabels();
@@ -120,9 +120,6 @@ public class TLDetectorActors {
     }
 
     private static void getPredictions(INDArray image) throws IOException {
-        DataNormalization scaler = new VGG16ImagePreProcessor();
-        scaler.transform(image);
-
         INDArray[] output = model.output(false, image);
         List<Prediction> predictions = decodePredictions(output[0], 3);
         System.out.println("prediction: ");

@@ -75,7 +75,7 @@ public class TLDetectorActors {
     private static List<String> labels;
     private static int seed = 123;
     private static Random rng = new Random(seed);
-    private static String modelFilename = "/generated-models/TinyYOLO_TLDetectorActors.zip";
+    private static String modelFilename = new File(".").getAbsolutePath() + "/generated-models/TinyYOLO_TLDetectorActors.zip";
 
     public static void main(String[] args) throws Exception {
 
@@ -116,35 +116,28 @@ public class TLDetectorActors {
             INDArray priors = Nd4j.create(priorBoxes);
 
             /* STEP 1: Transfer Learning steps - Load TinyYOLO prebuilt model. */
-            /*
-            log.info("Build model...");
-            pretrained = (ComputationGraph)TinyYOLO.builder().build().initPretrained();
-             */
+//            log.info("Build model...");
+//            pretrained = (ComputationGraph)TinyYOLO.builder().build().initPretrained();
 
             /* STEP 2: Transfer Learning steps - Model Configurations. */
-            /*
-            fineTuneConf = getFineTuneConfiguration();
-             */
+//            fineTuneConf = getFineTuneConfiguration();
 
             /* STEP 3: Transfer Learning steps - Modify prebuilt model's architecture for current scenario */
-            /*
-            model = getNewComputationGraph(pretrained, priors, fineTuneConf);
-            System.out.println(model.summary(InputType.convolutional(height, width, nChannels)));
-             */
+//            model = getNewComputationGraph(pretrained, priors, fineTuneConf);
+//            System.out.println(model.summary(InputType.convolutional(height, width, nChannels)));
 
             /* STEP 4: Training and Save model. */
-            /*
-            log.info("Train model...");
-            model.setListeners(new ScoreIterationListener(1));
-            for (int i = 0; i < nEpochs; i++) {
-                train.reset();
-                while (train.hasNext()) {
-                    model.fit(train.next());
-                }
-                log.info("*** Completed epoch {} ***", i);
-            }
-            ModelSerializer.writeModel(model, modelFilename, true);
-             */
+//            log.info("Train model...");
+//            model.setListeners(new ScoreIterationListener(1));
+//            for (int i = 0; i < nEpochs; i++) {
+//                train.reset();
+//                while (train.hasNext()) {
+//                    model.fit(train.next());
+//                }
+//                log.info("*** Completed epoch {} ***", i);
+//            }
+//            ModelSerializer.writeModel(model, modelFilename, true);
+
         }
 
         OfflineValidationWithTestDataset(test);
