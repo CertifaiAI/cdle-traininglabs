@@ -1,6 +1,8 @@
-package org.deeplearning4j.solution.recurrent.character;
+package global.skymind.solution.recurrent.character;
+
 
 import global.skymind.training.recurrent.character.CharacterIterator;
+import org.deeplearning4j.nn.conf.layers.LSTM;
 import org.nd4j.linalg.io.ClassPathResource;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
@@ -20,6 +22,8 @@ import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.learning.config.AdaDelta;
+import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.learning.config.RmsProp;
 import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
 
@@ -44,20 +48,10 @@ import static java.lang.Math.ceil;
  the google news corpus, the linux kernel source code,
  or the complete works of Shakespeare
 
- This example uses weather forecasts archived from the
- US National Weather service office in Charleson West Virginia
+ This example uses the story "Alice’s Adventures in Wonderland" by Lewis Carroll as the training data.
+ You can get the original txt file from here: https://www.gutenberg.org/files/11/11-0.txt
 
- Weather forecast products have a particular text data format,
- also some weather terms are abbreviated.
-
- Note that the model trains in a semi-supervised way, it predicts the next character
- and training occurs based on how correct the prediction is.
-
- The model is then asked to generate text on it's own provided with a seed of text.
-
- What does the model end up "knowing"?
- It gets words sorted out fairly quickly.
- Long term dependencies, like Mon before tues, before wed. That takes longer.
+ The model will learn the story and the words, character by character and try to generate the story provided with a seed of text.
 
  You could modify this and feed it specific strings to probe what it can do.
 
@@ -75,23 +69,23 @@ import static java.lang.Math.ceil;
  6. Save model
  */
 
-public class GravesLSTMWeatherForecasts
+public class GravesLSTMAlice
 {
 
     static final int seedNumber = 12345;
 
     public static void main(String[] args) throws Exception
     {
-        int miniBatchSize = 32;                         //Number of text segments in each training mini-batch
-        int exampleLength = 4000;                       //Number of characters in each text segment.
+        int miniBatchSize = 20;                         //Number of text segments in each training mini-batch
+        int exampleLength = 500;                     //Number of characters in each text segment.
         int tbpttLength = 50;                           //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
-        double learningRate = 0.1;
-        double l2Value = 0.001;                         //Regularization l2 value - to prevent big weight value initialization
+        double learningRate = 0.005;
+        double l2Value = 0.0001;                         //Regularization l2 value - to prevent big weight value initialization
         int lstmLayerSize = 200;                        //Number of units in each GravesLSTM hiddenlayer
-        int epochs = 1;                                 //Total number of training epochs
-        int generateSamplesEveryNMinibatches = 30;      //How frequently to generate samples from the network?
-        int numSamples = 4;					            //Number of samples to generate after each training epoch
-        int charactersInEachSample = 1200;              //Lenght of each sample to generate
+        int epochs = 5;                                 //Total number of training epochs
+        int generateSamplesEveryNMinibatches = 5;      //How frequently to generate samples from the network?
+        int numSamples = 2;					            //Number of samples to generate after each training epoch
+        int charactersInEachSample = 500;              //Lenght of each sample to generate
 
         CharacterIterator characterIter = getCharacterIterator(miniBatchSize, exampleLength);
         int inputLayerSize = characterIter.inputColumns();
@@ -101,44 +95,38 @@ public class GravesLSTMWeatherForecasts
 		#### LAB STEP 2 #####
 		Setup character initalization -> to prompt the LSTM with a character sequence to continue/complete
         */
-        // String generationInitialization = null;		//Optional: random character is used if null
-        String generationInitialization = "WVZ006-171700-\n" +
-            "CABELL-\n" +
-            "INCLUDING THE CITY OF...HUNTINGTON\n" +
-            "932 PM EST FRI JUN 16 2016";
+         String generationInitialization = null;		//Optional: random character is used if null
+//        String generationInitialization = "CHAPTER ";
 
         /*
 		#### LAB STEP 3 #####
 		Configure network setting
 		*/
         MultiLayerConfiguration config = new NeuralNetConfiguration.Builder()
-            .seed(seedNumber)
-            .weightInit(WeightInit.XAVIER)
-            .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-            .updater(new RmsProp(learningRate))
-            .l2(l2Value)
-            .list()
-            .layer(0, new GravesLSTM.Builder()
-                .nIn(inputLayerSize)
-                .nOut(lstmLayerSize)
-                .activation(Activation.TANH)
-                .build())
-            .layer(1, new GravesLSTM.Builder()
-                .nIn(lstmLayerSize)
-                .nOut(lstmLayerSize)
-                .activation(Activation.TANH)
-                .build())
-            .layer(2, new RnnOutputLayer.Builder()
-                .nIn(lstmLayerSize)
-                .nOut(outputLayerSize)
-                .activation(Activation.SOFTMAX)
-                .lossFunction(LossFunction.MCXENT)
-                .build())
-            .pretrain(false)
-            .backprop(true)
-            .backpropType(BackpropType.TruncatedBPTT)
-            .tBPTTLength(tbpttLength)
-            .build();
+                .seed(seedNumber)
+                .weightInit(WeightInit.XAVIER)
+                .updater(new Adam(learningRate))
+                .l2(l2Value)
+                .list()
+                .layer(0, new GravesLSTM.Builder()
+                        .nIn(inputLayerSize)
+                        .nOut(lstmLayerSize)
+                        .activation(Activation.TANH)
+                        .build())
+                .layer(1, new GravesLSTM.Builder()
+                        .nIn(lstmLayerSize)
+                        .nOut(lstmLayerSize)
+                        .activation(Activation.TANH)
+                        .build())
+                .layer(2, new RnnOutputLayer.Builder()
+                        .nIn(lstmLayerSize)
+                        .nOut(outputLayerSize)
+                        .activation(Activation.SOFTMAX)
+                        .lossFunction(LossFunction.MCXENT)
+                        .build())
+                .backpropType(BackpropType.TruncatedBPTT)
+                .tBPTTLength(tbpttLength)
+                .build();
 
 
         MultiLayerNetwork network = new MultiLayerNetwork(config);
@@ -207,13 +195,13 @@ public class GravesLSTMWeatherForecasts
 		Save model
 		*/
 
-        File locationToSave = new File("dl4j-labs/src/main/resources/text/trained_graves_weather.zip");
+        File locationToSave = new File("dl4j-labs/src/main/resources/text/trained_alice.zip");
 
         //save updater
         boolean saveUpdater = true;
 
 
-        //ModelSerializer needs modelname, location, booleanSaveUpdater
+//        ModelSerializer needs modelname, location, booleanSaveUpdater
         ModelSerializer.writeModel(network, locationToSave, saveUpdater);
 
         System.out.println("\n\nTrain network saved at " + locationToSave);
@@ -346,7 +334,7 @@ public class GravesLSTMWeatherForecasts
      */
     public static CharacterIterator getCharacterIterator(int miniBatchSize, int sequenceLength) throws Exception
     {
-        File file = new ClassPathResource("text/weather.txt").getFile();
+        File file = new ClassPathResource("text/alice.txt").getFile();
         String fileLocation = file.getAbsolutePath();
 
         if(!file.exists()) throw new IOException("File does not exist");
@@ -354,7 +342,7 @@ public class GravesLSTMWeatherForecasts
         char[] validCharacters = CharacterIterator.getMinimalCharacterSet();
 
         return new CharacterIterator(fileLocation, Charset.forName("UTF-8"),
-            miniBatchSize, sequenceLength, validCharacters, new Random(seedNumber));
+                miniBatchSize, sequenceLength, validCharacters, new Random(seedNumber));
     }
 
 
