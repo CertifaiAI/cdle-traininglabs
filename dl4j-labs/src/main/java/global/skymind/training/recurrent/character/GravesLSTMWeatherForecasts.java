@@ -100,12 +100,12 @@ public class GravesLSTMWeatherForecasts
 		Split input text file  -> split input text into minibatch, with each minibatch containing certain length
         */
 
-        /*
+
         CharacterIterator characterIter = getCharacterIterator(miniBatchSize, exampleLength);
         int inputLayerSize = characterIter.inputColumns();
         int outputLayerSize = characterIter.totalOutcomes(); //both are same ( minimal characters length)
         System.out.println("Total number of mini batches: " + (int) ceil(characterIter.getFileCharacters() / (double)(miniBatchSize * exampleLength)));
-        */
+
 
         /*
 		#### LAB STEP 2 #####
