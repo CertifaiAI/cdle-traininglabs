@@ -87,7 +87,7 @@ public class GravesLSTMAlice
 		Create characters dataset by calling characterIterator
         */
 
-       /*
+        /*
         CharacterIterator characterIter = getCharacterIterator(miniBatchSize, exampleLength);
         int inputLayerSize = characterIter.inputColumns();
         int outputLayerSize = characterIter.totalOutcomes(); //both are same ( minimal characters length)
@@ -97,15 +97,19 @@ public class GravesLSTMAlice
 		#### LAB STEP 2 #####
 		Setup character initalization -> to prompt the LSTM with a character sequence to continue/complete
         */
+
+        /*
          String generationInitialization = null;		//Optional: random character is used if null
 //       String generationInitialization = "CHAPTER ";
+        */
 
         /*
 		#### LAB STEP 3 #####
 		Configure network setting
 		*/
+
+        /*
         MultiLayerConfiguration config = new NeuralNetConfiguration.Builder()
-                /*
                 .seed(seedNumber)
                 .weightInit(WeightInit.XAVIER)
                 .updater(new Adam(learningRate))
@@ -130,8 +134,10 @@ public class GravesLSTMAlice
                 .backpropType(BackpropType.TruncatedBPTT)
                 .tBPTTLength(tbpttLength)
                 .build();
-                */
-                /*
+
+        */
+
+        /*
         MultiLayerNetwork network = new MultiLayerNetwork(config);
         network.init();
         */
@@ -140,11 +146,14 @@ public class GravesLSTMAlice
 		#### LAB STEP 4 #####
 		Set user interface listeners
 		*/
+
+        /*
         StatsStorage storage = new InMemoryStatsStorage();
         UIServer server = UIServer.getInstance();
         server.attach(storage);
 
         network.setListeners(new StatsListener(storage, 10));
+        */
 
         //Print the  number of parameters in the network (and for each layer)
 
@@ -213,7 +222,6 @@ public class GravesLSTMAlice
         ModelSerializer.writeModel(network, locationToSave, saveUpdater);
 
         System.out.println("\n\nTrain network saved at " + locationToSave);
-
         */
 
     }
