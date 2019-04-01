@@ -211,25 +211,25 @@
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>javacpp</artifactId>
-            <version>1.4.1</version>
+            <version>${javacpp.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>javacv</artifactId>
-            <version>1.4.1</version>
+            <version>${javacv.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.bytedeco.javacpp-presets</groupId>
             <artifactId>opencv-platform</artifactId>
-            <version>3.4.1-1.4.1</version>
+            <version>${opencv-platform.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.bytedeco.javacpp-presets</groupId>
             <artifactId>ffmpeg-platform</artifactId>
-            <version>3.4.2-1.4.1</version>
+            <version>${ffmpeg-platform.version}</version>
         </dependency>
 
     </dependencies>
