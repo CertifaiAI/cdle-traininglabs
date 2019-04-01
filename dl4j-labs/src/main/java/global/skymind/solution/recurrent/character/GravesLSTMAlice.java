@@ -2,10 +2,8 @@ package global.skymind.solution.recurrent.character;
 
 
 import global.skymind.training.recurrent.character.CharacterIterator;
-import org.deeplearning4j.nn.conf.layers.LSTM;
 import org.nd4j.linalg.io.ClassPathResource;
 import org.deeplearning4j.api.storage.StatsStorage;
-import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.BackpropType;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -22,9 +20,7 @@ import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.learning.config.AdaDelta;
 import org.nd4j.linalg.learning.config.Adam;
-import org.nd4j.linalg.learning.config.RmsProp;
 import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
 
 import java.io.File;
@@ -87,6 +83,10 @@ public class GravesLSTMAlice
         int numSamples = 2;					            //Number of samples to generate after each training epoch
         int charactersInEachSample = 500;              //Lenght of each sample to generate
 
+       /*
+		#### LAB STEP 1 #####
+		Create characters dataset by calling characterIterator
+        */
         CharacterIterator characterIter = getCharacterIterator(miniBatchSize, exampleLength);
         int inputLayerSize = characterIter.inputColumns();
         int outputLayerSize = characterIter.totalOutcomes(); //both are same ( minimal characters length)
@@ -201,7 +201,7 @@ public class GravesLSTMAlice
         boolean saveUpdater = true;
 
 
-//        ModelSerializer needs modelname, location, booleanSaveUpdater
+//      ModelSerializer needs modelname, location, booleanSaveUpdater
         ModelSerializer.writeModel(network, locationToSave, saveUpdater);
 
         System.out.println("\n\nTrain network saved at " + locationToSave);

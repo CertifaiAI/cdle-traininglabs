@@ -7,12 +7,10 @@ import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.BackpropType;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.Updater;
 import org.deeplearning4j.nn.conf.layers.GravesLSTM;
 import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
-//import org.deeplearning4j.training.recurrent.character.CharacterIterator;
 import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
@@ -95,16 +93,18 @@ public class GravesLSTMWeatherForecasts
         int generateSamplesEveryNMinibatches = 30;      //How frequently to generate samples from the network?
         int numSamples = 4;					            //Number of samples to generate after each training epoch
         int charactersInEachSample = 1200;              //Lenght of each sample to generate
+
         /*
 		#### LAB STEP 1 #####
 		Split input text file  -> split input text into minibatch, with each minibatch containing certain length
         */
 
+        /*
         CharacterIterator characterIter = getCharacterIterator(miniBatchSize, exampleLength);
         int inputLayerSize = characterIter.inputColumns();
         int outputLayerSize = characterIter.totalOutcomes(); //both are same ( minimal characters length)
         System.out.println("Total number of mini batches: " + (int) ceil(characterIter.getFileCharacters() / (double)(miniBatchSize * exampleLength)));
-
+        */
 
         /*
 		#### LAB STEP 2 #####
@@ -229,15 +229,15 @@ public class GravesLSTMWeatherForecasts
 		#### LAB STEP 6#####
 		Save model
 		*/
-//        File locationToSave = new File("dl4j-labs/src/main/resources/text/trained_graves_weather.zip");
+        File locationToSave = new File("dl4j-labs/src/main/resources/text/trained_graves_weather.zip");
 
         //save updater
         boolean saveUpdater = true;
 
         //ModelSerializer needs modelname, location, booleanSaveUpdater
-//        ModelSerializer.writeModel(network, locationToSave, saveUpdater);
+        ModelSerializer.writeModel(network, locationToSave, saveUpdater);
 
-//        System.out.println("\n\nTrain network saved at " + locationToSave);
+        System.out.println("\n\nTrain network saved at " + locationToSave);
 
     }
 
@@ -359,7 +359,6 @@ public class GravesLSTMWeatherForecasts
         //Should never happen if distribution is a valid probability distribution
         throw new IllegalArgumentException("Distribution is invalid? randomNumber = " + randomNumber + ", sum = " + sum);
     }
-
     /**Read from text file, set up and return a simple
      * DataSetIterator that does vectorization based on the text.
      * @param miniBatchSize Number of text segments in each training mini-batch
