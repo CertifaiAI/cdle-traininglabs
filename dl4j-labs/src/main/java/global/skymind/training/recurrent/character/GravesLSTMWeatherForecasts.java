@@ -8,7 +8,6 @@ import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.BackpropType;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.Updater;
 import org.deeplearning4j.nn.conf.layers.GravesLSTM;
 import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
@@ -21,6 +20,7 @@ import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.learning.config.RmsProp;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.io.File;
@@ -94,35 +94,37 @@ public class GravesLSTMWeatherForecasts
         int generateSamplesEveryNMinibatches = 30;      //How frequently to generate samples from the network?
         int numSamples = 4;					            //Number of samples to generate after each training epoch
         int charactersInEachSample = 1200;              //Lenght of each sample to generate
+
         /*
 		#### LAB STEP 1 #####
 		Split input text file  -> split input text into minibatch, with each minibatch containing certain length
         */
-        /*
+
+
         CharacterIterator characterIter = getCharacterIterator(miniBatchSize, exampleLength);
         int inputLayerSize = characterIter.inputColumns();
         int outputLayerSize = characterIter.totalOutcomes(); //both are same ( minimal characters length)
         System.out.println("Total number of mini batches: " + (int) ceil(characterIter.getFileCharacters() / (double)(miniBatchSize * exampleLength)));
-        */
+
 
         /*
 		#### LAB STEP 2 #####
 		Setup character initalization -> to prompt the LSTM with a character sequence to continue/complete
         */
-        //String generationInitialization = null;		//Optional: random character is used if null
-        /*
+//        String generationInitialization = null;		//Optional: random character is used if null
+
         String generationInitialization = "WVZ006-171700-\n" +
             "CABELL-\n" +
             "INCLUDING THE CITY OF...HUNTINGTON\n" +
             "932 PM EST FRI JUN 16 2016";
-        */
+
 
 
         /*
 		#### LAB STEP 3 #####
 		Configure network setting.
 		*/
-        /*
+
         MultiLayerConfiguration config = new NeuralNetConfiguration.Builder()
             .seed(seedNumber)
             .weightInit(WeightInit.XAVIER)
@@ -153,7 +155,7 @@ public class GravesLSTMWeatherForecasts
             .tBPTTForwardLength(tbpttLength)
             .tBPTTBackwardLength(tbpttLength)
             .build();
-        */
+
 
         /*
 		#### LAB STEP 4 #####
@@ -165,24 +167,24 @@ public class GravesLSTMWeatherForecasts
         server.attach(storage);
 
 
-        /*
+
         MultiLayerNetwork network = new MultiLayerNetwork(config);
         network.init();
         network.setListeners(new StatsListener(storage, 10));
-        */
 
-        /*
+
+
         //Print the  number of parameters in the network (and for each layer)
         Layer[] layers = network.getLayers();
         int totalNumParams = 0;
         for(int i = 0; i < layers.length; ++i)
         {
-            int params = layers[i].numParams();
+            int params = (int) layers[i].numParams();
             System.out.println("Number of parameters in layer " + i + ": " + params);
             totalNumParams += params;
         }
         System.out.println("Total number of network parameters: " + totalNumParams);
-        */
+
 
 
 
@@ -196,7 +198,7 @@ public class GravesLSTMWeatherForecasts
         int miniBatchNumber = 0;
         for(int i = 0; i < epochs; ++i)
         {
-            /*
+
             while(characterIter.hasNext())
             {
                 System.out.println("Current batch: " + miniBatchNumber++ );
@@ -220,7 +222,7 @@ public class GravesLSTMWeatherForecasts
 
             characterIter.reset(); //Reset iterator for another epoch
 
-            */
+
         }
 
 
@@ -234,7 +236,7 @@ public class GravesLSTMWeatherForecasts
         boolean saveUpdater = true;
 
         //ModelSerializer needs modelname, location, booleanSaveUpdater
-        /*ModelSerializer.writeModel(network, locationToSave, saveUpdater);*/
+        ModelSerializer.writeModel(network, locationToSave, saveUpdater);
 
         System.out.println("\n\nTrain network saved at " + locationToSave);
 
@@ -358,7 +360,6 @@ public class GravesLSTMWeatherForecasts
         //Should never happen if distribution is a valid probability distribution
         throw new IllegalArgumentException("Distribution is invalid? randomNumber = " + randomNumber + ", sum = " + sum);
     }
-
     /**Read from text file, set up and return a simple
      * DataSetIterator that does vectorization based on the text.
      * @param miniBatchSize Number of text segments in each training mini-batch
@@ -368,6 +369,7 @@ public class GravesLSTMWeatherForecasts
     {
         File file = new ClassPathResource("text/weather.txt").getFile();
         String fileLocation = file.getAbsolutePath();
+        System.out.println("Reading file at " + fileLocation);
 
         if(!file.exists()) throw new IOException("File does not exist");
 

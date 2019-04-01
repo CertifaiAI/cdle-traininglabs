@@ -1,5 +1,6 @@
-package org.deeplearning4j.solution.recurrent.character;
+package global.skymind.solution.recurrent.character;
 
+import global.skymind.training.recurrent.character.CharacterIterator;
 import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.conf.BackpropType;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
