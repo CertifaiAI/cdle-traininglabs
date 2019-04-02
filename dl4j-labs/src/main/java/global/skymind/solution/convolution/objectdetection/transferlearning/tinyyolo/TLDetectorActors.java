@@ -10,6 +10,7 @@ import org.datavec.api.records.metadata.RecordMetaDataImageURI;
 import org.datavec.api.split.FileSplit;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.objdetect.ObjectDetectionRecordReader;
+import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.ConvolutionMode;
@@ -24,6 +25,9 @@ import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.deeplearning4j.ui.api.UIServer;
+import org.deeplearning4j.ui.stats.StatsListener;
+import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
 import org.deeplearning4j.zoo.model.TinyYOLO;
 import org.nd4j.linalg.activations.Activation;
@@ -65,11 +69,11 @@ public class TLDetectorActors {
     private static double lambdaNoObj = 0.5;
     private static double lambdaCoord = 1.0;
     private static double[][] priorBoxes = {{2, 5}, {2.5, 6}, {3, 7}, {3.5, 8}, {4, 9}};
-    private static double detectionThreshold = 0.08;
+    private static double detectionThreshold = 0.1;
 
     // parameters for the training phase
-    private static int batchSize = 10;
-    private static int nEpochs = 45;
+    private static int batchSize = 8;
+    private static int nEpochs = 30;
     private static double learningRate = 1e-4;
     private static int nClasses = 3;
     private static List<String> labels;
@@ -128,7 +132,11 @@ public class TLDetectorActors {
 
             /* STEP 4: Training and Save model. */
             log.info("Train model...");
-            model.setListeners(new ScoreIterationListener(1));
+            UIServer server = UIServer.getInstance();
+            StatsStorage storage = new InMemoryStatsStorage();
+            server.attach(storage);
+            model.setListeners(new ScoreIterationListener(1), new StatsListener(storage));
+
             for (int i = 0; i < nEpochs; i++) {
                 train.reset();
                 while (train.hasNext()) {
