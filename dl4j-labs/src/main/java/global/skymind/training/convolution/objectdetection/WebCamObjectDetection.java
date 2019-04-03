@@ -1,5 +1,4 @@
 package global.skymind.training.convolution.objectdetection;
-import com.beust.jcommander.Parameter;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacv.*;
 import org.datavec.image.loader.NativeImageLoader;
