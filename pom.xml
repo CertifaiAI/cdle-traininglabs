@@ -47,6 +47,11 @@
         <aws.sdk.version>1.11.109</aws.sdk.version>
         <jackson.version>2.5.1</jackson.version>
         <scala.plugin.version>3.2.2</scala.plugin.version>
+
+        <javacpp.version>1.4.1</javacpp.version>
+        <javacv.version>1.4.1</javacv.version>
+        <opencv-platform.version>3.4.1-1.4.1</opencv-platform.version>
+        <ffmpeg-platform.version>3.4.2-1.4.1</ffmpeg-platform.version>
     </properties>
 
     <modules>
