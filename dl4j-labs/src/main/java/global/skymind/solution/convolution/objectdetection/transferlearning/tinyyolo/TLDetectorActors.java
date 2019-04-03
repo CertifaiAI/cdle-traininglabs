@@ -244,7 +244,14 @@ public class TLDetectorActors {
             int x2 = (int) Math.round(w * xy2[0] / gridWidth);
             int y2 = (int) Math.round(h * xy2[1] / gridHeight);
             rectangle(image, new opencv_core.Point(x1, y1), new opencv_core.Point(x2, y2), opencv_core.Scalar.RED);
-            putText(image, label+ " - " + proba, new opencv_core.Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, opencv_core.Scalar.GREEN);
+            putText(
+                    image,
+                    label+ " - " + String.format("%.2f", proba*100) + "%",
+                    new opencv_core.Point((x1+2) , (y1+y2)/2),
+                    FONT_HERSHEY_DUPLEX,
+                    0.5,
+                    opencv_core.Scalar.RED
+            );
         }
     }
 }
