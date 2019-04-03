@@ -1,4 +1,5 @@
 package global.skymind.training.convolution.objectdetection;
+import com.beust.jcommander.Parameter;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacv.*;
 import org.datavec.image.loader.NativeImageLoader;
@@ -24,14 +25,20 @@ import static org.opencv.imgproc.Imgproc.COLOR_BGR2RGB;
 
 /**
  * YOLO detection with camera
- * Note 1: Swap between camera by using createDefault parameter
- * Note 2: flip the camera if opening front camera
+ *
  */
 
 public class WebCamObjectDetection
 {
-    private static Thread thread;
+    //Camera position change between "front" and "back"
+    //front camera requires flipping of the image
+    private static String cameraPos = "front";
 
+    //swap between camera with 0 -? on the parameter
+    //Default is 0
+    private static int cameraNum = 0;
+
+    private static Thread thread;
 
     private static final int gridWidth = 13;
     private static final int gridHeight = 13;
@@ -41,10 +48,14 @@ public class WebCamObjectDetection
     private static final int tinyyoloheight = 416;
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception
+    {
+        if( !cameraPos.equals("front") && !cameraPos.equals("back") )
+        {
+            throw new Exception("Unknown argument for camera position. Choose between front and back");
+        }
 
-        //swap between camera with 0 -? on the parameter
-        FrameGrabber grabber = FrameGrabber.createDefault(0);
+        FrameGrabber grabber = FrameGrabber.createDefault(cameraNum);
         OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
 
         grabber.start();
@@ -61,12 +72,10 @@ public class WebCamObjectDetection
         ZooModel model = TinyYOLO.builder().numClasses(0).build();
         ComputationGraph initializedModel = (ComputationGraph) model.initPretrained();
 
-
         NativeImageLoader loader = new NativeImageLoader(tinyyolowidth, tinyyoloheight, 3, new ColorConversionTransform(COLOR_BGR2RGB));
         ImagePreProcessingScaler scaler = new ImagePreProcessingScaler(0, 1);
         VOCLabels labels = new VOCLabels();
 
-        System.out.println("Start running video");
 
         while (true)
         {
@@ -81,10 +90,18 @@ public class WebCamObjectDetection
                     {
                         try
                         {
-                            opencv_core.Mat rawImage = converter.convert(frame);
-                            //opencv_core.Mat rawImage = new opencv_core.Mat();
+                            opencv_core.Mat rawImage = new opencv_core.Mat();
+
                             //Flip the camera if opening front camera
-                            //opencv_core.flip(inputMat, rawImage, 1);
+                            if(cameraPos.equals("front"))
+                            {
+                                opencv_core.Mat inputImage = converter.convert(frame);
+                                opencv_core.flip(inputImage, rawImage, 1);
+                            }
+                            else
+                            {
+                                rawImage = converter.convert(frame);
+                            }
 
                             opencv_core.Mat resizeImage = new opencv_core.Mat();
                             resize(rawImage, resizeImage, new opencv_core.Size(tinyyolowidth, tinyyoloheight));
