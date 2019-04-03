@@ -130,7 +130,7 @@ public class PhysionetMultivariateTimeSeriesClassification
                 .addLayer("predictMortality", new RnnOutputLayer.Builder()
                                 .nIn(100)
                                 .nOut(numClasses)
-                                .lossFunction(LossFunctions.LossFunction.MCXENT)
+                                .lossFunction(LossFunctions.LossFunction.XENT)
                                 .activation(Activation.SOFTMAX)
                                 .build(),
                         "layer0")
