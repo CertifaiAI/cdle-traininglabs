@@ -136,7 +136,6 @@ public class PhysionetMultivariateTimeSeriesClassification
                                 .activation(Activation.SOFTMAX)
                                 .build(),
                         "layer0")
-                .pretrain(false)
                 .backpropType(BackpropType.Standard)
                 .build();
 
