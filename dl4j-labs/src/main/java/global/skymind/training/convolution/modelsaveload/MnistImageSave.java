@@ -115,7 +115,6 @@ public class MnistImageSave
                         .activation(Activation.SOFTMAX)
                         .weightInit(WeightInit.XAVIER)
                         .build())
-                .pretrain(false)
                 .backpropType(BackpropType.Standard)
                 .setInputType(InputType.convolutional(height,width,channels))
                 .build();

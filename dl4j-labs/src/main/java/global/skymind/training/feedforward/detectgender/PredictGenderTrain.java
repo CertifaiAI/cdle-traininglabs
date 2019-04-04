@@ -108,7 +108,6 @@ public class PredictGenderTrain
                 .lossFunction(LossFunctions.LossFunction.MCXENT)
                 .activation(Activation.SOFTMAX)
                 .build())
-            .pretrain(false)
             .backpropType(BackpropType.Standard)
             .build();
 

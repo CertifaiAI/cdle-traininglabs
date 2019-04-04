@@ -296,7 +296,6 @@ public class ImageDrawer extends Application {
                         .activation(Activation.IDENTITY)
                         .lossFunction(LossFunctions.LossFunction.L2)
                         .build())
-                .pretrain(false)
                 .backpropType(BackpropType.Standard)
                 .build();
 

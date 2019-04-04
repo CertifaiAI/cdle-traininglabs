@@ -108,7 +108,6 @@ public class MnistClassifier extends Application {
                         .build())
                 .setInputType(InputType.convolutionalFlat(height, width, 1)) // InputType.convolutional for normal image
                 .backpropType(BackpropType.Standard)
-                .pretrain(false)
                 .build();
 
         model = new MultiLayerNetwork(conf);
