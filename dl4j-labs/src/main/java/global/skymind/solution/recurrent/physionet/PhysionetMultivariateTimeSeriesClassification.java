@@ -84,12 +84,10 @@ public class PhysionetMultivariateTimeSeriesClassification
 
         //load training data
         SequenceRecordReader trainFeatures = new CSVSequenceRecordReader(1, ",");
-//        trainFeatures.initialize(new NumberedFileInputSplit(featuresDir.getAbsolutePath() + "/%d.csv", 0, trainSamples - 1));
-        trainFeatures.initialize(new NumberedFileInputSplit("file:///C:/Users/Keng%%20Hooi/Skymind/TrainingLabs/dl4j-labs/target/classes/physionet2012/resampled" + "/%d.csv", 0, trainSamples - 1));
+        trainFeatures.initialize(new NumberedFileInputSplit(featuresDir.getAbsolutePath() + "/%d.csv", 0, trainSamples - 1));
 
         SequenceRecordReader trainLabels = new CSVSequenceRecordReader();
-//        trainLabels.initialize(new NumberedFileInputSplit(labelsDir.getAbsolutePath() + "/%d.csv", 0, trainSamples - 1));
-        trainLabels.initialize(new NumberedFileInputSplit("file:///C:/Users/Keng%%20Hooi/Skymind/TrainingLabs/dl4j-labs/target/classes/physionet2012/mortality" + "/%d.csv", 0, trainSamples - 1));
+        trainLabels.initialize(new NumberedFileInputSplit(labelsDir.getAbsolutePath() + "/%d.csv", 0, trainSamples - 1));
 
         DataSetIterator trainData = new SequenceRecordReaderDataSetIterator(trainFeatures, trainLabels, miniBatchSize, numLabelClasses, false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);
 
@@ -100,24 +98,20 @@ public class PhysionetMultivariateTimeSeriesClassification
         */
         //load validation data
         SequenceRecordReader validFeatures = new CSVSequenceRecordReader(1, ",");
-//        validFeatures.initialize(new NumberedFileInputSplit(featuresDir.getAbsolutePath() + "/%d.csv", trainSamples, trainSamples + validSamples - 1));
-        validFeatures.initialize(new NumberedFileInputSplit("file:///C:/Users/Keng%%20Hooi/Skymind/TrainingLabs/dl4j-labs/target/classes/physionet2012/resampled" + "/%d.csv", trainSamples, trainSamples + validSamples - 1));
+        validFeatures.initialize(new NumberedFileInputSplit(featuresDir.getAbsolutePath() + "/%d.csv", trainSamples, trainSamples + validSamples - 1));
 
         SequenceRecordReader validLabels = new CSVSequenceRecordReader();
-//        validLabels.initialize(new NumberedFileInputSplit(labelsDir.getAbsolutePath() + "/%d.csv", trainSamples, trainSamples + validSamples - 1));
-        validLabels.initialize(new NumberedFileInputSplit("file:///C:/Users/Keng%%20Hooi/Skymind/TrainingLabs/dl4j-labs/target/classes/physionet2012/mortality" + "/%d.csv", trainSamples, trainSamples + validSamples - 1));
+        validLabels.initialize(new NumberedFileInputSplit(labelsDir.getAbsolutePath() + "/%d.csv", trainSamples, trainSamples + validSamples - 1));
 
         DataSetIterator validData = new SequenceRecordReaderDataSetIterator(validFeatures, validLabels, miniBatchSize, numLabelClasses, false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);
 
 
         //load testing data
         SequenceRecordReader testFeatures = new CSVSequenceRecordReader(1, ",");
-//        testFeatures.initialize(new NumberedFileInputSplit(featuresDir.getAbsolutePath() + "/%d.csv", trainSamples + validSamples, trainSamples + validSamples + testSamples- 1));
-        testFeatures.initialize(new NumberedFileInputSplit("file:///C:/Users/Keng%%20Hooi/Skymind/TrainingLabs/dl4j-labs/target/classes/physionet2012/resampled" + "/%d.csv", trainSamples + validSamples, trainSamples + validSamples + testSamples- 1));
+        testFeatures.initialize(new NumberedFileInputSplit(featuresDir.getAbsolutePath() + "/%d.csv", trainSamples + validSamples, trainSamples + validSamples + testSamples- 1));
 
         SequenceRecordReader testLabels = new CSVSequenceRecordReader();
-//        testLabels.initialize(new NumberedFileInputSplit(labelsDir.getAbsolutePath() + "/%d.csv", trainSamples + validSamples, trainSamples + validSamples + testSamples - 1));
-        testLabels.initialize(new NumberedFileInputSplit("file:///C:/Users/Keng%%20Hooi/Skymind/TrainingLabs/dl4j-labs/target/classes/physionet2012/mortality" + "/%d.csv", trainSamples + validSamples, trainSamples + validSamples + testSamples - 1));
+        testLabels.initialize(new NumberedFileInputSplit(labelsDir.getAbsolutePath() + "/%d.csv", trainSamples + validSamples, trainSamples + validSamples + testSamples - 1));
 
         DataSetIterator testData = new SequenceRecordReaderDataSetIterator(testFeatures, testLabels, miniBatchSize, numLabelClasses, false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);
 
