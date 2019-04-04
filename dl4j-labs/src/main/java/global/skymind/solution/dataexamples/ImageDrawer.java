@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.arbiter.util.ClassPathResource;
+import org.deeplearning4j.nn.conf.BackpropType;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
@@ -296,7 +297,7 @@ public class ImageDrawer extends Application {
                         .lossFunction(LossFunctions.LossFunction.L2)
                         .build())
                 .pretrain(false)
-                .backprop(true)
+                .backpropType(BackpropType.Standard)
                 .build();
 
 
