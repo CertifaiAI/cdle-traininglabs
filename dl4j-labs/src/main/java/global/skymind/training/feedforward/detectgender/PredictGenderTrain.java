@@ -7,6 +7,7 @@ import org.deeplearning4j.arbiter.util.ClassPathResource;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
+import org.deeplearning4j.nn.conf.BackpropType;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
@@ -108,7 +109,7 @@ public class PredictGenderTrain
                 .activation(Activation.SOFTMAX)
                 .build())
             .pretrain(false)
-            .backprop(true)
+            .backpropType(BackpropType.Standard)
             .build();
 
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
