@@ -6,8 +6,8 @@ import org.datavec.api.split.NumberedFileInputSplit;
 import org.nd4j.linalg.io.ClassPathResource;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.SequenceRecordReaderDataSetIterator;
-import org.deeplearning4j.eval.Evaluation;
-import org.deeplearning4j.eval.ROC;
+import org.nd4j.evaluation.classification.Evaluation;
+import org.nd4j.evaluation.classification.ROC;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.ComputationGraphConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -101,7 +101,6 @@ public class PhysionetMultivariateTimeSeriesClassification
 
         SequenceRecordReader validLabels = new CSVSequenceRecordReader();
         validLabels.initialize(new NumberedFileInputSplit(labelsDir.getAbsolutePath() + "/%d.csv", trainSamples, trainSamples + validSamples - 1));
-
         DataSetIterator validData = new SequenceRecordReaderDataSetIterator(validFeatures, validLabels, miniBatchSize, numLabelClasses, false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);
 
 
@@ -132,7 +131,7 @@ public class PhysionetMultivariateTimeSeriesClassification
                                 .nIn(100)
                                 .nOut(numClasses)
                                 .lossFunction(LossFunctions.LossFunction.XENT)
-                                .activation(Activation.SOFTMAX)
+                                .activation(Activation.SIGMOID)
                                 .build(),
                         "layer0")
                 .pretrain(false)
