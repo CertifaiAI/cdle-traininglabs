@@ -144,8 +144,7 @@ public class PhysionetMultivariateTimeSeriesClassification
                     .activation(Activation.SIGMOID)
                     .build(),
                     "layer0")
-                .pretrain(false)
-                .backprop(true)
+                .backpropType(BackpropType.Standard)
                 .build();
 
 

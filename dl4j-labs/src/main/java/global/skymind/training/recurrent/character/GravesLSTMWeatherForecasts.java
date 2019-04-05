@@ -148,9 +148,6 @@ public class GravesLSTMWeatherForecasts
                 .activation(Activation.SOFTMAX)
                 .lossFunction(LossFunctions.LossFunction.MCXENT)
                 .build())
-
-            .pretrain(false)
-            .backprop(true)
             .backpropType(BackpropType.TruncatedBPTT)
             .tBPTTForwardLength(tbpttLength)
             .tBPTTBackwardLength(tbpttLength)

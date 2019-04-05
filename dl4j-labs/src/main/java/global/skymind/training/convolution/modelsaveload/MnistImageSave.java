@@ -3,6 +3,7 @@ package global.skymind.training.convolution.modelsaveload;
 import org.datavec.api.io.labels.ParentPathLabelGenerator;
 import org.datavec.api.split.FileSplit;
 import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
+import org.deeplearning4j.nn.conf.BackpropType;
 import org.nd4j.linalg.io.ClassPathResource;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
@@ -114,7 +115,7 @@ public class MnistImageSave
                         .activation(Activation.SOFTMAX)
                         .weightInit(WeightInit.XAVIER)
                         .build())
-                .pretrain(false).backprop(true)
+                .backpropType(BackpropType.Standard)
                 .setInputType(InputType.convolutional(height,width,channels))
                 .build();
 
