@@ -1,6 +1,5 @@
 package global.skymind.training.recurrent.character;
 
-import global.skymind.training.recurrent.character.CharacterIterator;
 import org.nd4j.linalg.io.ClassPathResource;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.nn.api.Layer;

@@ -1,4 +1,4 @@
-package org.deeplearning4j.solution.recurrent.character;
+package global.skymind.solution.recurrent.character;
 
 import global.skymind.training.recurrent.character.CharacterIterator;
 import org.nd4j.linalg.io.ClassPathResource;
