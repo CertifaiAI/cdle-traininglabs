@@ -28,7 +28,7 @@ import static org.opencv.imgproc.Imgproc.COLOR_BGR2RGB;
  *
  */
 
-public class c
+public class WebCamObjectDetection
 {
     //Camera position change between "front" and "back"
     //front camera requires flipping of the image
