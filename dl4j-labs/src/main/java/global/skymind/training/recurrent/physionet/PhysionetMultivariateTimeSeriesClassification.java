@@ -131,7 +131,7 @@ public class PhysionetMultivariateTimeSeriesClassification
                                 .nIn(100)
                                 .nOut(numClasses)
                                 .lossFunction(LossFunctions.LossFunction.XENT)
-                                .activation(Activation.SOFTMAX)
+                                .activation(Activation.SIGMOID)
                                 .build(),
                         "layer0")
                 .pretrain(false)
