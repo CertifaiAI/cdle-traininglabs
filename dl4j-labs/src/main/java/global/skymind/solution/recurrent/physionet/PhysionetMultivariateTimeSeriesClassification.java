@@ -1,4 +1,4 @@
-package org.deeplearning4j.solution.recurrent.physionet;
+package global.skymind.solution.recurrent.physionet;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.datavec.api.records.reader.SequenceRecordReader;
@@ -7,8 +7,8 @@ import org.datavec.api.split.NumberedFileInputSplit;
 import org.nd4j.linalg.io.ClassPathResource;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.SequenceRecordReaderDataSetIterator;
-import org.deeplearning4j.eval.Evaluation;
-import org.deeplearning4j.eval.ROC;
+import org.nd4j.evaluation.classification.Evaluation;
+import org.nd4j.evaluation.classification.ROC;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.*;
 import org.deeplearning4j.nn.conf.layers.GravesLSTM;
@@ -144,8 +144,7 @@ public class PhysionetMultivariateTimeSeriesClassification
                     .activation(Activation.SIGMOID)
                     .build(),
                     "layer0")
-                .pretrain(false)
-                .backprop(true)
+                .backpropType(BackpropType.Standard)
                 .build();
 
 

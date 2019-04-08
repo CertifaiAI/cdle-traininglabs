@@ -1,4 +1,4 @@
-package org.deeplearning4j.solution.modelsaveload;
+package global.skymind.solution.modelsaveload;
 
 
 import org.deeplearning4j.util.ModelSerializer;

@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import org.datavec.image.loader.NativeImageLoader;
 import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
+import org.deeplearning4j.nn.conf.BackpropType;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.inputs.InputType;
@@ -106,7 +107,8 @@ public class MnistClassifier extends Application {
                         .activation(Activation.SOFTMAX)
                         .build())
                 .setInputType(InputType.convolutionalFlat(height, width, 1)) // InputType.convolutional for normal image
-                .backprop(true).pretrain(false).build();
+                .backpropType(BackpropType.Standard)
+                .build();
 
         model = new MultiLayerNetwork(conf);
         model.init();
