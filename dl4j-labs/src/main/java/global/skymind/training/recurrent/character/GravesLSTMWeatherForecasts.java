@@ -1,5 +1,6 @@
 package global.skymind.training.recurrent.character;
 
+import org.deeplearning4j.nn.conf.layers.LSTM;
 import org.nd4j.linalg.io.ClassPathResource;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.nn.api.Layer;
@@ -7,7 +8,6 @@ import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.BackpropType;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.layers.GravesLSTM;
 import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
@@ -131,12 +131,12 @@ public class GravesLSTMWeatherForecasts
             .updater(new RmsProp(learningRate))
             .l2(l2Value)
             .list()
-            .layer(0, new GravesLSTM.Builder()
+            .layer(0, new LSTM.Builder()
                 .nIn(inputLayerSize)
                 .nOut(lstmLayerSize)
                 .activation(Activation.TANH)
                 .build())
-            .layer(1, new GravesLSTM.Builder()
+            .layer(1, new LSTM.Builder()
                 .nIn(lstmLayerSize)
                 .nOut(lstmLayerSize)
                 .activation(Activation.TANH)

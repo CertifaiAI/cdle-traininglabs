@@ -5,7 +5,7 @@ import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.Updater;
-import org.deeplearning4j.nn.conf.layers.GravesLSTM;
+import org.deeplearning4j.nn.conf.layers.LSTM;
 import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
@@ -79,17 +79,17 @@ public class BasicRNNExample
             .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
             .miniBatch(false)
             .list()
-            .layer(0, new GravesLSTM.Builder()
+            .layer(0, new LSTM.Builder()
                 .nIn(LEARNSTRING_CHARS_LIST.size())
                 .nOut(150)
                 .activation(Activation.TANH)
                 .build())
-            .layer(1, new GravesLSTM.Builder()
+            .layer(1, new LSTM.Builder()
                 .nIn(150)
                 .nOut(100)
                 .activation(Activation.TANH)
                 .build())
-            .layer(2, new GravesLSTM.Builder()
+            .layer(2, new LSTM.Builder()
                 .nIn(100)
                 .nOut(50)
                 .activation(Activation.TANH)
@@ -115,7 +115,7 @@ public class BasicRNNExample
         server.attach(storage);
 
         network.setListeners(new StatsListener(storage, 10));
-*       */
+       */
 
         // Create input and output arrays: SAMPLE_INDEX, INPUT_NEURON, SEQUENCE_POSITION
         INDArray currentCharArray = Nd4j.zeros(1, LEARNSTRING_CHARS_LIST.size(), LEARNSTRING.length);

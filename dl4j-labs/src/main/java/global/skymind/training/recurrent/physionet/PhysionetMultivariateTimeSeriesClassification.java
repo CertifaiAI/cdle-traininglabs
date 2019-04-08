@@ -4,6 +4,7 @@ import org.datavec.api.records.reader.SequenceRecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVSequenceRecordReader;
 import org.datavec.api.split.NumberedFileInputSplit;
 import org.deeplearning4j.nn.conf.BackpropType;
+import org.deeplearning4j.nn.conf.layers.LSTM;
 import org.nd4j.linalg.io.ClassPathResource;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.SequenceRecordReaderDataSetIterator;
@@ -13,7 +14,6 @@ import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.ComputationGraphConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.Updater;
-import org.deeplearning4j.nn.conf.layers.GravesLSTM;
 import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.weights.WeightInit;
@@ -122,7 +122,7 @@ public class PhysionetMultivariateTimeSeriesClassification
                 .graphBuilder()
                 .addInputs("trainFeatures")
                 .setOutputs("predictMortality")
-                .addLayer("layer0", new GravesLSTM.Builder()
+                .addLayer("layer0", new LSTM.Builder()
                                 .nIn(numInputs)
                                 .nOut(100)
                                 .activation(Activation.TANH)
