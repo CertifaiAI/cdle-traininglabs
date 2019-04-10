@@ -1,5 +1,7 @@
 package global.skymind.training.recurrent.UCIHAR;
 
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import org.datavec.api.records.reader.SequenceRecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVSequenceRecordReader;
 import org.datavec.api.split.NumberedFileInputSplit;
@@ -27,6 +29,8 @@ import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.io.File;
+import java.io.IOException;
+
 
 /**
  * The purpose of this lab is to train the model to classify 6 different type of activities using accelerometer data:
@@ -96,30 +100,39 @@ public class ucihar {
     public static void main(String[] args) throws Exception
     {
         /*
+        #### LAB STEP 0 #####
+		Unzip all data sets
+        */
+        unzipAllDataSet();
+
+        /*
 		#### LAB STEP 1 #####
 		Load data into data iterators
         */
-        /*
+
         // Path creation for training set and test set.
         //Training set
-        File trainBaseDir = new ClassPathResource("uci_har_dl4j\\train\\").getFile();
+        File trainBaseDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/UCIHAR/train/");
         File trainFeaturesDir = new File(trainBaseDir, "features");
         File trainLabelsDir = new File(trainBaseDir, "labels");
         //Test set
-        File testBaseDir = new ClassPathResource("uci_har_dl4j\\test\\").getFile();
+        File testBaseDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/UCIHAR/test/");
         File testFeaturesDir = new File(testBaseDir, "features");
         File testLabelsDir = new File(testBaseDir, "labels");
-        */
+
         // Read all files in the created path using CSVSequenceRecordReader and store them as RecordReader object.
         // Do note that we read all features and labels as well.
+
         /*
         SequenceRecordReader trainFeatures = new CSVSequenceRecordReader(numSkipLines,",");
         trainFeatures.initialize(new NumberedFileInputSplit( trainFeaturesDir.getAbsolutePath()+ "/%d.csv", 0, 7351));
         SequenceRecordReader trainLabels = new CSVSequenceRecordReader(numSkipLines, ",");
         trainLabels.initialize(new NumberedFileInputSplit(trainLabelsDir.getAbsolutePath()+"/%d.csv", 0, 7351));
         */
+
         //Pass RecordReader into dataset iterator
         //training set
+
         /*
         DataSetIterator train = new SequenceRecordReaderDataSetIterator(trainFeatures, trainLabels, batchSize,numClassLabel,false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);
         */
@@ -134,7 +147,6 @@ public class ucihar {
         //test set
         /*
         DataSetIterator test = new SequenceRecordReaderDataSetIterator(testFeatures, testLabels, batchSize,numClassLabel,false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);
-        */
 
         /*
 		#### LAB STEP 2 #####
@@ -203,7 +215,7 @@ public class ucihar {
         */
 
         /*
-        File locationToSave = new File("dl4j-labs/src/main/resources/uci_har_dl4j/trained_ucihar.zip");
+        File locationToSave = new File("generated-models/trained_ucihar_model.zip");
         //save updater
         boolean saveUpdater = true;
         ModelSerializer.writeModel(model, locationToSave, saveUpdater);
@@ -235,5 +247,40 @@ public class ucihar {
         */
 
     }
+
+    public static void unzip(String source, String destination){
+        try {
+            ZipFile zipFile = new ZipFile(source);
+            zipFile.extractAll(destination);
+        } catch (ZipException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void unzipAllDataSet(){
+        //unzip training data set
+        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/UCIHAR");
+        if (!resourceDir.exists()) resourceDir.mkdirs();
+
+        String zipTrainFilePath = null;
+        String zipTestFilePath = null;
+        try {
+            zipTrainFilePath = new ClassPathResource("uci_har_dl4j/train.zip").getFile().toString();
+            zipTestFilePath = new ClassPathResource("uci_har_dl4j/test.zip").getFile().toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File trainFolder = new File(resourceDir+"/train");
+        if (!trainFolder.exists()) unzip(zipTrainFilePath, resourceDir.toString());
+
+
+        File testFolder = new File(resourceDir+"/test");
+        if (!testFolder.exists()) unzip(zipTestFilePath, resourceDir.toString());
+
+    }
+
+
+
+
 
 }

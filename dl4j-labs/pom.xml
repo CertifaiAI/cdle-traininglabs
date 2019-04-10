@@ -196,6 +196,13 @@
             <version>${logback.version}</version>
         </dependency>
 
+        <!--Used for Unzipping files in some of the examples-->
+        <dependency>
+            <groupId>net.lingala.zip4j</groupId>
+            <artifactId>zip4j</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+
          <!-- For running opencv and ffmpeg libraries -->
         <dependency>
             <groupId>org.bytedeco</groupId>
