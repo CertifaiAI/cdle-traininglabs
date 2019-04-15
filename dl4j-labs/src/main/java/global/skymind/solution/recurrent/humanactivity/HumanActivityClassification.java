@@ -158,8 +158,8 @@ public class HumanActivityClassification {
                 .addLayer("predictActivity", new RnnOutputLayer.Builder()
                                 .nIn(100)
                                 .nOut(numClassLabel)
-                                .lossFunction(LossFunctions.LossFunction.XENT)
-                                .activation(Activation.SIGMOID)
+                                .lossFunction(LossFunctions.LossFunction.MCXENT)
+                                .activation(Activation.SOFTMAX)
                                 .build(),
                         "layer0")
                 .build();
