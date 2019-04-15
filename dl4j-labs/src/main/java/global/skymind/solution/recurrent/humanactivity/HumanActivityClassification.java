@@ -1,35 +1,31 @@
-package global.skymind.training.recurrent.UCIHAR;
+package global.skymind.solution.recurrent.humanactivity;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
-import org.datavec.api.records.reader.SequenceRecordReader;
-import org.datavec.api.records.reader.impl.csv.CSVSequenceRecordReader;
-import org.datavec.api.split.NumberedFileInputSplit;
 import org.deeplearning4j.api.storage.StatsStorage;
-import org.deeplearning4j.datasets.datavec.SequenceRecordReaderDataSetIterator;
+import org.deeplearning4j.util.ModelSerializer;
+import org.nd4j.evaluation.classification.Evaluation;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
-import org.deeplearning4j.nn.conf.ComputationGraphConfiguration;
-import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.WorkspaceMode;
+import org.deeplearning4j.nn.conf.*;
 import org.deeplearning4j.nn.conf.layers.LSTM;
-import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
-import org.deeplearning4j.util.ModelSerializer;
-import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
+import org.deeplearning4j.datasets.datavec.SequenceRecordReaderDataSetIterator;
 import org.nd4j.linalg.io.ClassPathResource;
 import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
-
-import java.io.File;
-import java.io.IOException;
+import org.datavec.api.records.reader.impl.csv.CSVSequenceRecordReader;
+import org.datavec.api.records.reader.SequenceRecordReader;
+import org.datavec.api.split.NumberedFileInputSplit;
+import java.io.*;
 
 
 /**
@@ -90,11 +86,11 @@ import java.io.IOException;
  * 3. https://machinelearningmastery.com/how-to-develop-rnn-models-for-human-activity-recognition-time-series-classification/
 **/
 
-public class ucihar {
-    public static final int batchSize=64;
+public class HumanActivityClassification {
+    public static final int batchSize = 64;
     public static final int epoch = 15;
-    public static final int numClassLabel=6;
-    private static final int numSkipLines=0;
+    public static final int numClassLabel = 6;
+    private static final int numSkipLines = 0;
     private static final double learningRate = 0.05;
 
     public static void main(String[] args) throws Exception
@@ -112,48 +108,36 @@ public class ucihar {
 
         // Path creation for training set and test set.
         //Training set
-        File trainBaseDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/UCIHAR/train/");
+        File trainBaseDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/humanactivity/train/");
         File trainFeaturesDir = new File(trainBaseDir, "features");
         File trainLabelsDir = new File(trainBaseDir, "labels");
         //Test set
-        File testBaseDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/UCIHAR/test/");
+        File testBaseDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/humanactivity/test/");
         File testFeaturesDir = new File(testBaseDir, "features");
         File testLabelsDir = new File(testBaseDir, "labels");
 
         // Read all files in the created path using CSVSequenceRecordReader and store them as RecordReader object.
         // Do note that we read all features and labels as well.
-
-        /*
         SequenceRecordReader trainFeatures = new CSVSequenceRecordReader(numSkipLines,",");
         trainFeatures.initialize(new NumberedFileInputSplit( trainFeaturesDir.getAbsolutePath()+ "/%d.csv", 0, 7351));
         SequenceRecordReader trainLabels = new CSVSequenceRecordReader(numSkipLines, ",");
         trainLabels.initialize(new NumberedFileInputSplit(trainLabelsDir.getAbsolutePath()+"/%d.csv", 0, 7351));
-        */
-
         //Pass RecordReader into dataset iterator
         //training set
-
-        /*
         DataSetIterator train = new SequenceRecordReaderDataSetIterator(trainFeatures, trainLabels, batchSize,numClassLabel,false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);
-        */
 
-        /*
         SequenceRecordReader testFeatures = new CSVSequenceRecordReader(numSkipLines,",");
         testFeatures.initialize(new NumberedFileInputSplit( testFeaturesDir.getAbsolutePath()+ "/%d.csv", 0, 2946));
         SequenceRecordReader testLabels = new CSVSequenceRecordReader(numSkipLines, ",");
         testLabels.initialize(new NumberedFileInputSplit(testLabelsDir.getAbsolutePath()+"/%d.csv", 0, 2946));
-        */
         //Pass RecordReader into dataset iterator
         //test set
-        /*
         DataSetIterator test = new SequenceRecordReaderDataSetIterator(testFeatures, testLabels, batchSize,numClassLabel,false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);
 
         /*
 		#### LAB STEP 2 #####
 		Build the model
         */
-
-        /*
         int numInput = train.inputColumns();
         ComputationGraphConfiguration config = new NeuralNetConfiguration.Builder()
                 .trainingWorkspaceMode(WorkspaceMode.NONE)
@@ -179,14 +163,10 @@ public class ucihar {
                                 .build(),
                         "layer0")
                 .build();
-        */
-
         /*
 		#### LAB STEP 3 #####
 		Set listener
         */
-
-        /*
         StatsStorage storage = new InMemoryStatsStorage();
         UIServer server = UIServer.getInstance();
         server.attach(storage);
@@ -194,40 +174,31 @@ public class ucihar {
         ComputationGraph model = new ComputationGraph(config);
         model.init();
         model.setListeners(new StatsListener(storage, 10));
-        */
 
         /*
 		#### LAB STEP 4 #####
 		Train the model
         */
-
-        /*
         for (int i=0; i<epoch; i++){
             System.out.println("EPOCH: " + i);
             model.fit(train);
             train.reset();
         }
-        */
 
         /*
 		#### LAB STEP 5 #####
 		Save the model
         */
-
-        /*
         File locationToSave = new File("generated-models/trained_ucihar_model.zip");
         //save updater
         boolean saveUpdater = true;
         ModelSerializer.writeModel(model, locationToSave, saveUpdater);
         System.out.println("\n\nTrain network saved at " + locationToSave);
-        */
 
         /*
 		#### LAB STEP 6 #####
 		Evaluate the model
         */
-
-        /*
         System.out.println("***** Test Evaluation *****");
         Evaluation eval = new Evaluation(numClassLabel);
         test.reset();
@@ -244,7 +215,7 @@ public class ucihar {
         }
         System.out.println(eval.confusionToString());
         System.out.println(eval.stats());
-        */
+
 
     }
 
@@ -259,14 +230,14 @@ public class ucihar {
 
     public static void unzipAllDataSet(){
         //unzip training data set
-        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/UCIHAR");
+        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/humanactivity");
         if (!resourceDir.exists()) resourceDir.mkdirs();
 
         String zipTrainFilePath = null;
         String zipTestFilePath = null;
         try {
-            zipTrainFilePath = new ClassPathResource("uci_har_dl4j/train.zip").getFile().toString();
-            zipTestFilePath = new ClassPathResource("uci_har_dl4j/test.zip").getFile().toString();
+            zipTrainFilePath = new ClassPathResource("humanactivity/train.zip").getFile().toString();
+            zipTestFilePath = new ClassPathResource("humanactivity/test.zip").getFile().toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
