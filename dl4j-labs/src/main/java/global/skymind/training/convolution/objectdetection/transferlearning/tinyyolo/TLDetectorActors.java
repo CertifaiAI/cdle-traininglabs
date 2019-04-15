@@ -224,8 +224,8 @@ public class TLDetectorActors {
                 .updater(new Adam.Builder().learningRate(learningRate).build())
                 .l2(0.00001)
                 .activation(Activation.IDENTITY)
-                .trainingWorkspaceMode(WorkspaceMode.SEPARATE)
-                .inferenceWorkspaceMode(WorkspaceMode.SEPARATE)
+                .trainingWorkspaceMode(WorkspaceMode.ENABLED)
+                .inferenceWorkspaceMode(WorkspaceMode.ENABLED)
                 .build();
 
         return _FineTuneConfiguration;
