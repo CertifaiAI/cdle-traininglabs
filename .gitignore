@@ -18,3 +18,5 @@ node_modules/
 *.log
 *hs_err*
 *.mdmp
+dl4j-labs/src/main/resources/sea_temp/trained_seatemp.zip
+dl4j-labs/src/main/resources/uci_har_dl4j/trained_ucihar.zip
