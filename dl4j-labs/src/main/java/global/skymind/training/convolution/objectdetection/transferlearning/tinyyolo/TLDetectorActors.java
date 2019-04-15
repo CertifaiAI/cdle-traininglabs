@@ -146,8 +146,8 @@ public class TLDetectorActors {
 //            ModelSerializer.writeModel(model, modelFilename, true);
 
         }
-
-        OfflineValidationWithTestDataset(test);
+        /* STEP 5: Perform offline validation with Test data. */
+//        OfflineValidationWithTestDataset(test);
     }
 
     private static void OfflineValidationWithTestDataset(RecordReaderDataSetIterator test) throws InterruptedException {
