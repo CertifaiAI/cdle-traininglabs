@@ -242,7 +242,6 @@ public class HumanActivityClassification {
 
             eval.evalTimeSeries(labels, predicted[0], testDataSet.getLabelsMaskArray());
         }
-        System.out.println(eval.confusionToString());
         System.out.println(eval.stats());
         */
 
