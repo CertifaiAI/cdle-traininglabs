@@ -1,5 +1,4 @@
-package global.skymind.training.recurrent.cnnLSTM;
-
+package global.skymind.solution.recurrent.cnnLSTM;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.datavec.api.records.reader.SequenceRecordReader;
@@ -11,9 +10,7 @@ import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.ComputationGraphConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.WorkspaceMode;
-import org.deeplearning4j.nn.conf.layers.Convolution1DLayer;
-import org.deeplearning4j.nn.conf.layers.LSTM;
-import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
+import org.deeplearning4j.nn.conf.layers.*;
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.ui.api.UIServer;
@@ -28,10 +25,8 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.io.ClassPathResource;
 import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
-
 import java.io.File;
 import java.io.IOException;
-
 /**
  * This is an extension of Human Activity Classification using CNN-LSTM network [2].
  * The hybrid model improves the accuracy of the classification of activity by ~20%.
@@ -48,7 +43,7 @@ import java.io.IOException;
  * 1. Palaet et al, 2015. Analysis of CNN-based Speech Recognition System using Raw Speech as Input
  * 2. Ordóñez and Rogen 2016. Deep Convolutional and LSTM Recurrent Neural Networks for Multimodal Wearable Activity Recognition**/
 
-public class humanActivityClassificationCNNLSTM {
+public class HumanActivityClassificationCNNLSTM {
 
     public static final int batchSize = 64;
     public static final int epoch = 15;
@@ -81,8 +76,6 @@ public class humanActivityClassificationCNNLSTM {
 
         // Read all files in the created path using CSVSequenceRecordReader and store them as RecordReader object.
         // Do note that we read all features and labels as well.
-
-        /*
         SequenceRecordReader trainFeatures = new CSVSequenceRecordReader(numSkipLines,",");
         trainFeatures.initialize(new NumberedFileInputSplit( trainFeaturesDir.getAbsolutePath().replace(" ", "%%20")+ "/%d.csv", 0, 7351));
         SequenceRecordReader trainLabels = new CSVSequenceRecordReader(numSkipLines, ",");
@@ -98,14 +91,11 @@ public class humanActivityClassificationCNNLSTM {
         //Pass RecordReader into dataset iterator
         //test set
         DataSetIterator test = new SequenceRecordReaderDataSetIterator(testFeatures, testLabels, batchSize,numClassLabel,false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);
-         */
 
         /*
 		#### LAB STEP 2 #####
 		Build the model
         */
-
-        /*
         ComputationGraphConfiguration config = new NeuralNetConfiguration.Builder()
                 .trainingWorkspaceMode(WorkspaceMode.NONE)
                 .inferenceWorkspaceMode(WorkspaceMode.NONE)
@@ -137,14 +127,10 @@ public class humanActivityClassificationCNNLSTM {
                                 .build(),
                         "LSTM")
                 .build();
-        */
-
         /*
 		#### LAB STEP 3 #####
 		Set listener
         */
-
-        /*
         StatsStorage storage = new InMemoryStatsStorage();
         UIServer server = UIServer.getInstance();
         server.attach(storage);
@@ -152,40 +138,31 @@ public class humanActivityClassificationCNNLSTM {
         ComputationGraph model = new ComputationGraph(config);
         model.init();
         model.setListeners(new StatsListener(storage, 10));
-        */
 
         /*
 		#### LAB STEP 4 #####
 		Train the model
         */
-
-        /*
         for (int i=0; i<epoch; i++){
             System.out.println("EPOCH: " + i);
             model.fit(train);
             train.reset();
         }
-        */
 
         /*
 		#### LAB STEP 5 #####
 		Save the model
         */
-
-        /*
         File locationToSave = new File("generated-models/trained_ucihar_CNNLSTMmodel.zip");
         //save updater
         boolean saveUpdater = true;
         ModelSerializer.writeModel(model, locationToSave, saveUpdater);
         System.out.println("\n\nTrain network saved at " + locationToSave);
-        */
 
         /*
 		#### LAB STEP 6 #####
 		Evaluate the model
         */
-
-        /*
         System.out.println("***** Test Evaluation *****");
         Evaluation eval = new Evaluation(numClassLabel);
         test.reset();
@@ -201,7 +178,7 @@ public class humanActivityClassificationCNNLSTM {
             eval.evalTimeSeries(labels, predicted[0], testDataSet.getLabelsMaskArray());
         }
         System.out.println(eval.stats());
-        */
+
     }
 
     public static void unzip(String source, String destination){
