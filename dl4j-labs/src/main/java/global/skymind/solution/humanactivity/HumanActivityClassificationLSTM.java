@@ -86,7 +86,7 @@ import java.io.*;
  * 3. https://machinelearningmastery.com/how-to-develop-rnn-models-for-human-activity-recognition-time-series-classification/
 **/
 
-public class HumanActivityClassification {
+public class HumanActivityClassificationLSTM {
     public static final int batchSize = 64;
     public static final int epoch = 15;
     public static final int numClassLabel = 6;
@@ -119,17 +119,17 @@ public class HumanActivityClassification {
         // Read all files in the created path using CSVSequenceRecordReader and store them as RecordReader object.
         // Do note that we read all features and labels as well.
         SequenceRecordReader trainFeatures = new CSVSequenceRecordReader(numSkipLines,",");
-        trainFeatures.initialize(new NumberedFileInputSplit( trainFeaturesDir.getAbsolutePath()+ "/%d.csv", 0, 7351));
+        trainFeatures.initialize(new NumberedFileInputSplit( trainFeaturesDir.getAbsolutePath().replace(" ", "%%20")+ "/%d.csv", 0, 7351));
         SequenceRecordReader trainLabels = new CSVSequenceRecordReader(numSkipLines, ",");
-        trainLabels.initialize(new NumberedFileInputSplit(trainLabelsDir.getAbsolutePath()+"/%d.csv", 0, 7351));
+        trainLabels.initialize(new NumberedFileInputSplit(trainLabelsDir.getAbsolutePath().replace(" ", "%%20")+"/%d.csv", 0, 7351));
         //Pass RecordReader into dataset iterator
         //training set
         DataSetIterator train = new SequenceRecordReaderDataSetIterator(trainFeatures, trainLabels, batchSize,numClassLabel,false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);
 
         SequenceRecordReader testFeatures = new CSVSequenceRecordReader(numSkipLines,",");
-        testFeatures.initialize(new NumberedFileInputSplit( testFeaturesDir.getAbsolutePath()+ "/%d.csv", 0, 2946));
+        testFeatures.initialize(new NumberedFileInputSplit( testFeaturesDir.getAbsolutePath().replace(" ", "%%20")+ "/%d.csv", 0, 2946));
         SequenceRecordReader testLabels = new CSVSequenceRecordReader(numSkipLines, ",");
-        testLabels.initialize(new NumberedFileInputSplit(testLabelsDir.getAbsolutePath()+"/%d.csv", 0, 2946));
+        testLabels.initialize(new NumberedFileInputSplit(testLabelsDir.getAbsolutePath().replace(" ", "%%20")+"/%d.csv", 0, 2946));
         //Pass RecordReader into dataset iterator
         //test set
         DataSetIterator test = new SequenceRecordReaderDataSetIterator(testFeatures, testLabels, batchSize,numClassLabel,false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);
@@ -213,7 +213,6 @@ public class HumanActivityClassification {
 
             eval.evalTimeSeries(labels, predicted[0], testDataSet.getLabelsMaskArray());
         }
-        System.out.println(eval.confusionToString());
         System.out.println(eval.stats());
 
 
