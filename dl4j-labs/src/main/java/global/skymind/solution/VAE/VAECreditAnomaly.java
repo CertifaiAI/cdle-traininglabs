@@ -1,9 +1,11 @@
 package global.skymind.solution.VAE;
 
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
 import org.datavec.api.split.FileSplit;
-import org.datavec.api.util.ClassPathResource;
+import org.nd4j.linalg.io.ClassPathResource;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
@@ -24,20 +26,32 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.learning.config.Adam;
 
+import java.io.File;
+import java.io.IOException;
+
 
 public class VAECreditAnomaly {
 
     public static void main(String[] args) throws  Exception {
+        // Unzip all data sets
+        unzipAllDataSet();
 
-        //First: get the dataset using the record reader. CSVRecordReader handles loading/parsing
+        // Path creation for training set and test set.
+        File trainBaseDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/creditFraudDetection/train/");
+        File testBaseDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/creditFraudDetection/test/");
+
+        FileSplit train = new FileSplit(trainBaseDir);
+        FileSplit test = new FileSplit(testBaseDir);
+
+        // First: get the dataset using the record reader. CSVRecordReader handles loading/parsing
         int numLinesToSkip = 1;
         char delimiter = ',';
         RecordReader recordReader_normal = new CSVRecordReader(numLinesToSkip,delimiter);
-        recordReader_normal.initialize(new FileSplit(new ClassPathResource("/creditFraudDetection/train_scaled2105.csv").getFile()));
+        recordReader_normal.initialize(train);
 
         // Load anomalous data set
         RecordReader recordReader_anomalous = new CSVRecordReader(numLinesToSkip,delimiter);
-        recordReader_anomalous.initialize(new FileSplit(new ClassPathResource("/creditFraudDetection/test_scaled2105.csv").getFile()));
+        recordReader_anomalous.initialize(test);
 
         //Second: the RecordReaderDataSetIterator handles conversion to DataSet objects, ready for use in neural network
         int labelIndex = 30;
@@ -138,4 +152,37 @@ public class VAECreditAnomaly {
         System.out.println(eval.stats());
 
     }
+
+
+    public static void unzip(String source, String destination){
+        try {
+            ZipFile zipFile = new ZipFile(source);
+            zipFile.extractAll(destination);
+        } catch (ZipException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void unzipAllDataSet(){
+        //unzip training data set
+        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/creditFraudDetection");
+        System.out.println(resourceDir);
+
+        String zipTrainFilePath = null;
+        String zipTestFilePath = null;
+        try {
+            zipTrainFilePath = new ClassPathResource("creditFraudDetection/train_scaled2105.zip").getFile().toString();
+            zipTestFilePath = new ClassPathResource("creditFraudDetection/test_scaled2105.zip").getFile().toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        File trainFolder = new File(resourceDir+"/train");
+        if (!trainFolder.exists()) unzip(zipTrainFilePath, trainFolder.toString());
+
+        File testFolder = new File(resourceDir+"/test");
+        if (!testFolder.exists()) unzip(zipTestFilePath, testFolder.toString());
+    }
+
+
 }
