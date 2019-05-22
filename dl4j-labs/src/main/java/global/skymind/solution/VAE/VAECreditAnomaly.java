@@ -27,8 +27,6 @@ import org.nd4j.linalg.learning.config.Adam;
 
 public class VAECreditAnomaly {
 
-//    private static Logger log = LoggerFactory.getLogger(CSVExample.class);
-
     public static void main(String[] args) throws  Exception {
 
         //First: get the dataset using the record reader. CSVRecordReader handles loading/parsing
@@ -52,19 +50,9 @@ public class VAECreditAnomaly {
 
         // Create iterator for test (anomalous) data
         DataSetIterator iterator_anomalous = new RecordReaderDataSetIterator(recordReader_anomalous,minibatchSize,labelIndex,numClasses);
-//        DataSet testData = iterator_anomalous.next();
-//        testData.shuffle();
-
-
-//        System.out.println("BEFORE: " + "\n" + trainData.get(13));
-        //We need to normalize our data. We'll use NormalizeStandardize (which gives us mean 0, unit variance):
-//        DataNormalization normalizer = new NormalizerStandardize();
-//        normalizer.fit(iterator_normal);     //Collect the statistics (mean/stdev) from the training data. This does not modify the input data
-//        normalizer.transform(trainData);
-//        System.out.println("AFTER: " + "\n" + trainData.get(13));
 
         final int numInputs = 30;
-        int outputNum = 2;
+        int outputNum = 2; // size of latent variable z
         long seed = 8;
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
@@ -75,8 +63,8 @@ public class VAECreditAnomaly {
                 .list()
                 .layer(0, new VariationalAutoencoder.Builder()
                         .activation(Activation.RELU)
-                        .encoderLayerSizes(30, 10, 5)                    //2 encoder layers, each of size 10
-                        .decoderLayerSizes(5)                    //2 decoder layers, each of size 10
+                        .encoderLayerSizes(30, 10, 5)                    //3 encoder layers
+                        .decoderLayerSizes(5)                    //1 decoder layers
                         .pzxActivationFunction(Activation.IDENTITY)     //p(z|data) activation function
                         //Bernoulli reconstruction distribution + sigmoid activation - for modelling binary data (or data in range 0 to 1)
                         .reconstructionDistribution(new BernoulliReconstructionDistribution(Activation.SIGMOID))
@@ -90,12 +78,13 @@ public class VAECreditAnomaly {
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model.init();
 
-        // network.setListeners(new ScoreIterationListener(listenerFreq));
+        // UI server setup
         UIServer uiServer = UIServer.getInstance();
         StatsStorage statsStorage = new InMemoryStatsStorage();
         uiServer.attach(statsStorage);
         model.setListeners(new StatsListener( statsStorage),new ScoreIterationListener(1));
 
+        // training epochs
         int nEpochs = 50;
 
         //Fit the data (unsupervised training)
@@ -129,15 +118,13 @@ public class VAECreditAnomaly {
             INDArray reconstructionErrorEachExample = vae.reconstructionLogProbability(features, reconstructionNumSamples);    //Shape: [minibatchSize, 1]
             INDArray predicted = Nd4j.create(shape, 1);
 
+            // Setting threshold to identify anomalies. If reconstruction prob score <= threshold, the data point is anomalous.
             int threshold = 0;
 
             for( int j=0; j<nRows; j++){
-                INDArray example = features.getRow(j);
-                int label = (int)labels.getDouble(j);
                 double score = reconstructionErrorEachExample.getDouble(j);
 
                 if (score <= threshold) {
-//                    detected_anomalies_count += 1;
                     predicted.putScalar(j,1);
                 }
                 else {
