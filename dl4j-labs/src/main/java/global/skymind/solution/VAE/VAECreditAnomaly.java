@@ -33,11 +33,11 @@ public class VAECreditAnomaly {
         int numLinesToSkip = 1;
         char delimiter = ',';
         RecordReader recordReader_normal = new CSVRecordReader(numLinesToSkip,delimiter);
-        recordReader_normal.initialize(new FileSplit(new ClassPathResource("/tmp/train_scaled2105.csv").getFile()));
+        recordReader_normal.initialize(new FileSplit(new ClassPathResource("/creditFraudDetection/train_scaled2105.csv").getFile()));
 
         // Load anomalous data set
         RecordReader recordReader_anomalous = new CSVRecordReader(numLinesToSkip,delimiter);
-        recordReader_anomalous.initialize(new FileSplit(new ClassPathResource("/tmp/test_scaled2105.csv").getFile()));
+        recordReader_anomalous.initialize(new FileSplit(new ClassPathResource("/creditFraudDetection/test_scaled2105.csv").getFile()));
 
         //Second: the RecordReaderDataSetIterator handles conversion to DataSet objects, ready for use in neural network
         int labelIndex = 30;
@@ -85,11 +85,11 @@ public class VAECreditAnomaly {
         model.setListeners(new StatsListener( statsStorage),new ScoreIterationListener(1));
 
         // training epochs
-        int nEpochs = 50;
+        int nEpochs = 5;
 
         //Fit the data (unsupervised training)
         for( int i=0; i<nEpochs; i++ ){
-            model.pretrain(iterator_normal);        //Note use of .pretrain(DataSetIterator) not fit(DataSetIterator) for unsupervised training
+            model.pretrain(iterator_normal); //Note use of .pretrain(DataSetIterator) not fit(DataSetIterator) for unsupervised training
             System.out.println("Finished epoch " + (i+1) + " of " + nEpochs);
         }
 
@@ -101,7 +101,6 @@ public class VAECreditAnomaly {
         Evaluation eval = new Evaluation(2);
 
         //Iterate over the test (anomalous) data, calculating reconstruction probabilities
-
         while(recordReader_anomalous.hasNext()){
             DataSet testData = iterator_anomalous.next();
 //            normalizer.transform(testData);
@@ -134,7 +133,6 @@ public class VAECreditAnomaly {
 
             eval.eval(labels, predicted);
         }
-
 
         //Print the evaluation statistics
         System.out.println(eval.stats());
