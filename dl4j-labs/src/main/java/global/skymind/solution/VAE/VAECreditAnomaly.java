@@ -5,13 +5,13 @@ import net.lingala.zip4j.exception.ZipException;
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
 import org.datavec.api.split.FileSplit;
+import org.deeplearning4j.nn.conf.layers.variational.GaussianReconstructionDistribution;
 import org.nd4j.linalg.io.ClassPathResource;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.deeplearning4j.eval.Evaluation;
+import org.nd4j.evaluation.classification.Evaluation;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.layers.variational.BernoulliReconstructionDistribution;
 import org.deeplearning4j.nn.conf.layers.variational.VariationalAutoencoder;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
@@ -71,19 +71,19 @@ public class VAECreditAnomaly {
 
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
-                .updater(new Adam(3e-4))
+                .updater(new Adam(5e-2))
                 .weightInit(WeightInit.XAVIER)
                 .l2(1e-3)
                 .list()
                 .layer(0, new VariationalAutoencoder.Builder()
-                        .activation(Activation.RELU)
-                        .encoderLayerSizes(30, 10, 5)                    //3 encoder layers
-                        .decoderLayerSizes(5)                    //1 decoder layers
+                        .activation(Activation.TANH)
+                        .encoderLayerSizes(20)                    //3 encoder layers
+                        .decoderLayerSizes(15,5)                    //1 decoder layers
                         .pzxActivationFunction(Activation.IDENTITY)     //p(z|data) activation function
                         //Bernoulli reconstruction distribution + sigmoid activation - for modelling binary data (or data in range 0 to 1)
-                        .reconstructionDistribution(new BernoulliReconstructionDistribution(Activation.SIGMOID))
+                        .reconstructionDistribution(new GaussianReconstructionDistribution(Activation.TANH))
                         .nIn(numInputs)                                   //Input size: 29
-                        .nOut(outputNum)                                  //Size of the latent variable space: p(z|x) - 32 values
+                        .nOut(outputNum)                                  //Size of the latent variable space: p(z|x) - 2 values
                         .build())
                 .pretrain(true)
                 .backprop(false).build();
@@ -99,7 +99,7 @@ public class VAECreditAnomaly {
         model.setListeners(new StatsListener( statsStorage),new ScoreIterationListener(1));
 
         // training epochs
-        int nEpochs = 5;
+        int nEpochs = 1;
 
         //Fit the data (unsupervised training)
         for( int i=0; i<nEpochs; i++ ){
@@ -110,7 +110,6 @@ public class VAECreditAnomaly {
         //Get the variational autoencoder layer:
         org.deeplearning4j.nn.layers.variational.VariationalAutoencoder vae
                 = (org.deeplearning4j.nn.layers.variational.VariationalAutoencoder) model.getLayer(0);
-
 
         Evaluation eval = new Evaluation(2);
 
@@ -132,7 +131,7 @@ public class VAECreditAnomaly {
             INDArray predicted = Nd4j.create(shape, 1);
 
             // Setting threshold to identify anomalies. If reconstruction prob score <= threshold, the data point is anomalous.
-            int threshold = 0;
+            double threshold = -70.0;
 
             for( int j=0; j<nRows; j++){
                 double score = reconstructionErrorEachExample.getDouble(j);
