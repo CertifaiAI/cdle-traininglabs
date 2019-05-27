@@ -33,6 +33,12 @@ import java.io.IOException;
 public class VAECreditAnomaly {
 
     public static void main(String[] args) throws  Exception {
+
+        /*
+        STEP 1:
+        Unzip and load datasets
+        */
+
         // Unzip all data sets
         unzipAllDataSet();
 
@@ -65,7 +71,13 @@ public class VAECreditAnomaly {
         // Create iterator for test (anomalous) data
         DataSetIterator iterator_anomalous = new RecordReaderDataSetIterator(recordReader_anomalous,minibatchSize,labelIndex,numClasses);
 
-        final int numInputs = 30;
+
+        /*
+        STEP 2:
+        Setting up configuration for the VAE model
+        */
+
+        final int numInputs = 30; // number of features
         int outputNum = 2; // size of latent variable z
         long seed = 8;
 
@@ -77,10 +89,10 @@ public class VAECreditAnomaly {
                 .list()
                 .layer(0, new VariationalAutoencoder.Builder()
                         .activation(Activation.TANH)
-                        .encoderLayerSizes(20)                    //3 encoder layers
-                        .decoderLayerSizes(15,5)                    //1 decoder layers
+                        .encoderLayerSizes(20)                    //1 encoder layer with 20 nodes
+                        .decoderLayerSizes(15,5)                    //2 decoder layers with 15 and 5 nodes respectively
                         .pzxActivationFunction(Activation.IDENTITY)     //p(z|data) activation function
-                        //Bernoulli reconstruction distribution + sigmoid activation - for modelling binary data (or data in range 0 to 1)
+                        //Gaussian reconstruction distribution + TANH activation
                         .reconstructionDistribution(new GaussianReconstructionDistribution(Activation.TANH))
                         .nIn(numInputs)                                   //Input size: 29
                         .nOut(outputNum)                                  //Size of the latent variable space: p(z|x) - 2 values
@@ -92,20 +104,37 @@ public class VAECreditAnomaly {
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model.init();
 
+
+        /*
+        STEP 3:
+        Set up training visualisation server
+        */
+
         // UI server setup
         UIServer uiServer = UIServer.getInstance();
         StatsStorage statsStorage = new InMemoryStatsStorage();
         uiServer.attach(statsStorage);
         model.setListeners(new StatsListener( statsStorage),new ScoreIterationListener(1));
 
+
+        /*
+        STEP 4:
+        Run training for VAE model
+        */
+
         // training epochs
-        int nEpochs = 1;
+        int nEpochs = 5;
 
         //Fit the data (unsupervised training)
         for( int i=0; i<nEpochs; i++ ){
             model.pretrain(iterator_normal); //Note use of .pretrain(DataSetIterator) not fit(DataSetIterator) for unsupervised training
             System.out.println("Finished epoch " + (i+1) + " of " + nEpochs);
         }
+
+        /*
+        STEP 5:
+        Make inferences on anomalous data and evaluate the trained VAE model
+        */
 
         //Get the variational autoencoder layer:
         org.deeplearning4j.nn.layers.variational.VariationalAutoencoder vae
@@ -116,7 +145,6 @@ public class VAECreditAnomaly {
         //Iterate over the test (anomalous) data, calculating reconstruction probabilities
         while(recordReader_anomalous.hasNext()){
             DataSet testData = iterator_anomalous.next();
-//            normalizer.transform(testData);
             INDArray features = testData.getFeatures();
             INDArray labels = Nd4j.argMax(testData.getLabels(), 1);   //Labels as integer indexes (from one hot), shape [minibatchSize, 1]
             int nRows = features.rows();
