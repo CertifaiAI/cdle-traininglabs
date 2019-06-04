@@ -150,7 +150,7 @@ public class MnistClassifier extends Application {
         VBox root = new VBox(5, canvas, hbBottom);
         root.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(root, 520, 300);
+        Scene scene = new Scene(root, 680, 300);
         stage.setScene(scene);
         stage.setTitle("Draw a digit and hit enter (right-click to clear)");
         stage.setResizable(false);
