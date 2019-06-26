@@ -2,10 +2,15 @@ package global.skymind.training.convolution.objectdetection.transferlearning.tin
 
 import global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.LabelImgXmlLabelProvider;
 import global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.NonMaxSuppression;
-import org.bytedeco.javacpp.opencv_core;
-import org.bytedeco.javacpp.opencv_core.Mat;
+
+import org.bytedeco.opencv.opencv_core.*;
+import static org.bytedeco.opencv.global.opencv_imgproc.*;
+import static org.bytedeco.opencv.global.opencv_core.CV_8U;
+
+
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
+
 import org.datavec.api.records.metadata.RecordMetaDataImageURI;
 import org.datavec.api.split.FileSplit;
 import org.datavec.image.loader.NativeImageLoader;
@@ -44,9 +49,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static org.bytedeco.javacpp.opencv_core.CV_8U;
-import static org.bytedeco.javacpp.opencv_core.FONT_HERSHEY_DUPLEX;
-import static org.bytedeco.javacpp.opencv_imgproc.*;
+//import static org.bytedeco.javacpp.opencv_core.CV_8U;
+//import static org.bytedeco.javacpp.opencv_core.FONT_HERSHEY_DUPLEX;
+//import static org.bytedeco.javacpp.opencv_imgproc.*;
 
 /**
  * Example transfer learning from a Tiny YOLO model pretrained on ImageNet and Pascal VOC
@@ -176,7 +181,7 @@ public class TLDetectorActors {
             int w = metadata.getOrigW() * 2;
             int h = metadata.getOrigH() * 2;
             Mat image = new Mat();
-            resize(convertedMat, image, new opencv_core.Size(w, h));
+            resize(convertedMat, image, new Size(w, h));
             drawBoxes(objects, w, h, image);
             frame.setTitle(new File(metadata.getURI()).getName() + " - Validate Test Dataset");
             frame.setCanvasSize(w, h);
@@ -242,8 +247,8 @@ public class TLDetectorActors {
             int y1 = (int) Math.round(h * xy1[1] / gridHeight);
             int x2 = (int) Math.round(w * xy2[0] / gridWidth);
             int y2 = (int) Math.round(h * xy2[1] / gridHeight);
-            rectangle(image, new opencv_core.Point(x1, y1), new opencv_core.Point(x2, y2), opencv_core.Scalar.RED);
-            putText(image, label+ " - " + proba, new opencv_core.Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, opencv_core.Scalar.GREEN);
+            rectangle(image, new Point(x1, y1), new Point(x2, y2), Scalar.RED);
+            putText(image, label+ " - " + proba, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, Scalar.GREEN);
         }
     }
 }

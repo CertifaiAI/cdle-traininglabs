@@ -1,10 +1,11 @@
 package global.skymind.solution.convolution.objectdetection.transferlearning.tinyyolo;
 
 import global.skymind.solution.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.NonMaxSuppression;
-import org.bytedeco.javacpp.opencv_core;
-import org.bytedeco.javacpp.opencv_core.Mat;
-import org.bytedeco.javacpp.opencv_imgproc;
-import org.bytedeco.javacpp.opencv_videoio;
+import org.bytedeco.opencv.opencv_core.*;
+import static org.bytedeco.opencv.global.opencv_imgproc.*;
+import org.bytedeco.opencv.opencv_videoio.*;
+import static org.bytedeco.opencv.global.opencv_videoio.CAP_PROP_FRAME_HEIGHT;
+import static org.bytedeco.opencv.global.opencv_videoio.CAP_PROP_FRAME_WIDTH;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.datavec.image.loader.NativeImageLoader;
@@ -15,16 +16,10 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static org.bytedeco.javacpp.opencv_imgproc.putText;
-import static org.bytedeco.javacpp.opencv_imgproc.rectangle;
-import static org.bytedeco.javacpp.opencv_videoio.CV_CAP_PROP_FRAME_HEIGHT;
-import static org.bytedeco.javacpp.opencv_videoio.CV_CAP_PROP_FRAME_WIDTH;
 
 /**
  * Real-time inference with trained model 'TLDetectorActors'
@@ -60,9 +55,9 @@ public class WebcamInference {
         }
 
         // invoke webcam - inferencing
-        final AtomicReference<opencv_videoio.VideoCapture> capture = new AtomicReference<>(new opencv_videoio.VideoCapture());
-        capture.get().set(CV_CAP_PROP_FRAME_WIDTH, width);
-        capture.get().set(CV_CAP_PROP_FRAME_HEIGHT, height);
+        final AtomicReference<VideoCapture> capture = new AtomicReference<>(new VideoCapture());
+        capture.get().set(CAP_PROP_FRAME_WIDTH, width);
+        capture.get().set(CAP_PROP_FRAME_HEIGHT, height);
 
         if (!capture.get().open(0)) {
             log.error("Can not open the cam !!!");
@@ -78,11 +73,11 @@ public class WebcamInference {
         while (true) {
             while (capture.get().read(colorimg) && mainframe.isVisible()) {
                 long st = System.currentTimeMillis();
-                opencv_imgproc.resize(colorimg, colorimg, new opencv_core.Size(width, height));
+                resize(colorimg, colorimg, new Size(width, height));
                 detect(colorimg, detectionThreshold);
                 double per = (System.currentTimeMillis() - st) / 1000.0;
                 log.info("It takes " + per + "Seconds to make detection");
-                putText(colorimg, "Detection Time : " + per + " ms", new opencv_core.Point(10, 25), 2,.9, opencv_core.Scalar.YELLOW);
+                putText(colorimg, "Detection Time : " + per + " ms", new Point(10, 25), 2,.9, Scalar.YELLOW);
 
                 mainframe.showImage(converter.convert(colorimg));
                 try {
@@ -130,8 +125,8 @@ public class WebcamInference {
             int y1 = (int) Math.round(height * xy1[1] / gridHeight);
             int x2 = (int) Math.round(width * xy2[0] / gridWidth);
             int y2 = (int) Math.round(height * xy2[1] / gridHeight);
-            rectangle(image, new opencv_core.Point(x1, y1), new opencv_core.Point(x2, y2), opencv_core.Scalar.RED);
-            putText(image, (String) labels[predictedClass], new opencv_core.Point(x1 + 2, y2 - 2), 1, .8, opencv_core.Scalar.RED);
+            rectangle(image, new Point(x1, y1), new Point(x2, y2), Scalar.RED);
+            putText(image, (String) labels[predictedClass], new Point(x1 + 2, y2 - 2), 1, .8, Scalar.RED);
         }
     }
 }

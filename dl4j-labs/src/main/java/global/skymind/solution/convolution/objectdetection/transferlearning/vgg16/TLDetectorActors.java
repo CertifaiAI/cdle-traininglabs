@@ -145,7 +145,7 @@ public class TLDetectorActors {
         int i = 0;
         for (INDArray currentBatch = encodedPredictions.getRow(0).dup(); i < numPredicted; ++i) {
 
-            topX[i] = Nd4j.argMax(currentBatch, 1).getInt(0, 0);
+            topX[i] = Nd4j.argMax(currentBatch, 1).getInt(0);
             topXProb[i] = currentBatch.getFloat(0, topX[i]);
             currentBatch.putScalar(0, topX[i], 0.0D);
             decodedPredictions.add(new Prediction(labels.get(topX[i]), (topXProb[i] * 100.0F)));
@@ -180,8 +180,7 @@ public class TLDetectorActors {
                 .addLayer("predictions",
                         new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                                 .nIn(2622).nOut(nClasses)
-                                .weightInit(WeightInit.DISTRIBUTION)
-                                .dist(new NormalDistribution(0,0.2*(2.0/(4096+nClasses)))) //This weight init dist gave better results than Xavier
+                                .weightInit(new NormalDistribution(0,0.2*(2.0/(4096+nClasses)))) //This weight init dist gave better results than Xavier
                                 .activation(Activation.SOFTMAX).build(),
                         "fc8")
                 .setOutputs("predictions")

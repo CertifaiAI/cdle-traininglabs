@@ -1,11 +1,13 @@
 package global.skymind.solution.convolution.objectdetection;
 
-
-import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
+
+import org.bytedeco.opencv.opencv_core.*;
+import static org.bytedeco.opencv.global.opencv_imgproc.*;
+
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.transform.ColorConversionTransform;
 import org.deeplearning4j.nn.graph.ComputationGraph;
@@ -20,9 +22,6 @@ import org.nd4j.linalg.factory.Nd4j;
 
 import java.awt.event.KeyEvent;
 import java.util.List;
-
-import static org.bytedeco.javacpp.opencv_core.FONT_HERSHEY_DUPLEX;
-import static org.bytedeco.javacpp.opencv_imgproc.*;
 
 /**
  * Yolo Detection with video
@@ -73,14 +72,14 @@ public class VideoObjectDetection
 
         System.out.println("Start running video");
 
-        while (true)
+        while ((grabber.grab()) != null)
         {
             Frame frame = grabber.grabImage();
             //if a thread is null, create new thread
 
-            opencv_core.Mat rawImage = converter.convert(frame);
-            opencv_core.Mat resizeImage = new opencv_core.Mat();//rawImage);
-            resize(rawImage, resizeImage, new opencv_core.Size(tinyyolowidth, tinyyoloheight));
+            Mat rawImage = converter.convert(frame);
+            Mat resizeImage = new Mat();//rawImage);
+            resize(rawImage, resizeImage, new Size(tinyyolowidth, tinyyoloheight));
             INDArray inputImage = loader.asMatrix(resizeImage);
             scaler.transform(inputImage);
             INDArray outputs = initializedModel.outputSingle(inputImage);
@@ -94,8 +93,8 @@ public class VideoObjectDetection
                 int y1 = (int) Math.round(h * xy1[1] / gridHeight);
                 int x2 = (int) Math.round(w * xy2[0] / gridWidth);
                 int y2 = (int) Math.round(h * xy2[1] / gridHeight);
-                rectangle(rawImage, new opencv_core.Point(x1, y1), new opencv_core.Point(x2, y2), opencv_core.Scalar.RED, 2, 0, 0);
-                putText(rawImage, label, new opencv_core.Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, opencv_core.Scalar.GREEN);
+                rectangle(rawImage, new Point(x1, y1), new Point(x2, y2), Scalar.RED, 2, 0, 0);
+                putText(rawImage, label, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, Scalar.GREEN);
 
             }
             canvas.showImage(converter.convert(rawImage));
