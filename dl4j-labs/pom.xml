@@ -76,7 +76,7 @@
         <dependency>
             <groupId>org.deeplearning4j</groupId>
             <artifactId>deeplearning4j-cuda-10.0</artifactId>
-            <version>1.0.0-beta3</version>
+            <version>${dl4j.version}</version>
         </dependency>
 
         <!-- Core DL4J functionality -->
