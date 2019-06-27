@@ -164,7 +164,6 @@ public class BasicRNNExample
                 // neuron, the neuron with the highest output has the highest
                 // chance to get chosen
                 int sampledCharacterIdx = Nd4j.getExecutioner().exec(new IMax(output,1)).getInt(0);
-//                        exec(new IMax(output), 1).getInt(0);
 
                 //print the chosen output
                 System.out.print(LEARNSTRING_CHARS_LIST.get(sampledCharacterIdx));

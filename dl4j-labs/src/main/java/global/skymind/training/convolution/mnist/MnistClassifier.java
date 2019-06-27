@@ -205,7 +205,7 @@ public class MnistClassifier extends Application {
 
     private void predictImage(BufferedImage img, Label lbl) throws IOException {
         NativeImageLoader loader = new NativeImageLoader(28, 28, 1, true);
-        INDArray image = loader.asRowVector(img);
+        INDArray image = loader.asRowVector(img).reshape(new int[]{1,784});
         //ImagePreProcessingScaler scaler = new ImagePreProcessingScaler(0, 1);
         //scaler.transform(image);
         INDArray output = model.output(image);
