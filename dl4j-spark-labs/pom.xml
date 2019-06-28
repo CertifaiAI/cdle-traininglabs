@@ -13,6 +13,11 @@
 
     <name>DeepLearning4j Spark Labs</name>
 
+    <properties>
+        <jcommander.version>1.27</jcommander.version>
+        <spark.version>1.6.3</spark.version>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
