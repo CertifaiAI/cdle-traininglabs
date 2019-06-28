@@ -2,15 +2,11 @@ package global.skymind.training.convolution.objectdetection.transferlearning.tin
 
 import global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.LabelImgXmlLabelProvider;
 import global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.NonMaxSuppression;
-
 import org.bytedeco.opencv.opencv_core.*;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.global.opencv_core.CV_8U;
-
-
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
-
 import org.datavec.api.records.metadata.RecordMetaDataImageURI;
 import org.datavec.api.split.FileSplit;
 import org.datavec.image.loader.NativeImageLoader;
@@ -43,15 +39,10 @@ import org.nd4j.linalg.io.ClassPathResource;
 import org.nd4j.linalg.learning.config.Adam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
-//import static org.bytedeco.javacpp.opencv_core.CV_8U;
-//import static org.bytedeco.javacpp.opencv_core.FONT_HERSHEY_DUPLEX;
-//import static org.bytedeco.javacpp.opencv_imgproc.*;
 
 /**
  * Example transfer learning from a Tiny YOLO model pretrained on ImageNet and Pascal VOC
