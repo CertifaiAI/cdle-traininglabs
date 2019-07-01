@@ -115,7 +115,6 @@ public class TLDetectorActors {
             ComputationGraph pretrained = null;
             FineTuneConfiguration fineTuneConf = null;
             INDArray priors = Nd4j.create(priorBoxes);
-
             /* STEP 1: Transfer Learning steps - Load TinyYOLO prebuilt model. */
             log.info("Build model...");
             pretrained = (ComputationGraph)TinyYOLO.builder().build().initPretrained();
@@ -142,7 +141,8 @@ public class TLDetectorActors {
                 log.info("*** Completed epoch {} ***", i);
             }
             ModelSerializer.writeModel(model, modelFilename, true);
-
+            model = null;
+            model = ModelSerializer.restoreComputationGraph(modelFilename);
         }
         /* STEP 5: Perform offline validation with Test data. */
         OfflineValidationWithTestDataset(test);

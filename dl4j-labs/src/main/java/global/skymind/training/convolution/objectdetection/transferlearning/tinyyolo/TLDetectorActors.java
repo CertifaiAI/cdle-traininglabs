@@ -140,6 +140,8 @@ public class TLDetectorActors {
 //                log.info("*** Completed epoch {} ***", i);
 //            }
 //            ModelSerializer.writeModel(model, modelFilename, true);
+//            model=null;
+//            model = ModelSerializer.restoreComputationGraph(modelFilename);
 
         }
         /* STEP 5: Perform offline validation with Test data. */
