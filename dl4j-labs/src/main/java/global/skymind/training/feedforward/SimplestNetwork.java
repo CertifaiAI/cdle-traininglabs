@@ -53,16 +53,16 @@ public class SimplestNetwork
 		#### LAB STEP 1 #####
 		Declare the input and output data in INDArray format
         */
-
+        /*
         INDArray input = Nd4j.create(new float[]{(float) 0.5}, new int[]{1,1});
         INDArray output = Nd4j.create(new float[]{(float) 0.8}, new int[]{1,1});
-
+        */
 
         /*
 		#### LAB STEP 2 #####
 		Set up the network configuration
         */
-
+        /*
         MultiLayerConfiguration config = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
@@ -83,44 +83,40 @@ public class SimplestNetwork
                 .pretrain(false)
                 .backprop(true)
                 .build();
-
+        */
 
 
         /*
 		#### LAB STEP 3 #####
 		Set up UI performance monitoring (port http://localhost:9000)
-
         Create a web based UI server to show progress as the network trains
         The Listeners for the model are set here as well
         One listener to pass stats to the UI
         and a Listener to pass progress info to the console
         */
-
+        /*
         StatsStorage storage = new InMemoryStatsStorage();
         UIServer server = UIServer.getInstance();
         server.attach(storage);
-
+        */
 
         /*
 		#### LAB STEP 4 #####
 		Declare MultiLayerNetwork, train the network
 		*/
-
+        /*
         MultiLayerNetwork model = new MultiLayerNetwork(config);
         model.init();
         model.setListeners(new StatsListener(storage, 10));
-
         for(int i = 0; i < epochs; ++i)
         {
             log.info("Epoch: " + i);
-
             model.fit(input, output);
-
             INDArray predicted = model.output(input);
             log.info("predicted: " + predicted.toString());
-
             Thread.sleep(100);
         }
+        */
 
         /*
 		#### LAB STEP 5 #####
