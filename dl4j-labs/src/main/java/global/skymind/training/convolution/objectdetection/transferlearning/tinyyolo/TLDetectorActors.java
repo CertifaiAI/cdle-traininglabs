@@ -32,6 +32,7 @@ import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
 import org.deeplearning4j.zoo.model.TinyYOLO;
 import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.linalg.factory.Nd4j;
@@ -107,10 +108,12 @@ public class TLDetectorActors {
         if (new File(modelFilename).exists()) {
 
             // Load trained model from previous execution
+            Nd4j.getRandom().setSeed(seed);
             log.info("Load model...");
             model = ModelSerializer.restoreComputationGraph(modelFilename);
 
         } else {
+            Nd4j.getRandom().setSeed(seed);
             ComputationGraph pretrained = null;
             FineTuneConfiguration fineTuneConf = null;
             INDArray priors = Nd4j.create(priorBoxes);
@@ -140,8 +143,6 @@ public class TLDetectorActors {
 //                log.info("*** Completed epoch {} ***", i);
 //            }
 //            ModelSerializer.writeModel(model, modelFilename, true);
-//            model=null;
-//            model = ModelSerializer.restoreComputationGraph(modelFilename);
 
         }
         /* STEP 5: Perform offline validation with Test data. */
@@ -203,7 +204,7 @@ public class TLDetectorActors {
                         new Yolo2OutputLayer.Builder()
                                 .lambbaNoObj(lambdaNoObj)
                                 .lambdaCoord(lambdaCoord)
-                                .boundingBoxPriors(priors)
+                                .boundingBoxPriors(priors.castTo(DataType.FLOAT))
                                 .build(),
                         "convolution2d_9")
                 .setOutputs("outputs")
