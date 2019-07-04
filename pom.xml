@@ -50,6 +50,8 @@
 
         <javacpp.version>1.4.1</javacpp.version>
         <javacv.version>1.4.1</javacv.version>
+        <bytedeco-javacpp-presets-v9-2.version>9.2-7.1-1.4.2</bytedeco-javacpp-presets-v9-2.version>
+        <bytedeco-javacpp-presets-v10.version>10.0-7.3-1.4.3</bytedeco-javacpp-presets-v10.version>
         <opencv-platform.version>3.4.1-1.4.1</opencv-platform.version>
         <ffmpeg-platform.version>3.4.2-1.4.1</ffmpeg-platform.version>
     </properties>

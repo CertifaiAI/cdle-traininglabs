@@ -235,14 +235,14 @@
 <!--        <dependency>-->
 <!--            <groupId>org.bytedeco.javacpp-presets</groupId>-->
 <!--            <artifactId>cuda</artifactId>-->
-<!--            <version>9.2-7.1-1.4.2</version>-->
+<!--            <version>${bytedeco-javacpp-presets-v9-2.version}</version>-->
 <!--            <classifier>linux-x86_64-redist | linux-ppc64le-redist | macosx-x86_64-redist | windows-x86_64-redist</classifier>-->
 <!--        </dependency>-->
 
 <!--        <dependency>-->
 <!--            <groupId>org.bytedeco.javacpp-presets</groupId>-->
 <!--            <artifactId>cuda</artifactId>-->
-<!--            <version>10.0-7.3-1.4.3</version>-->
+<!--            <version>${bytedeco-javacpp-presets-v10.version}</version>-->
 <!--            <classifier>linux-x86_64-redist | linux-ppc64le-redist | macosx-x86_64-redist | windows-x86_64-redist</classifier>-->
 <!--        </dependency>-->
     </dependencies>
