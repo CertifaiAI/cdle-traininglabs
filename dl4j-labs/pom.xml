@@ -187,7 +187,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.3.5</version>
+            <version>${httpclient.version}</version>
         </dependency>
 
         <dependency>
@@ -200,7 +200,7 @@
         <dependency>
             <groupId>net.lingala.zip4j</groupId>
             <artifactId>zip4j</artifactId>
-            <version>1.3.2</version>
+            <version>${zip4j.version}</version>
         </dependency>
 
          <!-- For running opencv and ffmpeg libraries -->
@@ -224,6 +224,23 @@
             <artifactId>ffmpeg-platform</artifactId>
             <version>${ffmpeg-platform.version}</version>
         </dependency>
+            <!--following 2 commented out dependency are needed for different platform if users intended to use GPU for training NN-->
+            <!--Please manually perform un-comment out these dependencies by referring to your system requirement-->
+            <!--Un-commented out all 3 following dependencies will causes heavy space consumption, advise do not commented out all together-->
+            <!--Please perform manual remove unnecessary classifier variable (choose the one that only match with your system)-->
+<!--        <dependency>-->
+<!--            <groupId>org.bytedeco.javacpp-presets</groupId>-->
+<!--            <artifactId>cuda</artifactId>-->
+<!--            <version>${bytedeco-javacpp-presets-v9-2.version}</version>-->
+<!--            <classifier>linux-x86_64-redist | linux-ppc64le-redist | macosx-x86_64-redist | windows-x86_64-redist</classifier>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.bytedeco.javacpp-presets</groupId>-->
+<!--            <artifactId>cuda</artifactId>-->
+<!--            <version>${bytedeco-javacpp-presets-v10.version}</version>-->
+<!--            <classifier>linux-x86_64-redist | linux-ppc64le-redist | macosx-x86_64-redist | windows-x86_64-redist</classifier>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

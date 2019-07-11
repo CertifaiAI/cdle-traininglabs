@@ -89,7 +89,6 @@ public class SimplestNetwork
         /*
 		#### LAB STEP 3 #####
 		Set up UI performance monitoring (port http://localhost:9000)
-
         Create a web based UI server to show progress as the network trains
         The Listeners for the model are set here as well
         One listener to pass stats to the UI
@@ -109,16 +108,12 @@ public class SimplestNetwork
         MultiLayerNetwork model = new MultiLayerNetwork(config);
         model.init();
         model.setListeners(new StatsListener(storage, 10));
-
         for(int i = 0; i < epochs; ++i)
         {
             log.info("Epoch: " + i);
-
             model.fit(input, output);
-
             INDArray predicted = model.output(input);
             log.info("predicted: " + predicted.toString());
-
             Thread.sleep(100);
         }
         */
