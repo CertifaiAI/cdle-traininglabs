@@ -9,10 +9,11 @@ import org.nd4j.linalg.io.ClassPathResource;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.file.Paths;
 
 //maxLengthName is the longest name trained. need to manually altered
 public class PredictGenderTest implements Runnable {
-    private int row=0;
+
     private JDialog jd;
     private JTextField jtf;
     private JLabel jlbl;
@@ -20,7 +21,6 @@ public class PredictGenderTest implements Runnable {
     private JLabel gender;
     private String filePath;
     private JButton btnNext;
-    private JLabel genderLabel;
     private MultiLayerNetwork model;
     private final int maxLengthName = 11;
 
@@ -128,9 +128,9 @@ public class PredictGenderTest implements Runnable {
     {
         try
         {
-            this.filePath = new ClassPathResource("PredictGender").getFile().getAbsolutePath() + "/Data/";
+            this.filePath = Paths.get(System.getProperty("java.io.tmpdir") , "PredictGender.zip").toString();
             this.possibleCharacters = " abcdefghijklmnopqrstuvwxyz";
-            this.model = ModelSerializer.restoreMultiLayerNetwork(System.getProperty("java.io.tmpdir") + "PredictGender.zip");
+            this.model = ModelSerializer.restoreMultiLayerNetwork(this.filePath);
         }
         catch(Exception e)
         {

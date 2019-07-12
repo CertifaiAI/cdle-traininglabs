@@ -22,6 +22,8 @@ import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -139,8 +141,8 @@ public class PredictGenderTrain
         System.out.println(eval.stats());
 
 
-        String modelSaveAs = System.getProperty("java.io.tmpdir")  + "PredictGender.zip";
-        ModelSerializer.writeModel(model, modelSaveAs,true);
+        Path modelSaveAs = Paths.get(System.getProperty("java.io.tmpdir")  , "PredictGender.zip");
+        ModelSerializer.writeModel(model, modelSaveAs.toString(),true);
 
         System.out.println("Modelsave at " + modelSaveAs);
 

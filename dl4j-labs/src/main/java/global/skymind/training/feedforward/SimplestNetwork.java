@@ -80,8 +80,6 @@ public class SimplestNetwork
                         .nIn(nHidden)
                         .nOut(numOutputs)
                         .build())
-                .pretrain(false)
-                .backprop(true)
                 .build();
         */
 
