@@ -1,4 +1,4 @@
-package global.skymind.training.convolution.mnist;
+package global.skymind.solution.convolution.mnist;
 
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;

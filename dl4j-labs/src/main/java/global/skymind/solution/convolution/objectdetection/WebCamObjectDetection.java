@@ -1,6 +1,9 @@
 package global.skymind.solution.convolution.objectdetection;
 
-import org.bytedeco.javacpp.opencv_core;
+import org.bytedeco.opencv.opencv_core.*;
+import static org.bytedeco.opencv.global.opencv_core.flip;
+import static org.bytedeco.opencv.global.opencv_imgproc.*;
+
 import org.bytedeco.javacv.*;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.transform.ColorConversionTransform;
@@ -17,12 +20,6 @@ import org.nd4j.linalg.factory.Nd4j;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-import static org.bytedeco.javacpp.opencv_core.FONT_HERSHEY_DUPLEX;
-import static org.bytedeco.javacpp.opencv_imgproc.putText;
-import static org.bytedeco.javacpp.opencv_imgproc.rectangle;
-import static org.bytedeco.javacpp.opencv_imgproc.resize;
-import static org.opencv.imgproc.Imgproc.COLOR_BGR2RGB;
-
 /**
  * YOLO detection with camera
  *
@@ -37,7 +34,6 @@ public class WebCamObjectDetection
     //swap between camera with 0 -? on the parameter
     //Default is 0
     private static int cameraNum = 0;
-
     private static Thread thread;
 
     private static final int gridWidth = 13;
@@ -90,21 +86,21 @@ public class WebCamObjectDetection
                     {
                         try
                         {
-                            opencv_core.Mat rawImage = new opencv_core.Mat();
+                            Mat rawImage = new Mat();
 
                             //Flip the camera if opening front camera
                             if(cameraPos.equals("front"))
                             {
-                                opencv_core.Mat inputImage = converter.convert(frame);
-                                opencv_core.flip(inputImage, rawImage, 1);
+                                Mat inputImage = converter.convert(frame);
+                                flip(inputImage, rawImage, 1);
                             }
                             else
                             {
                                 rawImage = converter.convert(frame);
                             }
 
-                            opencv_core.Mat resizeImage = new opencv_core.Mat();
-                            resize(rawImage, resizeImage, new opencv_core.Size(tinyyolowidth, tinyyoloheight));
+                            Mat resizeImage = new Mat();
+                            resize(rawImage, resizeImage, new Size(tinyyolowidth, tinyyoloheight));
 
                             INDArray inputImage = loader.asMatrix(resizeImage);
                             scaler.transform(inputImage);
@@ -120,8 +116,8 @@ public class WebCamObjectDetection
                                 int y1 = (int) Math.round(h * xy1[1] / gridHeight);
                                 int x2 = (int) Math.round(w * xy2[0] / gridWidth);
                                 int y2 = (int) Math.round(h * xy2[1] / gridHeight);
-                                rectangle(rawImage, new opencv_core.Point(x1, y1), new opencv_core.Point(x2, y2), opencv_core.Scalar.RED, 2, 0, 0);
-                                putText(rawImage, label, new opencv_core.Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, opencv_core.Scalar.GREEN);
+                                rectangle(rawImage, new Point(x1, y1), new Point(x2, y2), Scalar.RED, 2, 0, 0);
+                                putText(rawImage, label, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, Scalar.GREEN);
                             }
 
                             canvas.showImage(converter.convert(rawImage));

@@ -2,8 +2,9 @@ package global.skymind.training.convolution.objectdetection.transferlearning.tin
 
 import global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.LabelImgXmlLabelProvider;
 import global.skymind.training.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.NonMaxSuppression;
-import org.bytedeco.javacpp.opencv_core;
-import org.bytedeco.javacpp.opencv_core.Mat;
+import org.bytedeco.opencv.opencv_core.*;
+import static org.bytedeco.opencv.global.opencv_imgproc.*;
+import static org.bytedeco.opencv.global.opencv_core.CV_8U;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.datavec.api.records.metadata.RecordMetaDataImageURI;
@@ -31,6 +32,7 @@ import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
 import org.deeplearning4j.zoo.model.TinyYOLO;
 import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.linalg.factory.Nd4j;
@@ -38,15 +40,10 @@ import org.nd4j.linalg.io.ClassPathResource;
 import org.nd4j.linalg.learning.config.Adam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
-import static org.bytedeco.javacpp.opencv_core.CV_8U;
-import static org.bytedeco.javacpp.opencv_core.FONT_HERSHEY_DUPLEX;
-import static org.bytedeco.javacpp.opencv_imgproc.*;
 
 /**
  * Example transfer learning from a Tiny YOLO model pretrained on ImageNet and Pascal VOC
@@ -111,10 +108,12 @@ public class TLDetectorActors {
         if (new File(modelFilename).exists()) {
 
             // Load trained model from previous execution
+            Nd4j.getRandom().setSeed(seed);
             log.info("Load model...");
             model = ModelSerializer.restoreComputationGraph(modelFilename);
 
         } else {
+            Nd4j.getRandom().setSeed(seed);
             ComputationGraph pretrained = null;
             FineTuneConfiguration fineTuneConf = null;
             INDArray priors = Nd4j.create(priorBoxes);
@@ -176,7 +175,7 @@ public class TLDetectorActors {
             int w = metadata.getOrigW() * 2;
             int h = metadata.getOrigH() * 2;
             Mat image = new Mat();
-            resize(convertedMat, image, new opencv_core.Size(w, h));
+            resize(convertedMat, image, new Size(w, h));
             drawBoxes(objects, w, h, image);
             frame.setTitle(new File(metadata.getURI()).getName() + " - Validate Test Dataset");
             frame.setCanvasSize(w, h);
@@ -205,7 +204,7 @@ public class TLDetectorActors {
                         new Yolo2OutputLayer.Builder()
                                 .lambbaNoObj(lambdaNoObj)
                                 .lambdaCoord(lambdaCoord)
-                                .boundingBoxPriors(priors)
+                                .boundingBoxPriors(priors.castTo(DataType.FLOAT))
                                 .build(),
                         "convolution2d_9")
                 .setOutputs("outputs")
@@ -242,8 +241,8 @@ public class TLDetectorActors {
             int y1 = (int) Math.round(h * xy1[1] / gridHeight);
             int x2 = (int) Math.round(w * xy2[0] / gridWidth);
             int y2 = (int) Math.round(h * xy2[1] / gridHeight);
-            rectangle(image, new opencv_core.Point(x1, y1), new opencv_core.Point(x2, y2), opencv_core.Scalar.RED);
-            putText(image, label+ " - " + proba, new opencv_core.Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, opencv_core.Scalar.GREEN);
+            rectangle(image, new Point(x1, y1), new Point(x2, y2), Scalar.RED);
+            putText(image, label+ " - " + proba, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, Scalar.GREEN);
         }
     }
 }

@@ -1,4 +1,4 @@
-package global.skymind.training.feedforward.detectgender;
+package global.skymind.solution.feedforward.detectgender;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
@@ -13,7 +13,6 @@ import java.nio.file.Paths;
 
 //maxLengthName is the longest name trained. need to manually altered
 public class PredictGenderTest implements Runnable {
-
     private JDialog jd;
     private JTextField jtf;
     private JLabel jlbl;

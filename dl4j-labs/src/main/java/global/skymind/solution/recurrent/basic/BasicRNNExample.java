@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+
 /**
  This example trains a RNN. When trained we only have to put the first
  character of LEARNSTRING to the rnn, AND IT WILL RECITE THE FOLLOWING CHARS
@@ -49,9 +50,6 @@ public class BasicRNNExample
     //A list of all possible characters
     private static final List<Character> LEARNSTRING_CHARS_LIST = new ArrayList<>();
 
-    //RNN Dimensions
-    private static final int HIDDEN_LAYER_WIDTH = 100;
-
     public static void main(String[] args)
     {
         double learningRate = 0.001;
@@ -62,14 +60,12 @@ public class BasicRNNExample
 
         char[] LEARNSTRING = sampleString.toCharArray();
         LinkedHashSet<Character> LEARNSTRING_CHARS = new LinkedHashSet<>();
-
         for(char c : LEARNSTRING)
         {
             LEARNSTRING_CHARS.add(c);
 
         }
         LEARNSTRING_CHARS_LIST.addAll(LEARNSTRING_CHARS);
-
 
         //Neural net configuration
         MultiLayerConfiguration config = new NeuralNetConfiguration.Builder()
@@ -142,11 +138,9 @@ public class BasicRNNExample
         for(int iterEpoch = 0; iterEpoch < 600; ++iterEpoch)
         {
             System.out.println("Epoch " + iterEpoch);
-
             System.out.print("String: ");
             //train the data
             network.fit(trainingData);
-
             //clear current stance fromm the last example
             network.rnnClearPreviousState();
 
@@ -155,7 +149,7 @@ public class BasicRNNExample
             Initialize test string with first character. Get predicted data from network.
             */
             //put the first character into the rnn as an initialization
-            INDArray testInit = Nd4j.zeros(LEARNSTRING_CHARS_LIST.size());
+            INDArray testInit = Nd4j.zeros(1,LEARNSTRING_CHARS_LIST.size(),1);
             testInit.putScalar(LEARNSTRING_CHARS_LIST.indexOf(LEARNSTRING[0]), 1);
 
             //rnn one step -> IMPORTANT: rnnTimeStep() must be called, not output
@@ -167,18 +161,17 @@ public class BasicRNNExample
                 // first process the last output of the network to a concrete
                 // neuron, the neuron with the highest output has the highest
                 // chance to get chosen
-                int sampledCharacterIdx = Nd4j.getExecutioner().exec(new IMax(output), 1).getInt(0);
+                int sampledCharacterIdx = Nd4j.getExecutioner().exec(new IMax(output,1)).getInt(0);
 
                 //print the chosen output
                 System.out.print(LEARNSTRING_CHARS_LIST.get(sampledCharacterIdx));
 
                 //use the last output as input
-                INDArray nextInput =  Nd4j.zeros(LEARNSTRING_CHARS_LIST.size());
+                INDArray nextInput =  Nd4j.zeros(1,LEARNSTRING_CHARS_LIST.size(),1);
                 nextInput.putScalar(sampledCharacterIdx, 1);
                 output = network.rnnTimeStep(nextInput);
             }
             System.out.println("\n");
-
         }
 
         System.out.println("BasicRNNExample completed");

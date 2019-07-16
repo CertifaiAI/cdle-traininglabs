@@ -1,4 +1,4 @@
-package global.skymind.training.recurrent.cnnLSTM;
+package global.skymind.training.humanactivity;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -84,17 +84,17 @@ public class HumanActivityClassificationCNNLSTM {
 
         /*
         SequenceRecordReader trainFeatures = new CSVSequenceRecordReader(numSkipLines,",");
-        trainFeatures.initialize(new NumberedFileInputSplit( trainFeaturesDir.getAbsolutePath().replace(" ", "%%20")+ "/%d.csv", 0, 7351));
+        trainFeatures.initialize(new NumberedFileInputSplit( trainFeaturesDir.getAbsolutePath()+ "/%d.csv", 0, 7351));
         SequenceRecordReader trainLabels = new CSVSequenceRecordReader(numSkipLines, ",");
-        trainLabels.initialize(new NumberedFileInputSplit(trainLabelsDir.getAbsolutePath().replace(" ", "%%20")+"/%d.csv", 0, 7351));
+        trainLabels.initialize(new NumberedFileInputSplit(trainLabelsDir.getAbsolutePath()+"/%d.csv", 0, 7351));
         //Pass RecordReader into dataset iterator
         //training set
         DataSetIterator train = new SequenceRecordReaderDataSetIterator(trainFeatures, trainLabels, batchSize,numClassLabel,false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);
 
         SequenceRecordReader testFeatures = new CSVSequenceRecordReader(numSkipLines,",");
-        testFeatures.initialize(new NumberedFileInputSplit( testFeaturesDir.getAbsolutePath().replace(" ", "%%20")+ "/%d.csv", 0, 2946));
+        testFeatures.initialize(new NumberedFileInputSplit( testFeaturesDir.getAbsolutePath()+ "/%d.csv", 0, 2946));
         SequenceRecordReader testLabels = new CSVSequenceRecordReader(numSkipLines, ",");
-        testLabels.initialize(new NumberedFileInputSplit(testLabelsDir.getAbsolutePath().replace(" ", "%%20")+"/%d.csv", 0, 2946));
+        testLabels.initialize(new NumberedFileInputSplit(testLabelsDir.getAbsolutePath()+"/%d.csv", 0, 2946));
         //Pass RecordReader into dataset iterator
         //test set
         DataSetIterator test = new SequenceRecordReaderDataSetIterator(testFeatures, testLabels, batchSize,numClassLabel,false, SequenceRecordReaderDataSetIterator.AlignmentMode.ALIGN_END);

@@ -1,4 +1,4 @@
-package global.skymind.training.convolution.modelsaveload;
+package global.skymind.training.modelsaveload;
 
 import org.nd4j.linalg.io.ClassPathResource;
 import org.datavec.image.loader.NativeImageLoader;

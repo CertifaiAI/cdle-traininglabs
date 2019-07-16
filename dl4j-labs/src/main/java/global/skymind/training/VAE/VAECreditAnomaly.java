@@ -97,8 +97,7 @@ public class VAECreditAnomaly {
 //                        .nIn(numInputs)                                   //Input size: 29
 //                        .nOut(outputNum)                                  //Size of the latent variable space: p(z|x) - 2 values
 //                        .build())
-                .pretrain(true)
-                .backprop(false).build();
+                .build();
 
         //run the model
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
@@ -146,7 +145,7 @@ public class VAECreditAnomaly {
 //        while(recordReader_anomalous.hasNext()){
 //            DataSet testData = iterator_anomalous.next();
 //            INDArray features = testData.getFeatures();
-//            INDArray labels = Nd4j.argMax(testData.getLabels(), 1);   //Labels as integer indexes (from one hot), shape [minibatchSize, 1]
+//            INDArray labels = Nd4j.argMax(testData.getLabels(), 1).reshape(testData.getLabels().size(0), 1);    //Labels as integer indexes (from one hot), shape [minibatchSize, 1]
 //            int nRows = features.rows();
 //
 //            // Get shape of dataset to create array for storing output later

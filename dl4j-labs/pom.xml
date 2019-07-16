@@ -72,11 +72,11 @@
             <artifactId>${nd4j.backend}</artifactId>
             <version>${nd4j.version}</version>
         </dependency>
-
+        <!--Comment out to disable GPU capability-->
         <dependency>
             <groupId>org.deeplearning4j</groupId>
             <artifactId>deeplearning4j-cuda-10.0</artifactId>
-            <version>1.0.0-beta3</version>
+            <version>${dl4j.version}</version>
         </dependency>
 
         <!-- Core DL4J functionality -->
@@ -206,28 +206,24 @@
          <!-- For running opencv and ffmpeg libraries -->
         <dependency>
             <groupId>org.bytedeco</groupId>
-            <artifactId>javacpp</artifactId>
-            <version>${javacpp.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.bytedeco</groupId>
             <artifactId>javacv</artifactId>
             <version>${javacv.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacpp</artifactId>
+            <version>${javacpp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bytedeco</groupId>
             <artifactId>opencv-platform</artifactId>
             <version>${opencv-platform.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <groupId>org.bytedeco</groupId>
             <artifactId>ffmpeg-platform</artifactId>
             <version>${ffmpeg-platform.version}</version>
         </dependency>
-
             <!--following 2 commented out dependency are needed for different platform if users intended to use GPU for training NN-->
             <!--Please manually perform un-comment out these dependencies by referring to your system requirement-->
             <!--Un-commented out all 3 following dependencies will causes heavy space consumption, advise do not commented out all together-->

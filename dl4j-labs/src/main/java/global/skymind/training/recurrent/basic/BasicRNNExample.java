@@ -50,9 +50,6 @@ public class BasicRNNExample
     //A list of all possible characters
     private static final List<Character> LEARNSTRING_CHARS_LIST = new ArrayList<>();
 
-    //RNN Dimensions
-    private static final int HIDDEN_LAYER_WIDTH = 100;
-
     public static void main(String[] args)
     {
         /*
@@ -158,7 +155,7 @@ public class BasicRNNExample
 
             /*
             //put the first character into the rnn as an initialization
-            INDArray testInit = Nd4j.zeros(LEARNSTRING_CHARS_LIST.size());
+            INDArray testInit = Nd4j.zeros(1,LEARNSTRING_CHARS_LIST.size(),1);
             testInit.putScalar(LEARNSTRING_CHARS_LIST.indexOf(LEARNSTRING[0]), 1);
 
             //rnn one step -> IMPORTANT: rnnTimeStep() must be called, not output
@@ -176,7 +173,7 @@ public class BasicRNNExample
                 System.out.print(LEARNSTRING_CHARS_LIST.get(sampledCharacterIdx));
 
                 //use the last output as input
-                INDArray nextInput =  Nd4j.zeros(LEARNSTRING_CHARS_LIST.size());
+                INDArray nextInput =  Nd4j.zeros(1,LEARNSTRING_CHARS_LIST.size(),1);
                 nextInput.putScalar(sampledCharacterIdx, 1);
                 output = network.rnnTimeStep(nextInput);
             }
