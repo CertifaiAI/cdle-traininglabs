@@ -50,8 +50,6 @@ public class BasicRNNExample
     //A list of all possible characters
     private static final List<Character> LEARNSTRING_CHARS_LIST = new ArrayList<>();
 
-    //RNN Dimensions
-
     public static void main(String[] args)
     {
         double learningRate = 0.001;

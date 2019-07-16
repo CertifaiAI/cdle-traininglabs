@@ -50,9 +50,6 @@ public class BasicRNNExample
     //A list of all possible characters
     private static final List<Character> LEARNSTRING_CHARS_LIST = new ArrayList<>();
 
-    //RNN Dimensions
-    private static final int HIDDEN_LAYER_WIDTH = 100;
-
     public static void main(String[] args)
     {
         /*
