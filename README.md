@@ -7,8 +7,6 @@ This repo contains codes for hands-on purpose during training session.
   Mnist classification using CNN.
 - [convolution/TransferLearning/TinyYoLo/TLDetectorActors](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/convolution/objectdetection/transferlearning/tinyyolo):Detect
   actors face using CNN.
-- [convolution/VGG16](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/convolution/objectdetection/transferlearning/vgg16):
-  Image classification on oil palm images.
 - [dataexample/ImageDrawer](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/dataexamples):
   Train neural network that learns to draw.
 - [feedforward/detectgender](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/feedforward/detectgender):
@@ -41,7 +39,9 @@ This repo contains codes for hands-on purpose during training session.
 - [HelloWorldSpark](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-spark-labs/src/main/java/global/skymind)
 
 ## Built with
-deeplearning4j beta 4.0
+- deeplearning4j beta 4.0
+- CUDA 10.0
+- cuDNN 7.6
 
 ## Getting Started ##
 
@@ -56,24 +56,41 @@ Check the version of Java using:
 java -version
 ```
 
-Make sure that 64- Bit version of Java is installed.
+Make sure that 64-Bit version of Java is installed.
 
 ### Install IntelliJ IDEA Community Edition ###
 Download and install 
 [IntelliJ IDEA](https://www.jetbrains.com/idea/download/).
 
-### Install Apache Maven * ###
-
-<b>\* Optional if you are using prebuilt maven from IntelliJ </b>
-
+### Install Apache Maven  *Optional* ###
+IntelliJ provides a default Maven that is bundled with the installer.
 Follow these [instructions](https://maven.apache.org/install.html) to install Apache Maven.
 
+### GPU setup  *Optional* ##
+Follow the instructions below if you plan to use GPU setup.
+1. Install CUDA and cuDNN <br> 
+    Requirements:
+   -  CUDA 10.0 
+   -  cuDNN 7.6
+
+
+CUDA and cuDNN can be downloaded from
+[here](https://developer.nvidia.com/cuda-10.0-download-archive) and
+[here](https://developer.nvidia.com/cudnn). Step by step installation
+guides can be found
+[here](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html).
+
+2. Dependencies are needed to be included into Maven project if we wish
+   to use GPU for training. Follow the links below for instructions in
+   details.
+   -  [ND4J backends for GPUs](https://deeplearning4j.org/docs/latest/deeplearning4j-config-gpu-cpu)
+   - [Using Deeplearning4J with cuDNN](https://deeplearning4j.org/docs/latest/deeplearning4j-config-cudnn)
 ## Usage ##
 All examples are separated into
-[trainings](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/training)
+[training](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/training)
 and
-[solutions](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution)
-folders. The download will take sometime to download dependencies from
+[solution](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution)
+folders. The download will take some time to download dependencies from
 maven when you first run these examples.
 
 All codes in <b>training</b> folder have few lines commented out so that
