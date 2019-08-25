@@ -7,7 +7,7 @@
     <groupId>global.skymind</groupId>
     <artifactId>traininglabs</artifactId>
     <modelVersion>4.0.0</modelVersion>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-alpha</version>
 
     <name>Training Labs Parent</name>
     <description>Hands on labs training</description>

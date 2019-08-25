@@ -1,9 +1,9 @@
-When you added a new program / programs , tick the below OS that you have test it on
+When you added a new program / programs , put a cross on the  OS that you have test it on  
+(Example: [ X ] Windows  )
 
-[ ] Windows
-[ ] Linux Ubuntu
-[ ] Mac
+[  ] Windows  
+[  ] Linux Ubuntu  
+[  ] Mac  
+[  ] Others  (State here -> xxx )  
 
-Assign a reviewer (other that yourself) to review your code.
-
-Only team lead merge the pull request.
+Assign a reviewer to review your code.
