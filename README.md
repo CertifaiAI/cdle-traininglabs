@@ -40,16 +40,16 @@ This repo contains codes for hands-on purpose during training session.
 
 ## Built with
 - deeplearning4j beta 4.0
-- CUDA 10.0
-- cuDNN 7.6
+- CUDA 10.0 (Note: Optional if you are using CPU)
+- cuDNN 7.6 (Note: Optional if you are using CPU)
 
 ## Getting Started ##
 
 ### Install Java ###
 
 Download Java JDK
-[here](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)\.
-Note that DL4J supports Java 1.7 or later.
+[here](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).  
+(Note: Use Java 8 for full support of DL4J operations)
 
 Check the version of Java using: 
 ```sh
