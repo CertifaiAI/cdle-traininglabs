@@ -6,6 +6,7 @@
 
     <groupId>global.skymind</groupId>
     <artifactId>traininglabs</artifactId>
+    <packaging>pom</packaging>
     <modelVersion>4.0.0</modelVersion>
     <version>1.0.0-alpha</version>
 
@@ -61,6 +62,7 @@
 
     <modules>
         <module>dl4j-labs</module>
+        <module>dl4j-cv-labs</module>
     </modules>
 
     <!-- Maven Enforcer: Ensures user has an up to date version of Maven before building -->
