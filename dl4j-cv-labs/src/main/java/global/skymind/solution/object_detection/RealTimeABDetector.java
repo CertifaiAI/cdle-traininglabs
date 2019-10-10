@@ -1,7 +1,7 @@
-package global.skymind.solution.convolution.objectdetection.transferlearning.tinyyolo;
+package global.skymind.solution.object_detection;
 
-import global.skymind.solution.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.LabelImgXmlLabelProvider;
-import global.skymind.solution.convolution.objectdetection.transferlearning.tinyyolo.dataHelpers.NonMaxSuppression;
+import global.skymind.solution.object_detection.dataHelpers.LabelImgXmlLabelProvider;
+import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
