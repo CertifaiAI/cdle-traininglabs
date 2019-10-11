@@ -2,6 +2,8 @@ package global.skymind.solution.object_detection;
 
 import global.skymind.solution.object_detection.dataHelpers.LabelImgXmlLabelProvider;
 import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
@@ -41,6 +43,7 @@ import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.io.ClassPathResource;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -81,10 +84,10 @@ public class RealTimeABDetector {
     private static Frame frame = null;
 
     public static void main(String[] args) throws Exception {
-        System.out.println(modelFilename.getAbsolutePath());
-        File trainDir = new ClassPathResource("fruits/train").getFile();
-        File testDir = new ClassPathResource("fruits/test").getFile();
-        System.out.println(trainDir);
+
+        unzipAllDataSet();
+        File trainDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits/train/");
+        File testDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits/test/");
         log.info("Load data...");
         FileSplit trainData = new FileSplit(trainDir, NativeImageLoader.ALLOWED_FORMATS, rng);
         FileSplit testData = new FileSplit(testDir, NativeImageLoader.ALLOWED_FORMATS, rng);
@@ -105,8 +108,8 @@ public class RealTimeABDetector {
         labels = train.getLabels();
         System.out.println(labels);
 
+        //If model already exist, evaluate it and then run real time object detection inference, else train the model.
         if (modelFilename.exists()) {
-
             // Load trained model from previous execution
             Nd4j.getRandom().setSeed(seed);
             log.info("Load model...");
@@ -194,6 +197,7 @@ public class RealTimeABDetector {
         return _FineTuneConfiguration;
     }
 
+    // Manually Evaluate the performance of the object detection model
     private static void OfflineValidationWithTestDataset(RecordReaderDataSetIterator test)throws InterruptedException{
         NativeImageLoader imageLoader = new NativeImageLoader();
         CanvasFrame canvas = new CanvasFrame("Validate Test Dataset");
@@ -201,8 +205,6 @@ public class RealTimeABDetector {
         org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout = (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer)model.getOutputLayer(0);
         Mat convertedMat = new Mat();
         Mat convertedMat_big = new Mat();
-
-
 
         while (test.hasNext() && canvas.isVisible()) {
             org.nd4j.linalg.dataset.DataSet ds = test.next();
@@ -234,6 +236,8 @@ public class RealTimeABDetector {
         }
         canvas.dispose();
     }
+
+    // Stream video frames from Webcam and run them through TinyYOLO model and get predictions
     private static void doInference(){
 
         String cameraPos = "front";
@@ -347,7 +351,42 @@ public class RealTimeABDetector {
                 break;
             }
         }
+    }
 
+    //To unzip the training and test datset
+    public static void unzip(String source, String destination){
+        try {
+            ZipFile zipFile = new ZipFile(source);
+            zipFile.extractAll(destination);
+        } catch (ZipException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void unzipAllDataSet(){
+        //unzip training data set
+        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits");
+        if (!resourceDir.exists()) resourceDir.mkdirs();
+
+        String zipTrainFilePath = null;
+        String zipTestFilePath = null;
+        try {
+            zipTrainFilePath  = new ClassPathResource("fruits/train.zip").getFile().toString();
+            zipTestFilePath  = new ClassPathResource("fruits/test.zip").getFile().toString();
+            System.out.println(zipTrainFilePath);
+            System.out.println(zipTestFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File trainFolder = new File(resourceDir+"/train");
+        if (!trainFolder.exists()) unzip(zipTrainFilePath, resourceDir.toString());
+        System.out.println("unziptrain done");
+        System.out.println(trainFolder);
+
+        File testFolder = new File(resourceDir+"/test");
+        if (!testFolder.exists()) unzip(zipTestFilePath, resourceDir.toString());
+        System.out.println(testFolder);
+        System.out.println("unziptest done");
     }
 }
 
