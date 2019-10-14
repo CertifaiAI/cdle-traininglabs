@@ -15,6 +15,7 @@ import org.bytedeco.opencv.opencv_core.Size;
 import org.datavec.api.split.FileSplit;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.objdetect.ObjectDetectionRecordReader;
+import org.datavec.image.transform.BoxImageTransform;
 import org.datavec.image.transform.ColorConversionTransform;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
@@ -93,10 +94,10 @@ public class RealTimeABDetector {
         FileSplit testData = new FileSplit(testDir, NativeImageLoader.ALLOWED_FORMATS, rng);
 
         ObjectDetectionRecordReader recordReaderTrain = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
-                gridHeight, gridWidth, new LabelImgXmlLabelProvider(trainDir));
+                gridHeight, gridWidth, new LabelImgXmlLabelProvider(trainDir), new BoxImageTransform(tinyyoloheight,tinyyolowidth));
         recordReaderTrain.initialize(trainData);
         ObjectDetectionRecordReader recordReaderTest = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
-                gridHeight, gridWidth, new LabelImgXmlLabelProvider(testDir));
+                gridHeight, gridWidth, new LabelImgXmlLabelProvider(testDir), new BoxImageTransform(tinyyoloheight,tinyyolowidth));
         recordReaderTest.initialize(testData);
 
         RecordReaderDataSetIterator train = new RecordReaderDataSetIterator(recordReaderTrain, batchSize, 1, 1, true);
