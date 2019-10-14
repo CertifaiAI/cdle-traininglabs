@@ -1,6 +1,6 @@
-package global.skymind.solution.classification.transferlearning;
+package global.skymind.training.classification.transferlearning;
 
-import global.skymind.solution.classification.DogBreedDataSetIterator;
+import global.skymind.training.classification.DogBreedDataSetIterator;
 import org.datavec.image.transform.*;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
@@ -20,7 +20,6 @@ import org.deeplearning4j.zoo.model.VGG16;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.learning.config.Adam;
-import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.nd4j.linalg.primitives.Pair;
 import org.slf4j.Logger;
@@ -36,7 +35,8 @@ public class EditAtBottleneckAndExtendModel {
     private static int epochs = 120;
     private static int batchSize = 32;
     private static int seed = 123;
-    private static int numClasses =5;
+    private static int numClasses = 5;
+    private static int trainPerc = 80;
 
     private static int height = 224;
     private static int width = 224;
@@ -45,7 +45,9 @@ public class EditAtBottleneckAndExtendModel {
     private static final Random randNumGen = new Random(seed);
 
     public static void main(String args[]) throws Exception {
-        // image augmentation
+        /*
+        Initialize image augmentation
+        */
         ImageTransform horizontalFlip = new FlipImageTransform(1);
         ImageTransform cropImage = new CropImageTransform(25);
         ImageTransform rotateImage = new RotateImageTransform(randNumGen, 15);
@@ -57,16 +59,19 @@ public class EditAtBottleneckAndExtendModel {
                 new Pair<>(cropImage, 0.3)
 //                ,new Pair<>(showImage,1.0) //uncomment this to show transform image
         );
-
         ImageTransform transform = new PipelineImageTransform(pipeline, shuffle);
 
-        DogBreedDataSetIterator.setup(batchSize, 80, transform);
-
-        //create iterators
+        /*
+        Initialize dataset and create training and testing dataset iterator
+        */
+        DogBreedDataSetIterator.setup(batchSize, trainPerc, transform);
         DataSetIterator trainIter = DogBreedDataSetIterator.trainIterator();
         DataSetIterator testIter = DogBreedDataSetIterator.testIterator();
 
-        //load vgg16 zoo model
+        /*
+        Using pre-configured model
+        */
+        // Loading vgg16 from zooModel
         ZooModel zooModel = VGG16.builder().build();
         ComputationGraph vgg16 = (ComputationGraph) zooModel.initPretrained();
         log.info(vgg16.summary());
@@ -76,7 +81,7 @@ public class EditAtBottleneckAndExtendModel {
                 .activation(Activation.LEAKYRELU)
                 .weightInit(WeightInit.XAVIER)
                 .updater(new Adam(1e-4))
-//                .dropOut(0.2)
+                .dropOut(0.2)
                 .seed(seed)
                 .build();
 
@@ -96,9 +101,13 @@ public class EditAtBottleneckAndExtendModel {
                 // configurations on a new layer here will be override the finetune confs.
                 // For eg. activation function will be softmax not RELU
                 .setOutputs("newpredictions") //since we removed the output vertex and it's connections we need to specify outputs for the graph
-                .build();
+            .build();
         log.info(vgg16Transfer.summary());
 
+        /*
+        Start a dashboard to visualize network training
+        Setup listener to capture useful information during training.
+        */
         UIServer uiServer = UIServer.getInstance();
         StatsStorage statsStorage = new FileStatsStorage(new File(System.getProperty("java.io.tmpdir"), "ui-stats.dl4j"));
         uiServer.attach(statsStorage);
@@ -109,6 +118,9 @@ public class EditAtBottleneckAndExtendModel {
                 new EvaluativeListener(testIter, 1, InvocationType.EPOCH_END)
         );
 
+        /*
+        Start training
+        */
         vgg16Transfer.fit(trainIter, epochs);
 
     }

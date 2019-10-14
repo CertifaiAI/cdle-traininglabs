@@ -1,4 +1,4 @@
-package global.skymind.solution.classification;
+package global.skymind.training.classification;
 
 import org.datavec.api.io.filters.BalancedPathFilter;
 import org.datavec.api.io.labels.ParentPathLabelGenerator;
@@ -19,6 +19,18 @@ import java.util.Random;
 
 public class DogBreedDataSetIterator {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(DogBreedDataSetIterator.class);
+
+    //DIRECTORY STRUCTURE:
+    //Images in the dataset have to be organized in directories by class/label.
+    //In this example there are images in three classes
+    //Here is the directory structure
+    //                                    parentDir
+    //                                  /    |     \
+    //                                 /     |      \
+    //                            labelA  labelB   labelC
+    //
+    //Set your data up like this so that labels from each label/class live in their own directory
+    //And these label/class directories live together in the parent directory
 
     private static final String DATA_DIR = CustomModel.class.getClassLoader().getResource("dog-breed-identification/train").getFile();
 

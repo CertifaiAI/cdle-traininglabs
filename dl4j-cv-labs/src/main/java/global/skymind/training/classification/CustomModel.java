@@ -1,22 +1,13 @@
-package global.skymind.solution.classification;
+package global.skymind.training.classification;
 
-import org.datavec.api.io.filters.BalancedPathFilter;
-import org.datavec.api.io.labels.ParentPathLabelGenerator;
-import org.datavec.api.split.FileSplit;
-import org.datavec.api.split.InputSplit;
-import org.datavec.image.loader.BaseImageLoader;
-import org.datavec.image.recordreader.ImageRecordReader;
 import org.datavec.image.transform.*;
 import org.deeplearning4j.api.storage.StatsStorage;
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-
 import org.deeplearning4j.nn.conf.ConvolutionMode;
 import org.deeplearning4j.nn.conf.GradientNormalization;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.inputs.InputType;
 import org.deeplearning4j.nn.conf.layers.*;
-import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.api.InvocationType;
@@ -25,32 +16,29 @@ import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.FileStatsStorage;
-import org.deeplearning4j.zoo.ZooModel;
-import org.deeplearning4j.zoo.model.VGG16;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
-import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.nd4j.linalg.primitives.Pair;
-import org.deeplearning4j.zoo.*;
 import org.slf4j.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class CustomModel {
-
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(CustomModel.class);
 
+    /*
+    Define training parameters
+    */
     private static int epochs = 120;
     private static int batchSize = 32;
     private static int seed = 123;
-    private static int numClasses =5;
+    private static int numClasses = 5;
+    private static int trainPerc = 80;
 
     private static int height = 224;
     private static int width = 224;
@@ -60,7 +48,9 @@ public class CustomModel {
 
     public static void main(String args[]) throws Exception{
 
-        // image augmentation
+        /*
+        Initialize image augmentation
+        */
         ImageTransform horizontalFlip = new FlipImageTransform(1);
         ImageTransform cropImage = new CropImageTransform(25);
         ImageTransform rotateImage = new RotateImageTransform(randNumGen, 15);
@@ -70,18 +60,20 @@ public class CustomModel {
                 new Pair<>(horizontalFlip,0.5),
                 new Pair<>(rotateImage, 0.5),
                 new Pair<>(cropImage,0.3)
-//                ,new Pair<>(showImage,1.0) //uncomment this to show transform image
+//                ,new Pair<>(showImage,1.0) //uncomment this to show transformed image
         );
-
         ImageTransform transform = new PipelineImageTransform(pipeline,shuffle);
 
-        DogBreedDataSetIterator.setup(batchSize, 80, transform);
-
-        //create iterators
+        /*
+        Initialize dataset and create training and testing dataset iterator
+        */
+        DogBreedDataSetIterator.setup(batchSize, trainPerc, transform);
         DataSetIterator trainIter = DogBreedDataSetIterator.trainIterator();
         DataSetIterator testIter = DogBreedDataSetIterator.testIterator();
 
-        //model configuration
+        /*
+        Model configuration
+        */
         double nonZeroBias = 0.1;
         double dropOut = 0.5;
 
@@ -164,13 +156,18 @@ public class CustomModel {
                     .setInputType(InputType.convolutional(height, width, channel))
                 .build();
 
-
-        //train model and eval model
+        /*
+        Initialize network with configuration
+        */
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model.init();
 
         log.info(model.summary());
 
+        /*
+        Start a dashboard to visualize network training
+        Setup listener to capture useful information during training.
+        */
         UIServer uiServer = UIServer.getInstance();
         StatsStorage statsStorage = new FileStatsStorage(new File(System.getProperty("java.io.tmpdir"), "ui-stats.dl4j"));
         uiServer.attach(statsStorage);
@@ -181,6 +178,9 @@ public class CustomModel {
                 new EvaluativeListener(testIter, 1, InvocationType.EPOCH_END)
         );
 
+        /*
+        Start training
+        */
         model.fit(trainIter, epochs);
     }
 }

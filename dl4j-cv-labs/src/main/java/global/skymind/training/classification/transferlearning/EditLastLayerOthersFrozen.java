@@ -1,6 +1,6 @@
-package global.skymind.solution.classification.transferlearning;
+package global.skymind.training.classification.transferlearning;
 
-import global.skymind.solution.classification.DogBreedDataSetIterator;
+import global.skymind.training.classification.DogBreedDataSetIterator;
 import org.datavec.image.transform.*;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
@@ -34,7 +34,8 @@ public class EditLastLayerOthersFrozen {
     private static int epochs = 120;
     private static int batchSize = 32;
     private static int seed = 123;
-    private static int numClasses =5;
+    private static int numClasses = 5;
+    private static int trainPerc = 80;
 
     private static int height = 224;
     private static int width = 224;
@@ -43,7 +44,9 @@ public class EditLastLayerOthersFrozen {
     private static final Random randNumGen = new Random(seed);
 
     public static void main(String args[]) throws Exception{
-        // image augmentation
+        /*
+        Initialize image augmentation
+        */
         ImageTransform horizontalFlip = new FlipImageTransform(1);
         ImageTransform cropImage = new CropImageTransform(25);
         ImageTransform rotateImage = new RotateImageTransform(randNumGen, 15);
@@ -58,13 +61,17 @@ public class EditLastLayerOthersFrozen {
 
         ImageTransform transform = new PipelineImageTransform(pipeline,shuffle);
 
-        DogBreedDataSetIterator.setup(batchSize, 80, transform);
-
-        //create iterators
+        /*
+        Initialize dataset and create training and testing dataset iterator
+        */
+        DogBreedDataSetIterator.setup(batchSize, trainPerc, transform);
         DataSetIterator trainIter = DogBreedDataSetIterator.trainIterator();
         DataSetIterator testIter = DogBreedDataSetIterator.testIterator();
 
-        //load vgg16 zoo model
+        /*
+        Using pre-configured model
+        */
+        // Loading vgg16 from zooModel
         ZooModel zooModel = VGG16.builder().build();
         ComputationGraph vgg16 = (ComputationGraph) zooModel.initPretrained();
         log.info(vgg16.summary());
@@ -89,6 +96,11 @@ public class EditLastLayerOthersFrozen {
                 .build();
         log.info(vgg16Transfer.summary());
 
+
+        /*
+        Start a dashboard to visualize network training
+        Setup listener to capture useful information during training.
+        */
         UIServer uiServer = UIServer.getInstance();
         StatsStorage statsStorage = new FileStatsStorage(new File(System.getProperty("java.io.tmpdir"), "ui-stats.dl4j"));
         uiServer.attach(statsStorage);
@@ -99,6 +111,9 @@ public class EditLastLayerOthersFrozen {
                 new EvaluativeListener(testIter, 1, InvocationType.EPOCH_END)
         );
 
+        /*
+        Start training
+        */
         vgg16Transfer.fit(trainIter, epochs);
     }
 }
