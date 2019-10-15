@@ -1,5 +1,6 @@
 package global.skymind.training.classification;
 
+import org.apache.commons.io.FileUtils;
 import org.datavec.api.io.filters.BalancedPathFilter;
 import org.datavec.api.io.labels.ParentPathLabelGenerator;
 import org.datavec.api.split.FileSplit;
@@ -11,10 +12,12 @@ import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
+import org.nd4j.util.ArchiveUtils;
 import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Random;
 
 public class DogBreedDataSetIterator {
@@ -32,7 +35,8 @@ public class DogBreedDataSetIterator {
     //Set your data up like this so that labels from each label/class live in their own directory
     //And these label/class directories live together in the parent directory
 
-    private static final String DATA_DIR = CustomModel.class.getClassLoader().getResource("dog-breed-identification/train").getFile();
+    private static final String dataDir = "src/main/resources";
+    private static final String downloadLink = "https://docs.google.com/uc?export=download&id=17dOxbD7Tr3_w55podg0U-lgjpF9jMo-1";
 
     //Images are of format given by allowedExtension
     private static final String [] allowedExtensions = BaseImageLoader.ALLOWED_FORMATS;
@@ -80,9 +84,11 @@ public class DogBreedDataSetIterator {
     }
 
     public static void setup(int batchSizeArg, int trainPerc) throws IOException {
+        File parentDir = new File(dataDir+"/dog-breed-identification");
+        if(!parentDir.exists()){
+            downloadAndUnzip();
+        }
         batchSize = batchSizeArg;
-
-        File parentDir = new File(DATA_DIR);
 
         //Files in directories under the parent dir that have "allowed extensions" split needs a random number generator for reproducibility when splitting the files into train and test
         FileSplit filesInDir = new FileSplit(parentDir, allowedExtensions, rng);
@@ -99,7 +105,14 @@ public class DogBreedDataSetIterator {
         testData = filesInDirSplit[1];
     }
 
+    public static void downloadAndUnzip() throws IOException{
+        String dataPath = new File(dataDir).getAbsolutePath();
+        File zipFile = new File(dataPath, "dog-breed-identification.zip");
 
-
-
+        if(!zipFile.isFile()){
+            log.info("Downloading the flower dataset from "+downloadLink+ "...");
+            FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
+        }
+        ArchiveUtils.unzipFileTo(zipFile.getAbsolutePath(), dataPath);
+    }
 }
