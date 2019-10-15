@@ -1,6 +1,11 @@
-package global.skymind;
+package global.skymind.solution.segmentation;
 
 import global.skymind.imageUtils.visualisation;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.datavec.api.io.filters.BalancedPathFilter;
 import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.InputSplit;
@@ -35,9 +40,12 @@ import org.nd4j.linalg.learning.config.AdaDelta;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.nd4j.linalg.primitives.Pair;
 import org.slf4j.Logger;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -59,6 +67,9 @@ public class PretrainedUNET {
     private static final Random random = new Random(seed);
 
     public static void main(String[] args) throws IOException, InvalidKerasConfigurationException, UnsupportedKerasConfigurationException{
+
+        downloadData();
+        unzipAllDataSet();
 
         ZooModel zooModel = UNet.builder().build();
 
@@ -98,7 +109,7 @@ public class PretrainedUNET {
         UIServer uiServer = UIServer.getInstance();
         uiServer.attach(statsStorage);
 
-        File imagesPath = new File(System.getProperty("user.dir"), "src/main/resources/data-science-bowl-2018/inputs_no_alpha");
+        File imagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/inputs_no_alpha");
 //        System.out.println(imagesPath);
         FileSplit imageSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
 
@@ -227,5 +238,63 @@ public class PretrainedUNET {
                 , new Pair<>(enhanceContrast, 1.0)
         );
         return new PipelineImageTransform(pipeline, false);
+    }
+
+    public static void downloadData() {
+        // Download data
+        File parentDir = new File(System.getProperty("user.home"), ".deeplearning4j\\data\\data-science-bowl-2018");
+
+//        String DATA_URL = "https://www.googleapis.com/drive/v3/files/1UVNwQPG_Y-lpi72AYCIrYDEB6rZEAaMA?alt=media&key=AIzaSyBtQjXp_x5nzkMWIMs3czTtD8Zs3DRIKDk";
+//        String DATA_URL = "https://drive.google.com/open?id=18gUE7wJWVRy7HrhHNeM8wNa0RRazGPS1";
+//        String DATA_URL = "https://driver.google.com/uc?export=download&confirm=yH3-&id=18gUE7wJWVRy7HrhHNeM8wNa0RRazGPS1";
+        String DATA_URL = "https://drive.google.com/a/skymind.my/uc?authuser=0&id=18gUE7wJWVRy7HrhHNeM8wNa0RRazGPS1&export=download";
+
+        File file = new File(parentDir + "\\data-science-bowl-2018.zip");
+
+
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            HttpClientBuilder builder = HttpClientBuilder.create();
+            CloseableHttpClient client = builder.build();
+            try (CloseableHttpResponse response = client.execute(new HttpGet(DATA_URL))) {
+                HttpEntity entity = response.getEntity();
+
+                System.out.println(entity);
+
+                if (entity != null) {
+                    try (FileOutputStream outstream = new FileOutputStream(file)) {
+                        entity.writeTo(outstream);
+                        outstream.flush();
+                    }
+                }
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }
+
+
+        }
+
+    }
+
+    public static void unzip(String source, String destination){
+        try {
+            ZipFile zipFile = new ZipFile(source);
+            zipFile.extractAll(destination);
+        } catch (ZipException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void unzipAllDataSet(){
+        //unzip training data set
+        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018");
+
+        String zipClass0FilePath = resourceDir + "/data-science-bowl-2018.zip";
+
+        File class0Folder = new File(resourceDir + "/data-science-bowl-2018");
+        if (!class0Folder.exists()){
+            System.out.println("Unzipping data ...");
+            unzip(zipClass0FilePath, class0Folder.toString());
+        }
     }
 }
