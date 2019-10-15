@@ -2,6 +2,8 @@ package global.skymind.solution.object_detection;
 
 import global.skymind.solution.object_detection.dataHelpers.LabelImgXmlLabelProvider;
 import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
+import global.skymind.solution.object_detection.dataHelpers.ObjectDetectionRRCustom;
+
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.bytedeco.javacv.CanvasFrame;
@@ -14,7 +16,8 @@ import org.bytedeco.opencv.opencv_core.Scalar;
 import org.bytedeco.opencv.opencv_core.Size;
 import org.datavec.api.split.FileSplit;
 import org.datavec.image.loader.NativeImageLoader;
-import org.datavec.image.recordreader.objdetect.ObjectDetectionRecordReader;
+//import org.datavec.image.recordreader.objdetect.ObjectDetectionRecordReader;
+
 import org.datavec.image.transform.BoxImageTransform;
 import org.datavec.image.transform.ColorConversionTransform;
 import org.deeplearning4j.api.storage.StatsStorage;
@@ -74,6 +77,7 @@ public class RealTimeABDetector {
 
     private static int batchSize = 8;
     private static int nEpochs = 40;
+
     private static double learningRate = 1e-4;
 
     private static int nClasses = 2;
@@ -93,23 +97,30 @@ public class RealTimeABDetector {
         FileSplit trainData = new FileSplit(trainDir, NativeImageLoader.ALLOWED_FORMATS, rng);
         FileSplit testData = new FileSplit(testDir, NativeImageLoader.ALLOWED_FORMATS, rng);
 
-        ObjectDetectionRecordReader recordReaderTrain = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
+//        ObjectDetectionRecordReader recordReaderTrain = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
+//                gridHeight, gridWidth, new LabelImgXmlLabelProvider(trainDir), new BoxImageTransform(tinyyoloheight,tinyyolowidth));
+//        recordReaderTrain.initialize(trainData);
+//        ObjectDetectionRecordReader recordReaderTest = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
+//                gridHeight, gridWidth, new LabelImgXmlLabelProvider(testDir), new BoxImageTransform(tinyyoloheight,tinyyolowidth));
+//        recordReaderTest.initialize(testData);
+
+        ObjectDetectionRRCustom recordReaderTrain = new ObjectDetectionRRCustom(tinyyoloheight, tinyyolowidth, nChannels,
                 gridHeight, gridWidth, new LabelImgXmlLabelProvider(trainDir), new BoxImageTransform(tinyyoloheight,tinyyolowidth));
         recordReaderTrain.initialize(trainData);
-        ObjectDetectionRecordReader recordReaderTest = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
+        ObjectDetectionRRCustom recordReaderTest = new ObjectDetectionRRCustom(tinyyoloheight, tinyyolowidth, nChannels,
                 gridHeight, gridWidth, new LabelImgXmlLabelProvider(testDir), new BoxImageTransform(tinyyoloheight,tinyyolowidth));
         recordReaderTest.initialize(testData);
-
+//
         RecordReaderDataSetIterator train = new RecordReaderDataSetIterator(recordReaderTrain, batchSize, 1, 1, true);
         train.setPreProcessor(new ImagePreProcessingScaler(0, 1));
         RecordReaderDataSetIterator test = new RecordReaderDataSetIterator(recordReaderTest, 1, 1, 1, true);
         test.setPreProcessor(new ImagePreProcessingScaler(0, 1));
-
-        // Print Labels
+//
+//        // Print Labels
         labels = train.getLabels();
-        System.out.println(labels);
-
-        //If model already exist, evaluate it and then run real time object detection inference, else train the model.
+//        System.out.println(labels);
+//
+//        //If model already exist, evaluate it and then run real time object detection inference, else train the model.
         if (modelFilename.exists()) {
             // Load trained model from previous execution
             Nd4j.getRandom().setSeed(seed);
@@ -148,9 +159,9 @@ public class RealTimeABDetector {
             ModelSerializer.writeModel(model, modelFilename, true);
             System.out.println("Model saved.");
         }
-        /* STEP 5: Perform offline validation with Test data. */
+//        /* STEP 5: Perform offline validation with Test data. */
         OfflineValidationWithTestDataset(test);
-        doInference();
+////        doInference();
     }
 
     private static ComputationGraph getNewComputationGraph(ComputationGraph pretrained, INDArray priors, FineTuneConfiguration fineTuneConf) {
@@ -198,7 +209,7 @@ public class RealTimeABDetector {
         return _FineTuneConfiguration;
     }
 
-    // Manually Evaluate the performance of the object detection model
+//    // Manually Evaluate the performance of the object detection model
     private static void OfflineValidationWithTestDataset(RecordReaderDataSetIterator test)throws InterruptedException{
         NativeImageLoader imageLoader = new NativeImageLoader();
         CanvasFrame canvas = new CanvasFrame("Validate Test Dataset");
@@ -208,6 +219,9 @@ public class RealTimeABDetector {
         Mat convertedMat_big = new Mat();
 
         while (test.hasNext() && canvas.isVisible()) {
+//        while (train.hasNext() && canvas.isVisible()) {
+
+            //.next is here?!
             org.nd4j.linalg.dataset.DataSet ds = test.next();
             INDArray features = ds.getFeatures();
             INDArray results = model.outputSingle(features);
@@ -216,8 +230,10 @@ public class RealTimeABDetector {
 
             Mat mat = imageLoader.asMat(features);
             mat.convertTo(convertedMat, CV_8U, 255, 0);
-            int w = mat.cols() * 2;
-            int h = mat.rows() * 2;
+//            int w = mat.cols() * 2;
+//            int h = mat.rows() * 2;
+            int w = mat.cols();
+            int h = mat.rows();
             resize(convertedMat,convertedMat_big, new Size(w, h));
 
             for (DetectedObject obj : objects) {
@@ -237,123 +253,123 @@ public class RealTimeABDetector {
         }
         canvas.dispose();
     }
-
-    // Stream video frames from Webcam and run them through TinyYOLO model and get predictions
-    private static void doInference(){
-
-        String cameraPos = "front";
-        int cameraNum = 0;
-        Thread thread = null;
-        NativeImageLoader loader = new NativeImageLoader(tinyyolowidth, tinyyoloheight, 3, new ColorConversionTransform(COLOR_BGR2RGB));
-        ImagePreProcessingScaler scaler = new ImagePreProcessingScaler(0, 1);
-
-        if( !cameraPos.equals("front") && !cameraPos.equals("back") )
-        {
-            try {
-                throw new Exception("Unknown argument for camera position. Choose between front and back");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        FrameGrabber grabber = null;
-        try {
-            grabber = FrameGrabber.createDefault(cameraNum);
-        } catch (FrameGrabber.Exception e) {
-            e.printStackTrace();
-        }
-        OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
-
-        try {
-            grabber.start();
-        } catch (FrameGrabber.Exception e) {
-            e.printStackTrace();
-        }
-
-        String winName = "Object Detection";
-        CanvasFrame canvas = new CanvasFrame(winName);
-
-        int w = grabber.getImageWidth();
-        int h = grabber.getImageHeight();
-
-
-        canvas.setCanvasSize(w, h);
-        while (true)
-        {
-            try {
-                frame = grabber.grab();
-            } catch (FrameGrabber.Exception e) {
-                e.printStackTrace();
-            }
-
-            //if a thread is null, create new thread
-            if (thread == null)
-            {
-                thread = new Thread(() ->
-                {
-                    while (frame != null)
-                    {
-                        try
-                        {
-                            Mat rawImage = new Mat();
-
-                            //Flip the camera if opening front camera
-                            if(cameraPos.equals("front"))
-                            {
-                                Mat inputImage = converter.convert(frame);
-                                flip(inputImage, rawImage, 1);
-                            }
-                            else
-                            {
-                                rawImage = converter.convert(frame);
-                            }
-
-                            Mat resizeImage = new Mat();
-                            resize(rawImage, resizeImage, new Size(tinyyolowidth, tinyyoloheight));
-
-                            INDArray inputImage = loader.asMatrix(resizeImage);
-                            scaler.transform(inputImage);
-                            INDArray outputs = model.outputSingle(inputImage);
-                            org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout = (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer)model.getOutputLayer(0);
-                            List<DetectedObject> objs = yout.getPredictedObjects(outputs, detectionThreshold);
-                            List<DetectedObject> objects = NonMaxSuppression.getObjects(objs);
-
-                            for (DetectedObject obj : objects) {
-
-                                double[] xy1 = obj.getTopLeftXY();
-                                double[] xy2 = obj.getBottomRightXY();
-                                String label = labels.get(obj.getPredictedClass());
-                                int x1 = (int) Math.round(w * xy1[0] / gridWidth);
-                                int y1 = (int) Math.round(h * xy1[1] / gridHeight);
-                                int x2 = (int) Math.round(w * xy2[0] / gridWidth);
-                                int y2 = (int) Math.round(h * xy2[1] / gridHeight);
-                                rectangle(rawImage, new Point(x1, y1), new Point(x2, y2), Scalar.RED, 2, 0, 0);
-                                putText(rawImage, label, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, Scalar.GREEN);
-                            }
-                            canvas.showImage(converter.convert(rawImage));
-                        }
-                        catch (Exception e)
-                        {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
-                thread.start();
-            }
-
-            KeyEvent t = null;
-            try {
-                t = canvas.waitKey(33);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            if ((t != null) && (t.getKeyCode() == KeyEvent.VK_Q)) {
-                break;
-            }
-        }
-    }
-
+//
+//    // Stream video frames from Webcam and run them through TinyYOLO model and get predictions
+//    private static void doInference(){
+//
+//        String cameraPos = "front";
+//        int cameraNum = 0;
+//        Thread thread = null;
+//        NativeImageLoader loader = new NativeImageLoader(tinyyolowidth, tinyyoloheight, 3, new ColorConversionTransform(COLOR_BGR2RGB));
+//        ImagePreProcessingScaler scaler = new ImagePreProcessingScaler(0, 1);
+//
+//        if( !cameraPos.equals("front") && !cameraPos.equals("back") )
+//        {
+//            try {
+//                throw new Exception("Unknown argument for camera position. Choose between front and back");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        FrameGrabber grabber = null;
+//        try {
+//            grabber = FrameGrabber.createDefault(cameraNum);
+//        } catch (FrameGrabber.Exception e) {
+//            e.printStackTrace();
+//        }
+//        OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
+//
+//        try {
+//            grabber.start();
+//        } catch (FrameGrabber.Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        String winName = "Object Detection";
+//        CanvasFrame canvas = new CanvasFrame(winName);
+//
+//        int w = grabber.getImageWidth();
+//        int h = grabber.getImageHeight();
+//
+//
+//        canvas.setCanvasSize(w, h);
+//        while (true)
+//        {
+//            try {
+//                frame = grabber.grab();
+//            } catch (FrameGrabber.Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            //if a thread is null, create new thread
+//            if (thread == null)
+//            {
+//                thread = new Thread(() ->
+//                {
+//                    while (frame != null)
+//                    {
+//                        try
+//                        {
+//                            Mat rawImage = new Mat();
+//
+//                            //Flip the camera if opening front camera
+//                            if(cameraPos.equals("front"))
+//                            {
+//                                Mat inputImage = converter.convert(frame);
+//                                flip(inputImage, rawImage, 1);
+//                            }
+//                            else
+//                            {
+//                                rawImage = converter.convert(frame);
+//                            }
+//
+//                            Mat resizeImage = new Mat();
+//                            resize(rawImage, resizeImage, new Size(tinyyolowidth, tinyyoloheight));
+//
+//                            INDArray inputImage = loader.asMatrix(resizeImage);
+//                            scaler.transform(inputImage);
+//                            INDArray outputs = model.outputSingle(inputImage);
+//                            org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout = (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer)model.getOutputLayer(0);
+//                            List<DetectedObject> objs = yout.getPredictedObjects(outputs, detectionThreshold);
+//                            List<DetectedObject> objects = NonMaxSuppression.getObjects(objs);
+//
+//                            for (DetectedObject obj : objects) {
+//
+//                                double[] xy1 = obj.getTopLeftXY();
+//                                double[] xy2 = obj.getBottomRightXY();
+//                                String label = labels.get(obj.getPredictedClass());
+//                                int x1 = (int) Math.round(w * xy1[0] / gridWidth);
+//                                int y1 = (int) Math.round(h * xy1[1] / gridHeight);
+//                                int x2 = (int) Math.round(w * xy2[0] / gridWidth);
+//                                int y2 = (int) Math.round(h * xy2[1] / gridHeight);
+//                                rectangle(rawImage, new Point(x1, y1), new Point(x2, y2), Scalar.RED, 2, 0, 0);
+//                                putText(rawImage, label, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, Scalar.GREEN);
+//                            }
+//                            canvas.showImage(converter.convert(rawImage));
+//                        }
+//                        catch (Exception e)
+//                        {
+//                            throw new RuntimeException(e);
+//                        }
+//                    }
+//                });
+//                thread.start();
+//            }
+//
+//            KeyEvent t = null;
+//            try {
+//                t = canvas.waitKey(33);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//
+//            if ((t != null) && (t.getKeyCode() == KeyEvent.VK_Q)) {
+//                break;
+//            }
+//        }
+//    }
+//
     //To unzip the training and test datset
     public static void unzip(String source, String destination){
         try {
