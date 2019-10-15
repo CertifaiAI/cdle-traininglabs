@@ -35,7 +35,7 @@ public class DogBreedDataSetIterator {
     //Set your data up like this so that labels from each label/class live in their own directory
     //And these label/class directories live together in the parent directory
 
-    private static final String dataDir = "src/main/resources";
+    private static final String dataDir = System.getProperty("user.home")+ "/.deeplearning4j/data";
     private static final String downloadLink = "https://docs.google.com/uc?export=download&id=17dOxbD7Tr3_w55podg0U-lgjpF9jMo-1";
 
     //Images are of format given by allowedExtension
