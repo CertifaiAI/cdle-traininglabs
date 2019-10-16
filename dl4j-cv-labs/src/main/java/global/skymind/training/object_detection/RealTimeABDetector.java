@@ -1,7 +1,7 @@
-package global.skymind.solution.object_detection;
+package global.skymind.training.object_detection;
 
-import global.skymind.solution.object_detection.dataHelpers.LabelImgXmlLabelProvider;
-import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
+import global.skymind.training.object_detection.dataHelpers.LabelImgXmlLabelProvider;
+import global.skymind.training.object_detection.dataHelpers.NonMaxSuppression;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -89,77 +89,77 @@ public class RealTimeABDetector {
     public static void main(String[] args) throws Exception {
 
         //         STEP 1 : Unzip the dataset into your local pc.
-        unzipAllDataSet();
+//        unzipAllDataSet();
         //         STEP 2 : Specify your training data and test data.
-        File trainDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits/train/");
-        File testDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits/test/");
-        log.info("Load data...");
-        FileSplit trainData = new FileSplit(trainDir, NativeImageLoader.ALLOWED_FORMATS, rng);
-        FileSplit testData = new FileSplit(testDir, NativeImageLoader.ALLOWED_FORMATS, rng);
+//        File trainDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits/train/");
+//        File testDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits/test/");
+//        log.info("Load data...");
+//        FileSplit trainData = new FileSplit(trainDir, NativeImageLoader.ALLOWED_FORMATS, rng);
+//        FileSplit testData = new FileSplit(testDir, NativeImageLoader.ALLOWED_FORMATS, rng);
 
         //         STEP 3 : Load the data into a RecordReader and make it into a RecordReaderDatasetIterator. MinMax scaling was applied as a Preprocessing step.
-        ObjectDetectionRecordReader recordReaderTrain = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
-                gridHeight, gridWidth, new LabelImgXmlLabelProvider(trainDir), new BoxImageTransform(tinyyoloheight,tinyyolowidth));
-        recordReaderTrain.initialize(trainData);
-        ObjectDetectionRecordReader recordReaderTest = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
-                gridHeight, gridWidth, new LabelImgXmlLabelProvider(testDir), new BoxImageTransform(tinyyoloheight,tinyyolowidth));
-        recordReaderTest.initialize(testData);
-
-        RecordReaderDataSetIterator train = new RecordReaderDataSetIterator(recordReaderTrain, batchSize, 1, 1, true);
-        train.setPreProcessor(new ImagePreProcessingScaler(0, 1));
-        RecordReaderDataSetIterator test = new RecordReaderDataSetIterator(recordReaderTest, 1, 1, 1, true);
-        test.setPreProcessor(new ImagePreProcessingScaler(0, 1));
+//        ObjectDetectionRecordReader recordReaderTrain = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
+//                gridHeight, gridWidth, new LabelImgXmlLabelProvider(trainDir), new BoxImageTransform(tinyyoloheight,tinyyolowidth));
+//        recordReaderTrain.initialize(trainData);
+//        ObjectDetectionRecordReader recordReaderTest = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
+//                gridHeight, gridWidth, new LabelImgXmlLabelProvider(testDir), new BoxImageTransform(tinyyoloheight,tinyyolowidth));
+//        recordReaderTest.initialize(testData);
+//
+//        RecordReaderDataSetIterator train = new RecordReaderDataSetIterator(recordReaderTrain, batchSize, 1, 1, true);
+//        train.setPreProcessor(new ImagePreProcessingScaler(0, 1));
+//        RecordReaderDataSetIterator test = new RecordReaderDataSetIterator(recordReaderTest, 1, 1, 1, true);
+//        test.setPreProcessor(new ImagePreProcessingScaler(0, 1));
 
         //         STEP 3.1 : Determine the list of available labels
-        labels = train.getLabels();
+//        labels = train.getLabels();
 
         //        If model does not exist, train the model, else directly go to model evaluation and then run real time object detection inference.
         if (modelFilename.exists()) {
         //        STEP 4 : Load trained model from previous execution
-            Nd4j.getRandom().setSeed(seed);
-            log.info("Load model...");
-            model = ModelSerializer.restoreComputationGraph(modelFilename);
+//            Nd4j.getRandom().setSeed(seed);
+//            log.info("Load model...");
+//            model = ModelSerializer.restoreComputationGraph(modelFilename);
         } else {
-            Nd4j.getRandom().setSeed(seed);
-            ComputationGraph pretrained = null;
-            FineTuneConfiguration fineTuneConf = null;
-            INDArray priors = Nd4j.create(priorBoxes);
+//            Nd4j.getRandom().setSeed(seed);
+//            ComputationGraph pretrained = null;
+//            FineTuneConfiguration fineTuneConf = null;
+//            INDArray priors = Nd4j.create(priorBoxes);
             //     STEP 4 : Train the model using Transfer Learning
 
             //     STEP 4.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
-            log.info("Build model...");
-            pretrained = (ComputationGraph)TinyYOLO.builder().build().initPretrained();
+//            log.info("Build model...");
+//            pretrained = (ComputationGraph)TinyYOLO.builder().build().initPretrained();
 
             //     STEP 4.2: Transfer Learning steps - Model Configurations.
-            fineTuneConf = getFineTuneConfiguration();
+//            fineTuneConf = getFineTuneConfiguration();
 
             //     STEP 4.3: Transfer Learning steps - Modify prebuilt model's architecture
 
-            model = getNewComputationGraph(pretrained, priors, fineTuneConf);
-            System.out.println(model.summary(InputType.convolutional(tinyyoloheight, tinyyolowidth, nClasses)));
+//            model = getNewComputationGraph(pretrained, priors, fineTuneConf);
+//            System.out.println(model.summary(InputType.convolutional(tinyyoloheight, tinyyolowidth, nClasses)));
 
             //     STEP 4.4: Training and Save model.
 
-            log.info("Train model...");
-            UIServer server = UIServer.getInstance();
-            StatsStorage storage = new InMemoryStatsStorage();
-            server.attach(storage);
-            model.setListeners(new ScoreIterationListener(1), new StatsListener(storage));
-
-            for (int i = 1; i < nEpochs+1; i++) {
-                train.reset();
-                while (train.hasNext()) {
-                    model.fit(train.next());
-                }
-                log.info("*** Completed epoch {} ***", i);
-            }
-            ModelSerializer.writeModel(model, modelFilename, true);
-            System.out.println("Model saved.");
-        }
+//            log.info("Train model...");
+//            UIServer server = UIServer.getInstance();
+//            StatsStorage storage = new InMemoryStatsStorage();
+//            server.attach(storage);
+//            model.setListeners(new ScoreIterationListener(1), new StatsListener(storage));
+//
+//            for (int i = 1; i < nEpochs+1; i++) {
+//                train.reset();
+//                while (train.hasNext()) {
+//                    model.fit(train.next());
+//                }
+//                log.info("*** Completed epoch {} ***", i);
+//            }
+//            ModelSerializer.writeModel(model, modelFilename, true);
+//            System.out.println("Model saved.");
+//        }
         //     STEP 5: Training and Save model.
-        OfflineValidationWithTestDataset(test);
+//        OfflineValidationWithTestDataset(test);
         //     STEP 6: Training and Save model.
-        doInference();
+//        doInference();
     }
 
     private static ComputationGraph getNewComputationGraph(ComputationGraph pretrained, INDArray priors, FineTuneConfiguration fineTuneConf) {
