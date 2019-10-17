@@ -48,8 +48,8 @@ public class DogBreedDataSetIterator {
     //Random number generator
     private static final Random rng  = new Random(123);
 
-    private static String dataDir = System.getProperty("user.home")+ "/.deeplearning4j/data";
-    private static String downloadLink = "https://docs.google.com/uc?export=download&id=17dOxbD7Tr3_w55podg0U-lgjpF9jMo-1";
+    private static String dataDir;
+    private static String downloadLink;
 
     private static ParentPathLabelGenerator labelMaker = new ParentPathLabelGenerator();
     private static InputSplit trainData,testData;
