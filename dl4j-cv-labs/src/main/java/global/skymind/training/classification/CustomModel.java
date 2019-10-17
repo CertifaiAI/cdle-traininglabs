@@ -34,7 +34,7 @@ public class CustomModel {
     /*
     Define training parameters
     */
-    private static int epochs = 120;
+    private static int epochs = 10; //120
     private static int batchSize = 32;
     private static int seed = 123;
     private static int numClasses = 5;
