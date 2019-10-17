@@ -1,5 +1,6 @@
 package global.skymind.training.classification;
 
+import global.skymind.Helper;
 import org.apache.commons.io.FileUtils;
 import org.datavec.api.io.filters.BalancedPathFilter;
 import org.datavec.api.io.labels.ParentPathLabelGenerator;
@@ -18,10 +19,11 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Random;
 
 public class DogBreedDataSetIterator {
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(DogBreedDataSetIterator.class);
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(global.skymind.solution.classification.DogBreedDataSetIterator.class);
 
     //DIRECTORY STRUCTURE:
     //Images in the dataset have to be organized in directories by class/label.
@@ -35,8 +37,10 @@ public class DogBreedDataSetIterator {
     //Set your data up like this so that labels from each label/class live in their own directory
     //And these label/class directories live together in the parent directory
 
-    private static final String dataDir = System.getProperty("user.home")+ "/.deeplearning4j/data";
-    private static final String downloadLink = "https://docs.google.com/uc?export=download&id=17dOxbD7Tr3_w55podg0U-lgjpF9jMo-1";
+    private static final int height = 224;
+    private static final int width = 224;
+    private static final int channels = 3;
+    private static final int numClasses = 5;
 
     //Images are of format given by allowedExtension
     private static final String [] allowedExtensions = BaseImageLoader.ALLOWED_FORMATS;
@@ -44,10 +48,8 @@ public class DogBreedDataSetIterator {
     //Random number generator
     private static final Random rng  = new Random(123);
 
-    private static final int height = 224;
-    private static final int width = 224;
-    private static final int channels = 3;
-    private static final int numClasses = 5;
+    private static String dataDir = System.getProperty("user.home")+ "/.deeplearning4j/data";
+    private static String downloadLink = "https://docs.google.com/uc?export=download&id=17dOxbD7Tr3_w55podg0U-lgjpF9jMo-1";
 
     private static ParentPathLabelGenerator labelMaker = new ParentPathLabelGenerator();
     private static InputSplit trainData,testData;
@@ -56,6 +58,9 @@ public class DogBreedDataSetIterator {
     //scale input to 0 - 1
     private static DataNormalization scaler = new ImagePreProcessingScaler(0, 1);
     private static ImageTransform transform;
+
+    public DogBreedDataSetIterator() throws IOException {
+    }
 
     private static DataSetIterator makeIterator(InputSplit split, boolean training) throws IOException {
         ImageRecordReader recordReader = new ImageRecordReader(height,width,channels,labelMaker);
@@ -84,7 +89,14 @@ public class DogBreedDataSetIterator {
     }
 
     public static void setup(int batchSizeArg, int trainPerc) throws IOException {
-        File parentDir = new File(dataDir+"/dog-breed-identification");
+        dataDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("classification.datapath")
+        ).toString();
+        downloadLink = Helper.getPropValues("classification.downloadlink");
+
+        File parentDir = new File(Paths.get(dataDir,"dog-breed-identification").toString());
+
         if(!parentDir.exists()){
             downloadAndUnzip();
         }

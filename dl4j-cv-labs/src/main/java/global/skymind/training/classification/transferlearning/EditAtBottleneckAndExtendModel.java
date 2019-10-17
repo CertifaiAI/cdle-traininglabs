@@ -32,15 +32,11 @@ import java.util.Random;
 public class EditAtBottleneckAndExtendModel {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(EditAtBottleneckAndExtendModel.class);
 
-    private static int epochs = 120;
+    private static int epochs = 10;
     private static int batchSize = 32;
     private static int seed = 123;
     private static int numClasses = 5;
     private static int trainPerc = 80;
-
-    private static int height = 224;
-    private static int width = 224;
-    private static int channel = 3;
 
     private static final Random randNumGen = new Random(seed);
 

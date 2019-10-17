@@ -36,10 +36,6 @@ public class EditLastLayerOthersFrozen {
     private static int seed = 123;
     private static int numClasses =5;
 
-    private static int height = 224;
-    private static int width = 224;
-    private static int channel = 3;
-
     private static final Random randNumGen = new Random(seed);
 
     public static void main(String args[]) throws Exception{
