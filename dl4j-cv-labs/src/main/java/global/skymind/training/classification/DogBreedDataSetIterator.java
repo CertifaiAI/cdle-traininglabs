@@ -91,9 +91,9 @@ public class DogBreedDataSetIterator {
     public static void setup(int batchSizeArg, int trainPerc) throws IOException {
         dataDir = Paths.get(
                 System.getProperty("user.home"),
-                Helper.getPropValues("classification.datapath")
+                Helper.getPropValues("dl4j_home.data")
         ).toString();
-        downloadLink = Helper.getPropValues("classification.downloadlink");
+        downloadLink = Helper.getPropValues("dataset.dogbreed.url");
 
         File parentDir = new File(Paths.get(dataDir,"dog-breed-identification").toString());
 
