@@ -31,7 +31,7 @@ import java.util.Random;
 public class EditLastLayerOthersFrozen {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(EditLastLayerOthersFrozen.class);
 
-    private static int epochs = 120;
+    private static int epochs = 30;
     private static int batchSize = 32;
     private static int seed = 123;
     private static int numClasses =5;
@@ -71,7 +71,7 @@ public class EditLastLayerOthersFrozen {
 
         // Override the setting for all layers that are not "frozen".
         FineTuneConfiguration fineTuneConf = new FineTuneConfiguration.Builder()
-                .updater(new Nesterovs(5e-5, 0.9))
+                .updater(new Nesterovs(5e-4, 0.9))
                 .seed(seed)
                 .build();
 
