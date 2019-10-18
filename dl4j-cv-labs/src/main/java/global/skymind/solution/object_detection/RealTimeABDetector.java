@@ -16,7 +16,6 @@ import org.bytedeco.opencv.opencv_core.Size;
 import org.datavec.api.split.FileSplit;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.objdetect.ObjectDetectionRecordReader;
-import org.datavec.image.transform.BoxImageTransform;
 import org.datavec.image.transform.ColorConversionTransform;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
@@ -57,6 +56,8 @@ import org.deeplearning4j.ui.api.UIServer;
 import static org.bytedeco.opencv.global.opencv_core.CV_8U;
 import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
+import static org.bytedeco.opencv.helper.opencv_core.RGB;
+
 import java.awt.event.KeyEvent;
 
 public class RealTimeABDetector {
@@ -64,14 +65,16 @@ public class RealTimeABDetector {
     private static int nChannels = 3;
     private static final int gridWidth = 13;
     private static final int gridHeight = 13;
-    private static double detectionThreshold = 0.1;
+    private static double detectionThreshold = 0.3;
     private static final int tinyyolowidth = 416;
     private static final int tinyyoloheight = 416;
 
     private static int nBoxes = 5;
     private static double lambdaNoObj = 0.5;
-    private static double lambdaCoord = 1.0;
-    private static double[][] priorBoxes = {{2, 5}, {2.5, 6}, {3, 7}, {3.5, 8}, {4, 9}};
+    private static double lambdaCoord = 5.0;
+//    private static double[][] priorBoxes = {{2, 5}, {2.5, 6}, {3, 7}, {3.5, 8}, {4, 9}};
+    private static double[][] priorBoxes = {{1, 3}, {2.5, 6}, {3, 4}, {3.5, 8}, {4, 9}};
+
 
     private static int batchSize = 8;
     private static int nEpochs = 40;
@@ -80,11 +83,14 @@ public class RealTimeABDetector {
 
     private static int nClasses = 2;
     private static List<String> labels;
-    private static int seed = 10;
+    private static int seed = 123;
     private static Random rng = new Random(seed);
     private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/Avocado_Banana_Detector.zip");
     private static ComputationGraph model;
     private static Frame frame = null;
+    public static final Scalar GREEN = RGB(0, 255.0, 0);
+    public static final Scalar YELLOW = RGB(255, 255, 0);
+    public static Scalar[] colormap = {GREEN,YELLOW};
 
     public static void main(String[] args) throws Exception {
 
@@ -99,10 +105,12 @@ public class RealTimeABDetector {
 
         //         STEP 3 : Load the data into a RecordReader and make it into a RecordReaderDatasetIterator. MinMax scaling was applied as a Preprocessing step.
         ObjectDetectionRecordReader recordReaderTrain = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
-                gridHeight, gridWidth, new LabelImgXmlLabelProvider(trainDir), new BoxImageTransform(tinyyoloheight,tinyyolowidth));
+                gridHeight, gridWidth, new LabelImgXmlLabelProvider(trainDir));
+
         recordReaderTrain.initialize(trainData);
         ObjectDetectionRecordReader recordReaderTest = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
-                gridHeight, gridWidth, new LabelImgXmlLabelProvider(testDir), new BoxImageTransform(tinyyoloheight,tinyyolowidth));
+                gridHeight, gridWidth, new LabelImgXmlLabelProvider(testDir));
+
         recordReaderTest.initialize(testData);
 
         RecordReaderDataSetIterator train = new RecordReaderDataSetIterator(recordReaderTrain, batchSize, 1, 1, true);
@@ -114,6 +122,9 @@ public class RealTimeABDetector {
         labels = train.getLabels();
 
         //        If model does not exist, train the model, else directly go to model evaluation and then run real time object detection inference.
+//        boolean trainOrNot=true;
+//        if (trainOrNot!=true) {
+
         if (modelFilename.exists()) {
         //        STEP 4 : Load trained model from previous execution
             Nd4j.getRandom().setSeed(seed);
@@ -226,8 +237,10 @@ public class RealTimeABDetector {
 
             Mat mat = imageLoader.asMat(features);
             mat.convertTo(convertedMat, CV_8U, 255, 0);
-            int w = mat.cols() * 2;
-            int h = mat.rows() * 2;
+            int w = mat.cols() ;
+            int h = mat.rows() ;
+//            int w = mat.cols() * 2;
+//            int h = mat.rows() * 2;
             resize(convertedMat,convertedMat_big, new Size(w, h));
 
             for (DetectedObject obj : objects) {
@@ -238,8 +251,8 @@ public class RealTimeABDetector {
                 int y1 = (int) Math.round(h * xy1[1] / gridHeight);
                 int x2 = (int) Math.round(w * xy2[0] / gridWidth);
                 int y2 = (int) Math.round(h * xy2[1] / gridHeight);
-                rectangle(convertedMat_big, new Point(x1, y1), new Point(x2, y2), Scalar.RED, 2, 0, 0);
-                putText(convertedMat_big, label, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, Scalar.GREEN);
+                rectangle(convertedMat_big, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
+                putText(convertedMat_big, label, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, colormap[obj.getPredictedClass()]);
             }
 
             canvas.showImage(converter.convert(convertedMat_big));
@@ -337,8 +350,8 @@ public class RealTimeABDetector {
                                 int y1 = (int) Math.round(h * xy1[1] / gridHeight);
                                 int x2 = (int) Math.round(w * xy2[0] / gridWidth);
                                 int y2 = (int) Math.round(h * xy2[1] / gridHeight);
-                                rectangle(rawImage, new Point(x1, y1), new Point(x2, y2), Scalar.RED, 2, 0, 0);
-                                putText(rawImage, label, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, Scalar.GREEN);
+                                rectangle(rawImage, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
+                                putText(rawImage, label, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, colormap[obj.getPredictedClass()]);
                             }
                             canvas.showImage(converter.convert(rawImage));
                         }
