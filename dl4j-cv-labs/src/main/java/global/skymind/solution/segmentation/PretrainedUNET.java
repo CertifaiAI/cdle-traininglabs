@@ -9,7 +9,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.datavec.api.io.filters.BalancedPathFilter;
 import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.InputSplit;
-import org.datavec.image.data.ImageWritable;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
 import org.datavec.image.transform.*;
@@ -220,13 +219,16 @@ public class PretrainedUNET {
 
             log.info(eval.stats());
 
-//            Intersection over Union
-            float IOUBackground = (float) eval.truePositives().get(0) / ((float) eval.truePositives().get(0) + (float) eval.falsePositives().get(0) + (float)  eval.falseNegatives().get(0));
+//            Intersection over Union:  TP / (TP + FN + FP)
+
+
+
+//            float IOUBackground = (float) eval.truePositives().get(0) / ((float) eval.truePositives().get(0) + (float) eval.falsePositives().get(0) + (float)  eval.falseNegatives().get(0));
             float IOUNuclei = (float)eval.truePositives().get(1) / ((float)eval.truePositives().get(1) + (float)eval.falsePositives().get(1) + (float)eval.falseNegatives().get(1));
-            float IOUMean = (IOUBackground + IOUNuclei)/ 2;
-            System.out.println("IOU Background " + String.format("%.3f", IOUBackground) );
+//            float IOUMean = (IOUBackground + IOUNuclei)/ 2;
+//            System.out.println("IOU Background " + String.format("%.3f", IOUBackground) );
             System.out.println("IOU Cell Nuclei " + String.format("%.3f", IOUNuclei) );
-            System.out.println("Mean IOU " + String.format("%.3f", IOUMean) );
+//            System.out.println("Mean IOU " + String.format("%.3f", IOUMean) );
 
             eval.reset();
 
@@ -273,10 +275,12 @@ public class PretrainedUNET {
 //        ImageTransform enhanceContrast = new EqualizeHistTransform();
         ImageTransform flip = new FlipImageTransform();
         ImageTransform rgb2gray = new ColorConversionTransform(CV_RGB2GRAY);
+        ImageTransform rotate = new RotateImageTransform(random, 30);
 
         List<Pair<ImageTransform, Double>> pipeline = Arrays.asList(
                 new Pair<>(rgb2gray, 1.0),
-                new Pair<>(flip, 0.7)
+                new Pair<>(flip, 0.5),
+                new Pair<>(rotate,0.5)
         );
         return new PipelineImageTransform(pipeline, false);
     }
