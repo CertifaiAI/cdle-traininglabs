@@ -122,7 +122,7 @@ public class DogBreedDataSetIterator {
         File zipFile = new File(dataPath, "dog-breed-identification.zip");
 
         if(!zipFile.isFile()){
-            log.info("Downloading the flower dataset from "+downloadLink+ "...");
+            log.info("Downloading the dataset from "+downloadLink+ "...");
             FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
         }
         ArchiveUtils.unzipFileTo(zipFile.getAbsolutePath(), dataPath);
