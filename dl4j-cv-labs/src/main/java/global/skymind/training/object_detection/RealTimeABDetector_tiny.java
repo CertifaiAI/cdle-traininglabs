@@ -1,10 +1,9 @@
-//This example uses transfer learning from YOLOv2 pretrained model
+//This example uses transfer learning from TinyYOLO pretrained model
 
 package global.skymind.training.object_detection;
 
 import global.skymind.solution.object_detection.dataHelpers.LabelImgXmlLabelProvider;
 import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
-
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.bytedeco.javacv.CanvasFrame;
@@ -34,42 +33,40 @@ import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
-import org.deeplearning4j.zoo.model.YOLO2;
+import org.deeplearning4j.zoo.model.TinyYOLO;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.io.ClassPathResource;
+import org.nd4j.linalg.learning.config.Adam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
-
-import org.nd4j.linalg.learning.config.Adam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.deeplearning4j.ui.api.UIServer;
 
 import static org.bytedeco.opencv.global.opencv_core.CV_8U;
 import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
-import java.awt.event.KeyEvent;
-
-public class RealTimeABDetector {
-    private static final Logger log = LoggerFactory.getLogger(RealTimeABDetector.class);
+public class RealTimeABDetector_tiny {
+    private static final Logger log = LoggerFactory.getLogger(RealTimeABDetector_tiny.class);
     private static int nChannels = 3;
     private static final int gridWidth = 13;
     private static final int gridHeight = 13;
-    private static double detectionThreshold = 0.5;
-    private static final int yolowidth = 416;
-    private static final int yoloheight = 416;
+    private static double detectionThreshold = 0.3;
+    private static final int tinyyolowidth = 416;
+    private static final int tinyyoloheight = 416;
 
     private static int nBoxes = 5;
     private static double lambdaNoObj = 0.5;
@@ -86,14 +83,13 @@ public class RealTimeABDetector {
     private static List<String> labels;
     private static int seed = 123;
     private static Random rng = new Random(seed);
-    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/Avocado_Banana_Detector_yolov2.zip");
+    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/Avocado_Banana_Detector_tinyyolo.zip");
     private static ComputationGraph model;
     private static Frame frame = null;
     public static final Scalar GREEN = RGB(0, 255.0, 0);
     public static final Scalar YELLOW = RGB(255, 255, 0);
     public static Scalar[] colormap = {GREEN,YELLOW};
     public static String labeltext = null;
-
 
     public static void main(String[] args) throws Exception {
 
@@ -107,11 +103,11 @@ public class RealTimeABDetector {
 //        FileSplit testData = new FileSplit(testDir, NativeImageLoader.ALLOWED_FORMATS, rng);
 
         //         STEP 3 : Load the data into a RecordReader and make it into a RecordReaderDatasetIterator. MinMax scaling was applied as a Preprocessing step.
-//        ObjectDetectionRecordReader recordReaderTrain = new ObjectDetectionRecordReader(yoloheight, yolowidth, nChannels,
+//        ObjectDetectionRecordReader recordReaderTrain = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
 //                gridHeight, gridWidth, new LabelImgXmlLabelProvider(trainDir));
 //
 //        recordReaderTrain.initialize(trainData);
-//        ObjectDetectionRecordReader recordReaderTest = new ObjectDetectionRecordReader(yoloheight, yolowidth, nChannels,
+//        ObjectDetectionRecordReader recordReaderTest = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
 //                gridHeight, gridWidth, new LabelImgXmlLabelProvider(testDir));
 //
 //        recordReaderTest.initialize(testData);
@@ -125,6 +121,7 @@ public class RealTimeABDetector {
 //        labels = train.getLabels();
 
         //        If model does not exist, train the model, else directly go to model evaluation and then run real time object detection inference.
+
 //        if (modelFilename.exists()) {
 //        //        STEP 4 : Load trained model from previous execution
 //            Nd4j.getRandom().setSeed(seed);
@@ -135,17 +132,18 @@ public class RealTimeABDetector {
 //            ComputationGraph pretrained = null;
 //            FineTuneConfiguration fineTuneConf = null;
 //            INDArray priors = Nd4j.create(priorBoxes);
-            //     STEP 4 : Train the model using Transfer Learning
-            //     STEP 4.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
+//            //     STEP 4 : Train the model using Transfer Learning
+//
+//            //     STEP 4.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
 //            log.info("Build model...");
-//            pretrained = (ComputationGraph) YOLO2.builder().build().initPretrained();
+//            pretrained = (ComputationGraph) TinyYOLO.builder().build().initPretrained();
 //
 //            //     STEP 4.2: Transfer Learning steps - Model Configurations.
 //            fineTuneConf = getFineTuneConfiguration();
 //
 //            //     STEP 4.3: Transfer Learning steps - Modify prebuilt model's architecture
 //            model = getNewComputationGraph(pretrained, priors, fineTuneConf);
-//            System.out.println(model.summary(InputType.convolutional(yoloheight, yolowidth, nClasses)));
+//            System.out.println(model.summary(InputType.convolutional(tinyyoloheight, tinyyolowidth, nClasses)));
 //
 //            //     STEP 4.4: Training and Save model.
 //            log.info("Train model...");
@@ -173,9 +171,9 @@ public class RealTimeABDetector {
     private static ComputationGraph getNewComputationGraph(ComputationGraph pretrained, INDArray priors, FineTuneConfiguration fineTuneConf) {
         ComputationGraph _ComputationGraph = new TransferLearning.GraphBuilder(pretrained)
                 .fineTuneConfiguration(fineTuneConf)
-                .removeVertexKeepConnections("conv2d_23")
+                .removeVertexKeepConnections("conv2d_9")
                 .removeVertexKeepConnections("outputs")
-                .addLayer("conv2d_23",
+                .addLayer("conv2d_9",
                         new ConvolutionLayer.Builder(1, 1)
                                 .nIn(1024)
                                 .nOut(nBoxes * (5 + nClasses))
@@ -184,14 +182,14 @@ public class RealTimeABDetector {
                                 .weightInit(WeightInit.XAVIER)
                                 .activation(Activation.IDENTITY)
                                 .build(),
-                        "leaky_re_lu_22")
+                        "leaky_re_lu_8")
                 .addLayer("outputs",
                         new Yolo2OutputLayer.Builder()
                                 .lambbaNoObj(lambdaNoObj)
                                 .lambdaCoord(lambdaCoord)
                                 .boundingBoxPriors(priors.castTo(DataType.FLOAT))
                                 .build(),
-                        "conv2d_23")
+                        "conv2d_9")
                 .setOutputs("outputs")
                 .build();
 
@@ -261,13 +259,13 @@ public class RealTimeABDetector {
         canvas.dispose();
     }
 
-    // Stream video frames from Webcam and run them through YOLOv2 model and get predictions
+    // Stream video frames from Webcam and run them through TinyYOLO model and get predictions
     private static void doInference(){
 
         String cameraPos = "front";
         int cameraNum = 0;
         Thread thread = null;
-        NativeImageLoader loader = new NativeImageLoader(yolowidth, yoloheight, 3, new ColorConversionTransform(COLOR_BGR2RGB));
+        NativeImageLoader loader = new NativeImageLoader(tinyyolowidth, tinyyoloheight, 3, new ColorConversionTransform(COLOR_BGR2RGB));
         ImagePreProcessingScaler scaler = new ImagePreProcessingScaler(0, 1);
 
         if( !cameraPos.equals("front") && !cameraPos.equals("back") )
@@ -332,7 +330,7 @@ public class RealTimeABDetector {
                             }
 
                             Mat resizeImage = new Mat();
-                            resize(rawImage, resizeImage, new Size(yolowidth, yoloheight));
+                            resize(rawImage, resizeImage, new Size(tinyyolowidth, tinyyoloheight));
 
                             INDArray inputImage = loader.asMatrix(resizeImage);
                             scaler.transform(inputImage);

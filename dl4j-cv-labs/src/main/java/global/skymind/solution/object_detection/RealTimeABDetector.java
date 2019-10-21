@@ -1,3 +1,5 @@
+//This example uses transfer learning from YOLOv2 pretrained model
+
 package global.skymind.solution.object_detection;
 
 import global.skymind.solution.object_detection.dataHelpers.LabelImgXmlLabelProvider;
@@ -35,7 +37,7 @@ import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
-import org.deeplearning4j.zoo.model.TinyYOLO;
+import org.deeplearning4j.zoo.model.YOLO2;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -65,18 +67,17 @@ public class RealTimeABDetector {
     private static int nChannels = 3;
     private static final int gridWidth = 13;
     private static final int gridHeight = 13;
-    private static double detectionThreshold = 0.3;
-    private static final int tinyyolowidth = 416;
-    private static final int tinyyoloheight = 416;
+    private static double detectionThreshold = 0.5;
+    private static final int yolowidth = 416;
+    private static final int yoloheight = 416;
 
     private static int nBoxes = 5;
     private static double lambdaNoObj = 0.5;
     private static double lambdaCoord = 5.0;
-//    private static double[][] priorBoxes = {{2, 5}, {2.5, 6}, {3, 7}, {3.5, 8}, {4, 9}};
     private static double[][] priorBoxes = {{1, 3}, {2.5, 6}, {3, 4}, {3.5, 8}, {4, 9}};
 
 
-    private static int batchSize = 8;
+    private static int batchSize = 4;
     private static int nEpochs = 40;
 
     private static double learningRate = 1e-4;
@@ -85,12 +86,14 @@ public class RealTimeABDetector {
     private static List<String> labels;
     private static int seed = 123;
     private static Random rng = new Random(seed);
-    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/Avocado_Banana_Detector.zip");
+    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/Avocado_Banana_Detector_yolov2.zip");
     private static ComputationGraph model;
     private static Frame frame = null;
     public static final Scalar GREEN = RGB(0, 255.0, 0);
     public static final Scalar YELLOW = RGB(255, 255, 0);
     public static Scalar[] colormap = {GREEN,YELLOW};
+    public static String labeltext = null;
+
 
     public static void main(String[] args) throws Exception {
 
@@ -104,11 +107,11 @@ public class RealTimeABDetector {
         FileSplit testData = new FileSplit(testDir, NativeImageLoader.ALLOWED_FORMATS, rng);
 
         //         STEP 3 : Load the data into a RecordReader and make it into a RecordReaderDatasetIterator. MinMax scaling was applied as a Preprocessing step.
-        ObjectDetectionRecordReader recordReaderTrain = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
+        ObjectDetectionRecordReader recordReaderTrain = new ObjectDetectionRecordReader(yoloheight, yolowidth, nChannels,
                 gridHeight, gridWidth, new LabelImgXmlLabelProvider(trainDir));
 
         recordReaderTrain.initialize(trainData);
-        ObjectDetectionRecordReader recordReaderTest = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
+        ObjectDetectionRecordReader recordReaderTest = new ObjectDetectionRecordReader(yoloheight, yolowidth, nChannels,
                 gridHeight, gridWidth, new LabelImgXmlLabelProvider(testDir));
 
         recordReaderTest.initialize(testData);
@@ -122,9 +125,6 @@ public class RealTimeABDetector {
         labels = train.getLabels();
 
         //        If model does not exist, train the model, else directly go to model evaluation and then run real time object detection inference.
-//        boolean trainOrNot=true;
-//        if (trainOrNot!=true) {
-
         if (modelFilename.exists()) {
         //        STEP 4 : Load trained model from previous execution
             Nd4j.getRandom().setSeed(seed);
@@ -136,21 +136,18 @@ public class RealTimeABDetector {
             FineTuneConfiguration fineTuneConf = null;
             INDArray priors = Nd4j.create(priorBoxes);
             //     STEP 4 : Train the model using Transfer Learning
-
             //     STEP 4.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
             log.info("Build model...");
-            pretrained = (ComputationGraph)TinyYOLO.builder().build().initPretrained();
+            pretrained = (ComputationGraph) YOLO2.builder().build().initPretrained();
 
             //     STEP 4.2: Transfer Learning steps - Model Configurations.
             fineTuneConf = getFineTuneConfiguration();
 
             //     STEP 4.3: Transfer Learning steps - Modify prebuilt model's architecture
-
             model = getNewComputationGraph(pretrained, priors, fineTuneConf);
-            System.out.println(model.summary(InputType.convolutional(tinyyoloheight, tinyyolowidth, nClasses)));
+            System.out.println(model.summary(InputType.convolutional(yoloheight, yolowidth, nClasses)));
 
             //     STEP 4.4: Training and Save model.
-
             log.info("Train model...");
             UIServer server = UIServer.getInstance();
             StatsStorage storage = new InMemoryStatsStorage();
@@ -176,9 +173,9 @@ public class RealTimeABDetector {
     private static ComputationGraph getNewComputationGraph(ComputationGraph pretrained, INDArray priors, FineTuneConfiguration fineTuneConf) {
         ComputationGraph _ComputationGraph = new TransferLearning.GraphBuilder(pretrained)
                 .fineTuneConfiguration(fineTuneConf)
-                .removeVertexKeepConnections("conv2d_9")
+                .removeVertexKeepConnections("conv2d_23")
                 .removeVertexKeepConnections("outputs")
-                .addLayer("convolution2d_9",
+                .addLayer("conv2d_23",
                         new ConvolutionLayer.Builder(1, 1)
                                 .nIn(1024)
                                 .nOut(nBoxes * (5 + nClasses))
@@ -187,14 +184,14 @@ public class RealTimeABDetector {
                                 .weightInit(WeightInit.XAVIER)
                                 .activation(Activation.IDENTITY)
                                 .build(),
-                        "leaky_re_lu_8")
+                        "leaky_re_lu_22")
                 .addLayer("outputs",
                         new Yolo2OutputLayer.Builder()
                                 .lambbaNoObj(lambdaNoObj)
                                 .lambdaCoord(lambdaCoord)
                                 .boundingBoxPriors(priors.castTo(DataType.FLOAT))
                                 .build(),
-                        "convolution2d_9")
+                        "conv2d_23")
                 .setOutputs("outputs")
                 .build();
 
@@ -237,10 +234,8 @@ public class RealTimeABDetector {
 
             Mat mat = imageLoader.asMat(features);
             mat.convertTo(convertedMat, CV_8U, 255, 0);
-            int w = mat.cols() ;
-            int h = mat.rows() ;
-//            int w = mat.cols() * 2;
-//            int h = mat.rows() * 2;
+            int w = mat.cols() * 2;
+            int h = mat.rows() * 2;
             resize(convertedMat,convertedMat_big, new Size(w, h));
 
             for (DetectedObject obj : objects) {
@@ -251,23 +246,28 @@ public class RealTimeABDetector {
                 int y1 = (int) Math.round(h * xy1[1] / gridHeight);
                 int x2 = (int) Math.round(w * xy2[0] / gridWidth);
                 int y2 = (int) Math.round(h * xy2[1] / gridHeight);
+                //Draw bounding box
                 rectangle(convertedMat_big, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
-                putText(convertedMat_big, label, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, colormap[obj.getPredictedClass()]);
+                //Display label text
+                labeltext =label+" "+(Math.round(obj.getConfidence()*100.0)/100.0)*100.0 +"%";
+                int baseline[]={0};
+                Size textSize=getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1,1,baseline);
+                rectangle(convertedMat_big, new Point(x1 + 2, y2 - 2), new Point(x1 + 2+textSize.get(0), y2 - 2-textSize.get(1)), colormap[obj.getPredictedClass()], FILLED,0,0);
+                putText(convertedMat_big, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0,0,0));
             }
-
             canvas.showImage(converter.convert(convertedMat_big));
             canvas.waitKey();
         }
         canvas.dispose();
     }
 
-    // Stream video frames from Webcam and run them through TinyYOLO model and get predictions
+    // Stream video frames from Webcam and run them through YOLOv2 model and get predictions
     private static void doInference(){
 
         String cameraPos = "front";
         int cameraNum = 0;
         Thread thread = null;
-        NativeImageLoader loader = new NativeImageLoader(tinyyolowidth, tinyyoloheight, 3, new ColorConversionTransform(COLOR_BGR2RGB));
+        NativeImageLoader loader = new NativeImageLoader(yolowidth, yoloheight, 3, new ColorConversionTransform(COLOR_BGR2RGB));
         ImagePreProcessingScaler scaler = new ImagePreProcessingScaler(0, 1);
 
         if( !cameraPos.equals("front") && !cameraPos.equals("back") )
@@ -332,7 +332,7 @@ public class RealTimeABDetector {
                             }
 
                             Mat resizeImage = new Mat();
-                            resize(rawImage, resizeImage, new Size(tinyyolowidth, tinyyoloheight));
+                            resize(rawImage, resizeImage, new Size(yolowidth, yoloheight));
 
                             INDArray inputImage = loader.asMatrix(resizeImage);
                             scaler.transform(inputImage);
@@ -350,8 +350,14 @@ public class RealTimeABDetector {
                                 int y1 = (int) Math.round(h * xy1[1] / gridHeight);
                                 int x2 = (int) Math.round(w * xy2[0] / gridWidth);
                                 int y2 = (int) Math.round(h * xy2[1] / gridHeight);
+                                //Draw bounding box
                                 rectangle(rawImage, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
-                                putText(rawImage, label, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, colormap[obj.getPredictedClass()]);
+                                //Display label text
+                                labeltext =label+" "+(Math.round(obj.getConfidence()*100.0)/100.0)*100.0 +"%";
+                                int baseline[]={0};
+                                Size textSize=getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1,1,baseline);
+                                rectangle(rawImage, new Point(x1 + 2, y2 - 2), new Point(x1 + 2+textSize.get(0), y2 - 2-textSize.get(1)), colormap[obj.getPredictedClass()], FILLED,0,0);
+                                putText(rawImage, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0,0,0));
                             }
                             canvas.showImage(converter.convert(rawImage));
                         }
