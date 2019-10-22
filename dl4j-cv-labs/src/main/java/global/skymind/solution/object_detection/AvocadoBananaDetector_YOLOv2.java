@@ -62,8 +62,8 @@ import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
 import java.awt.event.KeyEvent;
 
-public class RealTimeABDetector {
-    private static final Logger log = LoggerFactory.getLogger(RealTimeABDetector.class);
+public class AvocadoBananaDetector_YOLOv2 {
+    private static final Logger log = LoggerFactory.getLogger(AvocadoBananaDetector_YOLOv2.class);
     private static int nChannels = 3;
     private static final int gridWidth = 13;
     private static final int gridHeight = 13;

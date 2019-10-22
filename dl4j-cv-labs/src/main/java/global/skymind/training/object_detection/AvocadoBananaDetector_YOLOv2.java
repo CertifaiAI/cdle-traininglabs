@@ -2,7 +2,6 @@
 
 package global.skymind.training.object_detection;
 
-import global.skymind.solution.object_detection.dataHelpers.LabelImgXmlLabelProvider;
 import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
 
 import net.lingala.zip4j.core.ZipFile;
@@ -15,17 +14,13 @@ import org.bytedeco.opencv.opencv_core.Mat;
 import org.bytedeco.opencv.opencv_core.Point;
 import org.bytedeco.opencv.opencv_core.Scalar;
 import org.bytedeco.opencv.opencv_core.Size;
-import org.datavec.api.split.FileSplit;
 import org.datavec.image.loader.NativeImageLoader;
-import org.datavec.image.recordreader.objdetect.ObjectDetectionRecordReader;
 import org.datavec.image.transform.ColorConversionTransform;
-import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.ConvolutionMode;
 import org.deeplearning4j.nn.conf.GradientNormalization;
 import org.deeplearning4j.nn.conf.WorkspaceMode;
-import org.deeplearning4j.nn.conf.inputs.InputType;
 import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
 import org.deeplearning4j.nn.conf.layers.objdetect.Yolo2OutputLayer;
 import org.deeplearning4j.nn.graph.ComputationGraph;
@@ -33,16 +28,10 @@ import org.deeplearning4j.nn.layers.objdetect.DetectedObject;
 import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.weights.WeightInit;
-import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.deeplearning4j.ui.stats.StatsListener;
-import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
-import org.deeplearning4j.util.ModelSerializer;
-import org.deeplearning4j.zoo.model.YOLO2;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
-import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.io.ClassPathResource;
 
 import java.io.File;
@@ -53,7 +42,6 @@ import java.util.Random;
 import org.nd4j.linalg.learning.config.Adam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.deeplearning4j.ui.api.UIServer;
 
 import static org.bytedeco.opencv.global.opencv_core.CV_8U;
 import static org.bytedeco.opencv.global.opencv_core.flip;
@@ -62,8 +50,8 @@ import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
 import java.awt.event.KeyEvent;
 
-public class RealTimeABDetector {
-    private static final Logger log = LoggerFactory.getLogger(RealTimeABDetector.class);
+public class AvocadoBananaDetector_YOLOv2 {
+    private static final Logger log = LoggerFactory.getLogger(AvocadoBananaDetector_YOLOv2.class);
     private static int nChannels = 3;
     private static final int gridWidth = 13;
     private static final int gridHeight = 13;
