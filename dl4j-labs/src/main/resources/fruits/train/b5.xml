@@ -1,0 +1,26 @@
+<annotation>
+	<folder>banana</folder>
+	<filename>banana (4).jpg</filename>
+	<path>C:\Users\choowilson\Desktop\ObjectDetection\src\main\resources\data\train\banana\banana (4).jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>416</width>
+		<height>416</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>banana</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>115</xmin>
+			<ymin>19</ymin>
+			<xmax>278</xmax>
+			<ymax>396</ymax>
+		</bndbox>
+	</object>
+</annotation>
