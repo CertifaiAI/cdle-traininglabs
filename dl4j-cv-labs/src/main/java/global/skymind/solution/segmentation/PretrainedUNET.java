@@ -302,14 +302,9 @@ public class PretrainedUNET {
     public static void downloadData() {
         // Download data
         File parentDir = new File(System.getProperty("user.home"), ".deeplearning4j\\data\\data-science-bowl-2018");
-
-//        String DATA_URL = "https://www.googleapis.com/drive/v3/files/1UVNwQPG_Y-lpi72AYCIrYDEB6rZEAaMA?alt=media&key=AIzaSyBtQjXp_x5nzkMWIMs3czTtD8Zs3DRIKDk";
-//        String DATA_URL = "https://drive.google.com/open?id=18gUE7wJWVRy7HrhHNeM8wNa0RRazGPS1";
-//        String DATA_URL = "https://driver.google.com/uc?export=download&confirm=yH3-&id=18gUE7wJWVRy7HrhHNeM8wNa0RRazGPS1";
-        String DATA_URL = "https://drive.google.com/a/skymind.my/uc?authuser=0&id=18gUE7wJWVRy7HrhHNeM8wNa0RRazGPS1&export=download";
+        String DATA_URL = "https://drive.google.com/a/skymind.my/uc?authuser=0&id=1zHn593J13dxLO1AJ0N2jKhpahs0yYGa0&export=download";
 
         File file = new File(parentDir + "\\data-science-bowl-2018.zip");
-
 
         if (!file.exists()) {
             file.getParentFile().mkdirs();
