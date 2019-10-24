@@ -37,7 +37,6 @@ import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.linalg.indexing.NDArrayIndex;
-import org.nd4j.linalg.learning.config.AdaDelta;
 import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.nd4j.linalg.primitives.Pair;
@@ -119,19 +118,18 @@ public class PretrainedUNET {
         uiServer.attach(statsStorage);
 
         File imagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs");
-//        System.out.println(imagesPath);
-        FileSplit imageSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
+        FileSplit imageFileSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
 
         //Load labels
         CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, 1); // labels have 1 channel
 
         BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
-        InputSplit[] imagesSplitss_ = imageSplit.sample(imageSplitPathFilter, 0.8, 0.3);
+        InputSplit[] imagesSplits = imageFileSplit.sample(imageSplitPathFilter, 0.8, 0.3);
 
         // Record reader
         ImageRecordReader imageRecordReaderTrain = new ImageRecordReader(height, width, channels, labelMaker);
-        ImageRecordReader imageRecordReaderTest = new ImageRecordReader(height, width, channels, labelMaker);
-        imageRecordReaderTrain.initialize(imagesSplitss_[0], getImageTransform());
+        ImageRecordReader imageRecordReaderVal = new ImageRecordReader(height, width, channels, labelMaker);
+        imageRecordReaderTrain.initialize(imagesSplits[0], getImageTransform());
 
         // Dataset iterator
         RecordReaderDataSetIterator imageDataSetTrain = new RecordReaderDataSetIterator(imageRecordReaderTrain, batchSize, 1, 1, true);
@@ -180,32 +178,21 @@ public class PretrainedUNET {
                     );
                 }
 
-//                visualisation.visualize(
-//                        imageSet.getFeatures(),
-//                        imageSet.getLabels(),
-//                        predict,
-//                        frame,
-//                        panel,
-//                        5,
-//                        224,
-//                        224
-//                );
-
             }
 
             imageDataSetTrain.reset();
         }
 
-        // TESTING
-        imageRecordReaderTest.initialize(imagesSplitss_[1]);
-        RecordReaderDataSetIterator imageDataSetTest = new RecordReaderDataSetIterator(imageRecordReaderTest, batchSize, 1, 1, true);
-        imageDataSetTest.setPreProcessor(dataNormalization);
+        // VALIDATION
+        imageRecordReaderVal.initialize(imagesSplits[1]);
+        RecordReaderDataSetIterator imageDataSetVal = new RecordReaderDataSetIterator(imageRecordReaderVal, batchSize, 1, 1, true);
+        imageDataSetVal.setPreProcessor(dataNormalization);
 
         Evaluation eval = new Evaluation(2);
 
 //         Visualisation -  validation
-        JFrame frameValidate = visualisation.initFrame("Viz");
-        JPanel panelValidate = visualisation.initPanel(
+        JFrame frameVal = visualisation.initFrame("Viz");
+        JPanel panelVal = visualisation.initPanel(
                 frame,
                 1,
                 height,
@@ -221,14 +208,14 @@ public class PretrainedUNET {
         }
 
         int count = 0;
-        while(imageDataSetTest.hasNext()) {
-            DataSet imageSetTest = imageDataSetTest.next();
+        while(imageDataSetVal.hasNext()) {
+            DataSet imageSetVal = imageDataSetVal.next();
 
-            INDArray predict = unetTransfer.output(imageSetTest.getFeatures())[0];
-            INDArray labels = imageSetTest.getLabels();
+            INDArray predict = unetTransfer.output(imageSetVal.getFeatures())[0];
+            INDArray labels = imageSetVal.getLabels();
 
             if (count%5==0) {
-                visualisation.export(exportDir, imageSetTest.getFeatures(), imageSetTest.getLabels(), predict, count );
+                visualisation.export(exportDir, imageSetVal.getFeatures(), imageSetVal.getLabels(), predict, count );
             }
 
             count++;
@@ -244,10 +231,10 @@ public class PretrainedUNET {
 
             eval.reset();
 
-            for (int n=0; n<imageSetTest.asList().size(); n++){
+            for (int n=0; n<imageSetVal.asList().size(); n++){
                 visualisation.visualize(
-                        imageSetTest.get(n).getFeatures(),
-                        imageSetTest.get(n).getLabels(),
+                        imageSetVal.get(n).getFeatures(),
+                        imageSetVal.get(n).getLabels(),
 //                            predict,
                         predict.get(NDArrayIndex.point(n)),
                         frame,
@@ -258,20 +245,10 @@ public class PretrainedUNET {
                 );
             }
 
-//            visualisation.visualize(
-//                    imageSetTest.getFeatures(),
-//                    imageSetTest.getLabels(),
-//                    predict,
-//                    frameValidate,
-//                    panelValidate,
-//                    5,
-//                    224,
-//                    224
-//            );
+
         }
 
-        // Save the model
-
+        // WRITE MODEL TO DISK
         File locationToSaveFineTune = new File(System.getProperty("user.home"),".deeplearning4j\\generated-models\\segmentUNetFineTune.zip");
         if (!locationToSaveFineTune.exists()){
             locationToSaveFineTune.getParentFile().mkdirs();
