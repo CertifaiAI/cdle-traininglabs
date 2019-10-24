@@ -38,7 +38,7 @@ public class CustomLabelGenerator implements PathLabelGenerator {
     public Writable getLabelForPath(String path) {
         try
         {
-            String labelPath = path.replace("\\inputs_no_alpha\\", "\\masks\\");
+            String labelPath = path.replace("\\inputs\\", "\\masks\\");
 
             NDArrayWritable label = new NDArrayWritable(imageLoader.asMatrix(new File(labelPath)) );
 
@@ -73,7 +73,7 @@ public class CustomLabelGenerator implements PathLabelGenerator {
     public INDArray getLabelForPathNDArray(URI uri) {
         try
         {
-            String labelURI = uri.toString().replace("\\inputs_no_alpha\\", "\\masks\\");
+            String labelURI = uri.toString().replace("\\inputs\\", "\\masks\\");
 
             return  imageLoader.asMatrix(new File(URI.create(labelURI))).div(255);
 //            return  imageLoader.asMatrix(new File(URI.create(labelURI)));

@@ -118,7 +118,7 @@ public class PretrainedUNET {
         UIServer uiServer = UIServer.getInstance();
         uiServer.attach(statsStorage);
 
-        File imagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/inputs_no_alpha");
+        File imagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs");
 //        System.out.println(imagesPath);
         FileSplit imageSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
 
