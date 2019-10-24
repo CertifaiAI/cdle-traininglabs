@@ -51,6 +51,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -63,15 +64,18 @@ public class PretrainedUNET {
 
     public static final String featurizeExtractionLayer = "conv2d_5";
     protected static final long seed = 12345;
-    protected static final int nEpochs = 1;
+    protected static final int nEpochs = 30;
     private static final int height = 224;
     private static final int width = 224;
     private static final int channels = 1;
     private static final int batchSize = 4;
-    private static int snapshotInterval = 5;
     private static final Random random = new Random(seed);
 
     public static void main(String[] args) throws IOException, InvalidKerasConfigurationException, UnsupportedKerasConfigurationException{
+
+        ClassLoader classLoader = PretrainedUNET.class.getClassLoader();
+        URL resource = classLoader.getResource("org/apache/http/message/BasicLineFormatter.class");
+        System.out.println(resource);
 
         downloadData();
         unzipAllDataSet();
@@ -122,7 +126,7 @@ public class PretrainedUNET {
         CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, 1); // labels have 1 channel
 
         BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
-        InputSplit[] imagesSplitss_ = imageSplit.sample(imageSplitPathFilter, 0.05, 0.95);
+        InputSplit[] imagesSplitss_ = imageSplit.sample(imageSplitPathFilter, 0.8, 0.3);
 
         // Record reader
         ImageRecordReader imageRecordReaderTrain = new ImageRecordReader(height, width, channels, labelMaker);
@@ -209,26 +213,34 @@ public class PretrainedUNET {
                 1
         );
 
+        //            EXPORT IMAGES
+        File exportDir = new File("export");
+
+        if (!exportDir.exists() ) {
+            exportDir.mkdir();
+        }
+
+        int count = 0;
         while(imageDataSetTest.hasNext()) {
             DataSet imageSetTest = imageDataSetTest.next();
 
             INDArray predict = unetTransfer.output(imageSetTest.getFeatures())[0];
             INDArray labels = imageSetTest.getLabels();
 
+            if (count%5==0) {
+                visualisation.export(exportDir, imageSetTest.getFeatures(), imageSetTest.getLabels(), predict, count );
+            }
+
+            count++;
+
             eval.eval(labels, predict);
 
             log.info(eval.stats());
 
 //            Intersection over Union:  TP / (TP + FN + FP)
-
-
-
-//            float IOUBackground = (float) eval.truePositives().get(0) / ((float) eval.truePositives().get(0) + (float) eval.falsePositives().get(0) + (float)  eval.falseNegatives().get(0));
             float IOUNuclei = (float)eval.truePositives().get(1) / ((float)eval.truePositives().get(1) + (float)eval.falsePositives().get(1) + (float)eval.falseNegatives().get(1));
-//            float IOUMean = (IOUBackground + IOUNuclei)/ 2;
-//            System.out.println("IOU Background " + String.format("%.3f", IOUBackground) );
+
             System.out.println("IOU Cell Nuclei " + String.format("%.3f", IOUNuclei) );
-//            System.out.println("Mean IOU " + String.format("%.3f", IOUMean) );
 
             eval.reset();
 
@@ -245,10 +257,6 @@ public class PretrainedUNET {
                         224
                 );
             }
-
-//            EXPORT IMAGES
-//            File dir = new File();
-//            visualisation.export();
 
 //            visualisation.visualize(
 //                    imageSetTest.getFeatures(),
@@ -273,14 +281,15 @@ public class PretrainedUNET {
 
 //        ImageTransform noise = new NoiseTransform(random, (int) (height * width * 0.1));
 //        ImageTransform enhanceContrast = new EqualizeHistTransform();
-        ImageTransform flip = new FlipImageTransform();
+//        ImageTransform flip = new FlipImageTransform();
         ImageTransform rgb2gray = new ColorConversionTransform(CV_RGB2GRAY);
-        ImageTransform rotate = new RotateImageTransform(random, 30);
+//        ImageTransform rotate = new RotateImageTransform(random, 30);
 
         List<Pair<ImageTransform, Double>> pipeline = Arrays.asList(
-                new Pair<>(rgb2gray, 1.0),
-                new Pair<>(flip, 0.5),
-                new Pair<>(rotate,0.5)
+                new Pair<>(rgb2gray, 1.0)
+//                new Pair<>(enhanceContrast, 1.0),
+//                new Pair<>(flip, 0.5)
+//                new Pair<>(rotate,0.5)
         );
         return new PipelineImageTransform(pipeline, false);
     }

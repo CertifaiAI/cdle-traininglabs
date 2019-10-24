@@ -3,6 +3,7 @@ package global.skymind.solution.segmentation;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;
 import org.datavec.image.data.ImageWritable;
+import org.datavec.image.loader.Java2DNativeImageLoader;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.transform.FlipImageTransform;
 import org.datavec.image.transform.ImageTransform;
@@ -59,6 +60,7 @@ public class ImageAugmentation {
                 Frame frame = transformed.getFrame() ;
                 Java2DFrameConverter converter = new Java2DFrameConverter();
                 BufferedImage bimage = converter.convert(frame);
+
                 ImageIO.write(bimage, "jpg", new File(augmentedImgPath + "/" + f.getName() ));
             }
         }

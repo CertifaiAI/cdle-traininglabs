@@ -104,14 +104,20 @@ public class visualisation {
     public static void export(File dir, INDArray image, INDArray label, INDArray predict, int count) throws IOException {
         for (int i = 0; i < image.size(0); i++) {
             BufferedImage oriImage = _Java2DNativeImageLoader.asBufferedImage(image.slice(i, 0).mul(255));
+            ImageIO.write(oriImage, "png", new File(dir.getAbsolutePath() + "/" + (i + count) + "_image.png"));
+
             BufferedImage labelImage = _Java2DNativeImageLoader.asBufferedImage(label.slice(i, 0).mul(255));
+            ImageIO.write(labelImage, "png", new File(dir.getAbsolutePath() + "/" + (i + count) + "_label.png"));
+
             BufferedImage predictImage = _Java2DNativeImageLoader.asBufferedImage(predict.slice(i, 0).mul(255));
+            ImageIO.write(predictImage, "png", new File(dir.getAbsolutePath() +"/" + (i + count) + "_predict.png"));
+
 //            INDArrayIndex[] imageMat = {NDArrayIndex.indices(i), NDArrayIndex.indices(1), NDArrayIndex.all(), NDArrayIndex.all()};
 //            BufferedImage labelImage = INDArraytoBufferedImage(Nd4j.argMax(label.get(imageMat), 1), displayHeight, displayWidth);
 //            BufferedImage predictImage = INDArraytoBufferedImage(Nd4j.argMax(predict.get(imageMat), 1), displayHeight, displayWidth);
-            ImageIO.write(oriImage, "png", new File(dir.getAbsolutePath() + "/" + (i + count) + "_image.png"));
-            ImageIO.write(labelImage, "png", new File(dir.getAbsolutePath() + "/" + (i + count) + "_label.png"));
-            ImageIO.write(predictImage, "png", new File(dir.getAbsolutePath() +"/" + (i + count) + "_predict.png"));
+//            ImageIO.write(oriImage, "png", new File(dir.getAbsolutePath() + "/" + (i + count) + "_image.png"));
+//            ImageIO.write(labelImage, "png", new File(dir.getAbsolutePath() + "/" + (i + count) + "_label.png"));
+//            ImageIO.write(predictImage, "png", new File(dir.getAbsolutePath() +"/" + (i + count) + "_predict.png"));
         }
     }
 
