@@ -41,7 +41,7 @@ public class ImageAugmentation {
 
         NativeImageLoader niLoader= new NativeImageLoader(224,224,1,flip);
 
-        File augmentedImgPath = new File(System.getProperty("user.home"),".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/augmented");
+        File augmentedImgPath = new File(System.getProperty("user.home"),".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/augmented_inputs");
 
         if (!augmentedImgPath.exists() ) {
             augmentedImgPath.mkdir();

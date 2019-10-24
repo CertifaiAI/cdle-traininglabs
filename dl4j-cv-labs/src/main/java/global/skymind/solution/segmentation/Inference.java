@@ -52,7 +52,7 @@ private static File modelFilename = new File(System.getProperty("user.home"), ".
         }
 
 
-        File testImagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs");
+        File testImagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/test/inputs");
         FileSplit imageSplit = new FileSplit(testImagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
 
         // Instantiate label generator
@@ -83,6 +83,9 @@ private static File modelFilename = new File(System.getProperty("user.home"), ".
         // Inference and evaluation on test set
         Evaluation eval = new Evaluation(2);
 
+        float iou = 0;
+        int count = 0;
+
         while(imageDataSetTest.hasNext())
         {
             DataSet imageSet = imageDataSetTest.next();
@@ -96,6 +99,9 @@ private static File modelFilename = new File(System.getProperty("user.home"), ".
             //Intersection over Union:  TP / (TP + FN + FP)
             float IOUNuclei = (float)eval.truePositives().get(1) / ((float)eval.truePositives().get(1) + (float)eval.falsePositives().get(1) + (float)eval.falseNegatives().get(1));
             System.out.println("IOU Cell Nuclei " + String.format("%.3f", IOUNuclei) );
+
+            iou = iou + IOUNuclei;
+            count++;
 
             eval.reset();
 
@@ -113,6 +119,9 @@ private static File modelFilename = new File(System.getProperty("user.home"), ".
                 );
             }
         }
+        System.out.print("Summed Iou: " + iou);
+        System.out.print("num samples: " + count);
+        System.out.print("Mean Iou: "+ iou/count );
     }
 
 
