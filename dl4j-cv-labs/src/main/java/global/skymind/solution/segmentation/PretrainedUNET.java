@@ -124,7 +124,7 @@ public class PretrainedUNET {
         CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, 1); // labels have 1 channel
 
         BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
-        InputSplit[] imagesSplits = imageFileSplit.sample(imageSplitPathFilter, 0.8, 0.3);
+        InputSplit[] imagesSplits = imageFileSplit.sample(imageSplitPathFilter, 0.8, 0.2);
 
         // Record reader
         ImageRecordReader imageRecordReaderTrain = new ImageRecordReader(height, width, channels, labelMaker);
@@ -207,6 +207,7 @@ public class PretrainedUNET {
             exportDir.mkdir();
         }
 
+        float IOUtotal = 0;
         int count = 0;
         while(imageDataSetVal.hasNext()) {
             DataSet imageSetVal = imageDataSetVal.next();
@@ -226,6 +227,7 @@ public class PretrainedUNET {
 
 //            Intersection over Union:  TP / (TP + FN + FP)
             float IOUNuclei = (float)eval.truePositives().get(1) / ((float)eval.truePositives().get(1) + (float)eval.falsePositives().get(1) + (float)eval.falseNegatives().get(1));
+            IOUtotal = IOUtotal + IOUNuclei;
 
             System.out.println("IOU Cell Nuclei " + String.format("%.3f", IOUNuclei) );
 
@@ -247,6 +249,9 @@ public class PretrainedUNET {
 
 
         }
+
+        System.out.print("Mean IOU: " + IOUtotal/count);
+
 
         // WRITE MODEL TO DISK
         File locationToSaveFineTune = new File(System.getProperty("user.home"),".deeplearning4j\\generated-models\\segmentUNetFineTune.zip");
