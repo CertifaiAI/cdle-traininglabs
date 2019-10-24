@@ -1,5 +1,6 @@
 package global.skymind.solution.segmentation;
 
+import global.skymind.solution.segmentation.imageUtils.visualisation;
 import org.datavec.api.io.filters.BalancedPathFilter;
 import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.InputSplit;
@@ -14,10 +15,14 @@ import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
+import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
+import org.nd4j.linalg.indexing.NDArrayIndex;
 import org.nd4j.linalg.primitives.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +32,6 @@ import static org.bytedeco.opencv.global.opencv_imgproc.CV_RGB2GRAY;
 
 public class Inference {
     private static final Logger log = LoggerFactory.getLogger(Inference.class);
-//    private static File modelFilename = new File("segmentUNetFineTune.zip");
 private static File modelFilename = new File(System.getProperty("user.home"), ".deeplearning4j/generated-models/segmentUNetFineTune.zip");
     private static final int height = 224;
     private static final int width = 224;
@@ -47,11 +51,11 @@ private static File modelFilename = new File(System.getProperty("user.home"), ".
             }
         }
 
-        File testImagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs");
 
+        File testImagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs");
         FileSplit imageSplit = new FileSplit(testImagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
-//
-//        //Load labels
+
+        // Instantiate label generator
         CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, 1); // labels have 1 channel
 
         // Initialize recordreader
@@ -60,6 +64,21 @@ private static File modelFilename = new File(System.getProperty("user.home"), ".
 
         // Dataset iterator
         RecordReaderDataSetIterator imageDataSetTest = new RecordReaderDataSetIterator(imageRecordReaderTest, 1, 1, 1, true);
+
+        // Preprocessing - normalisation
+        DataNormalization dataNormalization = new ImagePreProcessingScaler(0,1);
+        dataNormalization.fit(imageDataSetTest);
+        imageDataSetTest.setPreProcessor(dataNormalization);
+
+        // Visualisation of test image prediction
+        JFrame frame = visualisation.initFrame("Viz");
+        JPanel panel = visualisation.initPanel(
+                frame,
+                1,
+                height,
+                width,
+                1
+        );
 
         // Inference and evaluation on test set
         Evaluation eval = new Evaluation(2);
@@ -79,6 +98,20 @@ private static File modelFilename = new File(System.getProperty("user.home"), ".
             System.out.println("IOU Cell Nuclei " + String.format("%.3f", IOUNuclei) );
 
             eval.reset();
+
+            for (int n=0; n<imageSet.asList().size(); n++){
+                visualisation.visualize(
+                        imageSet.get(n).getFeatures(),
+                        imageSet.get(n).getLabels(),
+//                            predict,
+                        predict.get(NDArrayIndex.point(n)),
+                        frame,
+                        panel,
+                        4,
+                        224,
+                        224
+                );
+            }
         }
     }
 
