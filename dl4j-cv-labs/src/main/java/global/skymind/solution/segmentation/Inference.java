@@ -30,13 +30,13 @@ public class Inference {
             log.info("Model not found.");
         }
 
-        File imagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/inputs_no_alpha");
+//        File imagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/inputs_no_alpha");
 //        System.out.println(imagesPath);
-        FileSplit imageSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
-
-        //Load labels
-        CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, 1); // labels have 1 channel
-        BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
+//        FileSplit imageSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
+//
+//        //Load labels
+//        CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, 1); // labels have 1 channel
+//        BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
 
 
     }

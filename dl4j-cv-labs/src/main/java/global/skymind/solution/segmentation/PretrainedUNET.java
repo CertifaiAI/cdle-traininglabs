@@ -64,7 +64,7 @@ public class PretrainedUNET {
 
     public static final String featurizeExtractionLayer = "conv2d_5";
     protected static final long seed = 12345;
-    protected static final int nEpochs = 30;
+    protected static final int nEpochs = 1;
     private static final int height = 224;
     private static final int width = 224;
     private static final int channels = 1;
@@ -271,7 +271,12 @@ public class PretrainedUNET {
         }
 
         // Save the model
-        File locationToSaveFineTune = new File("segmentUNetFineTune.zip");
+
+        File locationToSaveFineTune = new File(System.getProperty("user.home"),".deeplearning4j\\generated-models\\segmentUNetFineTune.zip");
+        if (!locationToSaveFineTune.exists()){
+            locationToSaveFineTune.getParentFile().mkdirs();
+        }
+
         boolean saveUpdater = false;
         ModelSerializer.writeModel(unetTransfer, locationToSaveFineTune, saveUpdater);
         log.info("Model saved");
