@@ -22,6 +22,8 @@ import org.deeplearning4j.nn.modelimport.keras.exceptions.UnsupportedKerasConfig
 import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.optimize.listeners.Checkpoint;
+import org.deeplearning4j.optimize.listeners.CheckpointListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.stats.StatsListener;
@@ -61,9 +63,9 @@ public class PretrainedUNET {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(
             PretrainedUNET.class);
 
-    public static final String featurizeExtractionLayer = "conv2d_5";
+    public static final String featurizeExtractionLayer = "conv2d_4";
     protected static final long seed = 12345;
-    protected static final int nEpochs = 1;
+    protected static final int nEpochs = 40;
     private static final int height = 224;
     private static final int width = 224;
     private static final int channels = 1;
@@ -71,10 +73,6 @@ public class PretrainedUNET {
     private static final Random random = new Random(seed);
 
     public static void main(String[] args) throws IOException, InvalidKerasConfigurationException, UnsupportedKerasConfigurationException{
-
-        ClassLoader classLoader = PretrainedUNET.class.getClassLoader();
-        URL resource = classLoader.getResource("org/apache/http/message/BasicLineFormatter.class");
-        System.out.println(resource);
 
         downloadData();
         unzipAllDataSet();
@@ -89,9 +87,10 @@ public class PretrainedUNET {
         StatsListener statsListener = new StatsListener(statsStorage);
         ScoreIterationListener scoreIterationListener= new ScoreIterationListener(1);
 
+
         FineTuneConfiguration fineTuneConf = new FineTuneConfiguration.Builder()
                 .trainingWorkspaceMode(WorkspaceMode.ENABLED)
-                .updater(new Adam(new StepSchedule(ScheduleType.EPOCH,3e-4,0.5,5 )))
+                .updater(new Adam(new StepSchedule(ScheduleType.EPOCH,5e-3,0.5,5 )))
                 .seed(seed)
                 .build();
 
@@ -111,7 +110,15 @@ public class PretrainedUNET {
 
         System.out.println(unetTransfer.summary());
 
-        unetTransfer.setListeners(statsListener, scoreIterationListener);
+        CheckpointListener checkpointListener = new CheckpointListener.Builder(new File(System.getProperty("user.home"),".deeplearning4j\\generated-models"))
+                .keepAll()
+                .saveEveryNEpochs(1000)
+                .build();
+
+
+        unetTransfer.setListeners(statsListener, scoreIterationListener, checkpointListener);
+
+
 
         //Initialize the user interface backend
         UIServer uiServer = UIServer.getInstance();
@@ -190,7 +197,7 @@ public class PretrainedUNET {
 
         Evaluation eval = new Evaluation(2);
 
-//         Visualisation -  validation
+        // VISUALISATION -  validation
         JFrame frameVal = visualisation.initFrame("Viz");
         JPanel panelVal = visualisation.initPanel(
                 frame,
@@ -200,7 +207,7 @@ public class PretrainedUNET {
                 1
         );
 
-        //            EXPORT IMAGES
+        // EXPORT IMAGES
         File exportDir = new File("export");
 
         if (!exportDir.exists() ) {
@@ -246,8 +253,6 @@ public class PretrainedUNET {
                         224
                 );
             }
-
-
         }
 
         System.out.print("Mean IOU: " + IOUtotal/count);
