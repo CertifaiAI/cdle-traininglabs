@@ -43,8 +43,8 @@ import java.util.Random;
 import static org.bytedeco.opencv.global.opencv_core.CV_8UC1;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 
-public class Inference {
-    private static final Logger log = LoggerFactory.getLogger(Inference.class);
+public class ModelTest {
+    private static final Logger log = LoggerFactory.getLogger(ModelTest.class);
     private static File modelFilename = new File(System.getProperty("user.home"), ".deeplearning4j/generated-models/segmentUNetFineTune.zip");
     private static final int height = 224;
     private static final int width = 224;
