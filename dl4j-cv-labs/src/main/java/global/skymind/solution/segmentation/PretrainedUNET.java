@@ -22,7 +22,6 @@ import org.deeplearning4j.nn.modelimport.keras.exceptions.UnsupportedKerasConfig
 import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.weights.WeightInit;
-import org.deeplearning4j.optimize.listeners.CheckpointListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.stats.StatsListener;
@@ -108,13 +107,7 @@ public class PretrainedUNET {
 
         System.out.println(unetTransfer.summary());
 
-        CheckpointListener checkpointListener = new CheckpointListener.Builder(new File(System.getProperty("user.home"),".deeplearning4j\\generated-models"))
-                .keepAll()
-                .saveEveryNEpochs(1000)
-                .build();
-
-
-        unetTransfer.setListeners(statsListener, scoreIterationListener, checkpointListener);
+        unetTransfer.setListeners(statsListener, scoreIterationListener);
 
 
         //Initialize the user interface backend

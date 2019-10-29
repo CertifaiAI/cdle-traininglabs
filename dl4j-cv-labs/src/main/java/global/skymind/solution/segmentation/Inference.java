@@ -1,9 +1,19 @@
 package global.skymind.solution.segmentation;
 
 import global.skymind.solution.segmentation.imageUtils.visualisation;
-import org.datavec.api.io.filters.BalancedPathFilter;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.bytedeco.javacv.OpenCVFrameConverter;
+import org.bytedeco.opencv.opencv_imgproc.*;
+import org.bytedeco.opencv.opencv_core.*;
+import org.bytedeco.opencv.global.opencv_imgproc.*;
+import org.bytedeco.opencv.global.opencv_core.*;
+
 import org.datavec.api.split.FileSplit;
-import org.datavec.api.split.InputSplit;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
 import org.datavec.image.transform.ColorConversionTransform;
@@ -24,15 +34,18 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static org.bytedeco.opencv.global.opencv_imgproc.CV_RGB2GRAY;
+import static org.bytedeco.opencv.global.opencv_core.CV_8UC1;
+import static org.bytedeco.opencv.global.opencv_imgproc.*;
 
 public class Inference {
     private static final Logger log = LoggerFactory.getLogger(Inference.class);
-private static File modelFilename = new File(System.getProperty("user.home"), ".deeplearning4j/generated-models/segmentUNetFineTune.zip");
+    private static File modelFilename = new File(System.getProperty("user.home"), ".deeplearning4j/generated-models/segmentUNetFineTune.zip");
     private static final int height = 224;
     private static final int width = 224;
     private static final int channels = 1;
@@ -49,8 +62,16 @@ private static File modelFilename = new File(System.getProperty("user.home"), ".
             } catch(Exception ex){
                 ex.printStackTrace();
             }
-        }
+        } else {
+            log.info("Downloading pre-trained model...");
+            downloadModel();
+            try {
+                model = ModelSerializer.restoreComputationGraph(modelFilename);
+            } catch(Exception ex){
+                ex.printStackTrace();
+            }
 
+        }
 
         File testImagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/test/inputs");
         FileSplit imageSplit = new FileSplit(testImagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
@@ -86,11 +107,14 @@ private static File modelFilename = new File(System.getProperty("user.home"), ".
         float iou = 0;
         int count = 0;
 
+        NativeImageLoader loader = new NativeImageLoader();
+
         while(imageDataSetTest.hasNext())
         {
             DataSet imageSet = imageDataSetTest.next();
 
             INDArray predict = model.output(imageSet.getFeatures())[0];
+
             INDArray labels = imageSet.getLabels();
 
             eval.eval(labels, predict);
@@ -105,11 +129,11 @@ private static File modelFilename = new File(System.getProperty("user.home"), ".
 
             eval.reset();
 
+
             for (int n=0; n<imageSet.asList().size(); n++){
                 visualisation.visualize(
                         imageSet.get(n).getFeatures(),
                         imageSet.get(n).getLabels(),
-//                            predict,
                         predict.get(NDArrayIndex.point(n)),
                         frame,
                         panel,
@@ -125,20 +149,62 @@ private static File modelFilename = new File(System.getProperty("user.home"), ".
     }
 
 
+    public static void downloadModel() {
+        // Download trained model
+        File parentDir = new File(System.getProperty("user.home"), ".deeplearning4j\\generated-models");
+        String DATA_URL = "https://uc708c152a8b5bf05cc90d34c1dd.dl.dropboxusercontent.com/cd/0/get/ArU2hEyhanrptTOljm8JIHRiPmjnh7R9DjPxf1mADj8cEdFZCwy3wyWvFqwn2T_rxGkWXc_mTd64-2oTkru5QM4lKkGCJtoH3tb3eZBhEDZON8vsNWuF0lx3_rbKSPPV7n4/file";
+
+        File file = new File(parentDir + "\\segmentUNetFineTune.zip");
+
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            HttpClientBuilder builder = HttpClientBuilder.create();
+            CloseableHttpClient client = builder.build();
+            try (CloseableHttpResponse response = client.execute(new HttpGet(DATA_URL))) {
+                HttpEntity entity = response.getEntity();
+
+                System.out.println(entity);
+
+                if (entity != null) {
+                    try (FileOutputStream outstream = new FileOutputStream(file)) {
+                        entity.writeTo(outstream);
+                        outstream.flush();
+                    }
+                }
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }
+
+
+        }
+
+    }
+
     public static ImageTransform getImageTransform() {
 
-//        ImageTransform noise = new NoiseTransform(random, (int) (height * width * 0.1));
-//        ImageTransform enhanceContrast = new EqualizeHistTransform();
-//        ImageTransform flip = new FlipImageTransform();
         ImageTransform rgb2gray = new ColorConversionTransform(CV_RGB2GRAY);
-//        ImageTransform rotate = new RotateImageTransform(random, 30);
 
         List<Pair<ImageTransform, Double>> pipeline = Arrays.asList(
                 new Pair<>(rgb2gray, 1.0)
-//                new Pair<>(enhanceContrast, 1.0),
-//                new Pair<>(flip, 0.5)
-//                new Pair<>(rotate,0.5)
         );
         return new PipelineImageTransform(pipeline, false);
     }
+
+    public static INDArray dilateImage(INDArray src, NativeImageLoader loader) throws IOException {
+        Mat mat = loader.asMat(src);
+        Mat kernel = Mat.ones(3, 3, CV_8UC1).asMat();
+        dilate(mat, mat, kernel);
+
+        return loader.asMatrix(mat);
+    }
+
+    public static INDArray erodeImage(INDArray src, NativeImageLoader loader) throws IOException {
+        Mat mat = loader.asMat(src);
+        Mat kernel = Mat.ones(3, 3, CV_8UC1).asMat();
+        erode(mat, mat, kernel);
+
+        return loader.asMatrix(mat);
+    }
+
+
 }
