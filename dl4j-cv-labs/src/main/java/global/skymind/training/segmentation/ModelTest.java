@@ -49,6 +49,11 @@ public class ModelTest {
 
     public static void main(String[] args) throws Exception {
 
+        /*
+        * This program will perform segmentation on the test dataset, based on either model trained by students or model provided by instructor
+        *
+        * */
+
         if (modelFilename.exists()) {
             log.info("Load model...");
             try {

@@ -73,11 +73,23 @@ public class PretrainedUNET {
 
     public static void main(String[] args) throws IOException, InvalidKerasConfigurationException, UnsupportedKerasConfigurationException{
 
+        /*
+        * Instructions for this lab exercise:
+        * STEP 1: Download and unzip dataset
+        * STEP 2: Import pretrained UNET (provided in model zoo)
+        * STEP 3: Configuration of transfer learning
+        * STEP 4: Load and pre-process data
+        * STEP 5: Run training
+        * STEP 6: Complete the code for IOU calculation here
+        *
+        * */
+
+        //STEP 1: Download and unzip dataset
         downloadData();
         unzipAllDataSet();
 
+        //STEP 2: Import pretrained UNET (provided in model zoo)
         ZooModel zooModel = UNet.builder().build();
-
         ComputationGraph unet = (ComputationGraph) zooModel.initPretrained(PretrainedType.SEGMENT);
         System.out.println(unet.summary());
 
@@ -86,25 +98,19 @@ public class PretrainedUNET {
         StatsListener statsListener = new StatsListener(statsStorage);
         ScoreIterationListener scoreIterationListener= new ScoreIterationListener(1);
 
-
+        //STEP 3: Configuration of transfer learning
         FineTuneConfiguration fineTuneConf = new FineTuneConfiguration.Builder()
                 .trainingWorkspaceMode(WorkspaceMode.ENABLED)
-                .updater(new Adam(new StepSchedule(ScheduleType.EPOCH,3e-4,0.5,5 )))
+//                .updater() // 3.1 set updater here
                 .seed(seed)
                 .build();
 
         //Construct a new model with the intended architecture and print summary
         ComputationGraph unetTransfer = new TransferLearning.GraphBuilder(unet)
                 .fineTuneConfiguration(fineTuneConf)
-                .setFeatureExtractor(featurizeExtractionLayer)
-                .removeVertexAndConnections("activation_23")
-                .nInReplace("conv2d_1",1, WeightInit.XAVIER)
-                .nOutReplace("conv2d_23",1, WeightInit.XAVIER)
-                .addLayer("output",
-                        new CnnLossLayer.Builder(LossFunctions.LossFunction.XENT)
-                                .activation(Activation.SIGMOID).build(),
-                        "conv2d_23")
-                .setOutputs("output")
+                .setFeatureExtractor(featurizeExtractionLayer) // set which pre-trained layer to freeze and use as feature extractor
+                    /* add CnnLossLayer (convolutional layer) to the pre-trained UNet to
+                    form a Fully Convolutional Network*/
                 .build();
 
         System.out.println(unetTransfer.summary());
@@ -116,28 +122,30 @@ public class PretrainedUNET {
         UIServer uiServer = UIServer.getInstance();
         uiServer.attach(statsStorage);
 
-        File imagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs");
-        FileSplit imageFileSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
 
-        //Load labels
-        CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, 1); // labels have 1 channel
-
-        BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
-        InputSplit[] imagesSplits = imageFileSplit.sample(imageSplitPathFilter, 0.8, 0.2);
-
-        // Record reader
-        ImageRecordReader imageRecordReaderTrain = new ImageRecordReader(height, width, channels, labelMaker);
-        ImageRecordReader imageRecordReaderVal = new ImageRecordReader(height, width, channels, labelMaker);
-        imageRecordReaderTrain.initialize(imagesSplits[0], getImageTransform());
-
-        // Dataset iterator
-        RecordReaderDataSetIterator imageDataSetTrain = new RecordReaderDataSetIterator(imageRecordReaderTrain, batchSize, 1, 1, true);
-
-
-        // Preprocessing - normalisation
-        DataNormalization dataNormalization = new ImagePreProcessingScaler(0,1);
-        dataNormalization.fit(imageDataSetTrain);
-        imageDataSetTrain.setPreProcessor(dataNormalization);
+//        //STEP 4: Load and pre-process data
+//        File imagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs");
+//        FileSplit imageFileSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
+//
+//        //Load labels
+//        CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, 1); // labels have 1 channel
+//
+//        BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
+//        InputSplit[] imagesSplits = imageFileSplit.sample(imageSplitPathFilter, 0.8, 0.2);
+//
+//        // Record reader
+//        ImageRecordReader imageRecordReaderTrain = new ImageRecordReader(height, width, channels, labelMaker);
+//        ImageRecordReader imageRecordReaderVal = new ImageRecordReader(height, width, channels, labelMaker);
+//        imageRecordReaderTrain.initialize(imagesSplits[0], getImageTransform());
+//
+//        // Dataset iterator
+//        RecordReaderDataSetIterator imageDataSetTrain = new RecordReaderDataSetIterator(imageRecordReaderTrain, batchSize, 1, 1, true);
+//
+//
+//        // Preprocessing - normalisation
+//        DataNormalization dataNormalization = new ImagePreProcessingScaler(0,1);
+//        dataNormalization.fit(imageDataSetTrain);
+//        imageDataSetTrain.setPreProcessor(dataNormalization);
 
         // Visualisation -  training
         JFrame frame = visualisation.initFrame("Viz");
@@ -149,44 +157,44 @@ public class PretrainedUNET {
                 1
         );
 
-//        TRAINING
-        for(int i=0; i<nEpochs; i++){
+//        //STEP 5: Run training
+//        for(int i=0; i<nEpochs; i++){
+//
+//            log.info("Epoch: " + i);
+//
+//            while(imageDataSetTrain.hasNext())
+//            {
+//                DataSet imageSet = imageDataSetTrain.next();
+//
+//                unetTransfer.fit(imageSet);
+//
+//                INDArray predict = unetTransfer.output(imageSet.getFeatures())[0];
+//
+//
+//                for (int n=0; n<imageSet.asList().size(); n++){
+//                    visualisation.visualize(
+//                            imageSet.get(n).getFeatures(),
+//                            imageSet.get(n).getLabels(),
+//                            predict.get(NDArrayIndex.point(n)),
+//                            frame,
+//                            panel,
+//                            4,
+//                            224,
+//                            224
+//                    );
+//                }
+//
+//            }
+//
+//            imageDataSetTrain.reset();
+//        }
 
-            log.info("Epoch: " + i);
-
-            while(imageDataSetTrain.hasNext())
-            {
-                DataSet imageSet = imageDataSetTrain.next();
-
-                unetTransfer.fit(imageSet);
-
-                INDArray predict = unetTransfer.output(imageSet.getFeatures())[0];
-
-
-                for (int n=0; n<imageSet.asList().size(); n++){
-                    visualisation.visualize(
-                            imageSet.get(n).getFeatures(),
-                            imageSet.get(n).getLabels(),
-                            predict.get(NDArrayIndex.point(n)),
-                            frame,
-                            panel,
-                            4,
-                            224,
-                            224
-                    );
-                }
-
-            }
-
-            imageDataSetTrain.reset();
-        }
-
-        // VALIDATION
-        imageRecordReaderVal.initialize(imagesSplits[1]);
-        RecordReaderDataSetIterator imageDataSetVal = new RecordReaderDataSetIterator(imageRecordReaderVal, batchSize, 1, 1, true);
-        imageDataSetVal.setPreProcessor(dataNormalization);
-
-        Evaluation eval = new Evaluation(2);
+//        // VALIDATION
+//        imageRecordReaderVal.initialize(imagesSplits[1]);
+//        RecordReaderDataSetIterator imageDataSetVal = new RecordReaderDataSetIterator(imageRecordReaderVal, batchSize, 1, 1, true);
+//        imageDataSetVal.setPreProcessor(dataNormalization);
+//
+//        Evaluation eval = new Evaluation(2);
 
         // VISUALISATION -  validation
         JFrame frameVal = visualisation.initFrame("Viz");
@@ -205,48 +213,48 @@ public class PretrainedUNET {
             exportDir.mkdir();
         }
 
-        float IOUtotal = 0;
-        int count = 0;
-        while(imageDataSetVal.hasNext()) {
-            DataSet imageSetVal = imageDataSetVal.next();
-
-            INDArray predict = unetTransfer.output(imageSetVal.getFeatures())[0];
-            INDArray labels = imageSetVal.getLabels();
-
-            if (count%5==0) {
-                visualisation.export(exportDir, imageSetVal.getFeatures(), imageSetVal.getLabels(), predict, count );
-            }
-
-            count++;
-
-            eval.eval(labels, predict);
-
-            log.info(eval.stats());
-
-//            Intersection over Union:  TP / (TP + FN + FP)
-            float IOUNuclei = (float)eval.truePositives().get(1) / ((float)eval.truePositives().get(1) + (float)eval.falsePositives().get(1) + (float)eval.falseNegatives().get(1));
-            IOUtotal = IOUtotal + IOUNuclei;
-
-            System.out.println("IOU Cell Nuclei " + String.format("%.3f", IOUNuclei) );
-
-            eval.reset();
-
-            for (int n=0; n<imageSetVal.asList().size(); n++){
-                visualisation.visualize(
-                        imageSetVal.get(n).getFeatures(),
-                        imageSetVal.get(n).getLabels(),
-//                            predict,
-                        predict.get(NDArrayIndex.point(n)),
-                        frame,
-                        panel,
-                        4,
-                        224,
-                        224
-                );
-            }
-        }
-
-        System.out.print("Mean IOU: " + IOUtotal/count);
+//        float IOUtotal = 0;
+//        int count = 0;
+//        while(imageDataSetVal.hasNext()) {
+//            DataSet imageSetVal = imageDataSetVal.next();
+//
+//            INDArray predict = unetTransfer.output(imageSetVal.getFeatures())[0];
+//            INDArray labels = imageSetVal.getLabels();
+//
+//            if (count%5==0) {
+//                visualisation.export(exportDir, imageSetVal.getFeatures(), imageSetVal.getLabels(), predict, count );
+//            }
+//
+//            count++;
+//
+//            eval.eval(labels, predict);
+//
+//            log.info(eval.stats());
+//
+////            //STEP 6: Complete the code for IOU calculation here
+////            float IOUNuclei = (float)eval.truePositives().get(1) / ((float)eval.truePositives().get(1) + (float)eval.falsePositives().get(1) + (float)eval.falseNegatives().get(1));
+////            IOUtotal = IOUtotal + IOUNuclei;
+////
+////            System.out.println("IOU Cell Nuclei " + String.format("%.3f", IOUNuclei) );
+//
+//            eval.reset();
+//
+//            for (int n=0; n<imageSetVal.asList().size(); n++){
+//                visualisation.visualize(
+//                        imageSetVal.get(n).getFeatures(),
+//                        imageSetVal.get(n).getLabels(),
+////                            predict,
+//                        predict.get(NDArrayIndex.point(n)),
+//                        frame,
+//                        panel,
+//                        4,
+//                        224,
+//                        224
+//                );
+//            }
+//        }
+//
+//        System.out.print("Mean IOU: " + IOUtotal/count);
 
         // WRITE MODEL TO DISK
         File locationToSaveFineTune = new File(System.getProperty("user.home"),".deeplearning4j\\generated-models\\segmentUNetFineTune.zip");

@@ -25,6 +25,12 @@ public class ImageAugmentation {
     private static final Random random = new Random(seed);
 
     public static void main(String[] args) throws IOException{
+        /*
+         * ONLY run to generate more samples
+         *
+         * */
+
+
         File imagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs");
         File[] files = imagesPath.listFiles();
 
