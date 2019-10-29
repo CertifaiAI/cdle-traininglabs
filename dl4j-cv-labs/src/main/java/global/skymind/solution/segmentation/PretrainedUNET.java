@@ -22,7 +22,6 @@ import org.deeplearning4j.nn.modelimport.keras.exceptions.UnsupportedKerasConfig
 import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.weights.WeightInit;
-import org.deeplearning4j.optimize.listeners.Checkpoint;
 import org.deeplearning4j.optimize.listeners.CheckpointListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.api.UIServer;
@@ -52,7 +51,6 @@ import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -65,7 +63,7 @@ public class PretrainedUNET {
 
     public static final String featurizeExtractionLayer = "conv2d_4";
     protected static final long seed = 12345;
-    protected static final int nEpochs = 40;
+    protected static final int nEpochs = 30;
     private static final int height = 224;
     private static final int width = 224;
     private static final int channels = 1;
@@ -90,7 +88,7 @@ public class PretrainedUNET {
 
         FineTuneConfiguration fineTuneConf = new FineTuneConfiguration.Builder()
                 .trainingWorkspaceMode(WorkspaceMode.ENABLED)
-                .updater(new Adam(new StepSchedule(ScheduleType.EPOCH,5e-3,0.5,5 )))
+                .updater(new Adam(new StepSchedule(ScheduleType.EPOCH,3e-4,0.5,5 )))
                 .seed(seed)
                 .build();
 
@@ -117,7 +115,6 @@ public class PretrainedUNET {
 
 
         unetTransfer.setListeners(statsListener, scoreIterationListener, checkpointListener);
-
 
 
         //Initialize the user interface backend
@@ -175,7 +172,6 @@ public class PretrainedUNET {
                     visualisation.visualize(
                             imageSet.get(n).getFeatures(),
                             imageSet.get(n).getLabels(),
-//                            predict,
                             predict.get(NDArrayIndex.point(n)),
                             frame,
                             panel,
@@ -257,7 +253,6 @@ public class PretrainedUNET {
 
         System.out.print("Mean IOU: " + IOUtotal/count);
 
-
         // WRITE MODEL TO DISK
         File locationToSaveFineTune = new File(System.getProperty("user.home"),".deeplearning4j\\generated-models\\segmentUNetFineTune.zip");
         if (!locationToSaveFineTune.exists()){
@@ -270,18 +265,10 @@ public class PretrainedUNET {
     }
 
     public static ImageTransform getImageTransform() {
-
-//        ImageTransform noise = new NoiseTransform(random, (int) (height * width * 0.1));
-//        ImageTransform enhanceContrast = new EqualizeHistTransform();
-//        ImageTransform flip = new FlipImageTransform();
         ImageTransform rgb2gray = new ColorConversionTransform(CV_RGB2GRAY);
-//        ImageTransform rotate = new RotateImageTransform(random, 30);
 
         List<Pair<ImageTransform, Double>> pipeline = Arrays.asList(
                 new Pair<>(rgb2gray, 1.0)
-//                new Pair<>(enhanceContrast, 1.0),
-//                new Pair<>(flip, 0.5)
-//                new Pair<>(rotate,0.5)
         );
         return new PipelineImageTransform(pipeline, false);
     }
