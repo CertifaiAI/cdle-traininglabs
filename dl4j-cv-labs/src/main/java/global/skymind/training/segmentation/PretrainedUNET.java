@@ -88,10 +88,10 @@ public class PretrainedUNET {
         downloadData();
         unzipAllDataSet();
 
-        //STEP 2: Import pretrained UNET (provided in model zoo)
-        ZooModel zooModel = UNet.builder().build();
-        ComputationGraph unet = (ComputationGraph) zooModel.initPretrained(PretrainedType.SEGMENT);
-        System.out.println(unet.summary());
+//        //STEP 2: Import pretrained UNET (provided in model zoo)
+//        ZooModel zooModel = UNet.builder().build();
+//        ComputationGraph unet = (ComputationGraph) zooModel.initPretrained(PretrainedType.SEGMENT);
+//        System.out.println(unet.summary());
 
         // Set listeners
         StatsStorage statsStorage = new InMemoryStatsStorage();
@@ -105,17 +105,17 @@ public class PretrainedUNET {
                 .seed(seed)
                 .build();
 
-        //Construct a new model with the intended architecture and print summary
-        ComputationGraph unetTransfer = new TransferLearning.GraphBuilder(unet)
-                .fineTuneConfiguration(fineTuneConf)
-                .setFeatureExtractor(featurizeExtractionLayer) // set which pre-trained layer to freeze and use as feature extractor
-                    /* add CnnLossLayer (convolutional layer) to the pre-trained UNet to
-                    form a Fully Convolutional Network*/
-                .build();
-
-        System.out.println(unetTransfer.summary());
-
-        unetTransfer.setListeners(statsListener, scoreIterationListener);
+//        //Construct a new model with the intended architecture and print summary
+//        ComputationGraph unetTransfer = new TransferLearning.GraphBuilder(unet)
+//                .fineTuneConfiguration(fineTuneConf)
+//                .setFeatureExtractor(featurizeExtractionLayer) // set which pre-trained layer to freeze and use as feature extractor
+//                    /* add CnnLossLayer (convolutional layer) to the pre-trained UNet to
+//                    form a Fully Convolutional Network*/
+//                .build();
+//
+//        System.out.println(unetTransfer.summary());
+//
+//        unetTransfer.setListeners(statsListener, scoreIterationListener);
 
 
         //Initialize the user interface backend
@@ -261,9 +261,8 @@ public class PretrainedUNET {
         if (!locationToSaveFineTune.exists()){
             locationToSaveFineTune.getParentFile().mkdirs();
         }
-
         boolean saveUpdater = false;
-        ModelSerializer.writeModel(unetTransfer, locationToSaveFineTune, saveUpdater);
+//        ModelSerializer.writeModel(unetTransfer, locationToSaveFineTune, saveUpdater);
         log.info("Model saved");
     }
 

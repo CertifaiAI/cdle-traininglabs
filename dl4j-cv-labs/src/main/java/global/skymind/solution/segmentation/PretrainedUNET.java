@@ -71,9 +71,22 @@ public class PretrainedUNET {
 
     public static void main(String[] args) throws IOException, InvalidKerasConfigurationException, UnsupportedKerasConfigurationException{
 
+        /*
+         * Instructions for this lab exercise:
+         * STEP 1: Download and unzip dataset
+         * STEP 2: Import pretrained UNET (provided in model zoo)
+         * STEP 3: Configuration of transfer learning
+         * STEP 4: Load and pre-process data
+         * STEP 5: Run training
+         * STEP 6: Complete the code for IOU calculation here
+         *
+         * */
+
+        //STEP 1: Download and unzip dataset
         downloadData();
         unzipAllDataSet();
 
+        //STEP 2: Import pretrained UNET (provided in model zoo)
         ZooModel zooModel = UNet.builder().build();
 
         ComputationGraph unet = (ComputationGraph) zooModel.initPretrained(PretrainedType.SEGMENT);
@@ -84,7 +97,7 @@ public class PretrainedUNET {
         StatsListener statsListener = new StatsListener(statsStorage);
         ScoreIterationListener scoreIterationListener= new ScoreIterationListener(1);
 
-
+        //STEP 3: Configuration of transfer learning
         FineTuneConfiguration fineTuneConf = new FineTuneConfiguration.Builder()
                 .trainingWorkspaceMode(WorkspaceMode.ENABLED)
                 .updater(new Adam(new StepSchedule(ScheduleType.EPOCH,3e-4,0.5,5 )))
@@ -114,6 +127,7 @@ public class PretrainedUNET {
         UIServer uiServer = UIServer.getInstance();
         uiServer.attach(statsStorage);
 
+        //STEP 4: Load and pre-process data
         File imagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs");
         FileSplit imageFileSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
 
@@ -147,7 +161,7 @@ public class PretrainedUNET {
                 1
         );
 
-//        TRAINING
+        //STEP 5: Run training
         for(int i=0; i<nEpochs; i++){
 
             log.info("Epoch: " + i);
@@ -221,7 +235,8 @@ public class PretrainedUNET {
 
             log.info(eval.stats());
 
-//            Intersection over Union:  TP / (TP + FN + FP)
+            //STEP 6: Complete the code for IOU calculation here
+            //Intersection over Union:  TP / (TP + FN + FP)
             float IOUNuclei = (float)eval.truePositives().get(1) / ((float)eval.truePositives().get(1) + (float)eval.falsePositives().get(1) + (float)eval.falseNegatives().get(1));
             IOUtotal = IOUtotal + IOUNuclei;
 
