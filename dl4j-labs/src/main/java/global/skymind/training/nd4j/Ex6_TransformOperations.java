@@ -17,28 +17,28 @@ public class Ex6_TransformOperations {
         System.out.println(myArray);
 
         //array log
-        INDArray logArray = Transforms.log(myArray);
-        System.out.println(BLACK_BOLD + "\nArray log transform" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Transforms.log(myArray)" + ANSI_RESET);
-        System.out.println(logArray);
+//        INDArray logArray = Transforms.log(myArray);
+//        System.out.println(BLACK_BOLD + "\nArray log transform" + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "Transforms.log(myArray)" + ANSI_RESET);
+//        System.out.println(logArray);
 
         //array absolute value
-        INDArray absArray = Transforms.abs(logArray);
-        System.out.println(BLACK_BOLD + "\nArray absolute transform" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Transforms.abs(myArray)" + ANSI_RESET);
-        System.out.println(absArray);
+//        INDArray absArray = Transforms.abs(logArray);
+//        System.out.println(BLACK_BOLD + "\nArray absolute transform" + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "Transforms.abs(myArray)" + ANSI_RESET);
+//        System.out.println(absArray);
 
         //Round up array
-        INDArray roundUpArray = Transforms.ceil(absArray);
-        System.out.println(BLACK_BOLD + "\nRound up array" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Transforms.ceil(absArray)" + ANSI_RESET);
-        System.out.println(roundUpArray);
+//        INDArray roundUpArray = Transforms.ceil(absArray);
+//        System.out.println(BLACK_BOLD + "\nRound up array" + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "Transforms.ceil(absArray)" + ANSI_RESET);
+//        System.out.println(roundUpArray);
 
         //Array sigmoid function
-        INDArray sigmoidArray = Transforms.sigmoid(myArray);
-        System.out.println(BLACK_BOLD + "\nArray sigmoid function" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Transforms.sigmoid(myArray)" + ANSI_RESET);
-        System.out.println(sigmoidArray);
+//        INDArray sigmoidArray = Transforms.sigmoid(myArray);
+//        System.out.println(BLACK_BOLD + "\nArray sigmoid function" + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "Transforms.sigmoid(myArray)" + ANSI_RESET);
+//        System.out.println(sigmoidArray);
 
         //Try out more Transform function
     }

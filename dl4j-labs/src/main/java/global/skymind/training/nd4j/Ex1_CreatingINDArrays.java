@@ -12,87 +12,87 @@ public class Ex1_CreatingINDArrays {
 
     public static void main(String[] args) {
 
-        Nd4j.setDefaultDataTypes(DataType.DOUBLE, DataType.DOUBLE);
+//        Nd4j.setDefaultDataTypes(DataType.DOUBLE, DataType.DOUBLE);
 
         //Initialize INDArrays with zero, one, and scalar value
-        int nRows = 3;
-        int nColumns = 5;
-        INDArray allZeros = Nd4j.zeros(nRows, nColumns);
-        System.out.println(BLUE_BOLD+"\nNd4j.zeros(nRows, nColumns)"+ANSI_RESET);
-        System.out.println(allZeros);
+//        int nRows = 3;
+//        int nColumns = 5;
+//        INDArray allZeros = Nd4j.zeros(nRows, nColumns);
+//        System.out.println(BLUE_BOLD+"\nNd4j.zeros(nRows, nColumns)"+ANSI_RESET);
+//        System.out.println(allZeros);
 
-        INDArray allOnes = Nd4j.ones(nRows, nColumns);
-        System.out.println(BLUE_BOLD+"\nNd4j.ones(nRows, nColumns)"+ANSI_RESET);
-        System.out.println(allOnes);
+//        INDArray allOnes = Nd4j.ones(nRows, nColumns);
+//        System.out.println(BLUE_BOLD+"\nNd4j.ones(nRows, nColumns)"+ANSI_RESET);
+//        System.out.println(allOnes);
 
-        INDArray allTens = Nd4j.valueArrayOf(nRows, nColumns, 10.0);
-        System.out.println(BLUE_BOLD+"\nNd4j.valueArrayOf(nRows, nColumns, 10.0)"+ANSI_RESET);
-        System.out.println(allTens);
+//        INDArray allTens = Nd4j.valueArrayOf(nRows, nColumns, 10.0);
+//        System.out.println(BLUE_BOLD+"\nNd4j.valueArrayOf(nRows, nColumns, 10.0)"+ANSI_RESET);
+//        System.out.println(allTens);
 
         //Create INDArrays from double[] and double[][] (or, float/int etc Java arrays)
-        double[] vectorDouble = new double[]{1,2,3};
-        INDArray rowVector = Nd4j.create(vectorDouble);
-        System.out.println(BLACK_BOLD + "\nCreate row vector: " + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.create(new double[]{1,2,3})" + ANSI_RESET);
-        System.out.println(rowVector);
+//        double[] vectorDouble = new double[]{1,2,3};
+//        INDArray rowVector = Nd4j.create(vectorDouble);
+//        System.out.println(BLACK_BOLD + "\nCreate row vector: " + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "Nd4j.create(new double[]{1,2,3})" + ANSI_RESET);
+//        System.out.println(rowVector);
 
-        INDArray columnVector = Nd4j.create(vectorDouble, new int[]{3,1});  //Manually specify: 3 rows, 1 column
-        System.out.println(BLACK_BOLD + "\nCreate column vector: " + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.create(new double[]{1,2,3}, new int[]{3,1})" + ANSI_RESET);
-        System.out.println(columnVector);
+//        INDArray columnVector = Nd4j.create(vectorDouble, new int[]{3,1});  //Manually specify: 3 rows, 1 column
+//        System.out.println(BLACK_BOLD + "\nCreate column vector: " + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "Nd4j.create(new double[]{1,2,3}, new int[]{3,1})" + ANSI_RESET);
+//        System.out.println(columnVector);
 
-        double[][] matrixDouble = new double[][]{
-                {1, 2, 3},
-                {4, 5, 6}};
-        INDArray matrix = Nd4j.create(matrixDouble);
-        System.out.println(BLACK_BOLD + "\nCreate matrix with double[][]:" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.create(new double[][]{{1,2,3},{4,5,6}})" + ANSI_RESET);
-        System.out.println(matrix);
+//        double[][] matrixDouble = new double[][]{
+//                {1, 2, 3},
+//                {4, 5, 6}};
+//        INDArray matrix = Nd4j.create(matrixDouble);
+//        System.out.println(BLACK_BOLD + "\nCreate matrix with double[][]:" + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "Nd4j.create(new double[][]{{1,2,3},{4,5,6}})" + ANSI_RESET);
+//        System.out.println(matrix);
 
         //Create random INDArrays
         //uniform random number
-        INDArray uniformRand = Nd4j.rand(nRows,nColumns);
-        System.out.println(BLACK_BOLD + "\nCreate uniform random array:" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.rand(nRows, nColumns)" + ANSI_RESET);
-        System.out.println(uniformRand);
+//        INDArray uniformRand = Nd4j.rand(nRows,nColumns);
+//        System.out.println(BLACK_BOLD + "\nCreate uniform random array:" + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "Nd4j.rand(nRows, nColumns)" + ANSI_RESET);
+//        System.out.println(uniformRand);
 
-        INDArray uniformRand3D = Nd4j.rand(new int[]{2, nRows, nColumns});
-        System.out.println(BLACK_BOLD + "\nCreate 3 dimensions uniform random array:" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.rand(new int[]{2, nRows, nColumns})" + ANSI_RESET);
-        System.out.println(uniformRand3D);
+//        INDArray uniformRand3D = Nd4j.rand(new int[]{2, nRows, nColumns});
+//        System.out.println(BLACK_BOLD + "\nCreate 3 dimensions uniform random array:" + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "Nd4j.rand(new int[]{2, nRows, nColumns})" + ANSI_RESET);
+//        System.out.println(uniformRand3D);
 
         //gaussian random number
-        INDArray gaussianMeanZeroUnitVariance = Nd4j.randn(new int[]{nRows, nColumns});
-        System.out.println(BLACK_BOLD + "\nCreate random numbers with mean zero and standard deviation one:" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.randn(new int[]{nRows, nColumns})" + ANSI_RESET);
-        System.out.println(gaussianMeanZeroUnitVariance);
+//        INDArray gaussianMeanZeroUnitVariance = Nd4j.randn(new int[]{nRows, nColumns});
+//        System.out.println(BLACK_BOLD + "\nCreate random numbers with mean zero and standard deviation one:" + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "Nd4j.randn(new int[]{nRows, nColumns})" + ANSI_RESET);
+//        System.out.println(gaussianMeanZeroUnitVariance);
 
         //Create repeatable random array using seed:
-        long seed = 123;
-        int[] shape = new int[]{nRows, nColumns};
-        INDArray rand1 = Nd4j.rand(shape, seed);
-        INDArray rand2 = Nd4j.rand(shape, seed);
-        System.out.println(BLACK_BOLD +"\nUniform random arrays with same fixed seed:" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.rand(shape, seed)" + ANSI_RESET);
-        System.out.println(BLACK_BOLD + "rand1" + ANSI_RESET);
-        System.out.println(rand1);
-        System.out.println(BLACK_BOLD + "rand2" + ANSI_RESET);
-        System.out.println(rand2);
+//        long seed = 123;
+//        int[] shape = new int[]{nRows, nColumns};
+//        INDArray rand1 = Nd4j.rand(shape, seed);
+//        INDArray rand2 = Nd4j.rand(shape, seed);
+//        System.out.println(BLACK_BOLD +"\nUniform random arrays with same fixed seed:" + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "Nd4j.rand(shape, seed)" + ANSI_RESET);
+//        System.out.println(BLACK_BOLD + "rand1" + ANSI_RESET);
+//        System.out.println(rand1);
+//        System.out.println(BLACK_BOLD + "rand2" + ANSI_RESET);
+//        System.out.println(rand2);
 
         //Other miscellaneous methods
-        INDArray identityMatrix = Nd4j.eye(3);
-        System.out.println(BLACK_BOLD +"\nCreate identity matrix:" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.eye(3)" + ANSI_RESET);
-        System.out.println(identityMatrix);
+//        INDArray identityMatrix = Nd4j.eye(3);
+//        System.out.println(BLACK_BOLD +"\nCreate identity matrix:" + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "Nd4j.eye(3)" + ANSI_RESET);
+//        System.out.println(identityMatrix);
 
-        INDArray linspace = Nd4j.linspace(1,20,10); //Values 1 to 10, in 10 steps
-        System.out.println(BLACK_BOLD +"\nGenerate a vector with range of values (start from 1 to 20 in 10 steps):" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.linspace(1,20,10)" + ANSI_RESET);
-        System.out.println(linspace);
+//        INDArray linspace = Nd4j.linspace(1,20,10); //Values 1 to 10, in 10 steps
+//        System.out.println(BLACK_BOLD +"\nGenerate a vector with range of values (start from 1 to 20 in 10 steps):" + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "Nd4j.linspace(1,20,10)" + ANSI_RESET);
+//        System.out.println(linspace);
 
-        INDArray diagMatrix = Nd4j.diag(Nd4j.create(new double[]{4,5,6}));
-        System.out.println(BLACK_BOLD +"\nCreate square matrix, with vector along the diagonal:" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.diag(Nd4j.create(new double[]{4,5,6}))" + ANSI_RESET);
-        System.out.println(diagMatrix);
+//        INDArray diagMatrix = Nd4j.diag(Nd4j.create(new double[]{4,5,6}));
+//        System.out.println(BLACK_BOLD +"\nCreate square matrix, with vector along the diagonal:" + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "Nd4j.diag(Nd4j.create(new double[]{4,5,6}))" + ANSI_RESET);
+//        System.out.println(diagMatrix);
     }
 }
