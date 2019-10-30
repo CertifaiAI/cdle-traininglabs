@@ -12,7 +12,7 @@ public class Ex1_CreatingINDArrays {
 
     public static void main(String[] args) {
 
-        Nd4j.setDefaultDataTypes(DataType.DOUBLE, DataType.DOUBLE);
+//        Nd4j.setDefaultDataTypes(DataType.DOUBLE, DataType.DOUBLE);
 
         //Initialize INDArrays with zero, one, and scalar value
 //        int nRows = 3;
@@ -69,9 +69,9 @@ public class Ex1_CreatingINDArrays {
 
         //Create repeatable random array using seed:
 //        long seed = 123;
-//        long[] shape = new long[]{nRows, nColumns};
-//        INDArray rand1 = Nd4j.rand(seed, shape);
-//        INDArray rand2 = Nd4j.rand(seed, shape);
+//        int[] shape = new int[]{nRows, nColumns};
+//        INDArray rand1 = Nd4j.rand(shape, seed);
+//        INDArray rand2 = Nd4j.rand(shape, seed);
 //        System.out.println(BLACK_BOLD +"\nUniform random arrays with same fixed seed:" + ANSI_RESET);
 //        System.out.println(BLUE_BOLD + "Nd4j.rand(shape, seed)" + ANSI_RESET);
 //        System.out.println(BLACK_BOLD + "rand1" + ANSI_RESET);

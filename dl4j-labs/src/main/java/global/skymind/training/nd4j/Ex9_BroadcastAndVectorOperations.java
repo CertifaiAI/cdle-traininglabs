@@ -9,11 +9,11 @@ public class Ex9_BroadcastAndVectorOperations {
     public static final String ANSI_RESET = "\u001B[0m";
 
     public static void main(String[] args) {
-        int nRows = 3;
-        int nColumns = 5;
-        INDArray myArray = Nd4j.randn(123, new long[]{nRows, nColumns});
-        System.out.println(BLACK_BOLD + "Default array" + ANSI_RESET);
-        System.out.println(myArray);
+//        int nRows = 3;
+//        int nColumns = 5;
+//        INDArray myArray = Nd4j.randn(new int[]{nRows, nColumns}, 123);
+//        System.out.println(BLACK_BOLD + "Default array" + ANSI_RESET);
+//        System.out.println(myArray);
 
         //Add row vector
 //        INDArray rowVector = Nd4j.ones(1,5);
