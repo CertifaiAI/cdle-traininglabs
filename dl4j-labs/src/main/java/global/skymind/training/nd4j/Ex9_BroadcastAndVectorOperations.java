@@ -11,23 +11,23 @@ public class Ex9_BroadcastAndVectorOperations {
     public static void main(String[] args) {
         int nRows = 3;
         int nColumns = 5;
-        INDArray myArray = Nd4j.randn(new int[]{nRows, nColumns}, 123);
+        INDArray myArray = Nd4j.randn(123, new long[]{nRows, nColumns});
         System.out.println(BLACK_BOLD + "Default array" + ANSI_RESET);
         System.out.println(myArray);
 
         //Add row vector
-        INDArray rowVector = Nd4j.ones(1,5);
-        INDArray addedRowVector = myArray.addRowVector(rowVector);
-        System.out.println(BLACK_BOLD + "\nAdd row vector" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "myArray.addRowVector(rowVector)" + ANSI_RESET);
-        System.out.println(addedRowVector);
+//        INDArray rowVector = Nd4j.ones(1,5);
+//        INDArray addedRowVector = myArray.addRowVector(rowVector);
+//        System.out.println(BLACK_BOLD + "\nAdd row vector" + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "myArray.addRowVector(rowVector)" + ANSI_RESET);
+//        System.out.println(addedRowVector);
 
         //Subtract column vector
-        INDArray columnVector = Nd4j.ones(3,1);
-        INDArray subtractedColVector = myArray.subColumnVector(columnVector);
-        System.out.println(BLACK_BOLD + "\nAdd row vector" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "myArray.subColumnVector(columnVector)" + ANSI_RESET);
-        System.out.println(subtractedColVector);
+//        INDArray columnVector = Nd4j.ones(3,1);
+//        INDArray subtractedColVector = myArray.subColumnVector(columnVector);
+//        System.out.println(BLACK_BOLD + "\nAdd row vector" + ANSI_RESET);
+//        System.out.println(BLUE_BOLD + "myArray.subColumnVector(columnVector)" + ANSI_RESET);
+//        System.out.println(subtractedColVector);
 
         //try out divide and multiply
     }

@@ -72,9 +72,9 @@ public class Ex1_CreatingINDArrays {
 
         //Create repeatable random array using seed:
         long seed = 123;
-        int[] shape = new int[]{nRows, nColumns};
-        INDArray rand1 = Nd4j.rand(shape, seed);
-        INDArray rand2 = Nd4j.rand(shape, seed);
+        long[] shape = new long[]{nRows, nColumns};
+        INDArray rand1 = Nd4j.rand(seed, shape);
+        INDArray rand2 = Nd4j.rand(seed, shape);
         System.out.println(BLACK_BOLD +"\nUniform random arrays with same fixed seed:" + ANSI_RESET);
         System.out.println(BLUE_BOLD + "Nd4j.rand(shape, seed)" + ANSI_RESET);
         System.out.println(BLACK_BOLD + "rand1" + ANSI_RESET);
