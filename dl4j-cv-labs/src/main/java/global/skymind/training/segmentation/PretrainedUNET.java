@@ -62,9 +62,9 @@ public class PretrainedUNET {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(
             PretrainedUNET.class);
 
-    public static final String featurizeExtractionLayer = "conv2d_4";
-    protected static final long seed = 12345;
-    protected static final int nEpochs = 30;
+    private static final String featurizeExtractionLayer = "conv2d_4";
+    private static final long seed = 12345;
+    private static final int nEpochs = 30;
     private static final int height = 224;
     private static final int width = 224;
     private static final int channels = 1;
@@ -283,9 +283,11 @@ public class PretrainedUNET {
         File file = new File(parentDir + "\\data-science-bowl-2018.zip");
 
         if (!file.exists()) {
+            System.out.println("Creating dataset folder ...");
             file.getParentFile().mkdirs();
             HttpClientBuilder builder = HttpClientBuilder.create();
             CloseableHttpClient client = builder.build();
+            System.out.println("Downloading dataset ...");
             try (CloseableHttpResponse response = client.execute(new HttpGet(DATA_URL))) {
                 HttpEntity entity = response.getEntity();
 
