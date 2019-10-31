@@ -6,11 +6,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.datavec.api.io.filters.BalancedPathFilter;
-import org.datavec.api.split.FileSplit;
-import org.datavec.api.split.InputSplit;
-import org.datavec.image.loader.NativeImageLoader;
-import org.datavec.image.recordreader.ImageRecordReader;
 import org.datavec.image.transform.*;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
@@ -34,8 +29,6 @@ import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
-import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
-import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.linalg.indexing.NDArrayIndex;
 import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
@@ -67,6 +60,7 @@ public class PretrainedUNET {
     private static final int width = 224;
     private static final int channels = 1;
     private static final int batchSize = 4;
+    private static final double trainPerc = 0.8;
     private static final Random random = new Random(seed);
 
     public static void main(String[] args) throws IOException, InvalidKerasConfigurationException, UnsupportedKerasConfigurationException{
@@ -83,8 +77,8 @@ public class PretrainedUNET {
          * */
 
         //STEP 1: Download and unzip dataset
-        downloadData();
-        unzipAllDataSet();
+//        downloadData();
+//        unzipAllDataSet();
 
         //STEP 2: Import pretrained UNET (provided in model zoo)
         ZooModel zooModel = UNet.builder().build();
@@ -127,29 +121,11 @@ public class PretrainedUNET {
         UIServer uiServer = UIServer.getInstance();
         uiServer.attach(statsStorage);
 
-        //STEP 4: Load and pre-process data
-        File imagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs");
-        FileSplit imageFileSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
+        CellDataSetIterator.setup(batchSize, trainPerc, getImageTransform());
 
-        //Load labels
-        CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, 1); // labels have 1 channel
-
-        BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
-        InputSplit[] imagesSplits = imageFileSplit.sample(imageSplitPathFilter, 0.8, 0.2);
-
-        // Record reader
-        ImageRecordReader imageRecordReaderTrain = new ImageRecordReader(height, width, channels, labelMaker);
-        ImageRecordReader imageRecordReaderVal = new ImageRecordReader(height, width, channels, labelMaker);
-        imageRecordReaderTrain.initialize(imagesSplits[0], getImageTransform());
-
-        // Dataset iterator
-        RecordReaderDataSetIterator imageDataSetTrain = new RecordReaderDataSetIterator(imageRecordReaderTrain, batchSize, 1, 1, true);
-
-
-        // Preprocessing - normalisation
-        DataNormalization dataNormalization = new ImagePreProcessingScaler(0,1);
-        dataNormalization.fit(imageDataSetTrain);
-        imageDataSetTrain.setPreProcessor(dataNormalization);
+        //create iterators
+        RecordReaderDataSetIterator imageDataSetTrain = CellDataSetIterator.trainIterator();
+        RecordReaderDataSetIterator imageDataSetVal = CellDataSetIterator.valIterator();
 
         // Visualisation -  training
         JFrame frame = visualisation.initFrame("Viz");
@@ -174,7 +150,6 @@ public class PretrainedUNET {
 
                 INDArray predict = unetTransfer.output(imageSet.getFeatures())[0];
 
-
                 for (int n=0; n<imageSet.asList().size(); n++){
                     visualisation.visualize(
                             imageSet.get(n).getFeatures(),
@@ -194,10 +169,6 @@ public class PretrainedUNET {
         }
 
         // VALIDATION
-        imageRecordReaderVal.initialize(imagesSplits[1]);
-        RecordReaderDataSetIterator imageDataSetVal = new RecordReaderDataSetIterator(imageRecordReaderVal, batchSize, 1, 1, true);
-        imageDataSetVal.setPreProcessor(dataNormalization);
-
         Evaluation eval = new Evaluation(2);
 
         // VISUALISATION -  validation
@@ -281,58 +252,58 @@ public class PretrainedUNET {
         return new PipelineImageTransform(pipeline, false);
     }
 
-    public static void downloadData() {
-        // Download data
-        File parentDir = new File(System.getProperty("user.home"), ".deeplearning4j\\data\\data-science-bowl-2018");
-        String DATA_URL = "https://drive.google.com/a/skymind.my/uc?authuser=0&id=1zHn593J13dxLO1AJ0N2jKhpahs0yYGa0&export=download";
-
-        File file = new File(parentDir + "\\data-science-bowl-2018.zip");
-
-        if (!file.exists()) {
-            System.out.println("Creating dataset folder ...");
-            file.getParentFile().mkdirs();
-            HttpClientBuilder builder = HttpClientBuilder.create();
-            CloseableHttpClient client = builder.build();
-            System.out.println("Downloading dataset ...");
-            try (CloseableHttpResponse response = client.execute(new HttpGet(DATA_URL))) {
-                HttpEntity entity = response.getEntity();
-
-                System.out.println(entity);
-
-                if (entity != null) {
-                    try (FileOutputStream outstream = new FileOutputStream(file)) {
-                        entity.writeTo(outstream);
-                        outstream.flush();
-                    }
-                }
-            } catch (IOException ex) {
-                System.out.println(ex);
-            }
-
-
-        }
-
-    }
-
-    public static void unzip(String source, String destination){
-        try {
-            ZipFile zipFile = new ZipFile(source);
-            zipFile.extractAll(destination);
-        } catch (ZipException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void unzipAllDataSet(){
-        //unzip training data set
-        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018");
-
-        String zipClass0FilePath = resourceDir + "/data-science-bowl-2018.zip";
-
-        File class0Folder = new File(resourceDir + "/data-science-bowl-2018");
-        if (!class0Folder.exists()){
-            System.out.println("Unzipping data ...");
-            unzip(zipClass0FilePath, class0Folder.toString());
-        }
-    }
+//    public static void downloadData() {
+//        // Download data
+//        File parentDir = new File(System.getProperty("user.home"), ".deeplearning4j\\data\\data-science-bowl-2018");
+//        String DATA_URL = "https://drive.google.com/a/skymind.my/uc?authuser=0&id=1zHn593J13dxLO1AJ0N2jKhpahs0yYGa0&export=download";
+//
+//        File file = new File(parentDir + "\\data-science-bowl-2018.zip");
+//
+//        if (!file.exists()) {
+//            System.out.println("Creating dataset folder ...");
+//            file.getParentFile().mkdirs();
+//            HttpClientBuilder builder = HttpClientBuilder.create();
+//            CloseableHttpClient client = builder.build();
+//            System.out.println("Downloading dataset ...");
+//            try (CloseableHttpResponse response = client.execute(new HttpGet(DATA_URL))) {
+//                HttpEntity entity = response.getEntity();
+//
+//                System.out.println(entity);
+//
+//                if (entity != null) {
+//                    try (FileOutputStream outstream = new FileOutputStream(file)) {
+//                        entity.writeTo(outstream);
+//                        outstream.flush();
+//                    }
+//                }
+//            } catch (IOException ex) {
+//                System.out.println(ex);
+//            }
+//
+//
+//        }
+//
+//    }
+//
+//    public static void unzip(String source, String destination){
+//        try {
+//            ZipFile zipFile = new ZipFile(source);
+//            zipFile.extractAll(destination);
+//        } catch (ZipException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public static void unzipAllDataSet(){
+//        //unzip training data set
+//        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018");
+//
+//        String zipClass0FilePath = resourceDir + "/data-science-bowl-2018.zip";
+//
+//        File class0Folder = new File(resourceDir + "/data-science-bowl-2018");
+//        if (!class0Folder.exists()){
+//            System.out.println("Unzipping data ...");
+//            unzip(zipClass0FilePath, class0Folder.toString());
+//        }
+//    }
 }

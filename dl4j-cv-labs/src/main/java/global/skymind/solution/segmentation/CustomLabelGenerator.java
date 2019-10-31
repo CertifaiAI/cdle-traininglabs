@@ -21,6 +21,17 @@ public class CustomLabelGenerator implements PathLabelGenerator {
     private final int channels;
     private final NativeImageLoader imageLoader;
 
+    //DIRECTORY STRUCTURE:
+    //Images in the dataset have to be organized in directories by class/label.
+    //In this example there are images in three classes
+    //Here is the directory structure
+    //                                    parentDir
+    //                                  /    |     \
+    //                                 /     |      \
+    //                            labelA  labelB   labelC
+    //
+    //Set your data up like this so that labels from each label/class live in their own directory
+    //And these label/class directories live together in the parent directory
 
     @Override
     public boolean inferLabelClasses() {
