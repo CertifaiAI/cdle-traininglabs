@@ -289,9 +289,11 @@ public class PretrainedUNET {
         File file = new File(parentDir + "\\data-science-bowl-2018.zip");
 
         if (!file.exists()) {
+            System.out.println("Creating dataset folder ...");
             file.getParentFile().mkdirs();
             HttpClientBuilder builder = HttpClientBuilder.create();
             CloseableHttpClient client = builder.build();
+            System.out.println("Downloading dataset ...");
             try (CloseableHttpResponse response = client.execute(new HttpGet(DATA_URL))) {
                 HttpEntity entity = response.getEntity();
 
