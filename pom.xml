@@ -54,7 +54,7 @@
         <opencv-platform.version>4.0.1-1.5</opencv-platform.version>
         <ffmpeg-platform.version>4.1.3-1.5</ffmpeg-platform.version>
 
-        <!--<httpclient.version>4.3.5</httpclient.version>-->
+        <httpclient.version>4.3.5</httpclient.version>
         <zip4j.version>1.3.2</zip4j.version>
         <bytedeco-javacpp-presets-v9-2.version>9.2-7.1-1.4.2</bytedeco-javacpp-presets-v9-2.version>
         <bytedeco-javacpp-presets-v10.version>10.0-7.3-1.4.3</bytedeco-javacpp-presets-v10.version>
