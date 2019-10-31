@@ -1,5 +1,6 @@
 package global.skymind.training.segmentation;
 
+import global.skymind.Helper;
 import global.skymind.solution.segmentation.CellDataSetIterator;
 import global.skymind.training.segmentation.imageUtils.visualisation;
 import net.lingala.zip4j.core.ZipFile;
@@ -53,6 +54,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -72,6 +74,7 @@ public class PretrainedUNET {
     private static final int batchSize = 4;
     private static final double trainPerc = 0.8;
     private static final Random random = new Random(seed);
+    private static String modelExportDir;
 
     public static void main(String[] args) throws IOException, InvalidKerasConfigurationException, UnsupportedKerasConfigurationException{
 
@@ -236,10 +239,18 @@ public class PretrainedUNET {
 //        System.out.print("Mean IOU: " + IOUtotal/count);
 
         // WRITE MODEL TO DISK
-        File locationToSaveModel = new File(System.getProperty("user.home"),".deeplearning4j\\generated-models\\segmentUNetFineTune.zip");
+        // WRITE MODEL TO DISK
+        modelExportDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.generated-models")
+        ).toString();
+
+
+        File locationToSaveModel = new File(Paths.get(modelExportDir).toString() + "/segmentUNET.zip");
         if (!locationToSaveModel.exists()){
             locationToSaveModel.getParentFile().mkdirs();
         }
+
         boolean saveUpdater = false;
 //        ModelSerializer.writeModel(unetTransfer, locationToSaveModel, saveUpdater);
         log.info("Model saved");

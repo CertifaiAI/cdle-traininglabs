@@ -19,7 +19,19 @@ public class CustomLabelGenerator implements PathLabelGenerator {
     private final int width;
     private final int channels;
     private final NativeImageLoader imageLoader;
+    private static String inputDir;
 
+    //DIRECTORY STRUCTURE:
+    //Here is the directory structure
+    //                                  parentDir
+    //                                 /         \
+    //                                /           \
+    //                               /             \
+    //                           image              mask
+    //                          /  |  \            /  |  \
+    //                         /   |   \          /   |   \
+    //                        /    |    \        /    |    \
+    //                   case1  case2  case3   case1 case2  case3
 
     @Override
     public boolean inferLabelClasses() {
@@ -37,19 +49,13 @@ public class CustomLabelGenerator implements PathLabelGenerator {
     public Writable getLabelForPath(String path) {
         try
         {
-            String labelPath = path.replace("\\inputs\\", "\\masks\\");
+//
+            String labelPath = path.replace("inputs", "masks");
 
             NDArrayWritable label = new NDArrayWritable(imageLoader.asMatrix(new File(labelPath)) );
 
-//            System.out.println(labelPath);
-//            System.out.println(label);
-
             INDArray labelINDArray = label.get();
 
-//            // adding 255 to green channel, so that 0-1 normalisation would result in one-hot encoding for 3 classes.
-//            INDArray newValue = labelINDArray.get(NDArrayIndex.all(), NDArrayIndex.point(1),  NDArrayIndex.all()).add(labelINDArray.sum(1)).sub(255).mul(-1) ;
-//            labelINDArray.get(NDArrayIndex.all(), NDArrayIndex.point(1),  NDArrayIndex.all()).assign(newValue);
-//
 //            // normalise to 0-1 scale
             label.set( labelINDArray.div(255));
 
@@ -69,20 +75,6 @@ public class CustomLabelGenerator implements PathLabelGenerator {
     }
 
 
-    public INDArray getLabelForPathNDArray(URI uri) {
-        try
-        {
-            String labelURI = uri.toString().replace("\\inputs\\", "\\masks\\");
 
-            return  imageLoader.asMatrix(new File(URI.create(labelURI))).div(255);
-//            return  imageLoader.asMatrix(new File(URI.create(labelURI)));
-
-        }
-        catch (IOException ioe)
-        {
-            ioe.printStackTrace();
-            return null;
-        }
-    }
 
 }

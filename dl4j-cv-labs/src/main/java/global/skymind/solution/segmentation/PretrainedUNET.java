@@ -223,14 +223,13 @@ public class PretrainedUNET {
         System.out.print("Mean IOU: " + IOUtotal/count);
 
         // WRITE MODEL TO DISK
-
         modelExportDir = Paths.get(
                 System.getProperty("user.home"),
-                Helper.getPropValues("dl4j_home.models")
+                Helper.getPropValues("dl4j_home.generated-models")
         ).toString();
 
-//        File locationToSaveModel = new File(System.getProperty("user.home"),".deeplearning4j\\generated-models\\segmentUNetFineTune.zip");
-        File locationToSaveModel = new File(Paths.get(modelExportDir).toString());
+
+        File locationToSaveModel = new File(Paths.get(modelExportDir).toString() + "/segmentUNET.zip");
         if (!locationToSaveModel.exists()){
             locationToSaveModel.getParentFile().mkdirs();
         }

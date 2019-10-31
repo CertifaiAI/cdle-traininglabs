@@ -1,8 +1,7 @@
-package global.skymind.solution.segmentation;
+package global.skymind.training.segmentation;
 
 import global.skymind.Helper;
-import org.datavec.image.transform.ImageTransform;
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
+import global.skymind.solution.segmentation.CustomLabelGenerator;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.HttpEntity;
@@ -15,6 +14,8 @@ import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.InputSplit;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
+import org.datavec.image.transform.ImageTransform;
+import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 
