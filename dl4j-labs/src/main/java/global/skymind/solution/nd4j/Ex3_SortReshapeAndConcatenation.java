@@ -62,7 +62,7 @@ public class Ex3_SortReshapeAndConcatenation {
         System.out.println(hStacked);
 
         //Concatenation, combines arrays along a dimension
-        int[] shape = new int[]{2,3,2,};
+        int[] shape = new int[]{2,3,2};
         INDArray array1 = Nd4j.zeros(shape);
         INDArray array2 = Nd4j.ones(shape);
 
@@ -77,5 +77,20 @@ public class Ex3_SortReshapeAndConcatenation {
         System.out.println(BLUE_BOLD + "Nd4j.concat(1, array1, array2)" + ANSI_RESET);
         System.out.println("Shape: " + Arrays.toString(concatenated2.shape()));
         System.out.println(concatenated2);
+
+        /*
+        EXERCISE:
+        - Create arr1 with shape(2,3)
+        - Create arr2 with shape(5,2)
+        - Concatenate array2 to array1 (use reshape, flatten, or transpose if needed)
+        - Sort(descending) the concatenated array in dimension 1
+        */
+        System.out.println();
+        INDArray arr1 = Nd4j.randn(2,3);
+        INDArray arr2 = Nd4j.randn(5,2);
+        INDArray concated = Nd4j.concat(1, arr1, arr2.transpose());
+        INDArray concatedSorted = Nd4j.sort(concated,1,false);
+        System.out.println(concatedSorted);
+
     }
 }

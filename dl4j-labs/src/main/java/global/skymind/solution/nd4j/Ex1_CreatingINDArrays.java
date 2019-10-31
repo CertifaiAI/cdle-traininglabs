@@ -88,7 +88,7 @@ public class Ex1_CreatingINDArrays {
         System.out.println(BLUE_BOLD + "Nd4j.eye(3)" + ANSI_RESET);
         System.out.println(identityMatrix);
 
-        INDArray linspace = Nd4j.linspace(1,20,10); //Values 1 to 10, in 10 steps
+        INDArray linspace = Nd4j.linspace(1,20,10); //Values 1 to 20, in 10 steps
         System.out.println(BLACK_BOLD +"\nGenerate a vector with range of values (start from 1 to 20 in 10 steps):" + ANSI_RESET);
         System.out.println(BLUE_BOLD + "Nd4j.linspace(1,20,10)" + ANSI_RESET);
         System.out.println(linspace);
@@ -97,5 +97,37 @@ public class Ex1_CreatingINDArrays {
         System.out.println(BLACK_BOLD +"\nCreate square matrix, with vector along the diagonal:" + ANSI_RESET);
         System.out.println(BLUE_BOLD + "Nd4j.diag(Nd4j.create(new double[]{4,5,6}))" + ANSI_RESET);
         System.out.println(diagMatrix);
+
+        /*
+        EXERCISE:
+        - Create array with shape (3,2) initialize it with 0
+        - Create array with shape (5,5) initialize it with 5
+        - Create the following array
+            | 0  0  0 |
+            | 1  1  1 |
+            | 2  2  2 |
+        - Create array with shape (3,3,3) initialize it with gaussian random number
+        - Create a vector with range of 1 - 100 in 20 steps
+        */
+        INDArray ex1 = Nd4j.zeros(3, 2);
+        System.out.println(BLACK_BOLD +"\nCreate array with shape (3,2) initialize it with 0" + ANSI_RESET);
+        System.out.println(ex1);
+
+        INDArray ex2 = Nd4j.valueArrayOf(5, 5,5);
+        System.out.println(BLACK_BOLD +"\nCreate array with shape (5,5) initialize it with 5" + ANSI_RESET);
+        System.out.println(ex2);
+
+        INDArray ex3 = Nd4j.create(new double[]{0,0,0,1,1,1,2,2,2}, new int[]{3,3});
+        System.out.println(BLACK_BOLD +"\nCreate the following array" + ANSI_RESET);
+        System.out.println(ex3);
+
+        INDArray ex4 = Nd4j.randn(new int[]{3,3,3});
+        System.out.println(BLACK_BOLD +"\nCreate array with shape (3,3,3) initialize it with gaussian random number" + ANSI_RESET);
+        System.out.println(ex4);
+
+        INDArray ex5 = Nd4j.linspace(1,100,20);
+        System.out.println(BLACK_BOLD +"\nCreate a vector with range of 1 to 100 in 20 steps" + ANSI_RESET);
+        System.out.println(ex5);
+
     }
 }

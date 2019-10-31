@@ -35,6 +35,19 @@ public class Ex2_InspectingINDArrays {
         System.out.println("Is a vector:                   " + myArray.isVector());
         System.out.println("Is a scalar:                   " + myArray.isScalar());
         System.out.println("Is a matrix:                   " + myArray.isMatrix());
-        System.out.println("Is a square matrix:            " + myArray.isSquare());;
+        System.out.println("Is a square matrix:            " + myArray.isSquare());
+
+
+        /*
+        EXERCISE:
+        - Create the following array: Nd4j.randn(new int[]{2,5,6,3,5});
+        - Get the shape of the array
+        - Get number of dimension
+        - Get the size of dimension 4
+        */
+        INDArray arr = Nd4j.randn(new int[]{2,5,6,3,5});
+        System.out.println("\nNum. Dimensions / rank:   " + arr.rank());
+        System.out.println("Shape:                      " + Arrays.toString(arr.shape()));
+        System.out.println("size(4):                    " + arr.size(4));
     }
 }
