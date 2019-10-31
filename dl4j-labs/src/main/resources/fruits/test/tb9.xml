@@ -1,0 +1,26 @@
+<annotation>
+	<folder>test</folder>
+	<filename>tb9.jpg</filename>
+	<path>C:\Users\choowilson\Desktop\TinyYOLO\src\main\resources\data\test\tb9.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>416</width>
+		<height>306</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>banana</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>88</xmin>
+			<ymin>36</ymin>
+			<xmax>355</xmax>
+			<ymax>258</ymax>
+		</bndbox>
+	</object>
+</annotation>

@@ -34,6 +34,12 @@ This repo contains codes for hands-on purpose during training session.
   Mortality prediction using LSTM.
 - [VAE/VAECreditAnomaly](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/VAE):
   Bank transaction anomaly detection using VAE.
+  
+#### DL4J-cv-labs
+- [ImageClassification/CustomModel](https://github.com/skymindglobal/TrainingLabs/tree/imageclassification/dl4j-cv-labs/src/main/java/global/skymind/solution/classification):
+  Dog breed classification using custom model.
+- [ImageClassification/TransferLearning](https://github.com/skymindglobal/TrainingLabs/tree/imageclassification/dl4j-cv-labs/src/main/java/global/skymind/solution/classification/transferlearning):
+  Dog breed classification using transfer learning.
 
 #### Spark-Lab
 - [HelloWorldSpark](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-spark-labs/src/main/java/global/skymind)
