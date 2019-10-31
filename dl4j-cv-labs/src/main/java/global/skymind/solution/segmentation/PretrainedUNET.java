@@ -60,9 +60,9 @@ public class PretrainedUNET {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(
             PretrainedUNET.class);
 
-    public static final String featurizeExtractionLayer = "conv2d_4";
-    protected static final long seed = 12345;
-    protected static final int nEpochs = 30;
+    private static final String featurizeExtractionLayer = "conv2d_4";
+    private static final long seed = 12345;
+    private static final int nEpochs = 30;
     private static final int height = 224;
     private static final int width = 224;
     private static final int channels = 1;
