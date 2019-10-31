@@ -140,14 +140,11 @@ public class CellDataSetIterator {
         ).toString();
 
         File zipClassFilePath = new File(Paths.get(inputDir, "data-science-bowl-2018/data-science-bowl-2018.zip").toString());
-//        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018");
 
-//        String zipClassFilePath = resourceDir + "/data-science-bowl-2018.zip";
-
-//        File classFolder = new File(resourceDir + "/data-science-bowl-2018");
-        File classFolder = new File(Paths.get(inputDir, "data-science-bowl-2018").toString());
+        File classFolder = new File(Paths.get(inputDir, "data-science-bowl-2018/data-science-bowl-2018").toString());
         if (!classFolder.exists()){
-            System.out.println("Unzipping data ...");
+            classFolder.mkdir();
+            System.out.println("Unzipping dataset ...");
             unzip(zipClassFilePath.toString(), classFolder.toString());
         }
     }
