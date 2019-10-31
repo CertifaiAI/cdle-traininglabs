@@ -1,5 +1,6 @@
 package global.skymind.solution.segmentation;
 
+import global.skymind.Helper;
 import org.datavec.image.transform.ImageTransform;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import net.lingala.zip4j.core.ZipFile;
@@ -30,7 +31,8 @@ public class CellDataSetIterator {
     private static final Random random = new Random(seed);
     private static File parentDir = new File(System.getProperty("user.home"), ".deeplearning4j\\data\\data-science-bowl-2018");
     private static File file = new File(parentDir + "\\data-science-bowl-2018.zip");
-    private static String downloadLink = "https://drive.google.com/a/skymind.my/uc?authuser=0&id=1zHn593J13dxLO1AJ0N2jKhpahs0yYGa0&export=download";
+//    private static String downloadLink = "https://drive.google.com/a/skymind.my/uc?authuser=0&id=1zHn593J13dxLO1AJ0N2jKhpahs0yYGa0&export=download";
+    private static String downloadLink;
     private static CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, channels);
     private static InputSplit trainData,valData;
     private static int batchSize;
@@ -86,7 +88,9 @@ public class CellDataSetIterator {
         valData = imagesSplits[1];
     }
 
-    public static void downloadData() {
+    public static void downloadData() throws IOException {
+        downloadLink = Helper.getPropValues("dataset.segmentationCell.url");
+
         if (!file.exists()) {
             System.out.println("Creating dataset folder ...");
             file.getParentFile().mkdirs();
