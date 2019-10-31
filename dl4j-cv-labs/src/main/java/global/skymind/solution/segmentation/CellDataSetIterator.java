@@ -84,7 +84,6 @@ public class CellDataSetIterator {
                 Helper.getPropValues("dl4j_home.data")
         ).toString();
 
-
         File imagesPath = new File(Paths.get(inputDir, "data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs").toString());
         FileSplit imageFileSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
         BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);

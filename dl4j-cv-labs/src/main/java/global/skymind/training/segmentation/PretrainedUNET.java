@@ -1,5 +1,6 @@
 package global.skymind.training.segmentation;
 
+import global.skymind.solution.segmentation.CellDataSetIterator;
 import global.skymind.training.segmentation.imageUtils.visualisation;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -69,26 +70,22 @@ public class PretrainedUNET {
     private static final int width = 224;
     private static final int channels = 1;
     private static final int batchSize = 4;
+    private static final double trainPerc = 0.8;
     private static final Random random = new Random(seed);
 
     public static void main(String[] args) throws IOException, InvalidKerasConfigurationException, UnsupportedKerasConfigurationException{
 
         /*
-        * Instructions for this lab exercise:
-        * STEP 1: Download and unzip dataset
-        * STEP 2: Import pretrained UNET (provided in model zoo)
-        * STEP 3: Configuration of transfer learning
-        * STEP 4: Load and pre-process data
-        * STEP 5: Run training
-        * STEP 6: Complete the code for IOU calculation here
-        *
-        * */
+         * Instructions for this lab exercise:
+         * STEP 1: Import pretrained UNET (provided in model zoo)
+         * STEP 2: Configuration of transfer learning
+         * STEP 3: Load data into RecordReaderDataSetIterator
+         * STEP 4: Run training
+         * STEP 5: Complete the code for IOU calculation here
+         *
+         * */
 
-        //STEP 1: Download and unzip dataset
-        downloadData();
-        unzipAllDataSet();
-
-//        //STEP 2: Import pretrained UNET (provided in model zoo)
+//        //STEP 1: Import pretrained UNET (provided in model zoo)
 //        ZooModel zooModel = UNet.builder().build();
 //        ComputationGraph unet = (ComputationGraph) zooModel.initPretrained(PretrainedType.SEGMENT);
 //        System.out.println(unet.summary());
@@ -98,7 +95,7 @@ public class PretrainedUNET {
         StatsListener statsListener = new StatsListener(statsStorage);
         ScoreIterationListener scoreIterationListener= new ScoreIterationListener(1);
 
-        //STEP 3: Configuration of transfer learning
+        //STEP 2: Configuration of transfer learning
         FineTuneConfiguration fineTuneConf = new FineTuneConfiguration.Builder()
                 .trainingWorkspaceMode(WorkspaceMode.ENABLED)
 //                .updater() // 3.1 set updater here
@@ -118,34 +115,16 @@ public class PretrainedUNET {
 //        unetTransfer.setListeners(statsListener, scoreIterationListener);
 
 
-        //Initialize the user interface backend
-        UIServer uiServer = UIServer.getInstance();
-        uiServer.attach(statsStorage);
-
-
-//        //STEP 4: Load and pre-process data
-//        File imagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs");
-//        FileSplit imageFileSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
+//        //Initialize the user interface backend
+//        UIServer uiServer = UIServer.getInstance();
+//        uiServer.attach(statsStorage);
 //
-//        //Load labels
-//        CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, 1); // labels have 1 channel
+//        // STEP 3: Load data into RecordReaderDataSetIterator
+//        CellDataSetIterator.setup(batchSize, trainPerc, getImageTransform());
 //
-//        BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
-//        InputSplit[] imagesSplits = imageFileSplit.sample(imageSplitPathFilter, 0.8, 0.2);
-//
-//        // Record reader
-//        ImageRecordReader imageRecordReaderTrain = new ImageRecordReader(height, width, channels, labelMaker);
-//        ImageRecordReader imageRecordReaderVal = new ImageRecordReader(height, width, channels, labelMaker);
-//        imageRecordReaderTrain.initialize(imagesSplits[0], getImageTransform());
-//
-//        // Dataset iterator
-//        RecordReaderDataSetIterator imageDataSetTrain = new RecordReaderDataSetIterator(imageRecordReaderTrain, batchSize, 1, 1, true);
-//
-//
-//        // Preprocessing - normalisation
-//        DataNormalization dataNormalization = new ImagePreProcessingScaler(0,1);
-//        dataNormalization.fit(imageDataSetTrain);
-//        imageDataSetTrain.setPreProcessor(dataNormalization);
+//        //create iterators
+//        RecordReaderDataSetIterator imageDataSetTrain = CellDataSetIterator.trainIterator();
+//        RecordReaderDataSetIterator imageDataSetVal = CellDataSetIterator.valIterator();
 
         // Visualisation -  training
         JFrame frame = visualisation.initFrame("Viz");
@@ -157,7 +136,7 @@ public class PretrainedUNET {
                 1
         );
 
-//        //STEP 5: Run training
+//        //STEP 4: Run training
 //        for(int i=0; i<nEpochs; i++){
 //
 //            log.info("Epoch: " + i);
@@ -231,7 +210,7 @@ public class PretrainedUNET {
 //
 //            log.info(eval.stats());
 //
-////            //STEP 6: Complete the code for IOU calculation here
+////            //STEP 5: Complete the code for IOU calculation here
 ////            float IOUNuclei = (float)eval.truePositives().get(1) / ((float)eval.truePositives().get(1) + (float)eval.falsePositives().get(1) + (float)eval.falseNegatives().get(1));
 ////            IOUtotal = IOUtotal + IOUNuclei;
 ////
@@ -275,58 +254,4 @@ public class PretrainedUNET {
         return new PipelineImageTransform(pipeline, false);
     }
 
-    public static void downloadData() {
-        // Download data
-        File parentDir = new File(System.getProperty("user.home"), ".deeplearning4j\\data\\data-science-bowl-2018");
-        String DATA_URL = "https://drive.google.com/a/skymind.my/uc?authuser=0&id=1zHn593J13dxLO1AJ0N2jKhpahs0yYGa0&export=download";
-
-        File file = new File(parentDir + "\\data-science-bowl-2018.zip");
-
-        if (!file.exists()) {
-            System.out.println("Creating dataset folder ...");
-            file.getParentFile().mkdirs();
-            HttpClientBuilder builder = HttpClientBuilder.create();
-            CloseableHttpClient client = builder.build();
-            System.out.println("Downloading dataset ...");
-            try (CloseableHttpResponse response = client.execute(new HttpGet(DATA_URL))) {
-                HttpEntity entity = response.getEntity();
-
-                System.out.println(entity);
-
-                if (entity != null) {
-                    try (FileOutputStream outstream = new FileOutputStream(file)) {
-                        entity.writeTo(outstream);
-                        outstream.flush();
-                    }
-                }
-            } catch (IOException ex) {
-                System.out.println(ex);
-            }
-
-
-        }
-
-    }
-
-    public static void unzip(String source, String destination){
-        try {
-            ZipFile zipFile = new ZipFile(source);
-            zipFile.extractAll(destination);
-        } catch (ZipException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void unzipAllDataSet(){
-        //unzip training data set
-        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018");
-
-        String zipClass0FilePath = resourceDir + "/data-science-bowl-2018.zip";
-
-        File class0Folder = new File(resourceDir + "/data-science-bowl-2018");
-        if (!class0Folder.exists()){
-            System.out.println("Unzipping data ...");
-            unzip(zipClass0FilePath, class0Folder.toString());
-        }
-    }
 }
