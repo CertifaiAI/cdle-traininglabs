@@ -236,12 +236,12 @@ public class PretrainedUNET {
 //        System.out.print("Mean IOU: " + IOUtotal/count);
 
         // WRITE MODEL TO DISK
-        File locationToSaveFineTune = new File(System.getProperty("user.home"),".deeplearning4j\\generated-models\\segmentUNetFineTune.zip");
-        if (!locationToSaveFineTune.exists()){
-            locationToSaveFineTune.getParentFile().mkdirs();
+        File locationToSaveModel = new File(System.getProperty("user.home"),".deeplearning4j\\generated-models\\segmentUNetFineTune.zip");
+        if (!locationToSaveModel.exists()){
+            locationToSaveModel.getParentFile().mkdirs();
         }
         boolean saveUpdater = false;
-//        ModelSerializer.writeModel(unetTransfer, locationToSaveFineTune, saveUpdater);
+//        ModelSerializer.writeModel(unetTransfer, locationToSaveModel, saveUpdater);
         log.info("Model saved");
     }
 

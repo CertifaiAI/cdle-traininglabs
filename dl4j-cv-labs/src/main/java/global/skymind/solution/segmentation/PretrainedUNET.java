@@ -1,5 +1,6 @@
 package global.skymind.solution.segmentation;
 
+import global.skymind.Helper;
 import global.skymind.solution.segmentation.imageUtils.visualisation;
 import org.datavec.image.transform.*;
 import org.deeplearning4j.api.storage.StatsStorage;
@@ -35,6 +36,7 @@ import org.slf4j.Logger;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -47,13 +49,14 @@ public class PretrainedUNET {
 
     private static final String featurizeExtractionLayer = "conv2d_4";
     private static final long seed = 12345;
-    private static final int nEpochs = 30;
+    private static final int nEpochs = 1;
     private static final int height = 224;
     private static final int width = 224;
     private static final int channels = 1;
     private static final int batchSize = 4;
-    private static final double trainPerc = 0.8;
+    private static final double trainPerc = 0.3;
     private static final Random random = new Random(seed);
+    private static String modelExportDir;
 
     public static void main(String[] args) throws IOException, InvalidKerasConfigurationException, UnsupportedKerasConfigurationException{
 
@@ -220,13 +223,20 @@ public class PretrainedUNET {
         System.out.print("Mean IOU: " + IOUtotal/count);
 
         // WRITE MODEL TO DISK
-        File locationToSaveFineTune = new File(System.getProperty("user.home"),".deeplearning4j\\generated-models\\segmentUNetFineTune.zip");
-        if (!locationToSaveFineTune.exists()){
-            locationToSaveFineTune.getParentFile().mkdirs();
+
+        modelExportDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.models")
+        ).toString();
+
+//        File locationToSaveModel = new File(System.getProperty("user.home"),".deeplearning4j\\generated-models\\segmentUNetFineTune.zip");
+        File locationToSaveModel = new File(Paths.get(modelExportDir).toString());
+        if (!locationToSaveModel.exists()){
+            locationToSaveModel.getParentFile().mkdirs();
         }
 
         boolean saveUpdater = false;
-        ModelSerializer.writeModel(unetTransfer, locationToSaveFineTune, saveUpdater);
+        ModelSerializer.writeModel(unetTransfer, locationToSaveModel, saveUpdater);
         log.info("Model saved");
     }
 
