@@ -1,4 +1,5 @@
 package global.skymind.solution.segmentation;
+
 import org.datavec.image.transform.ImageTransform;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import net.lingala.zip4j.core.ZipFile;
@@ -15,7 +16,6 @@ import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
-import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,11 +23,9 @@ import java.io.IOException;
 import java.util.Random;
 
 public class CellDataSetIterator {
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(CellDataSetIterator.class);
     private static final int height = 224;
     private static final int width = 224;
     private static final int channels = 1;
-    private static final int numClasses = 2;
     private static final long seed = 12345;
     private static final Random random = new Random(seed);
     private static File parentDir = new File(System.getProperty("user.home"), ".deeplearning4j\\data\\data-science-bowl-2018");
