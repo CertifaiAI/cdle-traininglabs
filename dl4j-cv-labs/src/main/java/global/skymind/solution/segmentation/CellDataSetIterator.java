@@ -21,6 +21,7 @@ import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Random;
 
 public class CellDataSetIterator {
@@ -30,6 +31,7 @@ public class CellDataSetIterator {
     private static final long seed = 12345;
     private static final Random random = new Random(seed);
     private static File parentDir = new File(System.getProperty("user.home"), ".deeplearning4j\\data\\data-science-bowl-2018");
+    private static String inputDir;
     private static File file = new File(parentDir + "\\data-science-bowl-2018.zip");
 //    private static String downloadLink = "https://drive.google.com/a/skymind.my/uc?authuser=0&id=1zHn593J13dxLO1AJ0N2jKhpahs0yYGa0&export=download";
     private static String downloadLink;
@@ -77,10 +79,14 @@ public class CellDataSetIterator {
 
         batchSize = batchSizeArg;
 
-        //Files in directories under the parent dir that have "allowed extensions" split needs a random number generator for reproducibility when splitting the files into train and test
-        File imagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs");
-        FileSplit imageFileSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
+        inputDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.data")
+        ).toString();
 
+
+        File imagesPath = new File(Paths.get(inputDir, "data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs").toString());
+        FileSplit imageFileSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
         BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
         InputSplit[] imagesSplits = imageFileSplit.sample(imageSplitPathFilter, trainPerc, 1-trainPerc);
 
@@ -126,16 +132,23 @@ public class CellDataSetIterator {
         }
     }
 
-    public static void unzipAllDataSet(){
+    public static void unzipAllDataSet() throws IOException {
         //unzip training data set
-        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018");
+        inputDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.data")
+        ).toString();
 
-        String zipClass0FilePath = resourceDir + "/data-science-bowl-2018.zip";
+        File zipClassFilePath = new File(Paths.get(inputDir, "data-science-bowl-2018/data-science-bowl-2018.zip").toString());
+//        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018");
 
-        File class0Folder = new File(resourceDir + "/data-science-bowl-2018");
-        if (!class0Folder.exists()){
+//        String zipClassFilePath = resourceDir + "/data-science-bowl-2018.zip";
+
+//        File classFolder = new File(resourceDir + "/data-science-bowl-2018");
+        File classFolder = new File(Paths.get(inputDir, "data-science-bowl-2018").toString());
+        if (!classFolder.exists()){
             System.out.println("Unzipping data ...");
-            unzip(zipClass0FilePath, class0Folder.toString());
+            unzip(zipClassFilePath.toString(), classFolder.toString());
         }
     }
 
