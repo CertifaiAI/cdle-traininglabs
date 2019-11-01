@@ -1,5 +1,6 @@
 package global.skymind.solution.segmentation;
 
+import global.skymind.Helper;
 import global.skymind.solution.segmentation.imageUtils.visualisation;
 
 import org.apache.http.HttpEntity;
@@ -36,6 +37,8 @@ import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -45,12 +48,13 @@ import static org.bytedeco.opencv.global.opencv_imgproc.*;
 
 public class ModelTest {
     private static final Logger log = LoggerFactory.getLogger(ModelTest.class);
-    private static File modelFilename = new File(System.getProperty("user.home"), ".deeplearning4j/generated-models/segmentUNetFineTune.zip");
     private static final int height = 224;
     private static final int width = 224;
     private static final int channels = 1;
     protected static final long seed = 12345;
     private static final Random random = new Random(seed);
+    private static String parentDir;
+    private static String modelDownloadLink;
     private static ComputationGraph model;
 
     public static void main(String[] args) throws Exception {
@@ -60,11 +64,16 @@ public class ModelTest {
          *
          * */
 
+        parentDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.generated-models")
+        ).toString();
+        File modelFile = new File(Paths.get(parentDir,"KHSegmentUNET.zip").toString());
 
-        if (modelFilename.exists()) {
+        if (modelFile.exists()) {
             log.info("Load model...");
             try {
-                model = ModelSerializer.restoreComputationGraph(modelFilename);
+                model = ModelSerializer.restoreComputationGraph(modelFile);
             } catch(Exception ex){
                 ex.printStackTrace();
             }
@@ -72,14 +81,20 @@ public class ModelTest {
             log.info("Downloading pre-trained model...");
             downloadModel();
             try {
-                model = ModelSerializer.restoreComputationGraph(modelFilename);
+                model = ModelSerializer.restoreComputationGraph(modelFile);
             } catch(Exception ex){
                 ex.printStackTrace();
             }
 
         }
 
-        File testImagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/test/inputs");
+        parentDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.data")
+        ).toString();
+
+//        File testImagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/test/inputs");
+        File testImagesPath = new File(Paths.get(parentDir, "data-science-bowl-2018","data-science-bowl-2018","data-science-bowl-2018-2","test","inputs").toString());
         FileSplit imageSplit = new FileSplit(testImagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
 
         // Instantiate label generator
@@ -155,18 +170,22 @@ public class ModelTest {
     }
 
 
-    public static void downloadModel() {
+    public static void downloadModel() throws IOException {
         // Download trained model
-        File parentDir = new File(System.getProperty("user.home"), ".deeplearning4j\\generated-models");
-        String DATA_URL = "https://uc708c152a8b5bf05cc90d34c1dd.dl.dropboxusercontent.com/cd/0/get/ArU2hEyhanrptTOljm8JIHRiPmjnh7R9DjPxf1mADj8cEdFZCwy3wyWvFqwn2T_rxGkWXc_mTd64-2oTkru5QM4lKkGCJtoH3tb3eZBhEDZON8vsNWuF0lx3_rbKSPPV7n4/file";
+        parentDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.generated-models")
+        ).toString();
 
-        File file = new File(parentDir + "\\segmentUNetFineTune.zip");
+        modelDownloadLink = Helper.getPropValues("models.trained.url");
+
+        File file = new File(Paths.get(parentDir, "KHSegmentUNET.zip").toString());
 
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             HttpClientBuilder builder = HttpClientBuilder.create();
             CloseableHttpClient client = builder.build();
-            try (CloseableHttpResponse response = client.execute(new HttpGet(DATA_URL))) {
+            try (CloseableHttpResponse response = client.execute(new HttpGet(modelDownloadLink))) {
                 HttpEntity entity = response.getEntity();
 
                 System.out.println(entity);

@@ -1,12 +1,19 @@
 package global.skymind.training.segmentation;
 
-import global.skymind.training.segmentation.imageUtils.visualisation;
+import global.skymind.Helper;
+import global.skymind.solution.segmentation.imageUtils.visualisation;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.bytedeco.opencv.opencv_core.Mat;
+import org.bytedeco.javacv.OpenCVFrameConverter;
+import org.bytedeco.opencv.opencv_imgproc.*;
+import org.bytedeco.opencv.opencv_core.*;
+import org.bytedeco.opencv.global.opencv_imgproc.*;
+import org.bytedeco.opencv.global.opencv_core.*;
+
 import org.datavec.api.split.FileSplit;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
@@ -14,8 +21,8 @@ import org.datavec.image.transform.ColorConversionTransform;
 import org.datavec.image.transform.ImageTransform;
 import org.datavec.image.transform.PipelineImageTransform;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.util.ModelSerializer;
+import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -30,6 +37,8 @@ import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -39,25 +48,32 @@ import static org.bytedeco.opencv.global.opencv_imgproc.*;
 
 public class ModelTest {
     private static final Logger log = LoggerFactory.getLogger(ModelTest.class);
-    private static File modelFilename = new File(System.getProperty("user.home"), ".deeplearning4j/generated-models/segmentUNetFineTune.zip");
     private static final int height = 224;
     private static final int width = 224;
     private static final int channels = 1;
     protected static final long seed = 12345;
     private static final Random random = new Random(seed);
+    private static String parentDir;
+    private static String modelDownloadLink;
     private static ComputationGraph model;
 
     public static void main(String[] args) throws Exception {
 
         /*
-        * This program will perform segmentation on the test dataset, based on either model trained by students or model provided by instructor
-        *
-        * */
+         * This program will perform segmentation on the test dataset, based on either model trained by students or model provided by instructor
+         *
+         * */
 
-        if (modelFilename.exists()) {
+        parentDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.generated-models")
+        ).toString();
+        File modelFile = new File(Paths.get(parentDir,"KHSegmentUNET.zip").toString());
+
+        if (modelFile.exists()) {
             log.info("Load model...");
             try {
-                model = ModelSerializer.restoreComputationGraph(modelFilename);
+                model = ModelSerializer.restoreComputationGraph(modelFile);
             } catch(Exception ex){
                 ex.printStackTrace();
             }
@@ -65,14 +81,20 @@ public class ModelTest {
             log.info("Downloading pre-trained model...");
             downloadModel();
             try {
-                model = ModelSerializer.restoreComputationGraph(modelFilename);
+                model = ModelSerializer.restoreComputationGraph(modelFile);
             } catch(Exception ex){
                 ex.printStackTrace();
             }
 
         }
 
-        File testImagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/test/inputs");
+        parentDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.data")
+        ).toString();
+
+//        File testImagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/test/inputs");
+        File testImagesPath = new File(Paths.get(parentDir, "data-science-bowl-2018","data-science-bowl-2018","data-science-bowl-2018-2","test","inputs").toString());
         FileSplit imageSplit = new FileSplit(testImagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
 
         // Instantiate label generator
@@ -148,18 +170,22 @@ public class ModelTest {
     }
 
 
-    public static void downloadModel() {
+    public static void downloadModel() throws IOException {
         // Download trained model
-        File parentDir = new File(System.getProperty("user.home"), ".deeplearning4j\\generated-models");
-        String DATA_URL = "https://uc708c152a8b5bf05cc90d34c1dd.dl.dropboxusercontent.com/cd/0/get/ArU2hEyhanrptTOljm8JIHRiPmjnh7R9DjPxf1mADj8cEdFZCwy3wyWvFqwn2T_rxGkWXc_mTd64-2oTkru5QM4lKkGCJtoH3tb3eZBhEDZON8vsNWuF0lx3_rbKSPPV7n4/file";
+        parentDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.generated-models")
+        ).toString();
 
-        File file = new File(parentDir + "\\segmentUNetFineTune.zip");
+        modelDownloadLink = Helper.getPropValues("models.trained.url");
+
+        File file = new File(Paths.get(parentDir, "KHSegmentUNET.zip").toString());
 
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             HttpClientBuilder builder = HttpClientBuilder.create();
             CloseableHttpClient client = builder.build();
-            try (CloseableHttpResponse response = client.execute(new HttpGet(DATA_URL))) {
+            try (CloseableHttpResponse response = client.execute(new HttpGet(modelDownloadLink))) {
                 HttpEntity entity = response.getEntity();
 
                 System.out.println(entity);
