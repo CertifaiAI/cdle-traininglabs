@@ -1,7 +1,8 @@
 package global.skymind.training.segmentation;
 
 import global.skymind.Helper;
-import global.skymind.solution.segmentation.CustomLabelGenerator;
+import org.datavec.image.transform.ImageTransform;
+import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.HttpEntity;
@@ -14,8 +15,6 @@ import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.InputSplit;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
-import org.datavec.image.transform.ImageTransform;
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 
@@ -99,13 +98,13 @@ public class CellDataSetIterator {
                 Helper.getPropValues("dl4j_home.data")
         ).toString();
 
-        File dataDir = new File(inputDir + "/data-science-bowl-2018");
+//        File dataDir = new File(inputDir + "/data-science-bowl-2018");
+//        File dataDir = new File(Paths.get(inputDir, "data-science-bowl-2018").toString());
+        File dataZip = new File(Paths.get(inputDir, "data-science-bowl-2018", "data-science-bowl-2018.zip").toString());
 
-        if (!dataDir.exists()) {
+        if (!dataZip.exists()) {
             System.out.println("Creating dataset folder ...");
-//            file.getParentFile().mkdirs();
-            dataDir.getParentFile().mkdirs();
-
+            dataZip.getParentFile().mkdir();
             HttpClientBuilder builder = HttpClientBuilder.create();
             CloseableHttpClient client = builder.build();
             System.out.println("Downloading dataset ...");
@@ -115,8 +114,7 @@ public class CellDataSetIterator {
                 System.out.println(entity);
 
                 if (entity != null) {
-//                    try (FileOutputStream outstream = new FileOutputStream(file)) {
-                    try (FileOutputStream outstream = new FileOutputStream(dataDir)) {
+                    try (FileOutputStream outstream = new FileOutputStream(dataZip)) {
                         entity.writeTo(outstream);
                         outstream.flush();
                     }
@@ -146,11 +144,11 @@ public class CellDataSetIterator {
                 Helper.getPropValues("dl4j_home.data")
         ).toString();
 
-        File zipClassFilePath = new File(Paths.get(inputDir, "data-science-bowl-2018/data-science-bowl-2018.zip").toString());
+        File classFolder = new File(Paths.get(inputDir, "data-science-bowl-2018","data-science-bowl-2018").toString());
 
-        File classFolder = new File(Paths.get(inputDir, "data-science-bowl-2018/data-science-bowl-2018").toString());
         if (!classFolder.exists()){
             classFolder.mkdir();
+            File zipClassFilePath = new File(Paths.get(inputDir, "data-science-bowl-2018","data-science-bowl-2018.zip").toString());
             System.out.println("Unzipping dataset ...");
             unzip(zipClassFilePath.toString(), classFolder.toString());
         }
