@@ -102,13 +102,13 @@ public class Ex4_GettingandSettingINDArrays {
         System.out.println(arr1);
 
         System.out.println();
-        INDArray subArray = arr1.get(NDArrayIndex.point(2),NDArrayIndex.interval(1,3));
+        INDArray subArray = arr1.get(NDArrayIndex.point(2),NDArrayIndex.interval(1,4));
         System.out.println(subArray);
 
         System.out.println();
         arr1.put(
-                new INDArrayIndex[]{NDArrayIndex.point(2),NDArrayIndex.interval(1,3)},
-                Nd4j.ones(1,2)
+                new INDArrayIndex[]{NDArrayIndex.point(2),NDArrayIndex.interval(1,4)},
+                Nd4j.ones(1,3)
         );
         System.out.println(arr1);
     }
