@@ -24,7 +24,6 @@ public class visualisation {
     public static JFrame initFrame(String title) {
         JFrame frame = new JFrame();
         frame.setTitle(title);
-//        frame.setTitle("Viz");
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         return frame;
@@ -47,8 +46,6 @@ public class visualisation {
             if(i<image.size(0)) {
                 panel.add(getImage(image));
                 panel.add(getImage(label));
-//                panel.add(getBinaryImage(label, outputHeight, outputWidth));
-//                panel.add(get255Image(predict.slice(i,0), outputHeight, outputWidth));
                 panel.add(getImage(predict));
             }
 
