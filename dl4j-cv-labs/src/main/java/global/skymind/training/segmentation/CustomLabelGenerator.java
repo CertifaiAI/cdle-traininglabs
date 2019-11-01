@@ -49,14 +49,13 @@ public class CustomLabelGenerator implements PathLabelGenerator {
     public Writable getLabelForPath(String path) {
         try
         {
-//
             String labelPath = path.replace("inputs", "masks");
 
             NDArrayWritable label = new NDArrayWritable(imageLoader.asMatrix(new File(labelPath)) );
 
             INDArray labelINDArray = label.get();
 
-//            // normalise to 0-1 scale
+            // normalise to 0-1 scale
             label.set( labelINDArray.div(255));
 
             return label ;
