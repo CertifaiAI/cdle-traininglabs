@@ -34,14 +34,14 @@ public class Ex11_BooleanIndexing {
 
         /*
         EXERCISE:
-        - Create arr1 with shape(3,3) initialize with random value
+        - Create arr1 with Nd4j.create(new float[]{1,1,1,2,2,2,3,3,3}, new int[]{3,3})
         - Set value that not equal to one to one
         */
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nCreate arr1 with Nd4j.create(new float[]{1,1,1,2,2,2,3,3,3}, new int[]{3,3})" + ANSI_RESET);
         INDArray arr1 = Nd4j.create(new float[]{1,1,1,2,2,2,3,3,3}, new int[]{3,3});
         System.out.println(arr1);
 
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nSet value that not equal to one to one" + ANSI_RESET);
         BooleanIndexing.replaceWhere(arr1, 1, Conditions.notEquals(1));
         System.out.println(arr1);
     }

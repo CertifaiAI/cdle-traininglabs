@@ -85,10 +85,19 @@ public class Ex3_SortReshapeAndConcatenation {
         - Concatenate array2 to array1 (use reshape, flatten, or transpose if needed)
         - Sort(descending) the concatenated array in dimension 1
         */
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nCreate arr1 with shape(2,3) initialize with random value" + ANSI_RESET);
         INDArray arr1 = Nd4j.randn(2,3);
+        System.out.println(arr1);
+
+        System.out.println(BLACK_BOLD +"\nCreate arr2 with shape(5,2) initialize with random value" + ANSI_RESET);
         INDArray arr2 = Nd4j.randn(5,2);
+        System.out.println(arr2);
+
+        System.out.println(BLACK_BOLD +"\nConcatenate array2 to array1 (use reshape, flatten, or transpose if needed)" + ANSI_RESET);
         INDArray concated = Nd4j.concat(1, arr1, arr2.transpose());
+        System.out.println(concated);
+
+        System.out.println(BLACK_BOLD +"\nSort(descending) the concatenated array in dimension 1" + ANSI_RESET);
         INDArray concatedSorted = Nd4j.sort(concated,1,false);
         System.out.println(concatedSorted);
 

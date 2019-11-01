@@ -29,15 +29,15 @@ public class Ex10_MatrixOperations {
         - Create arr2 with shape(3,1) initialize with random value
         - Perform matrix multiplication of arr1 and arr2
         */
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nCreate arr1 with shape(3,3) initialize with random value" + ANSI_RESET);
         INDArray arr1 = Nd4j.randn(3,3);
         System.out.println(arr1);
 
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nCreate arr2 with shape(3,1) initialize with random value" + ANSI_RESET);
         INDArray arr2 = Nd4j.randn(3,1);
         System.out.println(arr2);
 
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nPerform matrix multiplication of arr1 and arr2" + ANSI_RESET);
         INDArray res = arr1.mmul(arr2);
         System.out.println(res);
     }

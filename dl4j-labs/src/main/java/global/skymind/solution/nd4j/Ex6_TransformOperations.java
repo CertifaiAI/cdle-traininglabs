@@ -48,15 +48,15 @@ public class Ex6_TransformOperations {
         - Perform TanH operation on arr1
         - Perform round operation on arr1
         */
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nCreate arr1 with shape(3,3) initialize with random value" + ANSI_RESET);
         INDArray arr1 = Nd4j.randn(3,3);
         System.out.println(arr1);
 
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nPerform TanH operation on arr1" + ANSI_RESET);
         INDArray arrTanh = Transforms.tanh(arr1);
         System.out.println(arrTanh);
 
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nPerform round operation on arr1" + ANSI_RESET);
         INDArray arrRound = Transforms.round(arr1);
         System.out.println(arrRound);
     }

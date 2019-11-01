@@ -46,11 +46,11 @@ public class Ex8_IndexReductionOperations {
         - Create arr1 with shape(3,3) initialize with random value
         - Get index of max value from the arr1 along dimension 1
         */
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nCreate arr1 with shape(3,3) initialize with random value" + ANSI_RESET);
         INDArray arr1 = Nd4j.randn(3,3);
         System.out.println(arr1);
 
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nGet index of max value from the arr1 along dimension 1" + ANSI_RESET);
         INDArray maxIdx = arr1.argMax(1);
         System.out.println(maxIdx);
     }

@@ -59,15 +59,15 @@ public class Ex7_ReductionOperations {
         - Get min value from the arr1 along dimension 0
         - Get max value from the arr1
         */
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nCreate arr1 with shape(3,3) initialize with random value" + ANSI_RESET);
         INDArray arr1 = Nd4j.randn(3,3);
         System.out.println(arr1);
 
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nGet min value from the arr1 along dimension 0" + ANSI_RESET);
         INDArray min = arr1.min(0);
         System.out.println(min);
 
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nGet max value from the arr1" + ANSI_RESET);
         INDArray max = arr1.max();
         System.out.println(max);
     }

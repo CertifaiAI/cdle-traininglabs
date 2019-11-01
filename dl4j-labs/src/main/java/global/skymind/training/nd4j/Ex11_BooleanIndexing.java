@@ -33,7 +33,7 @@ public class Ex11_BooleanIndexing {
 
         /*
         EXERCISE:
-        - Create arr1 with shape(3,3) initialize with random value
+        - Create arr1 with Nd4j.create(new float[]{1,1,1,2,2,2,3,3,3}, new int[]{3,3});
         - Set value that not equal to one to one
         */
 

@@ -85,27 +85,27 @@ public class Ex4_GettingandSettingINDArrays {
         - Get value of the 3rd row and 2nd - 4th columns
         - Replace the previously selected value with ones
         */
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nCreate arr1 with shape(3,5) initialize with random value" + ANSI_RESET);
         INDArray arr1 = Nd4j.randn(3,5);
         System.out.println(arr1);
 
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nGet value of the 2nd row" + ANSI_RESET);
         INDArray secRow = arr1.getRow(1);
         System.out.println(secRow);
 
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nChange value of first row and second column to 0" + ANSI_RESET);
         arr1.putScalar(new int[]{0,1}, 0);
         System.out.println(arr1);
 
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nReplace 2nd row with array of ones" + ANSI_RESET);
         arr1.putRow(1, Nd4j.ones(1,5));
         System.out.println(arr1);
 
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nGet value of the 3rd row and 2nd - 4th columns" + ANSI_RESET);
         INDArray subArray = arr1.get(NDArrayIndex.point(2),NDArrayIndex.interval(1,4));
         System.out.println(subArray);
 
-        System.out.println();
+        System.out.println(BLACK_BOLD +"\nReplace the previously selected value with ones" + ANSI_RESET);
         arr1.put(
                 new INDArrayIndex[]{NDArrayIndex.point(2),NDArrayIndex.interval(1,4)},
                 Nd4j.ones(1,3)
