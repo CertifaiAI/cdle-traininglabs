@@ -80,8 +80,8 @@ public class Ex3_SortReshapeAndConcatenation {
 
         /*
         EXERCISE:
-        - Create arr1 with shape(2,3)
-        - Create arr2 with shape(5,2)
+        - Create arr1 with shape(2,3) initialize with random value
+        - Create arr2 with shape(5,2) initialize with random value
         - Concatenate array2 to array1 (use reshape, flatten, or transpose if needed)
         - Sort(descending) the concatenated array in dimension 1
         */

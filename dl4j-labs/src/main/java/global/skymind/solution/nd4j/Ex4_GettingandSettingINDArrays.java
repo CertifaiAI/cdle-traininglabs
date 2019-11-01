@@ -70,19 +70,46 @@ public class Ex4_GettingandSettingINDArrays {
         //Set an arbitrary sub-arrays based on certain indexes
         myArray.put(
                 new INDArrayIndex[]{NDArrayIndex.point(0),NDArrayIndex.all()},
-                Nd4j.zeros(1,5)
+                Nd4j.ones(1,5)
         );
         System.out.println(BLACK_BOLD + "\nSet a first row and all columns to zero" + ANSI_RESET);
         System.out.println(BLUE_BOLD + "myArray.put(new INDArrayIndex[]{NDArrayIndex.point(0),NDArrayIndex.all()},Nd4j.zeros(1,5));" + ANSI_RESET);
         System.out.println(myArray);
 
-        //Alternative way
-        myArray.put(
-                myArray.get(NDArrayIndex.point(0), NDArrayIndex.all()),
-                Nd4j.zeros(1,5)
+        /*
+        EXERCISE:
+        - Create arr1 with shape(3,5) initialize with random value
+        - Get value of the 2nd row
+        - Change value of first row and second column to 0
+        - Replace 2nd row with array of ones
+        - Get value of the 3rd row and 2nd - 4th columns
+        - Replace the previously selected value with ones
+        */
+        System.out.println();
+        INDArray arr1 = Nd4j.randn(3,5);
+        System.out.println(arr1);
+
+        System.out.println();
+        INDArray secRow = arr1.getRow(1);
+        System.out.println(secRow);
+
+        System.out.println();
+        arr1.putScalar(new int[]{0,1}, 0);
+        System.out.println(arr1);
+
+        System.out.println();
+        arr1.putRow(1, Nd4j.ones(1,5));
+        System.out.println(arr1);
+
+        System.out.println();
+        INDArray subArray = arr1.get(NDArrayIndex.point(2),NDArrayIndex.interval(1,3));
+        System.out.println(subArray);
+
+        System.out.println();
+        arr1.put(
+                new INDArrayIndex[]{NDArrayIndex.point(2),NDArrayIndex.interval(1,3)},
+                Nd4j.ones(1,2)
         );
-        System.out.println(BLACK_BOLD + "\nSet a first row and all columns to zero" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "myArray.put(myArray.get(NDArrayIndex.point(0), NDArrayIndex.all()),Nd4j.zeros(1,5));" + ANSI_RESET);
-        System.out.println(myArray);
+        System.out.println(arr1);
     }
 }

@@ -29,6 +29,22 @@ public class Ex9_BroadcastAndVectorOperations {
         System.out.println(BLUE_BOLD + "myArray.subColumnVector(columnVector)" + ANSI_RESET);
         System.out.println(subtractedColVector);
 
-        //try out divide and multiply
+        /*
+        EXERCISE:
+        - Create arr1 with shape(3,3) initialize with random value
+        - Divide arr1 with row vector of [2,2,2]
+        - Multiply arr1 with column vector of [1,2,3]
+        */
+        System.out.println();
+        INDArray arr1 = Nd4j.randn(3,3);
+        System.out.println(arr1);
+
+        System.out.println();
+        INDArray div = arr1.divRowVector(Nd4j.valueArrayOf(new int[]{1,3}, 2));
+        System.out.println(div);
+
+        System.out.println();
+        INDArray mul = arr1.mulColumnVector(Nd4j.create(new float[]{1,2,3}, new int[]{3,1}));
+        System.out.println(mul);
     }
 }

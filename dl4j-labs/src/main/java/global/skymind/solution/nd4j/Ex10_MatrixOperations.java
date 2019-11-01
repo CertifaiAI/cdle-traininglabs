@@ -22,5 +22,23 @@ public class Ex10_MatrixOperations {
         System.out.println(BLACK_BOLD + "\nMatrix multiplication of array1 and array2" + ANSI_RESET);
         System.out.println(BLUE_BOLD + "myArray.addRowVector(rowVector)" + ANSI_RESET);
         System.out.println(mmulArray);
+
+        /*
+        EXERCISE:
+        - Create arr1 with shape(3,3) initialize with random value
+        - Create arr2 with shape(3,1) initialize with random value
+        - Perform matrix multiplication of arr1 and arr2
+        */
+        System.out.println();
+        INDArray arr1 = Nd4j.randn(3,3);
+        System.out.println(arr1);
+
+        System.out.println();
+        INDArray arr2 = Nd4j.randn(3,1);
+        System.out.println(arr1);
+
+        System.out.println();
+        INDArray res = arr1.mmul(arr2);
+        System.out.println(res);
     }
 }

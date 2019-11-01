@@ -53,6 +53,22 @@ public class Ex7_ReductionOperations {
         System.out.println(BLUE_BOLD + "myArray.mean()" + ANSI_RESET);
         System.out.println(meanArray);
 
-        //try out min, max, std
+        /*
+        EXERCISE:
+        - Create arr1 with shape(3,3) initialize with random value
+        - Get min value from the arr1 along dimension 0
+        - Get max value from the arr1
+        */
+        System.out.println();
+        INDArray arr1 = Nd4j.randn(3,3);
+        System.out.println(arr1);
+
+        System.out.println();
+        INDArray min = arr1.min(0);
+        System.out.println(min);
+
+        System.out.println();
+        INDArray max = arr1.max();
+        System.out.println(max);
     }
 }

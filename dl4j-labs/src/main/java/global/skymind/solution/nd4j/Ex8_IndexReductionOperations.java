@@ -40,5 +40,18 @@ public class Ex8_IndexReductionOperations {
         System.out.println(BLACK_BOLD + "\nGet the index of minimum value along dimension 0:" + ANSI_RESET);
         System.out.println(BLUE_BOLD + "Nd4j.getExecutioner().exec(new IMin(myArray, 0))" + ANSI_RESET);
         System.out.println(minIndexAlongDim0);
+
+        /*
+        EXERCISE:
+        - Create arr1 with shape(3,3) initialize with random value
+        - Get index of max value from the arr1 along dimension 1
+        */
+        System.out.println();
+        INDArray arr1 = Nd4j.randn(3,3);
+        System.out.println(arr1);
+
+        System.out.println();
+        INDArray maxIdx = arr1.argMax(0);
+        System.out.println(maxIdx);
     }
 }

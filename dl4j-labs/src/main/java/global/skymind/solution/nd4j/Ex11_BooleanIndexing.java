@@ -3,6 +3,7 @@ package global.skymind.solution.nd4j;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.indexing.BooleanIndexing;
+import org.nd4j.linalg.indexing.conditions.Condition;
 import org.nd4j.linalg.indexing.conditions.Conditions;
 
 public class Ex11_BooleanIndexing {
@@ -29,5 +30,19 @@ public class Ex11_BooleanIndexing {
         System.out.println(BLUE_BOLD + "BooleanIndexing.replaceWhere(myArray, 1, Conditions.greaterThan(1))" + ANSI_RESET);
         System.out.println(myArray);
 
+        //For more conditions: https://deeplearning4j.org/api/latest/org/nd4j/linalg/indexing/conditions/Condition.html
+
+        /*
+        EXERCISE:
+        - Create arr1 with shape(3,3) initialize with random value
+        - Set value that not equal to one to one
+        */
+        System.out.println();
+        INDArray arr1 = Nd4j.create(new float[]{1,1,1,2,2,2,3,3,3}, new int[]{3,3});
+        System.out.println(arr1);
+
+        System.out.println();
+        BooleanIndexing.replaceWhere(arr1, 1, Conditions.notEquals(1));
+        System.out.println(arr1);
     }
 }
