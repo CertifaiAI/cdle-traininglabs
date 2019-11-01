@@ -35,7 +35,7 @@ public class Ex10_MatrixOperations {
 
         System.out.println();
         INDArray arr2 = Nd4j.randn(3,1);
-        System.out.println(arr1);
+        System.out.println(arr2);
 
         System.out.println();
         INDArray res = arr1.mmul(arr2);

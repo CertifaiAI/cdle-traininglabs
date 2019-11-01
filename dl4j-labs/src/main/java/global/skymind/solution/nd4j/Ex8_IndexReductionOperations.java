@@ -51,7 +51,7 @@ public class Ex8_IndexReductionOperations {
         System.out.println(arr1);
 
         System.out.println();
-        INDArray maxIdx = arr1.argMax(0);
+        INDArray maxIdx = arr1.argMax(1);
         System.out.println(maxIdx);
     }
 }
