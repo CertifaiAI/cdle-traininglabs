@@ -9,18 +9,26 @@ public class Ex10_MatrixOperations {
     public static final String ANSI_RESET = "\u001B[0m";
 
     public static void main(String[] args) {
-//        INDArray array1 = Nd4j.randn(new int[]{2, 3}, 123);
-//        System.out.println(BLACK_BOLD + "array1" + ANSI_RESET);
-//        System.out.println(array1);
+        INDArray array1 = Nd4j.randn(new int[]{2, 3}, 123);
+        System.out.println(BLACK_BOLD + "array1" + ANSI_RESET);
+        System.out.println(array1);
 
-//        INDArray array2 = Nd4j.randn(new int[]{3, 2}, 123);
-//        System.out.println(BLACK_BOLD + "array2" + ANSI_RESET);
-//        System.out.println(array2);
+        INDArray array2 = Nd4j.randn(new int[]{3, 2}, 123);
+        System.out.println(BLACK_BOLD + "array2" + ANSI_RESET);
+        System.out.println(array2);
 
         // Matrix multiplication
-//        INDArray mmulArray = array1.mmul(array2);
-//        System.out.println(BLACK_BOLD + "\nMatrix multiplication of array1 and array2" + ANSI_RESET);
-//        System.out.println(BLUE_BOLD + "myArray.addRowVector(rowVector)" + ANSI_RESET);
-//        System.out.println(mmulArray);
+        INDArray mmulArray = array1.mmul(array2);
+        System.out.println(BLACK_BOLD + "\nMatrix multiplication of array1 and array2" + ANSI_RESET);
+        System.out.println(BLUE_BOLD + "myArray.addRowVector(rowVector)" + ANSI_RESET);
+        System.out.println(mmulArray);
+
+        /*
+        EXERCISE:
+        - Create arr1 with shape(3,3) initialize with random value
+        - Create arr2 with shape(3,1) initialize with random value
+        - Perform matrix multiplication of arr1 and arr2
+        */
+
     }
 }

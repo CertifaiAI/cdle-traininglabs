@@ -16,24 +16,30 @@ public class Ex5_ScalarOperations {
         System.out.println(myArray);
 
         //add operation
-//        INDArray addArray = myArray.add(1);
-//        System.out.println(BLACK_BOLD + "\nAdd 1 to array" + ANSI_RESET);
-//        System.out.println(BLUE_BOLD + "myArray.add(1)" + ANSI_RESET);
-//        System.out.println(addArray);
+        INDArray addArray = myArray.add(1);
+        System.out.println(BLACK_BOLD + "\nAdd 1 to array" + ANSI_RESET);
+        System.out.println(BLUE_BOLD + "myArray.add(1)" + ANSI_RESET);
+        System.out.println(addArray);
 
         //add operation inplace
-//        myArray.addi(1);
-//        System.out.println(BLACK_BOLD + "\nAdd 1 to array inplace" + ANSI_RESET);
-//        System.out.println(BLUE_BOLD + "myArray.addi(1)" + ANSI_RESET);
-//        System.out.println(myArray);
+        myArray.addi(1);
+        System.out.println(BLACK_BOLD + "\nAdd 1 to array inplace" + ANSI_RESET);
+        System.out.println(BLUE_BOLD + "myArray.addi(1)" + ANSI_RESET);
+        System.out.println(myArray);
 
         //add array to array
-//        INDArray randomArray = Nd4j.rand(3,5);
-//        INDArray addArraytoArray = myArray.add(randomArray);
-//        System.out.println(BLACK_BOLD + "\nAdd random array to array (array have to be in same size)" + ANSI_RESET);
-//        System.out.println(BLUE_BOLD + "myArray.add(randomArray)" + ANSI_RESET);
-//        System.out.println(addArraytoArray);
+        INDArray randomArray = Nd4j.rand(3,5);
+        INDArray addArraytoArray = myArray.add(randomArray);
+        System.out.println(BLACK_BOLD + "\nAdd random array to array (array have to be in same size)" + ANSI_RESET);
+        System.out.println(BLUE_BOLD + "myArray.add(randomArray)" + ANSI_RESET);
+        System.out.println(addArraytoArray);
 
-        // try out myArray.sub, myArray.div, myArray.mul
+        /*
+        EXERCISE:
+        - Create arr1 with shape(3,3) initialize with random value
+        - Multiply each of the element on the array with 2
+        - Subtract arr1 with arr2. (arr2 = shape(3,3) with value of ones)
+        */
+
     }
 }
