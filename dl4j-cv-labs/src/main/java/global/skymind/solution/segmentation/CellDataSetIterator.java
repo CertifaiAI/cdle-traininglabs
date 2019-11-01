@@ -98,8 +98,6 @@ public class CellDataSetIterator {
                 Helper.getPropValues("dl4j_home.data")
         ).toString();
 
-//        File dataDir = new File(inputDir + "/data-science-bowl-2018");
-//        File dataDir = new File(Paths.get(inputDir, "data-science-bowl-2018").toString());
         File dataZip = new File(Paths.get(inputDir, "data-science-bowl-2018", "data-science-bowl-2018.zip").toString());
 
         if (!dataZip.exists()) {
