@@ -30,10 +30,7 @@ public class CellDataSetIterator {
     private static final int channels = 1;
     private static final long seed = 12345;
     private static final Random random = new Random(seed);
-    private static File parentDir = new File(System.getProperty("user.home"), ".deeplearning4j\\data\\data-science-bowl-2018");
     private static String inputDir;
-    private static File file = new File(parentDir + "\\data-science-bowl-2018.zip");
-//    private static String downloadLink = "https://drive.google.com/a/skymind.my/uc?authuser=0&id=1zHn593J13dxLO1AJ0N2jKhpahs0yYGa0&export=download";
     private static String downloadLink;
     private static CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, channels);
     private static InputSplit trainData,valData;
@@ -84,7 +81,7 @@ public class CellDataSetIterator {
                 Helper.getPropValues("dl4j_home.data")
         ).toString();
 
-        File imagesPath = new File(Paths.get(inputDir, "data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs").toString());
+        File imagesPath = new File(Paths.get(inputDir, "data-science-bowl-2018","data-science-bowl-2018","data-science-bowl-2018-2","train","inputs").toString());
         FileSplit imageFileSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
         BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
         InputSplit[] imagesSplits = imageFileSplit.sample(imageSplitPathFilter, trainPerc, 1-trainPerc);
@@ -105,7 +102,7 @@ public class CellDataSetIterator {
 
         if (!dataDir.exists()) {
             System.out.println("Creating dataset folder ...");
-            file.getParentFile().mkdirs();
+            dataDir.getParentFile().mkdirs();
             HttpClientBuilder builder = HttpClientBuilder.create();
             CloseableHttpClient client = builder.build();
             System.out.println("Downloading dataset ...");
@@ -115,7 +112,7 @@ public class CellDataSetIterator {
                 System.out.println(entity);
 
                 if (entity != null) {
-                    try (FileOutputStream outstream = new FileOutputStream(file)) {
+                    try (FileOutputStream outstream = new FileOutputStream(dataDir)) {
                         entity.writeTo(outstream);
                         outstream.flush();
                     }

@@ -58,7 +58,7 @@ public class PretrainedUNET {
     private static final Random random = new Random(seed);
     private static String modelExportDir;
 
-    public static void main(String[] args) throws IOException, InvalidKerasConfigurationException, UnsupportedKerasConfigurationException{
+    public static void main(String[] args) throws IOException {
 
         /*
          * Instructions for this lab exercise:
@@ -229,7 +229,7 @@ public class PretrainedUNET {
         ).toString();
 
 
-        File locationToSaveModel = new File(Paths.get(modelExportDir).toString() + "/segmentUNET.zip");
+        File locationToSaveModel = new File(Paths.get(modelExportDir, "segmentUNET.zip").toString());
         if (!locationToSaveModel.exists()){
             locationToSaveModel.getParentFile().mkdirs();
         }
