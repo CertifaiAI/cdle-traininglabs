@@ -187,7 +187,7 @@ public class AvocadoBananaDetector_YOLOv2 {
                         "leaky_re_lu_22")
                 .addLayer("outputs",
                         new Yolo2OutputLayer.Builder()
-                                .lambbaNoObj(lambdaNoObj)
+                                .lambdaNoObj(lambdaNoObj)
                                 .lambdaCoord(lambdaCoord)
                                 .boundingBoxPriors(priors.castTo(DataType.FLOAT))
                                 .build(),
