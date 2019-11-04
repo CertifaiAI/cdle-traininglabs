@@ -19,7 +19,6 @@ public class CustomLabelGenerator implements PathLabelGenerator {
     private final int width;
     private final int channels;
     private final NativeImageLoader imageLoader;
-    private static String inputDir;
 
     //DIRECTORY STRUCTURE:
     //Here is the directory structure
