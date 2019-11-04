@@ -67,7 +67,7 @@ public class PretrainedUNET {
 
     private static final String featurizeExtractionLayer = "conv2d_4";
     private static final long seed = 12345;
-    private static final int nEpochs = 30;
+    private static final int nEpochs = 1;
     private static final int height = 224;
     private static final int width = 224;
     private static final int batchSize = 4;
