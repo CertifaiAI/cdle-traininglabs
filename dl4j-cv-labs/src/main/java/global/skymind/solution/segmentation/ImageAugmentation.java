@@ -1,9 +1,9 @@
 package global.skymind.solution.segmentation;
 
+import global.skymind.Helper;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;
 import org.datavec.image.data.ImageWritable;
-import org.datavec.image.loader.Java2DNativeImageLoader;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.transform.FlipImageTransform;
 import org.datavec.image.transform.ImageTransform;
@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -23,15 +23,19 @@ import java.util.Random;
 public class ImageAugmentation {
     protected static final long seed = 12345;
     private static final Random random = new Random(seed);
+    private static String inputDir;
 
     public static void main(String[] args) throws IOException{
         /*
          * ONLY run to generate more samples
          *
          * */
+        inputDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.data")
+        ).toString();
 
-
-        File imagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/inputs");
+        File imagesPath = new File(Paths.get(inputDir, "data-science-bowl-2018","data-science-bowl-2018","data-science-bowl-2018-2","train","inputs").toString());
         File[] files = imagesPath.listFiles();
 
         ImageTransform flip = new FlipImageTransform();
@@ -44,13 +48,12 @@ public class ImageAugmentation {
 
         PipelineImageTransform transformPipeline = new PipelineImageTransform(listOfTransform, false);
 
-
         NativeImageLoader niLoader= new NativeImageLoader(224,224,1,flip);
 
-        File augmentedImgPath = new File(System.getProperty("user.home"),".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/train/augmented_inputs");
+        File augmentedImgFolder = new File(Paths.get(inputDir, "data-science-bowl-2018","data-science-bowl-2018","data-science-bowl-2018-2","train","augmented_inputs").toString());
 
-        if (!augmentedImgPath.exists() ) {
-            augmentedImgPath.mkdir();
+        if (!augmentedImgFolder.exists() ) {
+            augmentedImgFolder.mkdir();
         }
 
 
@@ -59,7 +62,6 @@ public class ImageAugmentation {
 
                 // ImageWritable -> Frame -> BufferedImage -> png
                 ImageWritable iw = niLoader.asWritable(f);
-//                ImageWritable transformed = flip.transform(iw);
                 ImageWritable transformed = transformPipeline.transform(iw);
 
 
@@ -67,7 +69,8 @@ public class ImageAugmentation {
                 Java2DFrameConverter converter = new Java2DFrameConverter();
                 BufferedImage bimage = converter.convert(frame);
 
-                ImageIO.write(bimage, "jpg", new File(augmentedImgPath + "/" + f.getName() ));
+                File augmentedImgPath = new File(Paths.get(inputDir, "data-science-bowl-2018","data-science-bowl-2018","data-science-bowl-2018-2","train","augmented_inputs", f.getName()).toString());
+                ImageIO.write(bimage, "jpg", augmentedImgPath);
             }
         }
 
