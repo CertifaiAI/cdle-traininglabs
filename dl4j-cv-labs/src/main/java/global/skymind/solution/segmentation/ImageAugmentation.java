@@ -64,7 +64,6 @@ public class ImageAugmentation {
                 ImageWritable iw = niLoader.asWritable(f);
                 ImageWritable transformed = transformPipeline.transform(iw);
 
-
                 Frame frame = transformed.getFrame() ;
                 Java2DFrameConverter converter = new Java2DFrameConverter();
                 BufferedImage bimage = converter.convert(frame);

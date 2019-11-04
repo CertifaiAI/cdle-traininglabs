@@ -52,7 +52,6 @@ public class PretrainedUNET {
     private static final int nEpochs = 1;
     private static final int height = 224;
     private static final int width = 224;
-    private static final int channels = 1;
     private static final int batchSize = 4;
     private static final double trainPerc = 0.3;
     private static final Random random = new Random(seed);
@@ -209,7 +208,6 @@ public class PretrainedUNET {
                 visualisation.visualize(
                         imageSetVal.get(n).getFeatures(),
                         imageSetVal.get(n).getLabels(),
-//                            predict,
                         predict.get(NDArrayIndex.point(n)),
                         frame,
                         panel,
@@ -238,6 +236,7 @@ public class PretrainedUNET {
         ModelSerializer.writeModel(unetTransfer, locationToSaveModel, saveUpdater);
         log.info("Model saved");
     }
+
 
     public static ImageTransform getImageTransform() {
         ImageTransform rgb2gray = new ColorConversionTransform(CV_RGB2GRAY);
