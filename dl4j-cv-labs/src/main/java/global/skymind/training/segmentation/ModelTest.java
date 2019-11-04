@@ -93,11 +93,11 @@ public class ModelTest {
         // Instantiate label generator
         CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, 1); // labels have 1 channel
 
-        // Initialize recordreader
+        // Initialize ImageRecordReader
         ImageRecordReader imageRecordReaderTest = new ImageRecordReader(height, width, channels, labelMaker);
         imageRecordReaderTest.initialize(imageSplit, getImageTransform());
 
-        // Dataset iterator
+        // Dataset RecordReaderDataSetIterator
         RecordReaderDataSetIterator imageDataSetTest = new RecordReaderDataSetIterator(imageRecordReaderTest, 1, 1, 1, true);
 
         // Preprocessing - normalisation
