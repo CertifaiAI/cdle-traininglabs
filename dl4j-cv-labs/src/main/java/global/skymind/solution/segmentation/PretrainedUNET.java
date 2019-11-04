@@ -54,7 +54,6 @@ public class PretrainedUNET {
     private static final int width = 224;
     private static final int batchSize = 4;
     private static final double trainPerc = 0.3;
-    private static final Random random = new Random(seed);
     private static String modelExportDir;
 
     public static void main(String[] args) throws IOException {
@@ -66,6 +65,7 @@ public class PretrainedUNET {
          * STEP 3: Load data into RecordReaderDataSetIterator.
          * STEP 4: Run training.
          * STEP 5: We will use IOU (Intersection Over Union) as our evaluation metric. Complete the code for IOU calculation.
+         * STEP 6: Hyperparameter Tuning. (Epochs, learning rate etc.)
          *
          * */
 
