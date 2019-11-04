@@ -8,11 +8,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.bytedeco.javacv.OpenCVFrameConverter;
-import org.bytedeco.opencv.opencv_imgproc.*;
-import org.bytedeco.opencv.opencv_core.*;
-import org.bytedeco.opencv.global.opencv_imgproc.*;
-import org.bytedeco.opencv.global.opencv_core.*;
 
 import org.datavec.api.split.FileSplit;
 import org.datavec.image.loader.NativeImageLoader;
@@ -37,13 +32,11 @@ import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static org.bytedeco.opencv.global.opencv_core.CV_8UC1;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 
 public class ModelTest {
@@ -93,7 +86,6 @@ public class ModelTest {
                 Helper.getPropValues("dl4j_home.data")
         ).toString();
 
-//        File testImagesPath = new File(System.getProperty("user.home"), ".deeplearning4j/data/data-science-bowl-2018/data-science-bowl-2018/data-science-bowl-2018-2/test/inputs");
         File testImagesPath = new File(Paths.get(parentDir, "data-science-bowl-2018","data-science-bowl-2018","data-science-bowl-2018-2","test","inputs").toString());
         FileSplit imageSplit = new FileSplit(testImagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
 
@@ -213,22 +205,6 @@ public class ModelTest {
                 new Pair<>(rgb2gray, 1.0)
         );
         return new PipelineImageTransform(pipeline, false);
-    }
-
-    public static INDArray dilateImage(INDArray src, NativeImageLoader loader) throws IOException {
-        Mat mat = loader.asMat(src);
-        Mat kernel = Mat.ones(3, 3, CV_8UC1).asMat();
-        dilate(mat, mat, kernel);
-
-        return loader.asMatrix(mat);
-    }
-
-    public static INDArray erodeImage(INDArray src, NativeImageLoader loader) throws IOException {
-        Mat mat = loader.asMat(src);
-        Mat kernel = Mat.ones(3, 3, CV_8UC1).asMat();
-        erode(mat, mat, kernel);
-
-        return loader.asMatrix(mat);
     }
 
 

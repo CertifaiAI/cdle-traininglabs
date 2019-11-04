@@ -27,7 +27,7 @@ public class ImageAugmentation {
 
     public static void main(String[] args) throws IOException{
         /*
-        * ONLY run to generate more samples
+        * This is OPTIONAL. Only run when you want to generate more samples
         *
         * */
         inputDir = Paths.get(
@@ -38,6 +38,7 @@ public class ImageAugmentation {
         File imagesPath = new File(Paths.get(inputDir, "data-science-bowl-2018","data-science-bowl-2018","data-science-bowl-2018-2","train","inputs").toString());
         File[] files = imagesPath.listFiles();
 
+        // Set the types of image transformation here.
         ImageTransform flip = new FlipImageTransform();
         ImageTransform rotate = new RotateImageTransform(random, 30);
 
@@ -48,6 +49,7 @@ public class ImageAugmentation {
 
         PipelineImageTransform transformPipeline = new PipelineImageTransform(listOfTransform, false);
 
+        // Write augmented images to a new folder
         NativeImageLoader niLoader= new NativeImageLoader(224,224,1,flip);
 
         File augmentedImgFolder = new File(Paths.get(inputDir, "data-science-bowl-2018","data-science-bowl-2018","data-science-bowl-2018-2","train","augmented_inputs").toString());
@@ -55,7 +57,6 @@ public class ImageAugmentation {
         if (!augmentedImgFolder.exists() ) {
             augmentedImgFolder.mkdir();
         }
-
 
         if (files != null) {
             for (File f : files){

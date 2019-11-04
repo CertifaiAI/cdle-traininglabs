@@ -79,11 +79,11 @@ public class PretrainedUNET {
 
         /*
          * Instructions for this lab exercise:
-         * STEP 1: Import pretrained UNET (provided in model zoo)
-         * STEP 2: Configuration of transfer learning
-         * STEP 3: Load data into RecordReaderDataSetIterator
-         * STEP 4: Run training
-         * STEP 5: Complete the code for IOU calculation here
+         * STEP 1: Import pretrained UNET (provided in model zoo).
+         * STEP 2: Configuration of transfer learning.
+         * STEP 3: Load data into RecordReaderDataSetIterator.
+         * STEP 4: Run training.
+         * STEP 5: We will use IOU (Intersection Over Union) as our evaluation metric. Complete the code for IOU calculation.
          *
          * */
 
@@ -98,6 +98,7 @@ public class PretrainedUNET {
         ScoreIterationListener scoreIterationListener= new ScoreIterationListener(1);
 
         //STEP 2: Configuration of transfer learning
+        //STEP 2.1: Set updater and learning rate)
         FineTuneConfiguration fineTuneConf = new FineTuneConfiguration.Builder()
                 .trainingWorkspaceMode(WorkspaceMode.ENABLED)
 //                .updater() // 3.1 set updater here
@@ -105,9 +106,11 @@ public class PretrainedUNET {
                 .build();
 
 //        //Construct a new model with the intended architecture and print summary
+//        //STEP 2.2: Set which pre-trained layer to freeze and use as feature extractor
+//        //STEP 2.3: Add a CnnLossLayer to form a Fully Convolutional Network
 //        ComputationGraph unetTransfer = new TransferLearning.GraphBuilder(unet)
 //                .fineTuneConfiguration(fineTuneConf)
-//                .setFeatureExtractor(featurizeExtractionLayer) // set which pre-trained layer to freeze and use as feature extractor
+//                .setFeatureExtractor(featurizeExtractionLayer)
 //                    /* add CnnLossLayer (convolutional layer) to the pre-trained UNet to
 //                    form a Fully Convolutional Network*/
 //                .build();
@@ -124,7 +127,7 @@ public class PretrainedUNET {
 //        // STEP 3: Load data into RecordReaderDataSetIterator
 //        CellDataSetIterator.setup(batchSize, trainPerc, getImageTransform());
 //
-//        //create iterators
+//        //Create iterators
 //        RecordReaderDataSetIterator imageDataSetTrain = CellDataSetIterator.trainIterator();
 //        RecordReaderDataSetIterator imageDataSetVal = CellDataSetIterator.valIterator();
 

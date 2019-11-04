@@ -43,6 +43,7 @@ public class CellDataSetIterator {
     public CellDataSetIterator() throws IOException {
     }
 
+    //This method instantiates an ImageRecordReader and subsequently a RecordReaderDataSetIterator based on it
     private static RecordReaderDataSetIterator makeIterator(InputSplit split, boolean training) throws IOException {
         ImageRecordReader recordReader = new ImageRecordReader(height,width,channels,labelMaker);
         if (training && transform != null){
@@ -69,6 +70,9 @@ public class CellDataSetIterator {
         setup(batchSizeArg,trainPerc);
     }
 
+    //This method does the following:
+    // 1. Download and unzip dataset if it hasn't been downloaded
+    // 2. Split dataset into training set and validation set
     public static void setup(int batchSizeArg, double trainPerc) throws IOException {
 
         downloadData();
@@ -90,6 +94,7 @@ public class CellDataSetIterator {
         valData = imagesSplits[1];
     }
 
+    // Download dataset
     public static void downloadData() throws IOException {
         downloadLink = Helper.getPropValues("dataset.segmentationCell.url");
 

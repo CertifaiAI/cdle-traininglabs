@@ -44,6 +44,7 @@ public class CustomLabelGenerator implements PathLabelGenerator {
         this.imageLoader = new NativeImageLoader(this.height, this.width, this.channels);
     }
 
+    // This custom label generator finds labels for each input image by replacing one the folders (inputs >> masks) in the path string.
     @Override
     public Writable getLabelForPath(String path) {
         try
