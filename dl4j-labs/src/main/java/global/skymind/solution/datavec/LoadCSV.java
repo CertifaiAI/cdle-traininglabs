@@ -1,19 +1,21 @@
 package global.skymind.solution.datavec;
 
-
 import org.datavec.api.records.reader.RecordReader;
-import org.datavec.api.records.reader.impl.collection.CollectionRecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
 import org.datavec.api.split.FileSplit;
 import org.deeplearning4j.arbiter.util.ClassPathResource;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.deeplearning4j.datasets.iterator.IteratorDataSetIterator;
+import org.deeplearning4j.datasets.iterator.*;
+import org.deeplearning4j.datasets.iterator.impl.ListDataSetIterator;
 import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.dataset.ExistingMiniBatchDataSetIterator;
 import org.nd4j.linalg.dataset.SplitTestAndTrain;
+import org.nd4j.linalg.dataset.ViewIterator;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
+import org.nd4j.linalg.dataset.api.preprocessor.NormalizerMinMaxScaler;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 
 public class LoadCSV {
@@ -52,12 +54,22 @@ public class LoadCSV {
         System.out.println(Arrays.toString(testData.getFeatures().shape()));
 
         // create iterator for splitted training and test dataset
-        DataSetIterator trainIterator = new IteratorDataSetIterator(trainingData.iterator(), 16);
-        DataSetIterator testIterator = new IteratorDataSetIterator(testData.iterator(), 16);
+        DataSetIterator trainIterator = new ViewIterator(trainingData, 4);
+        DataSetIterator testIterator = new ViewIterator(testData, 2);
+
+        // normalize data to 0 - 1
+        DataNormalization scaler = new NormalizerMinMaxScaler(0,1);
+        scaler.fit(trainIterator);
+        trainIterator.setPreProcessor(scaler);
+        testIterator.setPreProcessor(scaler);
 
         System.out.println("\nShape of training batch vector:");
         System.out.println(Arrays.toString(trainIterator.next().getFeatures().shape()));
         System.out.println("\nShape of test batch vector:");
-        System.out.println(Arrays.toString(trainIterator.next().getFeatures().shape()));
+        System.out.println(Arrays.toString(testIterator.next().getFeatures().shape()));
+        System.out.println("\ntraining vector: ");
+        System.out.println(trainIterator.next().getFeatures());
+        System.out.println("\ntest vector: ");
+        System.out.println(testIterator.next().getFeatures());
     }
 }
