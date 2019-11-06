@@ -69,7 +69,6 @@ public class Exercise2 {
         FlipImageTransform horizontalFlip = new FlipImageTransform(1);
         ImageTransform cropImage = new CropImageTransform(5);
         ImageTransform rotateImage = new RotateImageTransform(randNumGen, 15);
-        ImageTransform showImage = new ShowImageTransform("Image",1000);
         boolean shuffle = false;
         List<Pair<ImageTransform,Double>> pipeline = Arrays.asList(
                 new Pair<>(horizontalFlip,0.5),
