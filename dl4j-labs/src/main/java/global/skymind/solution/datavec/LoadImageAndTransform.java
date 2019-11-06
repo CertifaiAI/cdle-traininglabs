@@ -98,7 +98,7 @@ public class LoadImageAndTransform {
             DataSet ds = trainIter.next();
 
             batchIndex += 1;
-            System.out.println("\nBatch number: " + String.valueOf(batchIndex));
+            System.out.println("\nBatch number: " + batchIndex);
             System.out.println("Feature vector shape: " + Arrays.toString(ds.getFeatures().shape()));
             System.out.println("Label vector shape: " +Arrays.toString(ds.getLabels().shape()));
         }
