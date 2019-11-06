@@ -50,17 +50,22 @@ public class Exercise2 {
         File parentDir = new File(Paths.get(dataDir,"plant-seedlings-classification","train").toString());
         if(!parentDir.exists()) downloadAndUnzip();
 
+        //create FileSplit point to images parent folder
         FileSplit fileSplit = new FileSplit(parentDir);
 
+        //create random path filter using RandomPathFilter
         RandomPathFilter pathFilter = new RandomPathFilter(randNumGen, allowedExtensions);
 
+        //split images into training and test dataset using FileSplit.sample
         InputSplit[] filesInDirSplit = fileSplit.sample(pathFilter, 80, 20);
         InputSplit trainData = filesInDirSplit[0];
         InputSplit testData = filesInDirSplit[1];
 
+        //read image using ImageRecordReader
         ImageRecordReader trainRR = new ImageRecordReader(height,width,channels,labelMaker);
         ImageRecordReader testRR = new ImageRecordReader(height,width,channels,labelMaker);
 
+        //define and initialize image transformation
         FlipImageTransform horizontalFlip = new FlipImageTransform(1);
         ImageTransform cropImage = new CropImageTransform(5);
         ImageTransform rotateImage = new RotateImageTransform(randNumGen, 15);
@@ -76,8 +81,11 @@ public class Exercise2 {
         trainRR.initialize(trainData,transform);
         testRR.initialize(testData);
 
+        //create dataset iterator
         DataSetIterator trainIter = new RecordReaderDataSetIterator(trainRR, batchSize, 1, numLabels);
         DataSetIterator testIter = new RecordReaderDataSetIterator(testRR, batchSize, 1, numLabels);
+
+        //set image data normalization
         trainIter.setPreProcessor(scaler);
         trainIter.setPreProcessor(scaler);
 
