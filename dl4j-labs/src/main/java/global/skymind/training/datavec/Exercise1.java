@@ -44,8 +44,8 @@ public class Exercise1 {
         // define transform process
         /*
         - remove unused column (PassengerId, Name, Tiket, Cabin)
-        - replace Age missing value with 0
-        - replace Embarked missing value with "S"
+        - replace Age missing value with 0. hint: use .transform(new ReplaceInvalidWithIntegerTransform(...))
+        - replace Embarked missing value with "S". hint: use .conditionalReplaceValueTransform(...))
         - convert Sex(category) to integer
         - convert Pclass, Embarked to one hot encoding
         */
