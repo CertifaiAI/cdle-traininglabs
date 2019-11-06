@@ -1,35 +1,16 @@
 package global.skymind.training.datavec;
 
 import org.apache.commons.io.FileUtils;
-import org.datavec.api.records.reader.RecordReader;
-import org.datavec.api.records.reader.impl.collection.CollectionRecordReader;
-import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
 import org.datavec.api.records.writer.RecordWriter;
 import org.datavec.api.records.writer.impl.csv.CSVRecordWriter;
 import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.partition.NumberOfRecordsPartitioner;
 import org.datavec.api.split.partition.Partitioner;
-import org.datavec.api.transform.TransformProcess;
-import org.datavec.api.transform.condition.ConditionOp;
-import org.datavec.api.transform.condition.column.CategoricalColumnCondition;
-import org.datavec.api.transform.schema.Schema;
-import org.datavec.api.transform.transform.integer.ReplaceInvalidWithIntegerTransform;
-import org.datavec.api.writable.Text;
 import org.datavec.api.writable.Writable;
-import org.datavec.local.transforms.LocalTransformExecutor;
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.nd4j.linalg.dataset.SplitTestAndTrain;
-import org.nd4j.linalg.dataset.ViewIterator;
-import org.nd4j.linalg.dataset.api.DataSet;
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
-import org.nd4j.linalg.dataset.api.preprocessor.NormalizerMinMaxScaler;
 import org.nd4j.linalg.io.ClassPathResource;
 
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Exercise1 {
@@ -50,7 +31,7 @@ public class Exercise1 {
         // read csv file
         /*
         YOUR CODE HERE
-        */
+         */
 
         // define schema
         /*
