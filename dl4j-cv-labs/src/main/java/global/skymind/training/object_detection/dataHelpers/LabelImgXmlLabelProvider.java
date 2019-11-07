@@ -25,18 +25,17 @@ public class LabelImgXmlLabelProvider implements ImageObjectLabelProvider {
     public LabelImgXmlLabelProvider(File dir) throws IOException, ParserConfigurationException, SAXException {
         File[] listOfFiles = dir.listFiles();
 
-        for(int i = 0; i < listOfFiles.length; i++){
-            String filename = listOfFiles[i].getName();
-            if(filename.endsWith(".xml")||filename.endsWith(".XML"))
-            {
+        for (File listOfFile : listOfFiles) {
+            String filename = listOfFile.getName();
+            if (filename.endsWith(".xml") || filename.endsWith(".XML")) {
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
-                Document doc = builder.parse(listOfFiles[i]);
+                Document doc = builder.parse(listOfFile);
                 NodeList objects = doc.getElementsByTagName("object");
                 int m = objects.getLength();
                 ArrayList<ImageObject> list = new ArrayList(m);
-                for(int j = 0; j < m; ++j) {
-                    Element el = (Element)objects.item(j);
+                for (int j = 0; j < m; ++j) {
+                    Element el = (Element) objects.item(j);
                     String name = el.getElementsByTagName("name").item(0).getTextContent();
                     int xmin = Integer.parseInt(el.getElementsByTagName("xmin").item(0).getTextContent());
                     int ymin = Integer.parseInt(el.getElementsByTagName("ymin").item(0).getTextContent());
@@ -52,7 +51,7 @@ public class LabelImgXmlLabelProvider implements ImageObjectLabelProvider {
     public List<ImageObject> getImageObjectsForPath(String path) {
         File file = new File(path);
         String filename = file.getName();
-        return (List)this.labelMap.get(FilenameUtils.getBaseName(filename));
+        return this.labelMap.get(FilenameUtils.getBaseName(filename));
     }
 
     public List<ImageObject> getImageObjectsForPath(URI uri) {
