@@ -36,6 +36,8 @@ This repo contains codes for hands-on purpose during training session.
   Bank transaction anomaly detection using VAE.
 - [ND4J](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/nd4j):
   ND4J tutorial and exercise.
+- [DataVec](https://github.com/skymindglobal/TrainingLabs/tree/datavec/dl4j-labs/src/main/java/global/skymind/solution/datavec):
+  Load and transform CSV and Image files using DataVec
   
 #### DL4J-cv-labs
 - [ImageClassification/CustomModel](https://github.com/skymindglobal/TrainingLabs/tree/imageclassification/dl4j-cv-labs/src/main/java/global/skymind/solution/classification):
