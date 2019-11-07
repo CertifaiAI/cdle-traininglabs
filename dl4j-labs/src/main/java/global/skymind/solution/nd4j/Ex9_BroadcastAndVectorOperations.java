@@ -11,7 +11,7 @@ public class Ex9_BroadcastAndVectorOperations {
     public static void main(String[] args) {
         int nRows = 3;
         int nColumns = 5;
-        INDArray myArray = Nd4j.randn(new int[]{nRows, nColumns}, 123);
+        INDArray myArray = Nd4j.randn(nRows, nColumns, 123);
         System.out.println(BLACK_BOLD + "Default array" + ANSI_RESET);
         System.out.println(myArray);
 
@@ -44,7 +44,7 @@ public class Ex9_BroadcastAndVectorOperations {
         System.out.println(div);
 
         System.out.println(BLACK_BOLD +"\nMultiply arr1 with column vector of [1,2,3]" + ANSI_RESET);
-        INDArray mul = arr1.mulColumnVector(Nd4j.create(new float[]{1,2,3}, new int[]{3,1}));
+        INDArray mul = arr1.mulColumnVector(Nd4j.create(new float[]{1,2,3}, 3, 1));
         System.out.println(mul);
     }
 }
