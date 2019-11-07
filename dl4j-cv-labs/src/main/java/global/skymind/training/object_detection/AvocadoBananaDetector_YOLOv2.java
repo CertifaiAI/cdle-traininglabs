@@ -235,7 +235,7 @@ public class AvocadoBananaDetector_YOLOv2 {
                 rectangle(convertedMat_big, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
                 //Display label text
                 labeltext =label+" "+(Math.round(obj.getConfidence()*100.0)/100.0)*100.0 +"%";
-                int baseline[]={0};
+                int[] baseline ={0};
                 Size textSize=getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1,1,baseline);
                 rectangle(convertedMat_big, new Point(x1 + 2, y2 - 2), new Point(x1 + 2+textSize.get(0), y2 - 2-textSize.get(1)), colormap[obj.getPredictedClass()], FILLED,0,0);
                 putText(convertedMat_big, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0,0,0));
@@ -339,7 +339,7 @@ public class AvocadoBananaDetector_YOLOv2 {
                                 rectangle(rawImage, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
                                 //Display label text
                                 labeltext =label+" "+(Math.round(obj.getConfidence()*100.0)/100.0)*100.0 +"%";
-                                int baseline[]={0};
+                                int[] baseline ={0};
                                 Size textSize=getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1,1,baseline);
                                 rectangle(rawImage, new Point(x1 + 2, y2 - 2), new Point(x1 + 2+textSize.get(0), y2 - 2-textSize.get(1)), colormap[obj.getPredictedClass()], FILLED,0,0);
                                 putText(rawImage, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0,0,0));
@@ -369,7 +369,7 @@ public class AvocadoBananaDetector_YOLOv2 {
     }
 
     //To unzip the training and test datset
-    public static void unzip(String source, String destination){
+    private static void unzip(String source, String destination){
         try {
             ZipFile zipFile = new ZipFile(source);
             zipFile.extractAll(destination);
@@ -378,7 +378,7 @@ public class AvocadoBananaDetector_YOLOv2 {
         }
     }
 
-    public static void unzipAllDataSet(){
+    private static void unzipAllDataSet(){
         //unzip training data set
         File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits");
         if (!resourceDir.exists()) resourceDir.mkdirs();
