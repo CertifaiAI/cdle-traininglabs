@@ -34,6 +34,8 @@ This repo contains codes for hands-on purpose during training session.
   Mortality prediction using LSTM.
 - [VAE/VAECreditAnomaly](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/VAE):
   Bank transaction anomaly detection using VAE.
+- [ND4J](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/nd4j):
+  ND4J tutorial and exercise.
   
 #### DL4J-cv-labs
 - [ImageClassification/CustomModel](https://github.com/skymindglobal/TrainingLabs/tree/imageclassification/dl4j-cv-labs/src/main/java/global/skymind/solution/classification):
