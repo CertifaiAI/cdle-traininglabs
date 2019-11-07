@@ -39,7 +39,7 @@ public class EditLastLayerOthersFrozen {
 
     private static final Random randNumGen = new Random(seed);
 
-    public static void main(String args[]) throws Exception{
+    public static void main(String[] args) throws Exception{
         /*
         Initialize image augmentation
         */

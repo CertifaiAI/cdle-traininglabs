@@ -40,7 +40,7 @@ public class EditAtBottleneckAndExtendModel {
 
     private static final Random randNumGen = new Random(seed);
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
         // image augmentation
         ImageTransform horizontalFlip = new FlipImageTransform(1);
         ImageTransform cropImage = new CropImageTransform(25);
