@@ -77,10 +77,10 @@ public class AvocadoBananaDetector_YOLOv2 {
     private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/Avocado_Banana_Detector_yolov2.zip");
     private static ComputationGraph model;
     private static Frame frame = null;
-    public static final Scalar GREEN = RGB(0, 255.0, 0);
-    public static final Scalar YELLOW = RGB(255, 255, 0);
-    public static Scalar[] colormap = {GREEN,YELLOW};
-    public static String labeltext = null;
+    private static final Scalar GREEN = RGB(0, 255.0, 0);
+    private static final Scalar YELLOW = RGB(255, 255, 0);
+    private static Scalar[] colormap = {GREEN,YELLOW};
+    private static String labeltext = null;
 
 
     public static void main(String[] args) throws Exception {
