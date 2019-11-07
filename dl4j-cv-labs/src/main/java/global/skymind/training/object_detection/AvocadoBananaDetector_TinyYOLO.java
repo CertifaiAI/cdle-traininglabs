@@ -157,7 +157,8 @@ public class AvocadoBananaDetector_TinyYOLO {
     }
 
     private static ComputationGraph getNewComputationGraph(ComputationGraph pretrained, INDArray priors, FineTuneConfiguration fineTuneConf) {
-        ComputationGraph _ComputationGraph = new TransferLearning.GraphBuilder(pretrained)
+
+        return new TransferLearning.GraphBuilder(pretrained)
                 .fineTuneConfiguration(fineTuneConf)
                 .removeVertexKeepConnections("conv2d_9")
                 .removeVertexKeepConnections("outputs")
@@ -180,13 +181,11 @@ public class AvocadoBananaDetector_TinyYOLO {
                         "conv2d_9")
                 .setOutputs("outputs")
                 .build();
-
-        return _ComputationGraph;
     }
 
     private static FineTuneConfiguration getFineTuneConfiguration() {
 
-        FineTuneConfiguration _FineTuneConfiguration = new FineTuneConfiguration.Builder()
+        return new FineTuneConfiguration.Builder()
                 .seed(seed)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .gradientNormalization(GradientNormalization.RenormalizeL2PerLayer)
@@ -197,8 +196,6 @@ public class AvocadoBananaDetector_TinyYOLO {
                 .trainingWorkspaceMode(WorkspaceMode.ENABLED)
                 .inferenceWorkspaceMode(WorkspaceMode.ENABLED)
                 .build();
-
-        return _FineTuneConfiguration;
     }
 
 //    Evaluate visually the performance of the trained object detection model
