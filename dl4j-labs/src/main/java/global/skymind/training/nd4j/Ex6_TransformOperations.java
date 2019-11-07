@@ -12,7 +12,7 @@ public class Ex6_TransformOperations {
     public static void main(String[] args) {
         int nRows = 3;
         int nColumns = 5;
-        INDArray myArray = Nd4j.rand(new int[]{nRows, nColumns}, 123);
+        INDArray myArray = Nd4j.rand(nRows, nColumns, 123);
         System.out.println(BLACK_BOLD + "Default array" + ANSI_RESET);
         System.out.println(myArray);
 

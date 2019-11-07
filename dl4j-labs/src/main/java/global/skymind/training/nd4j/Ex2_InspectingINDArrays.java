@@ -40,7 +40,7 @@ public class Ex2_InspectingINDArrays {
 
         /*
         EXERCISE:
-        - Create the following array: Nd4j.randn(new int[]{2,5,6,3,5});
+        - Create the following array: Nd4j.randn(2,5,6,3,5);
         - Get the shape of the array
         - Get number of dimension
         - Get the size of dimension 4

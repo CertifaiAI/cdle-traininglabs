@@ -41,7 +41,7 @@ public class Ex1_CreatingINDArrays {
 
         INDArray columnVector = Nd4j.create(vectorDouble, 3, 1);  //Manually specify: 3 rows, 1 column
         System.out.println(BLACK_BOLD + "\nCreate column vector: " + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.create(new double[]{1,2,3}, new int[]{3,1})" + ANSI_RESET);
+        System.out.println(BLUE_BOLD + "Nd4j.create(new double[]{1,2,3}, 3, 1)" + ANSI_RESET);
         System.out.println(columnVector);
 
         double[][] matrixDouble = new double[][]{
@@ -59,7 +59,7 @@ public class Ex1_CreatingINDArrays {
         System.out.println(BLUE_BOLD + "Nd4j.rand(nRows, nColumns)" + ANSI_RESET);
         System.out.println(uniformRand);
 
-        INDArray uniformRand3D = Nd4j.rand(nRows, nColumns, 2);
+        INDArray uniformRand3D = Nd4j.rand(new int[]{2, nRows, nColumns});
         System.out.println(BLACK_BOLD + "\nCreate 3 dimensions uniform random array:" + ANSI_RESET);
         System.out.println(BLUE_BOLD + "Nd4j.rand(new int[]{2, nRows, nColumns})" + ANSI_RESET);
         System.out.println(uniformRand3D);
@@ -67,7 +67,7 @@ public class Ex1_CreatingINDArrays {
         //gaussian random number
         INDArray gaussianMeanZeroUnitVariance = Nd4j.randn(nRows, nColumns);
         System.out.println(BLACK_BOLD + "\nCreate random numbers with mean zero and standard deviation one:" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.randn(new int[]{nRows, nColumns})" + ANSI_RESET);
+        System.out.println(BLUE_BOLD + "Nd4j.randn(nRows, nColumns)" + ANSI_RESET);
         System.out.println(gaussianMeanZeroUnitVariance);
 
         //Create repeatable random array using seed:
@@ -75,7 +75,7 @@ public class Ex1_CreatingINDArrays {
         INDArray rand1 = Nd4j.rand(nRows, nColumns, seed);
         INDArray rand2 = Nd4j.rand(nRows, nColumns, seed);
         System.out.println(BLACK_BOLD +"\nUniform random arrays with same fixed seed:" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.rand(shape, seed)" + ANSI_RESET);
+        System.out.println(BLUE_BOLD + "Nd4j.rand(nRows, nColumns, seed)" + ANSI_RESET);
         System.out.println(BLACK_BOLD + "rand1" + ANSI_RESET);
         System.out.println(rand1);
         System.out.println(BLACK_BOLD + "rand2" + ANSI_RESET);
