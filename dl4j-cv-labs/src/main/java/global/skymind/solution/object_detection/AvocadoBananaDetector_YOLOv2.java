@@ -77,7 +77,7 @@ public class AvocadoBananaDetector_YOLOv2 {
     private static double[][] priorBoxes = {{1, 3}, {2.5, 6}, {3, 4}, {3.5, 8}, {4, 9}};
 
 
-    private static int batchSize = 4;
+    private static int batchSize = 2;
     private static int nEpochs = 40;
 
     private static double learningRate = 1e-4;
