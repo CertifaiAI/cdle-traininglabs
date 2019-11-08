@@ -2,10 +2,12 @@
 
 package global.skymind.solution.object_detection;
 
+import global.skymind.Helper;
 import global.skymind.solution.object_detection.dataHelpers.LabelImgXmlLabelProvider;
 import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+import org.apache.commons.io.FileUtils;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
@@ -43,14 +45,16 @@ import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.io.ClassPathResource;
 import org.nd4j.linalg.learning.config.Adam;
+import org.nd4j.util.ArchiveUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Random;
 
@@ -72,18 +76,14 @@ public class AvocadoBananaDetector_TinyYOLO {
     private static double lambdaNoObj = 0.5;
     private static double lambdaCoord = 5.0;
     private static double[][] priorBoxes = {{1, 3}, {2.5, 6}, {3, 4}, {3.5, 8}, {4, 9}};
-
-
     private static int batchSize = 4;
     private static int nEpochs = 40;
-
     private static double learningRate = 1e-4;
-
     private static int nClasses = 2;
     private static List<String> labels;
     private static int seed = 123;
     private static Random rng = new Random(seed);
-    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/Avocado_Banana_Detector_tinyyolo.zip");
+    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/AvocadoBananaDetector_tinyyolo.zip");
     private static ComputationGraph model;
     private static Frame frame = null;
     private static final Scalar GREEN = RGB(0, 255.0, 0);
@@ -94,7 +94,7 @@ public class AvocadoBananaDetector_TinyYOLO {
     public static void main(String[] args) throws Exception {
 
         //         STEP 1 : Unzip the dataset into your local pc.
-        unzipAllDataSet();
+        downloadAndUnzip();
         //         STEP 2 : Specify your training data and test data.
         File trainDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits/train/");
         File testDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits/test/");
@@ -388,30 +388,21 @@ public class AvocadoBananaDetector_TinyYOLO {
         }
     }
 
-    private static void unzipAllDataSet(){
-        //unzip training data set
-        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits");
-        if (!resourceDir.exists()) resourceDir.mkdirs();
+    private static void downloadAndUnzip() throws IOException{
+        String dataDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.data")
+        ).toString();
+        String downloadLink = Helper.getPropValues("dataset.fruits.url");
+        File parentDir = new File(Paths.get(dataDir,"fruits").toString());
+        String dataPath = new File(dataDir).getAbsolutePath();
+        File zipFile = new File (dataPath,"fruits-detection.zip");
 
-        String zipTrainFilePath = null;
-        String zipTestFilePath = null;
-        try {
-            zipTrainFilePath  = new ClassPathResource("fruits/train.zip").getFile().toString();
-            zipTestFilePath  = new ClassPathResource("fruits/test.zip").getFile().toString();
-            System.out.println(zipTrainFilePath);
-            System.out.println(zipTestFilePath);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(!parentDir.exists()){
+            log.info("Downloading the dataset from "+downloadLink+ "...");
+            FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
+            ArchiveUtils.unzipFileTo(zipFile.getAbsolutePath(), dataPath);
         }
-        File trainFolder = new File(resourceDir+"/train");
-        if (!trainFolder.exists()) unzip(zipTrainFilePath, resourceDir.toString());
-        System.out.println("unziptrain done");
-        System.out.println(trainFolder);
-
-        File testFolder = new File(resourceDir+"/test");
-        if (!testFolder.exists()) unzip(zipTestFilePath, resourceDir.toString());
-        System.out.println(testFolder);
-        System.out.println("unziptest done");
     }
 }
 
