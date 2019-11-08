@@ -2,12 +2,11 @@
 
 package global.skymind.solution.object_detection;
 
-import global.skymind.Helper;
 import global.skymind.solution.object_detection.dataHelpers.LabelImgXmlLabelProvider;
 import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
+
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
-import org.apache.commons.io.FileUtils;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
@@ -35,7 +34,6 @@ import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
@@ -45,23 +43,24 @@ import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.learning.config.Adam;
-import org.nd4j.util.ArchiveUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.nd4j.linalg.io.ClassPathResource;
 
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Random;
+
+import org.nd4j.linalg.learning.config.Adam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.deeplearning4j.ui.api.UIServer;
 
 import static org.bytedeco.opencv.global.opencv_core.CV_8U;
 import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
+
+import java.awt.event.KeyEvent;
 
 public class AvocadoBananaDetector_YOLOv2 {
     private static final Logger log = LoggerFactory.getLogger(AvocadoBananaDetector_YOLOv2.class);
@@ -78,10 +77,8 @@ public class AvocadoBananaDetector_YOLOv2 {
     private static double[][] priorBoxes = {{1, 3}, {2.5, 6}, {3, 4}, {3.5, 8}, {4, 9}};
 
 
-    private static int batchSize = 4;
-//    private static int nEpochs = 40;
-    private static int nEpochs = 1;
-
+    private static int batchSize = 2;
+    private static int nEpochs = 40;
 
     private static double learningRate = 1e-4;
 
@@ -89,7 +86,7 @@ public class AvocadoBananaDetector_YOLOv2 {
     private static List<String> labels;
     private static int seed = 123;
     private static Random rng = new Random(seed);
-    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/AvocadoBananaDetector_YOLOv2.zip");
+    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/Avocado_Banana_Detector_yolov2.zip");
     private static ComputationGraph model;
     private static Frame frame = null;
     private static final Scalar GREEN = RGB(0, 255.0, 0);
@@ -101,7 +98,7 @@ public class AvocadoBananaDetector_YOLOv2 {
     public static void main(String[] args) throws Exception {
 
         //         STEP 1 : Unzip the dataset into your local pc.
-        downloadAndUnzip();
+        unzipAllDataSet();
         //         STEP 2 : Specify your training data and test data.
         File trainDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits/train/");
         File testDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits/test/");
@@ -393,21 +390,30 @@ public class AvocadoBananaDetector_YOLOv2 {
         }
     }
 
-    private static void downloadAndUnzip() throws IOException{
-        String dataDir = Paths.get(
-                System.getProperty("user.home"),
-                Helper.getPropValues("dl4j_home.data")
-        ).toString();
-        String downloadLink = Helper.getPropValues("dataset.fruits.url");
-        File parentDir = new File(Paths.get(dataDir,"fruits").toString());
-        String dataPath = new File(dataDir).getAbsolutePath();
-        File zipFile = new File (dataPath,"fruits-detection.zip");
+    private static void unzipAllDataSet(){
+        //unzip training data set
+        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits");
+        if (!resourceDir.exists()) resourceDir.mkdirs();
 
-        if(!parentDir.exists()){
-            log.info("Downloading the dataset from "+downloadLink+ "...");
-            FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
-            ArchiveUtils.unzipFileTo(zipFile.getAbsolutePath(), dataPath);
+        String zipTrainFilePath = null;
+        String zipTestFilePath = null;
+        try {
+            zipTrainFilePath  = new ClassPathResource("fruits/train.zip").getFile().toString();
+            zipTestFilePath  = new ClassPathResource("fruits/test.zip").getFile().toString();
+            System.out.println(zipTrainFilePath);
+            System.out.println(zipTestFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        File trainFolder = new File(resourceDir+"/train");
+        if (!trainFolder.exists()) unzip(zipTrainFilePath, resourceDir.toString());
+        System.out.println("unziptrain done");
+        System.out.println(trainFolder);
+
+        File testFolder = new File(resourceDir+"/test");
+        if (!testFolder.exists()) unzip(zipTestFilePath, resourceDir.toString());
+        System.out.println(testFolder);
+        System.out.println("unziptest done");
     }
 }
 
