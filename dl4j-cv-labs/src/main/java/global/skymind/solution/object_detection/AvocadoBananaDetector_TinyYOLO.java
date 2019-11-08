@@ -2,13 +2,7 @@
 
 package global.skymind.solution.object_detection;
 
-import global.skymind.Helper;
-import global.skymind.solution.classification.DogBreedDataSetIterator;
-import global.skymind.solution.object_detection.dataHelpers.LabelImgXmlLabelProvider;
 import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-import org.apache.commons.io.FileUtils;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
@@ -60,7 +54,6 @@ import static org.bytedeco.opencv.helper.opencv_core.RGB;
 public class AvocadoBananaDetector_TinyYOLO {
     private static final Logger log = LoggerFactory.getLogger(AvocadoBananaDetector_TinyYOLO.class);
     private static int seed = 123;
-
     private static double detectionThreshold = 0.3;
     private static int nBoxes = 5;
     private static double lambdaNoObj = 0.5;
@@ -68,13 +61,12 @@ public class AvocadoBananaDetector_TinyYOLO {
     private static double[][] priorBoxes = {{1, 3}, {2.5, 6}, {3, 4}, {3.5, 8}, {4, 9}};
 
     private static int batchSize = 2;
-    private static int nEpochs = 5;
+    private static int nEpochs = 40;
     private static double learningRate = 1e-4;
     private static int nClasses = 2;
     private static List<String> labels;
 
-    private static File modelFilename = new File(System.getProperty("user.dir"),
-            "generated-models/AvocadoBananaDetector_tinyyolo.zip");
+    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/AvocadoBananaDetector_tinyyolo.zip");
     private static ComputationGraph model;
     private static Frame frame = null;
     private static final Scalar GREEN = RGB(0, 255.0, 0);
@@ -86,16 +78,15 @@ public class AvocadoBananaDetector_TinyYOLO {
 
         FruitDataSetIterator.setup();
 
-        //create iterators
+        //        STEP 1 : Create iterators
         RecordReaderDataSetIterator trainIter = FruitDataSetIterator.trainIterator(batchSize);
         RecordReaderDataSetIterator testIter = FruitDataSetIterator.testIterator(1);
 
         labels = trainIter.getLabels();
 
         //        If model does not exist, train the model, else directly go to model evaluation and then run real time object detection inference.
-
         if (modelFilename.exists()) {
-        //        STEP 4 : Load trained model from previous execution
+        //        STEP 2 : Load trained model from previous execution
             Nd4j.getRandom().setSeed(seed);
             log.info("Load model...");
             model = ModelSerializer.restoreComputationGraph(modelFilename);
@@ -104,23 +95,22 @@ public class AvocadoBananaDetector_TinyYOLO {
             ComputationGraph pretrained = null;
             FineTuneConfiguration fineTuneConf = null;
             INDArray priors = Nd4j.create(priorBoxes);
-            //     STEP 4 : Train the model using Transfer Learning
-
-            //     STEP 4.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
+            //     STEP 2 : Train the model using Transfer Learning
+            //     STEP 2.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
             log.info("Build model...");
             pretrained = (ComputationGraph) TinyYOLO.builder().build().initPretrained();
 
-            //     STEP 4.2: Transfer Learning steps - Model Configurations.
+            //     STEP 2.2: Transfer Learning steps - Model Configurations.
             fineTuneConf = getFineTuneConfiguration();
 
-            //     STEP 4.3: Transfer Learning steps - Modify prebuilt model's architecture
+            //     STEP 2.3: Transfer Learning steps - Modify prebuilt model's architecture
             model = getNewComputationGraph(pretrained, priors, fineTuneConf);
             System.out.println(model.summary(InputType.convolutional(
-                    FruitDataSetIterator.tinyyoloheight,
-                    FruitDataSetIterator.tinyyolowidth,
+                    FruitDataSetIterator.yoloheight,
+                    FruitDataSetIterator.yolowidth,
                     nClasses)));
 
-            //     STEP 4.4: Training and Save model.
+            //     STEP 2.4: Training and Save model.
             log.info("Train model...");
             UIServer server = UIServer.getInstance();
             StatsStorage storage = new InMemoryStatsStorage();
@@ -137,9 +127,9 @@ public class AvocadoBananaDetector_TinyYOLO {
             ModelSerializer.writeModel(model, modelFilename, true);
             System.out.println("Model saved.");
         }
-        //     STEP 5: Training and Save model.
+        //     STEP 3: Evaluate the model's accuracy by using the test iterator.
         OfflineValidationWithTestDataset(testIter);
-        //     STEP 6: Training and Save model.
+        //     STEP 4: Inference the model and process the webcam stream and make predictions.
         doInference();
     }
 
@@ -238,8 +228,8 @@ public class AvocadoBananaDetector_TinyYOLO {
         int cameraNum = 0;
         Thread thread = null;
         NativeImageLoader loader = new NativeImageLoader(
-                FruitDataSetIterator.tinyyolowidth,
-                FruitDataSetIterator.tinyyoloheight,
+                FruitDataSetIterator.yolowidth,
+                FruitDataSetIterator.yoloheight,
                 3,
                 new ColorConversionTransform(COLOR_BGR2RGB));
         ImagePreProcessingScaler scaler = new ImagePreProcessingScaler(0, 1);
@@ -306,7 +296,7 @@ public class AvocadoBananaDetector_TinyYOLO {
                             }
 
                             Mat resizeImage = new Mat();
-                            resize(rawImage, resizeImage, new Size(FruitDataSetIterator.tinyyolowidth, FruitDataSetIterator.tinyyoloheight));
+                            resize(rawImage, resizeImage, new Size(FruitDataSetIterator.yolowidth, FruitDataSetIterator.yoloheight));
 
                             INDArray inputImage = loader.asMatrix(resizeImage);
                             scaler.transform(inputImage);
