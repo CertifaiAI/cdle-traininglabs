@@ -84,11 +84,11 @@ public class AvocadoBananaDetector_TinyYOLO {
 
     public static void main(String[] args) throws Exception {
 
-        FruitDataSetIterator.setup(batchSize);
+        FruitDataSetIterator.setup();
 
         //create iterators
-        RecordReaderDataSetIterator trainIter = FruitDataSetIterator.trainIterator();
-        RecordReaderDataSetIterator testIter = FruitDataSetIterator.testIterator();
+        RecordReaderDataSetIterator trainIter = FruitDataSetIterator.trainIterator(batchSize);
+        RecordReaderDataSetIterator testIter = FruitDataSetIterator.testIterator(1);
 
         labels = trainIter.getLabels();
 

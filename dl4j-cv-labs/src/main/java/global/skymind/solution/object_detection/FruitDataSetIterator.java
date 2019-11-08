@@ -30,15 +30,13 @@ public class FruitDataSetIterator {
     private static File trainDir, testDir;
     private static FileSplit trainData, testData;
 
-    private static int batchSize;
-
     private static final int nChannels = 3;
     public static final int gridWidth = 13;
     public static final int gridHeight = 13;
     public static final int tinyyolowidth = 416;
     public static final int tinyyoloheight = 416;
 
-    private static RecordReaderDataSetIterator makeIterator(InputSplit split, File dir) throws Exception {
+    private static RecordReaderDataSetIterator makeIterator(InputSplit split, File dir, int batchSize) throws Exception {
         ObjectDetectionRecordReader recordReader = new ObjectDetectionRecordReader(tinyyoloheight, tinyyolowidth, nChannels,
                 gridHeight, gridWidth, new LabelImgXmlLabelProvider(dir));
         recordReader.initialize(split);
@@ -49,19 +47,17 @@ public class FruitDataSetIterator {
         return iter;
     }
 
-    public static RecordReaderDataSetIterator trainIterator() throws Exception {
-        return makeIterator(trainData, trainDir);
+    public static RecordReaderDataSetIterator trainIterator(int batchSize) throws Exception {
+        return makeIterator(trainData, trainDir, batchSize);
     }
 
-    public static RecordReaderDataSetIterator testIterator() throws Exception {
-        return makeIterator(testData, testDir);
+    public static RecordReaderDataSetIterator testIterator(int batchSize) throws Exception {
+        return makeIterator(testData, testDir, batchSize);
     }
 
-    public static void setup(int batchSizeArg) throws IOException {
+    public static void setup() throws IOException {
         log.info("Load data...");
         loadData();
-
-        batchSize = batchSizeArg;
 
         trainDir = new File(dataDir,"fruits/train/");
         testDir = new File(dataDir, "fruits/test/");
