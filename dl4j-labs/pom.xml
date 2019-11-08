@@ -73,11 +73,11 @@
             <version>${nd4j.version}</version>
         </dependency>
         <!--Comment out to disable GPU capability-->
-<!--        <dependency>-->
-<!--            <groupId>org.deeplearning4j</groupId>-->
-<!--            <artifactId>deeplearning4j-cuda-10.0</artifactId>-->
-<!--            <version>${dl4j.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-cuda-10.0</artifactId>
+            <version>${dl4j.version}</version>
+        </dependency>
 
         <!-- Core DL4J functionality -->
         <dependency>
@@ -155,7 +155,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
 
         <!-- Arbiter - used for hyperparameter optimization (grid/random search) -->
         <dependency>
