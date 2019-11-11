@@ -9,11 +9,11 @@ public class Ex10_MatrixOperations {
     public static final String ANSI_RESET = "\u001B[0m";
 
     public static void main(String[] args) {
-        INDArray array1 = Nd4j.randn(new int[]{2, 3}, 123);
+        INDArray array1 = Nd4j.randn(2, 3, 123);
         System.out.println(BLACK_BOLD + "array1" + ANSI_RESET);
         System.out.println(array1);
 
-        INDArray array2 = Nd4j.randn(new int[]{3, 2}, 123);
+        INDArray array2 = Nd4j.randn(3, 2, 123);
         System.out.println(BLACK_BOLD + "array2" + ANSI_RESET);
         System.out.println(array2);
 

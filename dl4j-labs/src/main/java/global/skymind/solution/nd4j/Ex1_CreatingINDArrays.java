@@ -39,9 +39,9 @@ public class Ex1_CreatingINDArrays {
         System.out.println(BLUE_BOLD + "Nd4j.create(new double[]{1,2,3})" + ANSI_RESET);
         System.out.println(rowVector);
 
-        INDArray columnVector = Nd4j.create(vectorDouble, new int[]{3,1});  //Manually specify: 3 rows, 1 column
+        INDArray columnVector = Nd4j.create(vectorDouble, 3, 1);  //Manually specify: 3 rows, 1 column
         System.out.println(BLACK_BOLD + "\nCreate column vector: " + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.create(new double[]{1,2,3}, new int[]{3,1})" + ANSI_RESET);
+        System.out.println(BLUE_BOLD + "Nd4j.create(new double[]{1,2,3}, 3, 1)" + ANSI_RESET);
         System.out.println(columnVector);
 
         double[][] matrixDouble = new double[][]{
@@ -65,18 +65,17 @@ public class Ex1_CreatingINDArrays {
         System.out.println(uniformRand3D);
 
         //gaussian random number
-        INDArray gaussianMeanZeroUnitVariance = Nd4j.randn(new int[]{nRows, nColumns});
+        INDArray gaussianMeanZeroUnitVariance = Nd4j.randn(nRows, nColumns);
         System.out.println(BLACK_BOLD + "\nCreate random numbers with mean zero and standard deviation one:" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.randn(new int[]{nRows, nColumns})" + ANSI_RESET);
+        System.out.println(BLUE_BOLD + "Nd4j.randn(nRows, nColumns)" + ANSI_RESET);
         System.out.println(gaussianMeanZeroUnitVariance);
 
         //Create repeatable random array using seed:
         long seed = 123;
-        int[] shape = new int[]{nRows, nColumns};
-        INDArray rand1 = Nd4j.rand(shape, seed);
-        INDArray rand2 = Nd4j.rand(shape, seed);
+        INDArray rand1 = Nd4j.rand(nRows, nColumns, seed);
+        INDArray rand2 = Nd4j.rand(nRows, nColumns, seed);
         System.out.println(BLACK_BOLD +"\nUniform random arrays with same fixed seed:" + ANSI_RESET);
-        System.out.println(BLUE_BOLD + "Nd4j.rand(shape, seed)" + ANSI_RESET);
+        System.out.println(BLUE_BOLD + "Nd4j.rand(nRows, nColumns, seed)" + ANSI_RESET);
         System.out.println(BLACK_BOLD + "rand1" + ANSI_RESET);
         System.out.println(rand1);
         System.out.println(BLACK_BOLD + "rand2" + ANSI_RESET);
@@ -117,7 +116,7 @@ public class Ex1_CreatingINDArrays {
         System.out.println(BLACK_BOLD +"\nCreate array with shape (5,5) initialize it with 5" + ANSI_RESET);
         System.out.println(ex2);
 
-        INDArray ex3 = Nd4j.create(new double[]{0,0,0,1,1,1,2,2,2}, new int[]{3,3});
+        INDArray ex3 = Nd4j.create(new double[]{0,0,0,1,1,1,2,2,2}, 3,3);
         System.out.println(BLACK_BOLD +"\nCreate the following array" + ANSI_RESET);
         System.out.println(ex3);
 

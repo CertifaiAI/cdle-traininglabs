@@ -2,11 +2,7 @@
 
 package global.skymind.solution.object_detection;
 
-import global.skymind.solution.object_detection.dataHelpers.LabelImgXmlLabelProvider;
 import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
-
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
@@ -15,9 +11,7 @@ import org.bytedeco.opencv.opencv_core.Mat;
 import org.bytedeco.opencv.opencv_core.Point;
 import org.bytedeco.opencv.opencv_core.Scalar;
 import org.bytedeco.opencv.opencv_core.Size;
-import org.datavec.api.split.FileSplit;
 import org.datavec.image.loader.NativeImageLoader;
-import org.datavec.image.recordreader.objdetect.ObjectDetectionRecordReader;
 import org.datavec.image.transform.ColorConversionTransform;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
@@ -34,6 +28,7 @@ import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
@@ -43,90 +38,55 @@ import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.io.ClassPathResource;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Random;
-
 import org.nd4j.linalg.learning.config.Adam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.deeplearning4j.ui.api.UIServer;
+
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.util.List;
 
 import static org.bytedeco.opencv.global.opencv_core.CV_8U;
 import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
-import java.awt.event.KeyEvent;
-
 public class AvocadoBananaDetector_YOLOv2 {
     private static final Logger log = LoggerFactory.getLogger(AvocadoBananaDetector_YOLOv2.class);
-    private static int nChannels = 3;
-    private static final int gridWidth = 13;
-    private static final int gridHeight = 13;
+    private static int seed = 123;
     private static double detectionThreshold = 0.5;
-    private static final int yolowidth = 416;
-    private static final int yoloheight = 416;
-
     private static int nBoxes = 5;
     private static double lambdaNoObj = 0.5;
     private static double lambdaCoord = 5.0;
     private static double[][] priorBoxes = {{1, 3}, {2.5, 6}, {3, 4}, {3.5, 8}, {4, 9}};
 
-
-    private static int batchSize = 4;
+    private static int batchSize = 2;
     private static int nEpochs = 40;
-
     private static double learningRate = 1e-4;
-
     private static int nClasses = 2;
     private static List<String> labels;
-    private static int seed = 123;
-    private static Random rng = new Random(seed);
-    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/Avocado_Banana_Detector_yolov2.zip");
+
+    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/AvocadoBananaDetector_yolov2.zip");
     private static ComputationGraph model;
     private static Frame frame = null;
-    public static final Scalar GREEN = RGB(0, 255.0, 0);
-    public static final Scalar YELLOW = RGB(255, 255, 0);
-    public static Scalar[] colormap = {GREEN,YELLOW};
-    public static String labeltext = null;
-
+    private static final Scalar GREEN = RGB(0, 255.0, 0);
+    private static final Scalar YELLOW = RGB(255, 255, 0);
+    private static Scalar[] colormap = {GREEN,YELLOW};
+    private static String labeltext = null;
 
     public static void main(String[] args) throws Exception {
 
-        //         STEP 1 : Unzip the dataset into your local pc.
-        unzipAllDataSet();
-        //         STEP 2 : Specify your training data and test data.
-        File trainDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits/train/");
-        File testDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits/test/");
-        log.info("Load data...");
-        FileSplit trainData = new FileSplit(trainDir, NativeImageLoader.ALLOWED_FORMATS, rng);
-        FileSplit testData = new FileSplit(testDir, NativeImageLoader.ALLOWED_FORMATS, rng);
+        FruitDataSetIterator.setup();
 
-        //         STEP 3 : Load the data into a RecordReader and make it into a RecordReaderDatasetIterator. MinMax scaling was applied as a Preprocessing step.
-        ObjectDetectionRecordReader recordReaderTrain = new ObjectDetectionRecordReader(yoloheight, yolowidth, nChannels,
-                gridHeight, gridWidth, new LabelImgXmlLabelProvider(trainDir));
+        //        STEP 1 : Create iterators
+        RecordReaderDataSetIterator trainIter = FruitDataSetIterator.trainIterator(batchSize);
+        RecordReaderDataSetIterator testIter = FruitDataSetIterator.testIterator(1);
 
-        recordReaderTrain.initialize(trainData);
-        ObjectDetectionRecordReader recordReaderTest = new ObjectDetectionRecordReader(yoloheight, yolowidth, nChannels,
-                gridHeight, gridWidth, new LabelImgXmlLabelProvider(testDir));
-
-        recordReaderTest.initialize(testData);
-
-        RecordReaderDataSetIterator train = new RecordReaderDataSetIterator(recordReaderTrain, batchSize, 1, 1, true);
-        train.setPreProcessor(new ImagePreProcessingScaler(0, 1));
-        RecordReaderDataSetIterator test = new RecordReaderDataSetIterator(recordReaderTest, 1, 1, 1, true);
-        test.setPreProcessor(new ImagePreProcessingScaler(0, 1));
-
-        //         STEP 3.1 : Determine the list of available labels
-        labels = train.getLabels();
+        labels = trainIter.getLabels();
 
         //        If model does not exist, train the model, else directly go to model evaluation and then run real time object detection inference.
         if (modelFilename.exists()) {
-        //        STEP 4 : Load trained model from previous execution
+        //        STEP 2 : Load trained model from previous execution
             Nd4j.getRandom().setSeed(seed);
             log.info("Load model...");
             model = ModelSerializer.restoreComputationGraph(modelFilename);
@@ -135,19 +95,22 @@ public class AvocadoBananaDetector_YOLOv2 {
             ComputationGraph pretrained = null;
             FineTuneConfiguration fineTuneConf = null;
             INDArray priors = Nd4j.create(priorBoxes);
-            //     STEP 4 : Train the model using Transfer Learning
-            //     STEP 4.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
+            //     STEP 2 : Train the model using Transfer Learning
+            //     STEP 2.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
             log.info("Build model...");
             pretrained = (ComputationGraph) YOLO2.builder().build().initPretrained();
 
-            //     STEP 4.2: Transfer Learning steps - Model Configurations.
+            //     STEP 2.2: Transfer Learning steps - Model Configurations.
             fineTuneConf = getFineTuneConfiguration();
 
-            //     STEP 4.3: Transfer Learning steps - Modify prebuilt model's architecture
+            //     STEP 2.3: Transfer Learning steps - Modify prebuilt model's architecture
             model = getNewComputationGraph(pretrained, priors, fineTuneConf);
-            System.out.println(model.summary(InputType.convolutional(yoloheight, yolowidth, nClasses)));
+            System.out.println(model.summary(InputType.convolutional(
+                    FruitDataSetIterator.yoloheight,
+                    FruitDataSetIterator.yolowidth,
+                    nClasses)));
 
-            //     STEP 4.4: Training and Save model.
+            //     STEP 2.4: Training and Save model.
             log.info("Train model...");
             UIServer server = UIServer.getInstance();
             StatsStorage storage = new InMemoryStatsStorage();
@@ -155,23 +118,24 @@ public class AvocadoBananaDetector_YOLOv2 {
             model.setListeners(new ScoreIterationListener(1), new StatsListener(storage));
 
             for (int i = 1; i < nEpochs+1; i++) {
-                train.reset();
-                while (train.hasNext()) {
-                    model.fit(train.next());
+                trainIter.reset();
+                while (trainIter.hasNext()) {
+                    model.fit(trainIter.next());
                 }
                 log.info("*** Completed epoch {} ***", i);
             }
             ModelSerializer.writeModel(model, modelFilename, true);
             System.out.println("Model saved.");
         }
-        //     STEP 5: Training and Save model.
-        OfflineValidationWithTestDataset(test);
-        //     STEP 6: Training and Save model.
+        //     STEP 3: Evaluate the model's accuracy by using the test iterator.
+        OfflineValidationWithTestDataset(testIter);
+        //     STEP 4: Inference the model and process the webcam stream and make predictions.
         doInference();
     }
 
     private static ComputationGraph getNewComputationGraph(ComputationGraph pretrained, INDArray priors, FineTuneConfiguration fineTuneConf) {
-        ComputationGraph _ComputationGraph = new TransferLearning.GraphBuilder(pretrained)
+
+        return new TransferLearning.GraphBuilder(pretrained)
                 .fineTuneConfiguration(fineTuneConf)
                 .removeVertexKeepConnections("conv2d_23")
                 .removeVertexKeepConnections("outputs")
@@ -187,20 +151,18 @@ public class AvocadoBananaDetector_YOLOv2 {
                         "leaky_re_lu_22")
                 .addLayer("outputs",
                         new Yolo2OutputLayer.Builder()
-                                .lambbaNoObj(lambdaNoObj)
+                                .lambdaNoObj(lambdaNoObj)
                                 .lambdaCoord(lambdaCoord)
                                 .boundingBoxPriors(priors.castTo(DataType.FLOAT))
                                 .build(),
                         "conv2d_23")
                 .setOutputs("outputs")
                 .build();
-
-        return _ComputationGraph;
     }
 
     private static FineTuneConfiguration getFineTuneConfiguration() {
 
-        FineTuneConfiguration _FineTuneConfiguration = new FineTuneConfiguration.Builder()
+        return new FineTuneConfiguration.Builder()
                 .seed(seed)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .gradientNormalization(GradientNormalization.RenormalizeL2PerLayer)
@@ -211,8 +173,6 @@ public class AvocadoBananaDetector_YOLOv2 {
                 .trainingWorkspaceMode(WorkspaceMode.ENABLED)
                 .inferenceWorkspaceMode(WorkspaceMode.ENABLED)
                 .build();
-
-        return _FineTuneConfiguration;
     }
 
 //    Evaluate visually the performance of the trained object detection model
@@ -242,15 +202,15 @@ public class AvocadoBananaDetector_YOLOv2 {
                 double[] xy1 = obj.getTopLeftXY();
                 double[] xy2 = obj.getBottomRightXY();
                 String label = labels.get(obj.getPredictedClass());
-                int x1 = (int) Math.round(w * xy1[0] / gridWidth);
-                int y1 = (int) Math.round(h * xy1[1] / gridHeight);
-                int x2 = (int) Math.round(w * xy2[0] / gridWidth);
-                int y2 = (int) Math.round(h * xy2[1] / gridHeight);
+                int x1 = (int) Math.round(w * xy1[0] / FruitDataSetIterator.gridWidth);
+                int y1 = (int) Math.round(h * xy1[1] / FruitDataSetIterator.gridHeight);
+                int x2 = (int) Math.round(w * xy2[0] / FruitDataSetIterator.gridWidth);
+                int y2 = (int) Math.round(h * xy2[1] / FruitDataSetIterator.gridHeight);
                 //Draw bounding box
                 rectangle(convertedMat_big, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
                 //Display label text
                 labeltext =label+" "+(Math.round(obj.getConfidence()*100.0)/100.0)*100.0 +"%";
-                int baseline[]={0};
+                int[] baseline ={0};
                 Size textSize=getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1,1,baseline);
                 rectangle(convertedMat_big, new Point(x1 + 2, y2 - 2), new Point(x1 + 2+textSize.get(0), y2 - 2-textSize.get(1)), colormap[obj.getPredictedClass()], FILLED,0,0);
                 putText(convertedMat_big, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0,0,0));
@@ -267,7 +227,11 @@ public class AvocadoBananaDetector_YOLOv2 {
         String cameraPos = "front";
         int cameraNum = 0;
         Thread thread = null;
-        NativeImageLoader loader = new NativeImageLoader(yolowidth, yoloheight, 3, new ColorConversionTransform(COLOR_BGR2RGB));
+        NativeImageLoader loader = new NativeImageLoader(
+                FruitDataSetIterator.yolowidth,
+                FruitDataSetIterator.yoloheight,
+                3,
+                new ColorConversionTransform(COLOR_BGR2RGB));
         ImagePreProcessingScaler scaler = new ImagePreProcessingScaler(0, 1);
 
         if( !cameraPos.equals("front") && !cameraPos.equals("back") )
@@ -332,7 +296,7 @@ public class AvocadoBananaDetector_YOLOv2 {
                             }
 
                             Mat resizeImage = new Mat();
-                            resize(rawImage, resizeImage, new Size(yolowidth, yoloheight));
+                            resize(rawImage, resizeImage, new Size(FruitDataSetIterator.yolowidth, FruitDataSetIterator.yoloheight));
 
                             INDArray inputImage = loader.asMatrix(resizeImage);
                             scaler.transform(inputImage);
@@ -346,15 +310,15 @@ public class AvocadoBananaDetector_YOLOv2 {
                                 double[] xy1 = obj.getTopLeftXY();
                                 double[] xy2 = obj.getBottomRightXY();
                                 String label = labels.get(obj.getPredictedClass());
-                                int x1 = (int) Math.round(w * xy1[0] / gridWidth);
-                                int y1 = (int) Math.round(h * xy1[1] / gridHeight);
-                                int x2 = (int) Math.round(w * xy2[0] / gridWidth);
-                                int y2 = (int) Math.round(h * xy2[1] / gridHeight);
+                                int x1 = (int) Math.round(w * xy1[0] / FruitDataSetIterator.gridWidth);
+                                int y1 = (int) Math.round(h * xy1[1] / FruitDataSetIterator.gridHeight);
+                                int x2 = (int) Math.round(w * xy2[0] / FruitDataSetIterator.gridWidth);
+                                int y2 = (int) Math.round(h * xy2[1] / FruitDataSetIterator.gridHeight);
                                 //Draw bounding box
                                 rectangle(rawImage, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
                                 //Display label text
                                 labeltext =label+" "+(Math.round(obj.getConfidence()*100.0)/100.0)*100.0 +"%";
-                                int baseline[]={0};
+                                int[] baseline ={0};
                                 Size textSize=getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1,1,baseline);
                                 rectangle(rawImage, new Point(x1 + 2, y2 - 2), new Point(x1 + 2+textSize.get(0), y2 - 2-textSize.get(1)), colormap[obj.getPredictedClass()], FILLED,0,0);
                                 putText(rawImage, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0,0,0));
@@ -381,42 +345,6 @@ public class AvocadoBananaDetector_YOLOv2 {
                 break;
             }
         }
-    }
-
-    //To unzip the training and test datset
-    public static void unzip(String source, String destination){
-        try {
-            ZipFile zipFile = new ZipFile(source);
-            zipFile.extractAll(destination);
-        } catch (ZipException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void unzipAllDataSet(){
-        //unzip training data set
-        File resourceDir = new File(System.getProperty("user.home"), ".deeplearning4j/data/fruits");
-        if (!resourceDir.exists()) resourceDir.mkdirs();
-
-        String zipTrainFilePath = null;
-        String zipTestFilePath = null;
-        try {
-            zipTrainFilePath  = new ClassPathResource("fruits/train.zip").getFile().toString();
-            zipTestFilePath  = new ClassPathResource("fruits/test.zip").getFile().toString();
-            System.out.println(zipTrainFilePath);
-            System.out.println(zipTestFilePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        File trainFolder = new File(resourceDir+"/train");
-        if (!trainFolder.exists()) unzip(zipTrainFilePath, resourceDir.toString());
-        System.out.println("unziptrain done");
-        System.out.println(trainFolder);
-
-        File testFolder = new File(resourceDir+"/test");
-        if (!testFolder.exists()) unzip(zipTestFilePath, resourceDir.toString());
-        System.out.println(testFolder);
-        System.out.println("unziptest done");
     }
 }
 
