@@ -1,92 +1,65 @@
 package global.skymind.solution.facial_recognition;
 
-import org.bytedeco.javacv.Frame;
-import org.bytedeco.javacv.FrameGrabber;
-import org.bytedeco.javacv.OpenCVFrameConverter;
+import global.skymind.solution.facial_recognition.detection.FaceDetector;
+import global.skymind.solution.facial_recognition.detection.FaceLocalization;
+import global.skymind.solution.facial_recognition.detection.OpenCV_DeepLearningFaceDetector;
+import global.skymind.solution.facial_recognition.detection.OpenCV_HaarCascadeFaceDetector;
 import org.bytedeco.opencv.opencv_core.*;
-import org.nd4j.linalg.io.ClassPathResource;
+import org.bytedeco.opencv.opencv_videoio.VideoCapture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static global.skymind.solution.facial_recognition.detection.FaceDetector.OPENCV_DL_FACEDETECTOR;
+import static global.skymind.solution.facial_recognition.detection.FaceDetector.OPENCV_HAAR_CASCADE_FACEDETECTOR;
 import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_highgui.*;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
-import org.bytedeco.opencv.opencv_objdetect.CascadeClassifier;
+import static org.bytedeco.opencv.global.opencv_videoio.CAP_PROP_FRAME_HEIGHT;
+import static org.bytedeco.opencv.global.opencv_videoio.CAP_PROP_FRAME_WIDTH;
+
+import java.io.IOException;
+import java.util.List;
 
 
 public class FaceRecognitionWebcam {
     private static final Logger log = LoggerFactory.getLogger(FaceRecognitionWebcam.class);
-    private static Frame frame = null;
-    private static Mat gray = new Mat();
-    private static Mat rawImageClone = new Mat();
-    private static Mat face = new Mat();
-    private static Mat rawImage = new Mat();
+    private static final int WIDTH = 1280;
+    private static final int HEIGHT = 720;
+    private static final String outputWindowsName = "Face Recognition Example - DL4J";
 
     public static void main(String[] args) throws Exception {
-        String fdmodel_path = new ClassPathResource("fdmodel/haarcascade_frontalface_default.xml").getFile().toString();
-        CascadeClassifier face_cascade = new CascadeClassifier(fdmodel_path);
-        doInference(face_cascade);
-    }
+        FaceDetector FaceDetector = getFaceDetector(OPENCV_HAAR_CASCADE_FACEDETECTOR);
+//        FaceDetector FaceDetector = getFaceDetector(OPENCV_DL_FACEDETECTOR);//        FaceIdentifier FaceIdentifier = getFaceIdentifier(com.skymindglobal.faceverification.identification.FaceIdentifier.FEATURE_DISTANCE_RAMOK_FACENET_PREBUILT);
 
-    // Stream video frames from Webcam and get face detection
-    private static void doInference(CascadeClassifier cascade) {
+        VideoCapture capture = new VideoCapture();
+        capture.set(CAP_PROP_FRAME_WIDTH, WIDTH);
+        capture.set(CAP_PROP_FRAME_HEIGHT, HEIGHT);
+        namedWindow(outputWindowsName, WINDOW_NORMAL);
+        resizeWindow(outputWindowsName, 1280, 720);
 
-        OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
-
-        String cameraPos = "front";
-        int cameraNum = 0;
-
-        if (!cameraPos.equals("front") && !cameraPos.equals("back")) {
-            try {
-                throw new Exception("Unknown argument for camera position. Choose between front and back");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (!capture.open(0)) {
+            System.out.println("Can not open the camera !!!");
         }
 
-        FrameGrabber grabber = null;
-        try {
-            grabber = FrameGrabber.createDefault(cameraNum);
-        } catch (FrameGrabber.Exception e) {
-            e.printStackTrace();
-        }
+        Mat image = new Mat();
 
-        try {
-            grabber.start();
-        } catch (FrameGrabber.Exception e) {
-            e.printStackTrace();
-        }
-        //Change the minimum and maximum sizes for face detection
-        Size minSize = new Size(100, 100);
-        Size maxSize = new Size(1000, 1000);
+        while (capture.read(image)) {
+            Mat cloneCopy = new Mat();
 
-        while (true) {
-            try {
-                frame = grabber.grab();
-            } catch (FrameGrabber.Exception e) {
-                e.printStackTrace();
-            }
+            // face detection
+            image.copyTo(cloneCopy);
 
-            //Flip the camera if opening front camera
-            if (cameraPos.equals("front")) {
-                Mat inputImage = converter.convert(frame);
-                flip(inputImage, rawImage, 1);
-            } else {
-                rawImage = converter.convert(frame);
-            }
+            FaceDetector.detectFaces(cloneCopy);
+            List<FaceLocalization> faceLocalizations = FaceDetector.getFaceLocalization();
+            annotateFaces(faceLocalizations, image);
 
-            cvtColor(rawImage, gray, COLOR_BGR2GRAY);
-            rawImageClone = rawImage.clone();
-            RectVector faces = new RectVector();
-            cascade.detectMultiScale(gray, faces, 1.3, 5, 0, minSize, maxSize);
+            // face identification
+            //                image.copyTo(cloneCopy);
+            //                List<List<Prediction>> faceIdentities = FaceIdentifier.identify(faceLocalizations, cloneCopy);
+            //                labelIndividual(faceIdentities, image);
 
-            for (int i = 0; i < faces.size(); i++) {
-                Rect face_i = faces.get(i);
-                rectangle(rawImage, face_i, new Scalar(255, 0, 0, 1), 2, 8, 0);
-                face = new Mat(rawImageClone, face_i);
-                imshow("Cropped Face", face);
-            }
-            imshow("Original", rawImage);
+            flip(image, image, 1);
+            imshow(outputWindowsName, image);
 
             char key = (char) waitKey(20);
             // Exit this loop on escape:
@@ -96,6 +69,21 @@ public class FaceRecognitionWebcam {
             }
         }
     }
+
+    private static FaceDetector getFaceDetector(String faceDetector) throws IOException {
+        switch (faceDetector) {
+            case OPENCV_HAAR_CASCADE_FACEDETECTOR:
+                return new OpenCV_HaarCascadeFaceDetector();
+            case OPENCV_DL_FACEDETECTOR:
+                return new OpenCV_DeepLearningFaceDetector(300, 300, 0.8);
+            default:
+                return  null;
+        }
+    }
+
+    private static void annotateFaces(List<FaceLocalization> faceLocalizations, Mat image) {
+        for (FaceLocalization i : faceLocalizations){
+            rectangle(image,new Rect(new Point((int) i.getLeft_x(),(int) i.getLeft_y()), new Point((int) i.getRight_x(),(int) i.getRight_y())), new Scalar(0, 255, 0, 0),2,8,0);
+        }
+    }
 }
-
-
