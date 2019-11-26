@@ -52,8 +52,8 @@ public class SimplestNetwork
 		Declare the input and output data in INDArray format
         */
 
-        INDArray input = Nd4j.create(new float[]{(float) 0.5}, new int[]{1,1});
-        INDArray output = Nd4j.create(new float[]{(float) 0.8}, new int[]{1,1});
+        INDArray input = Nd4j.create(new float[]{(float) 0.5}, 1,1);
+        INDArray output = Nd4j.create(new float[]{(float) 0.8}, 1,1);
 
 
         /*

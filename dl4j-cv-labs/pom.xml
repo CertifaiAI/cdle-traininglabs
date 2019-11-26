@@ -186,7 +186,7 @@
             <version>${zip4j.version}</version>
         </dependency>
 
-        <!-- For running opencv and ffmpeg libraries -->
+      <!-- For running opencv and ffmpeg libraries -->
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>javacv</artifactId>
@@ -224,8 +224,11 @@
         <!--            <version>${bytedeco-javacpp-presets-v10.version}</version>-->
         <!--            <classifier>linux-x86_64-redist | linux-ppc64le-redist | macosx-x86_64-redist | windows-x86_64-redist</classifier>-->
         <!--        </dependency>-->
+            <groupId>org.bytedeco</groupId>  
+            <artifactId>openblas-platform</artifactId>
+            <version>${openblas-platform.version}</version>
+        </dependency>
     </dependencies>
-
 
     <build>
         <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
@@ -270,7 +273,6 @@
             </plugins>
         </pluginManagement>
     </build>
-
     <reporting>
         <plugins>
             <plugin>

@@ -1,0 +1,26 @@
+<annotation>
+	<folder>data</folder>
+	<filename>8098273219_4ec7961a6d_n.jpg</filename>
+	<path>C:\Users\choowilson\Desktop\TinyYOLO\src\main\resources\data\8098273219_4ec7961a6d_n.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>416</width>
+		<height>319</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>banana</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>47</xmin>
+			<ymin>10</ymin>
+			<xmax>391</xmax>
+			<ymax>289</ymax>
+		</bndbox>
+	</object>
+</annotation>
