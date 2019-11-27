@@ -45,8 +45,10 @@ This repo contains codes for hands-on purpose during training session.
 - [ImageClassification/TransferLearning](https://github.com/skymindglobal/TrainingLabs/tree/imageclassification/dl4j-cv-labs/src/main/java/global/skymind/solution/classification/transferlearning):
   Dog breed classification using transfer learning.
 - [ObjectDetection/YOLO](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-cv-labs/src/main/java/global/skymind/solution/object_detection): Avocado and Banana Object Detection model using Transfer learning of TinyYOLO and YOLOv2.
-- [segmentation/PretrainedUNET](https://github.com/skymindglobal/TrainingLabs/tree/segmentation/dl4j-cv-labs/src/main/java/global/skymind/solution/segmentation/PretrainedUNET): Semantic segmentation on the Cell nucleus image from Data Science Bowl 2018, using a Pre-trained U-Net.
-- [segmentation/ImageAugmentation](https://github.com/skymindglobal/TrainingLabs/tree/segmentation/dl4j-cv-labs/src/main/java/global/skymind/solution/segmentation/ImageAugmentation): (Optional) Image augmentation to increase samples, if required.
+- [Segmentation/PretrainedUNET](https://github.com/skymindglobal/TrainingLabs/tree/segmentation/dl4j-cv-labs/src/main/java/global/skymind/solution/segmentation/PretrainedUNET): Semantic segmentation on the Cell nucleus image from Data Science Bowl 2018, using a Pre-trained U-Net.
+- [Segmentation/ImageAugmentation](https://github.com/skymindglobal/TrainingLabs/tree/segmentation/dl4j-cv-labs/src/main/java/global/skymind/solution/segmentation/ImageAugmentation): (Optional) Image augmentation to increase samples, if required.
+- [FacialRecognition]() Perform facial recognition with a pipeline of video streaming->face detection->face recognition.
+
 #### Spark-Lab
 - [HelloWorldSpark](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-spark-labs/src/main/java/global/skymind)
 

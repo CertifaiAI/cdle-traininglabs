@@ -27,7 +27,16 @@ import static org.bytedeco.opencv.global.opencv_videoio.CAP_PROP_FRAME_WIDTH;
 
 import java.io.IOException;
 import java.util.List;
-
+/**
+ * This is an example of a simple face recognition pipeline.
+ * The pipeline starts from video streaming -> face detection -> face recognition
+ * Face detection can be done using traditional CV (Haar Cascade) or Deep Learning (SSD)
+ * Face recognition is done by matching the input face with the face in the database that has the smallest distance
+ *
+ * Distance can be calculated either by Euclidean distance or Cosine Similarity
+ * Face database is located in the resource folder "FaceDB"
+ * User can add or remove faces and group them in a same folder and the folder name will act as the Label
+ * **/
 
 public class FaceRecognitionWebcam {
     private static final Logger log = LoggerFactory.getLogger(FaceRecognitionWebcam.class);
@@ -36,11 +45,12 @@ public class FaceRecognitionWebcam {
     private static final String outputWindowsName = "Face Recognition Example - DL4J";
 
     public static void main(String[] args) throws Exception {
-
-        //        Switch between FaceDetector and FaceIdentifier to test different capabilities
+        //        STEP 1 : Select your face detector and face identifier
+        //        You can switch between different FaceDetector and FaceIdentifier options to test its performance
         FaceDetector FaceDetector = getFaceDetector(OPENCV_HAAR_CASCADE_FACEDETECTOR);
         FaceIdentifier FaceIdentifier = getFaceIdentifier(FEATURE_DISTANCE_RAMOK_FACENET_PREBUILT);
 
+        //        STEP 2 : Stream the video frame from camera
         VideoCapture capture = new VideoCapture();
         capture.set(CAP_PROP_FRAME_WIDTH, WIDTH);
         capture.set(CAP_PROP_FRAME_HEIGHT, HEIGHT);
@@ -48,7 +58,7 @@ public class FaceRecognitionWebcam {
         resizeWindow(outputWindowsName, 1280, 720);
 
         if (!capture.open(0)) {
-            System.out.println("Can not open the camera !!!");
+            System.out.println("Cannot open the camera !!!");
         }
 
         Mat image = new Mat();
@@ -57,17 +67,18 @@ public class FaceRecognitionWebcam {
         while (capture.read(image)) {
             flip(image, image, 1);
 
-            // Perform face detection
+            //        STEP 3 : Perform face detection
             image.copyTo(cloneCopy);
             FaceDetector.detectFaces(cloneCopy);
             List<FaceLocalization> faceLocalizations = FaceDetector.getFaceLocalization();
             annotateFaces(faceLocalizations, image);
 
-            // Perform face recognition
+            //        STEP 4 : Perform face recognition
             image.copyTo(cloneCopy);
             List<List<Prediction>> faceIdentities = FaceIdentifier.recognize(faceLocalizations, cloneCopy);
             labelIndividual(faceIdentities, image);
 
+            //        STEP 5 : Display output in a window
             imshow(outputWindowsName, image);
 
             char key = (char) waitKey(20);
@@ -90,6 +101,12 @@ public class FaceRecognitionWebcam {
         }
     }
 
+    //        Interface to change between different face recognition class
+    //        Modify values below to tweak the performance
+    //          *numPredictions: number of face to predict in an inference
+    //          *threshold: threshold to check if the face detected is in the database
+    //          *numSamples: the top n-number of samples that has the highest confidence
+
     private static FaceIdentifier getFaceIdentifier(String faceIdentifier) throws IOException, ClassNotFoundException {
         switch (faceIdentifier) {
             case FaceIdentifier.FEATURE_DISTANCE_VGG16_PREBUILT:
@@ -104,6 +121,7 @@ public class FaceRecognitionWebcam {
                 return null;
         }
     }
+
     //    Method to draw the predicted bounding box of the detected face
     private static void annotateFaces(List<FaceLocalization> faceLocalizations, Mat image) {
         for (FaceLocalization i : faceLocalizations){
