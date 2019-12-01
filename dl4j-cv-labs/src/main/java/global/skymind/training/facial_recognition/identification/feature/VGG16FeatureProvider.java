@@ -1,7 +1,7 @@
 package global.skymind.training.facial_recognition.identification.feature;
 
-import global.skymind.training.facial_recognition.detection.FaceLocalization;
-import global.skymind.training.facial_recognition.identification.Prediction;
+import global.skymind.solution.facial_recognition.detection.FaceLocalization;
+import global.skymind.solution.facial_recognition.identification.Prediction;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.bytedeco.opencv.opencv_core.Size;
 import org.datavec.api.io.labels.ParentPathLabelGenerator;
@@ -67,7 +67,7 @@ public class VGG16FeatureProvider extends FaceFeatureProvider {
                 .mapToInt(i -> tempArray[tempArray.length - i]);
     }
 
-    public List<Prediction> predict(Mat image, FaceLocalization faceLocalization, int numPredictions, double threshold, int numSamples) throws IOException {
+    public List<Prediction> predict(Mat image, FaceLocalization faceLocalization, double threshold, int numSamples) throws IOException {
         NativeImageLoader nativeImageLoader = new NativeImageLoader();
         resize(image, image, new Size(224, 224));
         INDArray _image = nativeImageLoader.asMatrix(image);
@@ -103,9 +103,9 @@ public class VGG16FeatureProvider extends FaceFeatureProvider {
         Collections.reverse(summary);
 
         List<Prediction> result = new ArrayList();
-        for(int i=0; i<numPredictions; i++){
+        for(int i=0; i<1; i++){
             if(i<summary.size()) {
-                result.add(summary.get(i));
+            result.add(summary.get(i));
             }
         }
         return result;
