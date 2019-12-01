@@ -15,14 +15,13 @@ import java.util.List;
 public class DistanceFaceIdentifier extends FaceIdentifier {
     private static final Logger log = LoggerFactory.getLogger(DistanceFaceIdentifier.class);
     private final FaceFeatureProvider _FaceFeatureProvider;
-    private final int numPredictions;
     private final double threshold;
     private final int numSamples;
 
-    public DistanceFaceIdentifier(FaceFeatureProvider faceFeatureProvider, File dictDir, int numPredictions, double threshold, int numSamples) throws IOException, ClassNotFoundException {
-        this._FaceFeatureProvider = faceFeatureProvider;
+     public DistanceFaceIdentifier(FaceFeatureProvider faceFeatureProvider, File dictDir, double threshold, int numSamples) throws IOException, ClassNotFoundException {
+
+            this._FaceFeatureProvider = faceFeatureProvider;
         _FaceFeatureProvider.setupAnchor(dictDir);
-        this.numPredictions = numPredictions;
         this.threshold = threshold;
         this.numSamples = numSamples;
     }
@@ -42,7 +41,8 @@ public class DistanceFaceIdentifier extends FaceIdentifier {
 
             // Get a collection of predictions
             List<Prediction> predictions = _FaceFeatureProvider.predict(
-                    crop_image, faceLocalizations.get(i), this.numPredictions, this.threshold, this.numSamples);
+            crop_image, faceLocalizations.get(i), this.threshold, this.numSamples);
+
             collection.add(predictions);
         }
         return collection;

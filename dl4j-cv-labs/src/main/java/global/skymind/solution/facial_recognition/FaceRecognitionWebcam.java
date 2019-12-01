@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * This is an example of a simple face recognition pipeline.
  * The pipeline starts from video streaming -> face detection -> face recognition
- * Face detection can be done using traditional CV (Haar Cascade) or Deep Learning (SSD)
+ * Face detection can be done using traditional CV ( Haar Cascade ) or Deep Learning ( Single Shot Detector(SSD) )
  * Face recognition is done by matching the input face with the face in the database that has the smallest distance
  *
  * Distance can be calculated either by Euclidean distance or Cosine Similarity
@@ -103,20 +103,19 @@ public class FaceRecognitionWebcam {
 
     //        Interface to change between different face recognition class
     //        Modify values below to tweak the performance
-    //          *numPredictions: number of face to predict in an inference
-    //          *threshold: threshold to check if the face detected is in the database
-    //          *numSamples: the top n-number of samples that has the highest confidence
+    //          *threshold: threshold to check if the detected face is within the database, do not label the face if lower than threshold
+    //          *numSamples: the top n-number of samples that has the highest confidence that is use for averaging
 
     private static FaceIdentifier getFaceIdentifier(String faceIdentifier) throws IOException, ClassNotFoundException {
         switch (faceIdentifier) {
             case FaceIdentifier.FEATURE_DISTANCE_VGG16_PREBUILT:
                 return new DistanceFaceIdentifier(
                         new VGG16FeatureProvider(),
-                        new ClassPathResource("FaceDB").getFile(), 1, 0.3, 3);
+                        new ClassPathResource("FaceDB").getFile(), 0.3, 3);
             case FaceIdentifier.FEATURE_DISTANCE_RAMOK_FACENET_PREBUILT:
                 return new DistanceFaceIdentifier(
                         new RamokFaceNetFeatureProvider(),
-                        new ClassPathResource("FaceDB").getFile(), 1, 0.3, 3);
+                        new ClassPathResource("FaceDB").getFile(), 0.3, 3);
             default:
                 return null;
         }
