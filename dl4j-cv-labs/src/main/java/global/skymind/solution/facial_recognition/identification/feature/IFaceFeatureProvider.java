@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 interface IFaceFeatureProvider {
-    public INDArray getEmbeddings(INDArray arr);
-    public ArrayList<LabelFeaturePair> setupAnchor(File classDict) throws IOException, ClassNotFoundException;
-    public List<Prediction> predict(Mat image, FaceLocalization faceLocalization, int numPredictions, double threshold, int numSamples) throws IOException;
+    INDArray getEmbeddings(INDArray arr);
+    ArrayList<LabelFeaturePair> setupAnchor(File classDict) throws IOException, ClassNotFoundException;
+    List<Prediction> predict(Mat image, FaceLocalization faceLocalization, double threshold, int numSamples) throws IOException;
+
 }

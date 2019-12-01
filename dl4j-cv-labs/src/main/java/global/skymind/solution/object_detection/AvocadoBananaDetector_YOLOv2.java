@@ -51,6 +51,13 @@ import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
+///**
+// * This is an example of a object detection using YOLOv2 architecture.
+// * If no model exists, train a model using Transfer Learning, then validate with test set
+// * If model exists, Validate model with test set and run real time inference on webcam frames.
+// * This model can detect avocado and banana in a single frame or live webcam frames.
+// * **/
+
 public class AvocadoBananaDetector_YOLOv2 {
     private static final Logger log = LoggerFactory.getLogger(AvocadoBananaDetector_YOLOv2.class);
     private static int seed = 123;

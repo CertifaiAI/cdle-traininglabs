@@ -51,6 +51,13 @@ import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
+///**
+// * This is an example of a object detection using YOLOv2 architecture.
+// * If no model exists, train a model using Transfer Learning, then validate with test set
+// * If model exists, Validate model with test set and run real time inference on webcam frames.
+// * This model can detect avocado and banana in a single frame or live webcam frames.
+// * **/
+
 public class AvocadoBananaDetector_YOLOv2 {
     private static final Logger log = LoggerFactory.getLogger(AvocadoBananaDetector_YOLOv2.class);
     private static int seed = 123;
@@ -76,25 +83,22 @@ public class AvocadoBananaDetector_YOLOv2 {
 
     public static void main(String[] args) throws Exception {
 
-//        FruitDataSetIterator.setup();
+        FruitDataSetIterator.setup();
 
         //        STEP 1 : Create iterators
-//        RecordReaderDataSetIterator trainIter = FruitDataSetIterator.trainIterator();
-//        RecordReaderDataSetIterator testIter = FruitDataSetIterator.testIterator(1);
-//
-//        labels = trainIter.getLabels();
+
 
         //        If model does not exist, train the model, else directly go to model evaluation and then run real time object detection inference.
 //        if (modelFilename.exists()) {
         //        STEP 2 : Load trained model from previous execution
 //            Nd4j.getRandom().setSeed(seed);
 //            log.info("Load model...");
-//            model = ModelSerializer.restoreComputationGraph(modelFilename);
+//            model = ModelSerializer.restoreComputationGraph();
 //        } else {
 //            Nd4j.getRandom().setSeed(seed);
 //            ComputationGraph pretrained = null;
 //            FineTuneConfiguration fineTuneConf = null;
-//            INDArray priors = Nd4j.create(priorBoxes);
+//            INDArray priors = Nd4j.create();
             //     STEP 2 : Train the model using Transfer Learning
             //     STEP 2.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
 //            log.info("Build model...");
@@ -142,7 +146,7 @@ public class AvocadoBananaDetector_YOLOv2 {
 //                .addLayer("conv2d_23",
 //                        new ConvolutionLayer.Builder(1, 1)
 //                                .nIn(1024)
-//                                .nOut(nBoxes * (5 + nClasses))
+//                                .nOut()
 //                                .stride(1, 1)
 //                                .convolutionMode(ConvolutionMode.Same)
 //                                .weightInit(WeightInit.XAVIER)
@@ -150,7 +154,7 @@ public class AvocadoBananaDetector_YOLOv2 {
 //                                .build(),
 //                        "leaky_re_lu_22")
 //                .addLayer("outputs",
-//                        new Yolo2OutputLayer.Builder()
+//                        new .Builder()
 //                                .lambdaNoObj(lambdaNoObj)
 //                                .lambdaCoord(lambdaCoord)
 //                                .boundingBoxPriors(priors.castTo(DataType.FLOAT))

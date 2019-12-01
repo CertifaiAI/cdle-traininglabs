@@ -47,7 +47,7 @@ This repo contains codes for hands-on purpose during training session.
 - [ObjectDetection/YOLO](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-cv-labs/src/main/java/global/skymind/solution/object_detection): Avocado and Banana Object Detection model using Transfer learning of TinyYOLO and YOLOv2.
 - [Segmentation/PretrainedUNET](https://github.com/skymindglobal/TrainingLabs/tree/segmentation/dl4j-cv-labs/src/main/java/global/skymind/solution/segmentation/PretrainedUNET): Semantic segmentation on the Cell nucleus image from Data Science Bowl 2018, using a Pre-trained U-Net.
 - [Segmentation/ImageAugmentation](https://github.com/skymindglobal/TrainingLabs/tree/segmentation/dl4j-cv-labs/src/main/java/global/skymind/solution/segmentation/ImageAugmentation): (Optional) Image augmentation to increase samples, if required.
-- [FacialRecognition]() Perform facial recognition with a pipeline of video streaming->face detection->face recognition.
+- [FacialRecognition](https://github.com/skymindglobal/TrainingLabs/blob/master/dl4j-cv-labs/src/main/java/global/skymind/solution/facial_recognition/FaceRecognitionWebcam.java) Perform facial recognition with a pipeline of video streaming->face detection->face recognition.
 
 #### Spark-Lab
 - [HelloWorldSpark](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-spark-labs/src/main/java/global/skymind)

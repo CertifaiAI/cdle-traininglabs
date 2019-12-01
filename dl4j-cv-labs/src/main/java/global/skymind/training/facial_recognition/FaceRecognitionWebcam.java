@@ -9,28 +9,31 @@
 //import global.skymind.training.facial_recognition.identification.Prediction;
 //import global.skymind.training.facial_recognition.identification.feature.RamokFaceNetFeatureProvider;
 //import global.skymind.training.facial_recognition.identification.feature.VGG16FeatureProvider;
-//import org.bytedeco.opencv.opencv_core.*;
+//import org.bytedeco.opencv.opencv_core.Mat;
+//import org.bytedeco.opencv.opencv_core.Point;
+//import org.bytedeco.opencv.opencv_core.Rect;
+//import org.bytedeco.opencv.opencv_core.Scalar;
 //import org.bytedeco.opencv.opencv_videoio.VideoCapture;
 //import org.nd4j.linalg.io.ClassPathResource;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 //
+//import java.io.IOException;
+//import java.util.List;
+//
 //import static global.skymind.training.facial_recognition.detection.FaceDetector.OPENCV_DL_FACEDETECTOR;
 //import static global.skymind.training.facial_recognition.detection.FaceDetector.OPENCV_HAAR_CASCADE_FACEDETECTOR;
 //import static global.skymind.training.facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_RAMOK_FACENET_PREBUILT;
-//import static global.skymind.training.facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_VGG16_PREBUILT;
 //import static org.bytedeco.opencv.global.opencv_core.flip;
 //import static org.bytedeco.opencv.global.opencv_highgui.*;
 //import static org.bytedeco.opencv.global.opencv_imgproc.*;
 //import static org.bytedeco.opencv.global.opencv_videoio.CAP_PROP_FRAME_HEIGHT;
 //import static org.bytedeco.opencv.global.opencv_videoio.CAP_PROP_FRAME_WIDTH;
 //
-//import java.io.IOException;
-//import java.util.List;
 ///**
 // * This is an example of a simple face recognition pipeline.
 // * The pipeline starts from video streaming -> face detection -> face recognition
-// * Face detection can be done using traditional CV (Haar Cascade) or Deep Learning (SSD)
+// * Face detection can be done using traditional CV ( Haar Cascade ) or Deep Learning ( Single Shot Detector(SSD) )
 // * Face recognition is done by matching the input face with the face in the database that has the smallest distance
 // *
 // * Distance can be calculated either by Euclidean distance or Cosine Similarity
@@ -40,15 +43,13 @@
 //
 //public class FaceRecognitionWebcam {
 //    private static final Logger log = LoggerFactory.getLogger(FaceRecognitionWebcam.class);
-//    private static final int WIDTH = ;
-//    private static final int HEIGHT = ;
-//    private static final String outputWindowsName = "";
+//    private static final int WIDTH = 1280;
+//    private static final int HEIGHT = 720;
+//    private static final String outputWindowsName = "Face Recognition Example - DL4J";
 //
 //    public static void main(String[] args) throws Exception {
 //        //        STEP 1 : Select your face detector and face identifier
 //        //        You can switch between different FaceDetector and FaceIdentifier options to test its performance
-//        FaceDetector FaceDetector =
-//        FaceIdentifier FaceIdentifier =
 //
 //        //        STEP 2 : Stream the video frame from camera
 //        VideoCapture capture = new VideoCapture();
@@ -92,7 +93,7 @@
 //            case OPENCV_HAAR_CASCADE_FACEDETECTOR:
 //                return new OpenCV_HaarCascadeFaceDetector();
 //            case OPENCV_DL_FACEDETECTOR:
-//                return new OpenCV_DeepLearningFaceDetector(300, 300, 0.8);
+//                return new OpenCV_DeepLearningFaceDetector();
 //            default:
 //                return  null;
 //        }
@@ -100,20 +101,17 @@
 //
 //    //        Interface to change between different face recognition class
 //    //        Modify values below to tweak the performance
-//    //          *numPredictions: number of face to predict in an inference
-//    //          *threshold: threshold to check if the face detected is in the database
-//    //          *numSamples: the top n-number of samples that has the highest confidence
+//    //          *threshold: threshold to check if the detected face is within the database, do not label the face if lower than threshold
+//    //          *numSamples: the top n-number of samples that has the highest confidence that is use for averaging
 //
 //    private static FaceIdentifier getFaceIdentifier(String faceIdentifier) throws IOException, ClassNotFoundException {
 //        switch (faceIdentifier) {
 //            case FaceIdentifier.FEATURE_DISTANCE_VGG16_PREBUILT:
 //                return new DistanceFaceIdentifier(
-//                        new (),
-//                        new ClassPathResource("").getFile(), );
+//                        );
 //            case FaceIdentifier.FEATURE_DISTANCE_RAMOK_FACENET_PREBUILT:
 //                return new DistanceFaceIdentifier(
-//                        new (),
-//                        new ClassPathResource("").getFile(), );
+//                       );
 //            default:
 //                return null;
 //        }

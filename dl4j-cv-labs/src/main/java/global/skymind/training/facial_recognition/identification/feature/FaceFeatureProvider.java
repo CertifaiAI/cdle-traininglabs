@@ -23,8 +23,8 @@ public class FaceFeatureProvider implements IFaceFeatureProvider {
         return null;
     }
 
-    public List<Prediction> predict(Mat image, FaceLocalization faceLocalization, int numPredictions, double threshold, int numSamples) throws IOException {
-        return null;
+    public List<Prediction> predict(Mat image, FaceLocalization faceLocalization, double threshold, int numSamples) throws IOException {
+            return null;
     }
 
     public int decodeLabelID(INDArray encoded) {
