@@ -1,4 +1,4 @@
-package global.skymind.solution.segmentation;
+package global.skymind.solution.segmentation.cell;
 
 import global.skymind.Helper;
 import global.skymind.solution.segmentation.imageUtils.visualisation;

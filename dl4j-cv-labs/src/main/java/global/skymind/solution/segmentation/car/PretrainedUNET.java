@@ -1,4 +1,4 @@
-package global.skymind.solution.segmentation;
+package global.skymind.solution.segmentation.car;
 
 import global.skymind.Helper;
 import global.skymind.solution.segmentation.imageUtils.visualisation;
@@ -113,11 +113,11 @@ public class PretrainedUNET {
         uiServer.attach(statsStorage);
 
         // STEP 3: Load data into RecordReaderDataSetIterator
-        CellDataSetIterator.setup(batchSize, trainPerc, getImageTransform());
+        CarDataSetIterator.setup(batchSize, trainPerc, getImageTransform());
 
         //Create iterators
-        RecordReaderDataSetIterator imageDataSetTrain = CellDataSetIterator.trainIterator();
-        RecordReaderDataSetIterator imageDataSetVal = CellDataSetIterator.valIterator();
+        RecordReaderDataSetIterator imageDataSetTrain = CarDataSetIterator.trainIterator();
+        RecordReaderDataSetIterator imageDataSetVal = CarDataSetIterator.valIterator();
 
         // Visualisation -  training
         JFrame frame = visualisation.initFrame("Viz");

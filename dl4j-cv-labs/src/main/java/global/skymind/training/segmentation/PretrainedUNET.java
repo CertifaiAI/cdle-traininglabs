@@ -1,7 +1,7 @@
 package global.skymind.training.segmentation;
 
 import global.skymind.Helper;
-import global.skymind.solution.segmentation.CellDataSetIterator;
+import global.skymind.solution.segmentation.car.CarDataSetIterator;
 import global.skymind.training.segmentation.imageUtils.visualisation;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
