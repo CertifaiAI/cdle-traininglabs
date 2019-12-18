@@ -200,10 +200,10 @@ public class PretrainedUNET {
 
             //STEP 5: Complete the code for IOU calculation here
             //Intersection over Union:  TP / (TP + FN + FP)
-            float IOUNuclei = (float)eval.truePositives().get(1) / ((float)eval.truePositives().get(1) + (float)eval.falsePositives().get(1) + (float)eval.falseNegatives().get(1));
-            IOUtotal = IOUtotal + IOUNuclei;
+            float IOUCar = (float)eval.truePositives().get(1) / ((float)eval.truePositives().get(1) + (float)eval.falsePositives().get(1) + (float)eval.falseNegatives().get(1));
+            IOUtotal = IOUtotal + IOUCar;
 
-            System.out.println("IOU Cell Nuclei " + String.format("%.3f", IOUNuclei) );
+            System.out.println("IOU Car " + String.format("%.3f", IOUCar) );
 
             eval.reset();
 
