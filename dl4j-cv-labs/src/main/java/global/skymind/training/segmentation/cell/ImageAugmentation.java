@@ -1,4 +1,4 @@
-package global.skymind.training.segmentation;
+package global.skymind.training.segmentation.cell;
 
 import global.skymind.Helper;
 import org.bytedeco.javacv.Frame;

@@ -1,4 +1,4 @@
-package global.skymind.training.segmentation;
+package global.skymind.training.segmentation.cell;
 
 import org.datavec.api.io.labels.PathLabelGenerator;
 import org.datavec.api.writable.NDArrayWritable;
