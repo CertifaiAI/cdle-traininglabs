@@ -49,6 +49,10 @@ public class CustomLabelGenerator implements PathLabelGenerator {
     public Writable getLabelForPath(String path) {
         try
         {
+
+            /**
+             * ENTER YOUR CODE HERE
+             * **/
             String labelPath = path.replace("inputs", "masks").replace(".jpg","_mask.gif");
 
             NDArrayWritable label = new NDArrayWritable(imageLoader.asMatrix(new File(labelPath)) );

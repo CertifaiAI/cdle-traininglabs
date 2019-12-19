@@ -53,7 +53,7 @@ public class PretrainedUNET {
     private static final int height = 224;
     private static final int width = 224;
     private static final int batchSize = 4;
-    private static final double trainPerc = 0.3;
+    private static final double trainPerc = 0.7;
     private static String modelExportDir;
 
     public static void main(String[] args) throws IOException {
