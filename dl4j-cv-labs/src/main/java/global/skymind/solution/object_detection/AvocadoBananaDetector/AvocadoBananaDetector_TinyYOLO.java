@@ -1,8 +1,8 @@
-//This example uses transfer learning from YOLOv2 pretrained model
+//This example uses transfer learning from TinyYOLO pretrained model
 
-package global.skymind.solution.object_detection;
+package global.skymind.solution.object_detection.AvocadoBananaDetector;
 
-import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
+import global.skymind.solution.object_detection.AvocadoBananaDetector.dataHelpers.NonMaxSuppression;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
@@ -32,7 +32,7 @@ import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
-import org.deeplearning4j.zoo.model.YOLO2;
+import org.deeplearning4j.zoo.model.TinyYOLO;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -52,16 +52,16 @@ import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
 ///**
-// * This is an example of a object detection using YOLOv2 architecture.
+// * This is an example of a object detection using TinyYOLO architecture.
 // * If no model exists, train a model using Transfer Learning, then validate with test set
 // * If model exists, Validate model with test set and run real time inference on webcam frames.
 // * This model can detect avocado and banana in a single frame or live webcam frames.
 // * **/
 
-public class AvocadoBananaDetector_YOLOv2 {
-    private static final Logger log = LoggerFactory.getLogger(AvocadoBananaDetector_YOLOv2.class);
+public class AvocadoBananaDetector_TinyYOLO {
+    private static final Logger log = LoggerFactory.getLogger(AvocadoBananaDetector_TinyYOLO.class);
     private static int seed = 123;
-    private static double detectionThreshold = 0.5;
+    private static double detectionThreshold = 0.3;
     private static int nBoxes = 5;
     private static double lambdaNoObj = 0.5;
     private static double lambdaCoord = 5.0;
@@ -73,7 +73,7 @@ public class AvocadoBananaDetector_YOLOv2 {
     private static int nClasses = 2;
     private static List<String> labels;
 
-    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/AvocadoBananaDetector_yolov2.zip");
+    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/AvocadoBananaDetector_tinyyolo.zip");
     private static ComputationGraph model;
     private static Frame frame = null;
     private static final Scalar GREEN = RGB(0, 255.0, 0);
@@ -105,7 +105,7 @@ public class AvocadoBananaDetector_YOLOv2 {
             //     STEP 2 : Train the model using Transfer Learning
             //     STEP 2.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
             log.info("Build model...");
-            pretrained = (ComputationGraph) YOLO2.builder().build().initPretrained();
+            pretrained = (ComputationGraph) TinyYOLO.builder().build().initPretrained();
 
             //     STEP 2.2: Transfer Learning steps - Model Configurations.
             fineTuneConf = getFineTuneConfiguration();
@@ -144,9 +144,9 @@ public class AvocadoBananaDetector_YOLOv2 {
 
         return new TransferLearning.GraphBuilder(pretrained)
                 .fineTuneConfiguration(fineTuneConf)
-                .removeVertexKeepConnections("conv2d_23")
+                .removeVertexKeepConnections("conv2d_9")
                 .removeVertexKeepConnections("outputs")
-                .addLayer("conv2d_23",
+                .addLayer("conv2d_9",
                         new ConvolutionLayer.Builder(1, 1)
                                 .nIn(1024)
                                 .nOut(nBoxes * (5 + nClasses))
@@ -155,14 +155,14 @@ public class AvocadoBananaDetector_YOLOv2 {
                                 .weightInit(WeightInit.XAVIER)
                                 .activation(Activation.IDENTITY)
                                 .build(),
-                        "leaky_re_lu_22")
+                        "leaky_re_lu_8")
                 .addLayer("outputs",
                         new Yolo2OutputLayer.Builder()
                                 .lambdaNoObj(lambdaNoObj)
                                 .lambdaCoord(lambdaCoord)
                                 .boundingBoxPriors(priors.castTo(DataType.FLOAT))
                                 .build(),
-                        "conv2d_23")
+                        "conv2d_9")
                 .setOutputs("outputs")
                 .build();
     }
@@ -228,7 +228,7 @@ public class AvocadoBananaDetector_YOLOv2 {
         canvas.dispose();
     }
 
-    // Stream video frames from Webcam and run them through YOLOv2 model and get predictions
+    // Stream video frames from Webcam and run them through TinyYOLO model and get predictions
     private static void doInference(){
 
         String cameraPos = "front";

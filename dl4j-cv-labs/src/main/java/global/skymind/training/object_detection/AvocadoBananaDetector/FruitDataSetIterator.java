@@ -1,7 +1,7 @@
-package global.skymind.training.object_detection;
+package global.skymind.training.object_detection.AvocadoBananaDetector;
 
 import global.skymind.Helper;
-import global.skymind.training.object_detection.dataHelpers.LabelImgXmlLabelProvider;
+import global.skymind.training.object_detection.AvocadoBananaDetector.dataHelpers.LabelImgXmlLabelProvider;
 import org.apache.commons.io.FileUtils;
 import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.InputSplit;

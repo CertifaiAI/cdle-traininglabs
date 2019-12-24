@@ -1,4 +1,4 @@
-package global.skymind.solution.object_detection.dataHelpers;
+package global.skymind.solution.object_detection.MetalDefectsDetector.dataHelpers;
 
 import org.apache.commons.io.FilenameUtils;
 import org.datavec.image.recordreader.objdetect.ImageObject;

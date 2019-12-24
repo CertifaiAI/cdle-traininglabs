@@ -1,8 +1,8 @@
-//This example uses transfer learning from TinyYOLO pretrained model
+//This example uses transfer learning from YOLOv2 pretrained model
 
-package global.skymind.solution.object_detection;
+package global.skymind.solution.object_detection.MetalDefectsDetector;
 
-import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
+import global.skymind.solution.object_detection.MetalDefectsDetector.dataHelpers.NonMaxSuppression;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
@@ -32,7 +32,7 @@ import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
-import org.deeplearning4j.zoo.model.TinyYOLO;
+import org.deeplearning4j.zoo.model.YOLO2;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -52,42 +52,46 @@ import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
 ///**
-// * This is an example of a object detection using TinyYOLO architecture.
+// * This is an example of a metal surface defect detection using YOLOv2 architecture.
 // * If no model exists, train a model using Transfer Learning, then validate with test set
-// * If model exists, Validate model with test set and run real time inference on webcam frames.
-// * This model can detect avocado and banana in a single frame or live webcam frames.
+// * If model exists, Validate model with test set.
+// * Data Source: http://faculty.neu.edu.cn/yunhyan/NEU_surface_defect_database.html
 // * **/
 
-public class AvocadoBananaDetector_TinyYOLO {
-    private static final Logger log = LoggerFactory.getLogger(AvocadoBananaDetector_TinyYOLO.class);
+public class MetalSurfaceDefectDetector_YOLOv2 {
+    private static final Logger log = LoggerFactory.getLogger(MetalSurfaceDefectDetector_YOLOv2.class);
     private static int seed = 123;
-    private static double detectionThreshold = 0.3;
+    private static double detectionThreshold = 0.5;
     private static int nBoxes = 5;
     private static double lambdaNoObj = 0.5;
     private static double lambdaCoord = 5.0;
-    private static double[][] priorBoxes = {{1, 3}, {2.5, 6}, {3, 4}, {3.5, 8}, {4, 9}};
+    private static double[][] priorBoxes = {{1, 4}, {2.5, 6}, {3, 1}, {3.5, 8}, {4, 9}};
 
     private static int batchSize = 2;
-    private static int nEpochs = 40;
+    private static int nEpochs = 10;
     private static double learningRate = 1e-4;
-    private static int nClasses = 2;
+    private static int nClasses = 6;
     private static List<String> labels;
 
-    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/AvocadoBananaDetector_tinyyolo.zip");
+    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/MetalSurfaceDefects_yolov2.zip");
     private static ComputationGraph model;
     private static Frame frame = null;
-    private static final Scalar GREEN = RGB(0, 255.0, 0);
-    private static final Scalar YELLOW = RGB(255, 255, 0);
-    private static Scalar[] colormap = {GREEN,YELLOW};
+    public static final Scalar BLUE = RGB(0, 0, 255);
+    public static final Scalar GREEN = RGB(0, 255, 0);
+    public static final Scalar RED = RGB(255, 0, 0);
+    public static final Scalar YELLOW = RGB(255, 225, 0);
+    public static final Scalar PINK = RGB(255, 0, 225);
+    public static final Scalar CYAN = RGB(0, 225, 225);
+    public static Scalar[] colormap = {BLUE,GREEN,RED,YELLOW, PINK, CYAN};
     private static String labeltext = null;
 
     public static void main(String[] args) throws Exception {
 
-        FruitDataSetIterator.setup();
+        MetalDefectDataSetIterator.setup();
 
         //        STEP 1 : Create iterators
-        RecordReaderDataSetIterator trainIter = FruitDataSetIterator.trainIterator(batchSize);
-        RecordReaderDataSetIterator testIter = FruitDataSetIterator.testIterator(1);
+        RecordReaderDataSetIterator trainIter = MetalDefectDataSetIterator.trainIterator(batchSize);
+        RecordReaderDataSetIterator testIter = MetalDefectDataSetIterator.testIterator(1);
 
         labels = trainIter.getLabels();
 
@@ -105,7 +109,7 @@ public class AvocadoBananaDetector_TinyYOLO {
             //     STEP 2 : Train the model using Transfer Learning
             //     STEP 2.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
             log.info("Build model...");
-            pretrained = (ComputationGraph) TinyYOLO.builder().build().initPretrained();
+            pretrained = (ComputationGraph) YOLO2.builder().build().initPretrained();
 
             //     STEP 2.2: Transfer Learning steps - Model Configurations.
             fineTuneConf = getFineTuneConfiguration();
@@ -113,8 +117,8 @@ public class AvocadoBananaDetector_TinyYOLO {
             //     STEP 2.3: Transfer Learning steps - Modify prebuilt model's architecture
             model = getNewComputationGraph(pretrained, priors, fineTuneConf);
             System.out.println(model.summary(InputType.convolutional(
-                    FruitDataSetIterator.yoloheight,
-                    FruitDataSetIterator.yolowidth,
+                    MetalDefectDataSetIterator.yoloheight,
+                    MetalDefectDataSetIterator.yolowidth,
                     nClasses)));
 
             //     STEP 2.4: Training and Save model.
@@ -136,17 +140,15 @@ public class AvocadoBananaDetector_TinyYOLO {
         }
         //     STEP 3: Evaluate the model's accuracy by using the test iterator.
         OfflineValidationWithTestDataset(testIter);
-        //     STEP 4: Inference the model and process the webcam stream and make predictions.
-        doInference();
     }
 
     private static ComputationGraph getNewComputationGraph(ComputationGraph pretrained, INDArray priors, FineTuneConfiguration fineTuneConf) {
 
         return new TransferLearning.GraphBuilder(pretrained)
                 .fineTuneConfiguration(fineTuneConf)
-                .removeVertexKeepConnections("conv2d_9")
+                .removeVertexKeepConnections("conv2d_23")
                 .removeVertexKeepConnections("outputs")
-                .addLayer("conv2d_9",
+                .addLayer("conv2d_23",
                         new ConvolutionLayer.Builder(1, 1)
                                 .nIn(1024)
                                 .nOut(nBoxes * (5 + nClasses))
@@ -155,14 +157,14 @@ public class AvocadoBananaDetector_TinyYOLO {
                                 .weightInit(WeightInit.XAVIER)
                                 .activation(Activation.IDENTITY)
                                 .build(),
-                        "leaky_re_lu_8")
+                        "leaky_re_lu_22")
                 .addLayer("outputs",
                         new Yolo2OutputLayer.Builder()
                                 .lambdaNoObj(lambdaNoObj)
                                 .lambdaCoord(lambdaCoord)
                                 .boundingBoxPriors(priors.castTo(DataType.FLOAT))
                                 .build(),
-                        "conv2d_9")
+                        "conv2d_23")
                 .setOutputs("outputs")
                 .build();
     }
@@ -209,10 +211,10 @@ public class AvocadoBananaDetector_TinyYOLO {
                 double[] xy1 = obj.getTopLeftXY();
                 double[] xy2 = obj.getBottomRightXY();
                 String label = labels.get(obj.getPredictedClass());
-                int x1 = (int) Math.round(w * xy1[0] / FruitDataSetIterator.gridWidth);
-                int y1 = (int) Math.round(h * xy1[1] / FruitDataSetIterator.gridHeight);
-                int x2 = (int) Math.round(w * xy2[0] / FruitDataSetIterator.gridWidth);
-                int y2 = (int) Math.round(h * xy2[1] / FruitDataSetIterator.gridHeight);
+                int x1 = (int) Math.round(w * xy1[0] / MetalDefectDataSetIterator.gridWidth);
+                int y1 = (int) Math.round(h * xy1[1] / MetalDefectDataSetIterator.gridHeight);
+                int x2 = (int) Math.round(w * xy2[0] / MetalDefectDataSetIterator.gridWidth);
+                int y2 = (int) Math.round(h * xy2[1] / MetalDefectDataSetIterator.gridHeight);
                 //Draw bounding box
                 rectangle(convertedMat_big, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
                 //Display label text
@@ -228,131 +230,6 @@ public class AvocadoBananaDetector_TinyYOLO {
         canvas.dispose();
     }
 
-    // Stream video frames from Webcam and run them through TinyYOLO model and get predictions
-    private static void doInference(){
-
-        String cameraPos = "front";
-        int cameraNum = 0;
-        Thread thread = null;
-        NativeImageLoader loader = new NativeImageLoader(
-                FruitDataSetIterator.yolowidth,
-                FruitDataSetIterator.yoloheight,
-                3,
-                new ColorConversionTransform(COLOR_BGR2RGB));
-        ImagePreProcessingScaler scaler = new ImagePreProcessingScaler(0, 1);
-
-        if( !cameraPos.equals("front") && !cameraPos.equals("back") )
-        {
-            try {
-                throw new Exception("Unknown argument for camera position. Choose between front and back");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        FrameGrabber grabber = null;
-        try {
-            grabber = FrameGrabber.createDefault(cameraNum);
-        } catch (FrameGrabber.Exception e) {
-            e.printStackTrace();
-        }
-        OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
-
-        try {
-            grabber.start();
-        } catch (FrameGrabber.Exception e) {
-            e.printStackTrace();
-        }
-
-        String winName = "Object Detection";
-        CanvasFrame canvas = new CanvasFrame(winName);
-
-        int w = grabber.getImageWidth();
-        int h = grabber.getImageHeight();
-
-
-        canvas.setCanvasSize(w, h);
-        while (true)
-        {
-            try {
-                frame = grabber.grab();
-            } catch (FrameGrabber.Exception e) {
-                e.printStackTrace();
-            }
-
-            //if a thread is null, create new thread
-            if (thread == null)
-            {
-                thread = new Thread(() ->
-                {
-                    while (frame != null)
-                    {
-                        try
-                        {
-                            Mat rawImage = new Mat();
-
-                            //Flip the camera if opening front camera
-                            if(cameraPos.equals("front"))
-                            {
-                                Mat inputImage = converter.convert(frame);
-                                flip(inputImage, rawImage, 1);
-                            }
-                            else
-                            {
-                                rawImage = converter.convert(frame);
-                            }
-
-                            Mat resizeImage = new Mat();
-                            resize(rawImage, resizeImage, new Size(FruitDataSetIterator.yolowidth, FruitDataSetIterator.yoloheight));
-
-                            INDArray inputImage = loader.asMatrix(resizeImage);
-                            scaler.transform(inputImage);
-                            INDArray outputs = model.outputSingle(inputImage);
-                            org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout = (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer)model.getOutputLayer(0);
-                            List<DetectedObject> objs = yout.getPredictedObjects(outputs, detectionThreshold);
-                            List<DetectedObject> objects = NonMaxSuppression.getObjects(objs);
-
-                            for (DetectedObject obj : objects) {
-
-                                double[] xy1 = obj.getTopLeftXY();
-                                double[] xy2 = obj.getBottomRightXY();
-                                String label = labels.get(obj.getPredictedClass());
-                                int x1 = (int) Math.round(w * xy1[0] / FruitDataSetIterator.gridWidth);
-                                int y1 = (int) Math.round(h * xy1[1] / FruitDataSetIterator.gridHeight);
-                                int x2 = (int) Math.round(w * xy2[0] / FruitDataSetIterator.gridWidth);
-                                int y2 = (int) Math.round(h * xy2[1] / FruitDataSetIterator.gridHeight);
-                                //Draw bounding box
-                                rectangle(rawImage, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
-                                //Display label text
-                                labeltext =label+" "+(Math.round(obj.getConfidence()*100.0)/100.0)*100.0 +"%";
-                                int[] baseline ={0};
-                                Size textSize=getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1,1,baseline);
-                                rectangle(rawImage, new Point(x1 + 2, y2 - 2), new Point(x1 + 2+textSize.get(0), y2 - 2-textSize.get(1)), colormap[obj.getPredictedClass()], FILLED,0,0);
-                                putText(rawImage, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0,0,0));
-                            }
-                            canvas.showImage(converter.convert(rawImage));
-                        }
-                        catch (Exception e)
-                        {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
-                thread.start();
-            }
-
-            KeyEvent t = null;
-            try {
-                t = canvas.waitKey(33);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            if ((t != null) && (t.getKeyCode() == KeyEvent.VK_Q)) {
-                break;
-            }
-        }
-    }
 }
 
 
