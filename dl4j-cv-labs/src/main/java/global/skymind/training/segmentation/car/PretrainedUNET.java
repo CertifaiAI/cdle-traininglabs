@@ -46,198 +46,134 @@ import static org.bytedeco.opencv.global.opencv_imgproc.CV_RGB2GRAY;
 public class PretrainedUNET {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(
             PretrainedUNET.class);
+    /*
+     * Instructions for this lab exercise:
+     * STEP 1: Complete code in CustomLabelGenerator.java file
+     * STEP 2: Set training hypeparameters.
+     * STEP 3: Configuration of transfer learning.
+     * STEP 4: Load data into RecordReaderDataSetIterator.
+     * STEP 5: Run training anf evaluate model performance.
+     * STEP 6: Hyperparameter Tuning. (Epochs, learning rate etc.)
+     *
+     * */
 
-    private static final String featurizeExtractionLayer = "conv2d_4";
+    //  STEP 2: Set Training hyperparameters here.
+    /**
+     private static final String featurizeExtractionLayer = "conv2d_4";
     private static final long seed = 12345;
-    private static final int nEpochs = 1;
-    private static final int height = 224;
-    private static final int width = 224;
-    private static final int batchSize = 4;
-    private static final double trainPerc = 0.7;
+    private static final int nEpochs = ;
+    private static final int height = ;
+    private static final int width = ;
+    private static final int batchSize = ;
+    private static final double trainPerc = ;
+     **/
+
     private static String modelExportDir;
 
     public static void main(String[] args) throws IOException {
 
-        /*
-         * Instructions for this lab exercise:
-         * STEP 1: Import pretrained UNET (provided in model zoo).
-         * STEP 2: Configuration of transfer learning.
-         * STEP 3: Load data into RecordReaderDataSetIterator.
-         * STEP 4: Run training.
-         * STEP 5: We will use IOU (Intersection Over Union) as our evaluation metric. Complete the code for IOU calculation.
-         * STEP 6: Hyperparameter Tuning. (Epochs, learning rate etc.)
-         *
-         * */
-
-        //STEP 1: Import pretrained UNET (provided in model zoo)
         ZooModel zooModel = UNet.builder().build();
 
         ComputationGraph unet = (ComputationGraph) zooModel.initPretrained(PretrainedType.SEGMENT);
         System.out.println(unet.summary());
 
-        // Set listeners
+
         StatsStorage statsStorage = new InMemoryStatsStorage();
         StatsListener statsListener = new StatsListener(statsStorage);
         ScoreIterationListener scoreIterationListener= new ScoreIterationListener(1);
 
-        //STEP 2: Configuration of transfer learning
-        //STEP 2.1: Set updater and learning rate)
-        FineTuneConfiguration fineTuneConf = new FineTuneConfiguration.Builder()
-                .trainingWorkspaceMode(WorkspaceMode.ENABLED)
-                .updater(new Adam(new StepSchedule(ScheduleType.EPOCH,3e-4,0.5,5 )))
-                .seed(seed)
-                .build();
+        //STEP 3: Configuration of transfer learning
+        /**
+        FineTuneConfiguration fineTuneConf = ;
 
-        //Construct a new model with the intended architecture and print summary
-        //STEP 2.2: Set which pre-trained layer to freeze and use as feature extractor
-        //STEP 2.3: Add a CnnLossLayer to form a Fully Convolutional Network
-        ComputationGraph unetTransfer = new TransferLearning.GraphBuilder(unet)
-                .fineTuneConfiguration(fineTuneConf)
-                .setFeatureExtractor(featurizeExtractionLayer)
-                .removeVertexAndConnections("activation_23")
-                .nInReplace("conv2d_1",1, WeightInit.XAVIER)
-                .nOutReplace("conv2d_23",1, WeightInit.XAVIER)
-                .addLayer("output",
-                        new CnnLossLayer.Builder(LossFunctions.LossFunction.XENT)
-                                .activation(Activation.SIGMOID).build(),
-                        "conv2d_23")
-                .setOutputs("output")
-                .build();
+        ComputationGraph unetTransfer = ;
+        **/
 
-        System.out.println(unetTransfer.summary());
-
-        unetTransfer.setListeners(statsListener, scoreIterationListener);
+//        System.out.println(unetTransfer.summary());
+//        unetTransfer.setListeners(statsListener, scoreIterationListener);
 
         //Initialize the user interface backend
         UIServer uiServer = UIServer.getInstance();
         uiServer.attach(statsStorage);
 
-        // STEP 3: Load data into RecordReaderDataSetIterator
+        // STEP 4: Load data into RecordReaderDataSetIterator
+        /**
         CarDataSetIterator.setup(batchSize, trainPerc, getImageTransform());
+         **/
 
         //Create iterators
         RecordReaderDataSetIterator imageDataSetTrain = CarDataSetIterator.trainIterator();
         RecordReaderDataSetIterator imageDataSetVal = CarDataSetIterator.valIterator();
 
-        // Visualisation -  training
-        JFrame frame = visualisation.initFrame("Viz");
-        JPanel panel = visualisation.initPanel(
-                frame,
-                1,
-                height,
-                width,
-                1
-        );
 
-        //STEP 4: Run training
-        for(int i=0; i<nEpochs; i++){
+//        STEP 5: Run Training
+//        for(int i=0; i<nEpochs; i++){
+//
+//            log.info("Epoch: " + i);
+//
+//            while(imageDataSetTrain.hasNext())
+//            {
+//                DataSet imageSet = imageDataSetTrain.next();
+//
+//                unetTransfer.fit(imageSet);
+//
+//                INDArray predict = unetTransfer.output(imageSet.getFeatures())[0];
+//
+//                for (int n=0; n<imageSet.asList().size(); n++){
+//                    visualisation.visualize(
+//                            imageSet.get(n).getFeatures(),
+//                            imageSet.get(n).getLabels(),
+//                            predict.get(NDArrayIndex.point(n)),
+//                            frame,
+//                            panel,
+//                            4,
+//                            224,
+//                            224
+//                    );
+//                }
+//            }
+//            imageDataSetTrain.reset();
+//        }
 
-            log.info("Epoch: " + i);
-
-            while(imageDataSetTrain.hasNext())
-            {
-                DataSet imageSet = imageDataSetTrain.next();
-
-                unetTransfer.fit(imageSet);
-
-                INDArray predict = unetTransfer.output(imageSet.getFeatures())[0];
-
-                for (int n=0; n<imageSet.asList().size(); n++){
-                    visualisation.visualize(
-                            imageSet.get(n).getFeatures(),
-                            imageSet.get(n).getLabels(),
-                            predict.get(NDArrayIndex.point(n)),
-                            frame,
-                            panel,
-                            4,
-                            224,
-                            224
-                    );
-                }
-
-            }
-
-            imageDataSetTrain.reset();
-        }
 
         // VALIDATION
         Evaluation eval = new Evaluation(2);
 
         // VISUALISATION -  validation
-        JFrame frameVal = visualisation.initFrame("Viz");
-        JPanel panelVal = visualisation.initPanel(
-                frame,
-                1,
-                height,
-                width,
-                1
-        );
+//        JFrame frameVal = visualisation.initFrame("Viz");
+//        JPanel panelVal = visualisation.initPanel(
+//                frame,
+//                1,
+//                height,
+//                width,
+//                1
+//        );
 
-        // EXPORT IMAGES
-        File exportDir = new File("export");
 
-        if (!exportDir.exists() ) {
-            exportDir.mkdir();
-        }
 
         float IOUtotal = 0;
         int count = 0;
         while(imageDataSetVal.hasNext()) {
             DataSet imageSetVal = imageDataSetVal.next();
 
-            INDArray predict = unetTransfer.output(imageSetVal.getFeatures())[0];
+//            INDArray predict = unetTransfer.output(imageSetVal.getFeatures())[0];
             INDArray labels = imageSetVal.getLabels();
-
-            if (count%5==0) {
-                visualisation.export(exportDir, imageSetVal.getFeatures(), imageSetVal.getLabels(), predict, count );
-            }
 
             count++;
 
-            eval.eval(labels, predict);
+//            eval.eval(labels, predict);
 
             log.info(eval.stats());
 
-            //STEP 5: Complete the code for IOU calculation here
+            //STEP 4: Complete the code for IOU calculation here
             //Intersection over Union:  TP / (TP + FN + FP)
-            float IOUCar = (float)eval.truePositives().get(1) / ((float)eval.truePositives().get(1) + (float)eval.falsePositives().get(1) + (float)eval.falseNegatives().get(1));
-            IOUtotal = IOUtotal + IOUCar;
+            /**
+            float IOUCar = ;
+            **/
 
-            System.out.println("IOU Car " + String.format("%.3f", IOUCar) );
-
-            eval.reset();
-
-            for (int n=0; n<imageSetVal.asList().size(); n++){
-                visualisation.visualize(
-                        imageSetVal.get(n).getFeatures(),
-                        imageSetVal.get(n).getLabels(),
-                        predict.get(NDArrayIndex.point(n)),
-                        frame,
-                        panel,
-                        4,
-                        224,
-                        224
-                );
-            }
         }
-
         System.out.print("Mean IOU: " + IOUtotal/count);
 
-        // WRITE MODEL TO DISK
-        modelExportDir = Paths.get(
-                System.getProperty("user.home"),
-                Helper.getPropValues("dl4j_home.generated-models")
-        ).toString();
-
-
-        File locationToSaveModel = new File(Paths.get(modelExportDir, "segmentUNET.zip").toString());
-        if (!locationToSaveModel.exists()){
-            locationToSaveModel.getParentFile().mkdirs();
-        }
-
-        boolean saveUpdater = false;
-        ModelSerializer.writeModel(unetTransfer, locationToSaveModel, saveUpdater);
-        log.info("Model saved");
     }
 
 

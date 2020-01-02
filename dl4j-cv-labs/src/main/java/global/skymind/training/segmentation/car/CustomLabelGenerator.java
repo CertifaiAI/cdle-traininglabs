@@ -20,17 +20,11 @@ public class CustomLabelGenerator implements PathLabelGenerator {
     private final int channels;
     private final NativeImageLoader imageLoader;
 
-    //DIRECTORY STRUCTURE:
-    //Here is the directory structure
-    //                                  parentDir
-    //                                 /         \
-    //                                /           \
-    //                               /             \
-    //                           image              mask
-    //                          /  |  \            /  |  \
-    //                         /   |   \          /   |   \
-    //                        /    |    \        /    |    \
-    //                   case1  case2  case3   case1 case2  case3
+    /*
+     * Instructions for this lab exercise:
+     * STEP 1: Complete the code in order to find corresponding labels for the training images.
+     *
+     * */
 
     @Override
     public boolean inferLabelClasses() {
@@ -44,32 +38,16 @@ public class CustomLabelGenerator implements PathLabelGenerator {
         this.imageLoader = new NativeImageLoader(this.height, this.width, this.channels);
     }
 
-    // This custom label generator finds labels for each input image by replacing one the folders (inputs >> masks) in the path string.
+    // STEP 1: Write your code here to generate labels for all images.
     @Override
     public Writable getLabelForPath(String path) {
-        try
-        {
+
 
             /**
              * ENTER YOUR CODE HERE
              * **/
-            String labelPath = path.replace("inputs", "masks").replace(".jpg","_mask.gif");
 
-            NDArrayWritable label = new NDArrayWritable(imageLoader.asMatrix(new File(labelPath)) );
-
-            INDArray labelINDArray = label.get();
-
-            // normalise to 0-1 scale
-            label.set( labelINDArray.div(255));
-
-            return label ;
-
-        }
-        catch (IOException ioe)
-        {
-            ioe.printStackTrace();
-            return null;
-        }
+        return null;
     }
 
     @Override
