@@ -9,17 +9,19 @@ public class Ex10_MatrixOperations {
     public static final String ANSI_RESET = "\u001B[0m";
 
     public static void main(String[] args) {
-        INDArray array1 = Nd4j.randn(2, 3, 123);
-        System.out.println(BLACK_BOLD + "array1" + ANSI_RESET);
+        INDArray shape1 = Nd4j.create(new int[]{2, 3});
+        INDArray array1 = Nd4j.randn(shape1, 123);
+        System.out.println(BLUE_BOLD + "array1" + ANSI_RESET);
         System.out.println(array1);
 
-        INDArray array2 = Nd4j.randn(3, 2, 123);
-        System.out.println(BLACK_BOLD + "array2" + ANSI_RESET);
+        INDArray shape2 = Nd4j.create(new int[]{3, 2});
+        INDArray array2 = Nd4j.randn(shape2, 123);
+        System.out.println(BLUE_BOLD + "array2" + ANSI_RESET);
         System.out.println(array2);
 
         // Matrix multiplication
         INDArray mmulArray = array1.mmul(array2);
-        System.out.println(BLACK_BOLD + "\nMatrix multiplication of array1 and array2" + ANSI_RESET);
+        System.out.println(BLUE_BOLD + "\nMatrix multiplication of array1 and array2" + ANSI_RESET);
         System.out.println(BLUE_BOLD + "myArray.addRowVector(rowVector)" + ANSI_RESET);
         System.out.println(mmulArray);
 
