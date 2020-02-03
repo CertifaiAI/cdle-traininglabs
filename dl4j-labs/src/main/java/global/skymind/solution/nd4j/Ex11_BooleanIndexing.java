@@ -22,13 +22,13 @@ public class Ex11_BooleanIndexing {
         //Replace negative values with zero
         BooleanIndexing.replaceWhere(myArray, 0, Conditions.lessThan(0));
         System.out.println(BLACK_BOLD + "\nReplace negative values with zero" + ANSI_RESET);
-        System.out.println(BLUE_BOLD  + "BooleanIndexing.replaceWhere(myArray, 0, Conditions.lessThan(0))" + ANSI_RESET);
+        System.out.println(BLUE_BOLD + "BooleanIndexing.replaceWhere(myArray, 0, Conditions.lessThan(0))" + ANSI_RESET);
         System.out.println(myArray);
 
         //Replace values greater than one to one
         BooleanIndexing.replaceWhere(myArray, 1, Conditions.greaterThan(1));
         System.out.println(BLACK_BOLD + "\nReplace values greater than one to one" + ANSI_RESET);
-        System.out.println(BLUE_BOLD  + "BooleanIndexing.replaceWhere(myArray, 1, Conditions.greaterThan(1))" + ANSI_RESET);
+        System.out.println(BLUE_BOLD + "BooleanIndexing.replaceWhere(myArray, 1, Conditions.greaterThan(1))" + ANSI_RESET);
         System.out.println(myArray);
 
         //For more conditions: https://deeplearning4j.org/api/latest/org/nd4j/linalg/indexing/conditions/Condition.html
@@ -38,11 +38,11 @@ public class Ex11_BooleanIndexing {
         - Create arr1 with Nd4j.create(new float[]{1,1,1,2,2,2,3,3,3}, new int[]{3,3})
         - Set value that not equal to one to one
         */
-        System.out.println(BLACK_BOLD +"\nCreate arr1 with Nd4j.create(new float[]{1,1,1,2,2,2,3,3,3}, new int[]{3,3})" + ANSI_RESET);
-        INDArray arr1 = Nd4j.create(new float[]{1,1,1,2,2,2,3,3,3}, new int[]{3,3});
+        System.out.println(BLACK_BOLD + "\nCreate arr1 with Nd4j.create(new float[]{1,1,1,2,2,2,3,3,3}, new int[]{3,3})" + ANSI_RESET);
+        INDArray arr1 = Nd4j.create(new float[]{1, 1, 1, 2, 2, 2, 3, 3, 3}, new int[]{3, 3});
         System.out.println(arr1);
 
-        System.out.println(BLACK_BOLD +"\nSet value that not equal to one to one" + ANSI_RESET);
+        System.out.println(BLACK_BOLD + "\nSet value that not equal to one to one" + ANSI_RESET);
         BooleanIndexing.replaceWhere(arr1, 1, Conditions.notEquals(1));
         System.out.println(arr1);
     }
