@@ -1,7 +1,7 @@
 package global.skymind.solution.object_detection.MetalDefectsDetector;
 
 import global.skymind.Helper;
-import global.skymind.solution.object_detection.MetalDefectsDetector.dataHelpers.LabelImgXmlLabelProvider;
+import global.skymind.solution.object_detection.dataHelpers.LabelImgXmlLabelProvider;
 import org.apache.commons.io.FileUtils;
 import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.InputSplit;
@@ -59,7 +59,7 @@ public class MetalDefectDataSetIterator {
         log.info("Load data...");
         loadData();
 
-        trainDir = new File(dataDir,"metaldefects/train/");
+        trainDir = new File(dataDir, "metaldefects/train/");
         testDir = new File(dataDir, "metaldefects/test/");
         trainData = new FileSplit(trainDir, NativeImageLoader.ALLOWED_FORMATS, rng);
         testData = new FileSplit(testDir, NativeImageLoader.ALLOWED_FORMATS, rng);
@@ -72,18 +72,18 @@ public class MetalDefectDataSetIterator {
         ).toString();
         downloadLink = Helper.getPropValues("dataset.metaldefects.url");
 
-        File parentDir = new File(Paths.get(dataDir,"metaldefects").toString());
-        if(!parentDir.exists()){
+        File parentDir = new File(Paths.get(dataDir, "metaldefects").toString());
+        if (!parentDir.exists()) {
             downloadAndUnzip();
         }
     }
 
     private static void downloadAndUnzip() throws IOException {
         String dataPath = new File(dataDir).getAbsolutePath();
-        File zipFile = new File (dataPath,"metal-defects.zip");
+        File zipFile = new File(dataPath, "metal-defects.zip");
 
-        if(!zipFile.isFile()){
-            log.info("Downloading the dataset from "+downloadLink+ "...");
+        if (!zipFile.isFile()) {
+            log.info("Downloading the dataset from " + downloadLink + "...");
             FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
         }
         ArchiveUtils.unzipFileTo(zipFile.getAbsolutePath(), dataPath);

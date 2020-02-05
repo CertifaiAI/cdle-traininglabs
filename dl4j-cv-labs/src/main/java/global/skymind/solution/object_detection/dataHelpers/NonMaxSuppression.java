@@ -1,4 +1,4 @@
-package global.skymind.training.object_detection.AvocadoBananaDetector.dataHelpers;
+package global.skymind.solution.object_detection.dataHelpers;
 
 import org.deeplearning4j.nn.layers.objdetect.DetectedObject;
 

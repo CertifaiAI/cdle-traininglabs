@@ -2,52 +2,36 @@
 
 package global.skymind.training.object_detection.MetalDefectsDetector;
 
-import global.skymind.training.object_detection.MetalDefectsDetector.dataHelpers.NonMaxSuppression;
+import global.skymind.training.object_detection.dataHelpers.NonMaxSuppression;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
-import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.bytedeco.opencv.opencv_core.Point;
 import org.bytedeco.opencv.opencv_core.Scalar;
 import org.bytedeco.opencv.opencv_core.Size;
 import org.datavec.image.loader.NativeImageLoader;
-import org.datavec.image.transform.ColorConversionTransform;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.deeplearning4j.nn.api.OptimizationAlgorithm;
-import org.deeplearning4j.nn.conf.ConvolutionMode;
-import org.deeplearning4j.nn.conf.GradientNormalization;
-import org.deeplearning4j.nn.conf.WorkspaceMode;
 import org.deeplearning4j.nn.conf.inputs.InputType;
-import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
-import org.deeplearning4j.nn.conf.layers.objdetect.Yolo2OutputLayer;
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.layers.objdetect.DetectedObject;
 import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
-import org.deeplearning4j.nn.transferlearning.TransferLearning;
-import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
 import org.deeplearning4j.zoo.model.YOLO2;
-import org.nd4j.linalg.activations.Activation;
-import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.learning.config.Adam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.List;
 
 import static org.bytedeco.opencv.global.opencv_core.CV_8U;
-import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
@@ -75,7 +59,7 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
     private static int nClasses = 6;
     private static List<String> labels;
 
-    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/MetalSurfaceDefects_yolov2.zip");
+    private static File modelFilename = new File(System.getProperty("user.dir"), "generated-models/MetalSurfaceDefects_yolov2.zip");
     private static ComputationGraph model;
     private static Frame frame = null;
     public static final Scalar BLUE = RGB(0, 0, 255);
@@ -84,7 +68,7 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
     public static final Scalar YELLOW = RGB(255, 225, 0);
     public static final Scalar PINK = RGB(255, 0, 225);
     public static final Scalar CYAN = RGB(0, 225, 225);
-    public static Scalar[] colormap = {BLUE,GREEN,RED,YELLOW, PINK, CYAN};
+    public static Scalar[] colormap = {BLUE, GREEN, RED, YELLOW, PINK, CYAN};
     private static String labeltext = null;
 
     public static void main(String[] args) throws Exception {
@@ -99,7 +83,7 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
 
         //        If model does not exist, train the model, else directly go to model evaluation and then run real time object detection inference.
         if (modelFilename.exists()) {
-        //        STEP 2 : Load trained model from previous execution
+            //        STEP 2 : Load trained model from previous execution
             Nd4j.getRandom().setSeed(seed);
             log.info("Load model...");
 //            model = null;
@@ -153,12 +137,12 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
         return null;
     }
 
-//    Evaluate visually the performance of the trained object detection model
-    private static void OfflineValidationWithTestDataset(RecordReaderDataSetIterator test)throws InterruptedException{
+    //    Evaluate visually the performance of the trained object detection model
+    private static void OfflineValidationWithTestDataset(RecordReaderDataSetIterator test) throws InterruptedException {
         NativeImageLoader imageLoader = new NativeImageLoader();
         CanvasFrame canvas = new CanvasFrame("Validate Test Dataset");
         OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
-        org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout = (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer)model.getOutputLayer(0);
+        org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout = (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer) model.getOutputLayer(0);
         Mat convertedMat = new Mat();
         Mat convertedMat_big = new Mat();
 
@@ -174,7 +158,7 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
             mat.convertTo(convertedMat, CV_8U, 255, 0);
             int w = mat.cols() * 2;
             int h = mat.rows() * 2;
-            resize(convertedMat,convertedMat_big, new Size(w, h));
+            resize(convertedMat, convertedMat_big, new Size(w, h));
 
             for (DetectedObject obj : objects) {
                 double[] xy1 = obj.getTopLeftXY();
@@ -187,11 +171,11 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
                 //Draw bounding box
                 rectangle(convertedMat_big, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
                 //Display label text
-                labeltext =label+" "+(Math.round(obj.getConfidence()*100.0)/100.0)*100.0 +"%";
-                int[] baseline ={0};
-                Size textSize=getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1,1,baseline);
-                rectangle(convertedMat_big, new Point(x1 + 2, y2 - 2), new Point(x1 + 2+textSize.get(0), y2 - 2-textSize.get(1)), colormap[obj.getPredictedClass()], FILLED,0,0);
-                putText(convertedMat_big, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0,0,0));
+                labeltext = label + " " + (Math.round(obj.getConfidence() * 100.0) / 100.0) * 100.0 + "%";
+                int[] baseline = {0};
+                Size textSize = getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1, 1, baseline);
+                rectangle(convertedMat_big, new Point(x1 + 2, y2 - 2), new Point(x1 + 2 + textSize.get(0), y2 - 2 - textSize.get(1)), colormap[obj.getPredictedClass()], FILLED, 0, 0);
+                putText(convertedMat_big, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0, 0, 0));
             }
             canvas.showImage(converter.convert(convertedMat_big));
             canvas.waitKey();

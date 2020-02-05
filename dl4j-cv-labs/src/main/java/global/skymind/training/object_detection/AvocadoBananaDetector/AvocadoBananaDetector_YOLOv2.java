@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.List;
 
-import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
 ///**
@@ -36,12 +35,12 @@ public class AvocadoBananaDetector_YOLOv2 {
     private static int nClasses = 2;
     private static List<String> labels;
 
-    private static File modelFilename = new File(System.getProperty("user.dir"),"generated-models/AvocadoBananaDetector_yolov2.zip");
+    private static File modelFilename = new File(System.getProperty("user.dir"), "generated-models/AvocadoBananaDetector_yolov2.zip");
     private static ComputationGraph model;
     private static Frame frame = null;
     private static final Scalar GREEN = RGB(0, 255.0, 0);
     private static final Scalar YELLOW = RGB(255, 255, 0);
-    private static Scalar[] colormap = {GREEN,YELLOW};
+    private static Scalar[] colormap = {GREEN, YELLOW};
     private static String labeltext = null;
 
     public static void main(String[] args) throws Exception {
@@ -62,22 +61,22 @@ public class AvocadoBananaDetector_YOLOv2 {
 //            ComputationGraph pretrained = null;
 //            FineTuneConfiguration fineTuneConf = null;
 //            INDArray priors = Nd4j.create();
-            //     STEP 2 : Train the model using Transfer Learning
-            //     STEP 2.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
+        //     STEP 2 : Train the model using Transfer Learning
+        //     STEP 2.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
 //            log.info("Build model...");
 //            pretrained = (ComputationGraph) .builder().build().initPretrained();
 
-            //     STEP 2.2: Transfer Learning steps - Model Configurations.
+        //     STEP 2.2: Transfer Learning steps - Model Configurations.
 //            fineTuneConf = getFineTuneConfiguration();
 
-            //     STEP 2.3: Transfer Learning steps - Modify prebuilt model's architecture
+        //     STEP 2.3: Transfer Learning steps - Modify prebuilt model's architecture
 //            model = getNewComputationGraph(, , );
 //            System.out.println(model.summary(InputType.convolutional(
-//                    MetalDefectDataSetIterator.yoloheight,
-//                    MetalDefectDataSetIterator.yolowidth,
+//                    FruitDataSetIterator.yoloheight,
+//                    FruitDataSetIterator.yolowidth,
 //                    nClasses)));
 
-            //     STEP 2.4: Training and Save model.
+        //     STEP 2.4: Training and Save model.
 //            log.info("Train model...");
 //            UIServer server = UIServer.getInstance();
 //            StatsStorage storage = new InMemoryStatsStorage();
@@ -169,10 +168,10 @@ public class AvocadoBananaDetector_YOLOv2 {
 //                double[] xy1 = obj.getTopLeftXY();
 //                double[] xy2 = obj.getBottomRightXY();
 //                String label = labels.get(obj.getPredictedClass());
-//                int x1 = (int) Math.round(w * xy1[0] / MetalDefectDataSetIterator.gridWidth);
-//                int y1 = (int) Math.round(h * xy1[1] / MetalDefectDataSetIterator.gridHeight);
-//                int x2 = (int) Math.round(w * xy2[0] / MetalDefectDataSetIterator.gridWidth);
-//                int y2 = (int) Math.round(h * xy2[1] / MetalDefectDataSetIterator.gridHeight);
+//                int x1 = (int) Math.round(w * xy1[0] / FruitDataSetIterator.gridWidth);
+//                int y1 = (int) Math.round(h * xy1[1] / FruitDataSetIterator.gridHeight);
+//                int x2 = (int) Math.round(w * xy2[0] / FruitDataSetIterator.gridWidth);
+//                int y2 = (int) Math.round(h * xy2[1] / FruitDataSetIterator.gridHeight);
 //                //Draw bounding box
 //                rectangle(convertedMat_big, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
 //                //Display label text
@@ -195,8 +194,8 @@ public class AvocadoBananaDetector_YOLOv2 {
 //        int cameraNum = 0;
 //        Thread thread = null;
 //        NativeImageLoader loader = new NativeImageLoader(
-//                MetalDefectDataSetIterator.yolowidth,
-//                MetalDefectDataSetIterator.yoloheight,
+//                FruitDataSetIterator.yolowidth,
+//                FruitDataSetIterator.yoloheight,
 //                3,
 //                new ColorConversionTransform(COLOR_BGR2RGB));
 //        ImagePreProcessingScaler scaler = new ImagePreProcessingScaler(0, 1);
@@ -263,7 +262,7 @@ public class AvocadoBananaDetector_YOLOv2 {
 //                            }
 //
 //                            Mat resizeImage = new Mat();
-//                            resize(rawImage, resizeImage, new Size(MetalDefectDataSetIterator.yolowidth, MetalDefectDataSetIterator.yoloheight));
+//                            resize(rawImage, resizeImage, new Size(FruitDataSetIterator.yolowidth, FruitDataSetIterator.yoloheight));
 //
 //                            INDArray inputImage = loader.asMatrix(resizeImage);
 //                            scaler.transform(inputImage);
@@ -277,10 +276,10 @@ public class AvocadoBananaDetector_YOLOv2 {
 //                                double[] xy1 = obj.getTopLeftXY();
 //                                double[] xy2 = obj.getBottomRightXY();
 //                                String label = labels.get(obj.getPredictedClass());
-//                                int x1 = (int) Math.round(w * xy1[0] / MetalDefectDataSetIterator.gridWidth);
-//                                int y1 = (int) Math.round(h * xy1[1] / MetalDefectDataSetIterator.gridHeight);
-//                                int x2 = (int) Math.round(w * xy2[0] / MetalDefectDataSetIterator.gridWidth);
-//                                int y2 = (int) Math.round(h * xy2[1] / MetalDefectDataSetIterator.gridHeight);
+//                                int x1 = (int) Math.round(w * xy1[0] / FruitDataSetIterator.gridWidth);
+//                                int y1 = (int) Math.round(h * xy1[1] / FruitDataSetIterator.gridHeight);
+//                                int x2 = (int) Math.round(w * xy2[0] / FruitDataSetIterator.gridWidth);
+//                                int y2 = (int) Math.round(h * xy2[1] / FruitDataSetIterator.gridHeight);
 //                                //Draw bounding box
 //                                rectangle(rawImage, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
 //                                //Display label text

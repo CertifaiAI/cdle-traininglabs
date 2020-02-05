@@ -1,4 +1,4 @@
-package global.skymind.solution.object_detection.AvocadoBananaDetector.dataHelpers;
+package global.skymind.training.object_detection.dataHelpers;
 
 import org.apache.commons.io.FilenameUtils;
 import org.datavec.image.recordreader.objdetect.ImageObject;

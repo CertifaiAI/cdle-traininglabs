@@ -1,7 +1,7 @@
 package global.skymind.training.object_detection.AvocadoBananaDetector;
 
 import global.skymind.Helper;
-import global.skymind.training.object_detection.AvocadoBananaDetector.dataHelpers.LabelImgXmlLabelProvider;
+import global.skymind.training.object_detection.dataHelpers.LabelImgXmlLabelProvider;
 import org.apache.commons.io.FileUtils;
 import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.InputSplit;
@@ -59,7 +59,7 @@ public class FruitDataSetIterator {
         log.info("Load data...");
         loadData();
 
-        trainDir = new File(dataDir,"fruits/train/");
+        trainDir = new File(dataDir, "fruits/train/");
         testDir = new File(dataDir, "fruits/test/");
 
         trainData = new FileSplit(trainDir, NativeImageLoader.ALLOWED_FORMATS, rng);
@@ -73,18 +73,18 @@ public class FruitDataSetIterator {
         ).toString();
         downloadLink = Helper.getPropValues("dataset.fruits.url");
 
-        File parentDir = new File(Paths.get(dataDir,"fruits").toString());
-        if(!parentDir.exists()){
+        File parentDir = new File(Paths.get(dataDir, "fruits").toString());
+        if (!parentDir.exists()) {
             downloadAndUnzip();
         }
     }
 
     private static void downloadAndUnzip() throws IOException {
         String dataPath = new File(dataDir).getAbsolutePath();
-        File zipFile = new File (dataPath,"fruits-detection.zip");
+        File zipFile = new File(dataPath, "fruits-detection.zip");
 
-        if(!zipFile.isFile()){
-            log.info("Downloading the dataset from "+downloadLink+ "...");
+        if (!zipFile.isFile()) {
+            log.info("Downloading the dataset from " + downloadLink + "...");
             FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
         }
         ArchiveUtils.unzipFileTo(zipFile.getAbsolutePath(), dataPath);
