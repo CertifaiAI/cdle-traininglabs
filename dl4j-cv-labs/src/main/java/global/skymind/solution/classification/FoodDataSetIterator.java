@@ -84,7 +84,6 @@ public class FoodDataSetIterator {
         recordReader.initialize(split, transform);
 
         DataSetIterator iter = new RecordReaderDataSetIterator(recordReader, batchSize, 1, numClasses);
-//        iter.setPreProcessor( new VGG16ImagePreProcessor());
         iter.setPreProcessor(scaler);
         return iter;
     }

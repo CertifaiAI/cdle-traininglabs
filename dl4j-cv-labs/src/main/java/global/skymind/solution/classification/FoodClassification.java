@@ -49,7 +49,6 @@ public class FoodClassification {
         * LOAD MODEL
         * */
         log.info("\n\nLoading org.deeplearning4j.transferlearning.resnet50...\n\n");
-//        ZooModel zooModel = VGG16.builder().build();
         ZooModel zooModel = ResNet50.builder().build();
         ComputationGraph resnet50 = (ComputationGraph) zooModel.initPretrained();
         log.info(resnet50.summary());
@@ -68,16 +67,12 @@ public class FoodClassification {
                         new OutputLayer.Builder(LossFunctions.LossFunction.MCXENT)
                                 .nIn(2048).nOut(numClasses)
                                 .weightInit(new NormalDistribution(0,0.2*(2.0/(4096+numClasses))))
-//                                .weightInit(WeightInit.XAVIER)
                                 .activation(Activation.SOFTMAX).build(),
                         "flatten_1")
                 .build();
         log.info(resnet50Transfer.summary());
 
         //Dataset iterators
-//        FoodDataSetIterator.setup(batchSize);
-//        DataSetIterator trainIter = FoodDataSetIterator.trainIterator();
-//        DataSetIterator testIter = FoodDataSetIterator.testIterator();
         DogBreedDataSetIterator.setup(batchSize, 80);
         DataSetIterator trainIter = DogBreedDataSetIterator.trainIterator();
         DataSetIterator testIter = DogBreedDataSetIterator.testIterator();
