@@ -1,5 +1,3 @@
-//This example uses transfer learning from TinyYOLO pretrained model
-
 package global.skymind.solution.object_detection.AvocadoBananaDetector;
 
 import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
@@ -41,21 +39,21 @@ import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.learning.config.Adam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.List;
-
 import static org.bytedeco.opencv.global.opencv_core.CV_8U;
 import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
 ///**
-// * This is an example of a object detection using TinyYOLO architecture.
-// * If no model exists, train a model using Transfer Learning, then validate with test set
+// * This is an example of a object detection using TinyYOLOv architecture.
+// * This example uses transfer learning to fine tune the last few layers of a TinyYOLO pretrained model
+// * If no model exists, train a new model, then validate with test set
 // * If model exists, Validate model with test set and run real time inference on webcam frames.
-// * This model can detect avocado and banana in a single frame or live webcam frames.
+// * This model is able to detect avocado and banana in images.
+// * Please adjust the batch size or switch between using CPU/GPU depending on your system's specifications (GPU RAM, CPU RAM and etc.)
 // * **/
 
 public class AvocadoBananaDetector_TinyYOLO {
@@ -67,7 +65,7 @@ public class AvocadoBananaDetector_TinyYOLO {
     private static double lambdaCoord = 5.0;
     private static double[][] priorBoxes = {{1, 3}, {2.5, 6}, {3, 4}, {3.5, 8}, {4, 9}};
 
-    private static int batchSize = 2;
+    private static int batchSize = 16;
     private static int nEpochs = 40;
     private static double learningRate = 1e-4;
     private static int nClasses = 2;
@@ -83,12 +81,10 @@ public class AvocadoBananaDetector_TinyYOLO {
 
     public static void main(String[] args) throws Exception {
 
-        FruitDataSetIterator.setup();
-
         //        STEP 1 : Create iterators
+        FruitDataSetIterator.setup();
         RecordReaderDataSetIterator trainIter = FruitDataSetIterator.trainIterator(batchSize);
         RecordReaderDataSetIterator testIter = FruitDataSetIterator.testIterator(1);
-
         labels = trainIter.getLabels();
 
         //        If model does not exist, train the model, else directly go to model evaluation and then run real time object detection inference.
@@ -192,36 +188,17 @@ public class AvocadoBananaDetector_TinyYOLO {
         Mat convertedMat_big = new Mat();
 
         while (test.hasNext() && canvas.isVisible()) {
-
             org.nd4j.linalg.dataset.DataSet ds = test.next();
             INDArray features = ds.getFeatures();
             INDArray results = model.outputSingle(features);
             List<DetectedObject> objs = yout.getPredictedObjects(results, detectionThreshold);
             List<DetectedObject> objects = NonMaxSuppression.getObjects(objs);
-
             Mat mat = imageLoader.asMat(features);
             mat.convertTo(convertedMat, CV_8U, 255, 0);
             int w = mat.cols() * 2;
             int h = mat.rows() * 2;
             resize(convertedMat, convertedMat_big, new Size(w, h));
-
-            for (DetectedObject obj : objects) {
-                double[] xy1 = obj.getTopLeftXY();
-                double[] xy2 = obj.getBottomRightXY();
-                String label = labels.get(obj.getPredictedClass());
-                int x1 = (int) Math.round(w * xy1[0] / FruitDataSetIterator.gridWidth);
-                int y1 = (int) Math.round(h * xy1[1] / FruitDataSetIterator.gridHeight);
-                int x2 = (int) Math.round(w * xy2[0] / FruitDataSetIterator.gridWidth);
-                int y2 = (int) Math.round(h * xy2[1] / FruitDataSetIterator.gridHeight);
-                //Draw bounding box
-                rectangle(convertedMat_big, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
-                //Display label text
-                labeltext = label + " " + (Math.round(obj.getConfidence() * 100.0) / 100.0) * 100.0 + "%";
-                int[] baseline = {0};
-                Size textSize = getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1, 1, baseline);
-                rectangle(convertedMat_big, new Point(x1 + 2, y2 - 2), new Point(x1 + 2 + textSize.get(0), y2 - 2 - textSize.get(1)), colormap[obj.getPredictedClass()], FILLED, 0, 0);
-                putText(convertedMat_big, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0, 0, 0));
-            }
+            convertedMat_big=drawResults(objects,convertedMat_big,w,h);
             canvas.showImage(converter.convert(convertedMat_big));
             canvas.waitKey();
         }
@@ -263,21 +240,17 @@ public class AvocadoBananaDetector_TinyYOLO {
             e.printStackTrace();
         }
 
-        String winName = "Object Detection";
-        CanvasFrame canvas = new CanvasFrame(winName);
-
+        CanvasFrame canvas = new CanvasFrame("Object Detection");
         int w = grabber.getImageWidth();
-        int h = grabber.getImageHeight();
-
-
+        int h= grabber.getImageHeight();
         canvas.setCanvasSize(w, h);
+
         while (true) {
             try {
                 frame = grabber.grab();
             } catch (FrameGrabber.Exception e) {
                 e.printStackTrace();
             }
-
             //if a thread is null, create new thread
             if (thread == null) {
                 thread = new Thread(() ->
@@ -285,7 +258,6 @@ public class AvocadoBananaDetector_TinyYOLO {
                     while (frame != null) {
                         try {
                             Mat rawImage = new Mat();
-
                             //Flip the camera if opening front camera
                             if (cameraPos.equals("front")) {
                                 Mat inputImage = converter.convert(frame);
@@ -293,10 +265,8 @@ public class AvocadoBananaDetector_TinyYOLO {
                             } else {
                                 rawImage = converter.convert(frame);
                             }
-
                             Mat resizeImage = new Mat();
                             resize(rawImage, resizeImage, new Size(FruitDataSetIterator.yolowidth, FruitDataSetIterator.yoloheight));
-
                             INDArray inputImage = loader.asMatrix(resizeImage);
                             scaler.transform(inputImage);
                             INDArray outputs = model.outputSingle(inputImage);
@@ -304,24 +274,7 @@ public class AvocadoBananaDetector_TinyYOLO {
                             List<DetectedObject> objs = yout.getPredictedObjects(outputs, detectionThreshold);
                             List<DetectedObject> objects = NonMaxSuppression.getObjects(objs);
 
-                            for (DetectedObject obj : objects) {
-
-                                double[] xy1 = obj.getTopLeftXY();
-                                double[] xy2 = obj.getBottomRightXY();
-                                String label = labels.get(obj.getPredictedClass());
-                                int x1 = (int) Math.round(w * xy1[0] / FruitDataSetIterator.gridWidth);
-                                int y1 = (int) Math.round(h * xy1[1] / FruitDataSetIterator.gridHeight);
-                                int x2 = (int) Math.round(w * xy2[0] / FruitDataSetIterator.gridWidth);
-                                int y2 = (int) Math.round(h * xy2[1] / FruitDataSetIterator.gridHeight);
-                                //Draw bounding box
-                                rectangle(rawImage, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
-                                //Display label text
-                                labeltext = label + " " + (Math.round(obj.getConfidence() * 100.0) / 100.0) * 100.0 + "%";
-                                int[] baseline = {0};
-                                Size textSize = getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1, 1, baseline);
-                                rectangle(rawImage, new Point(x1 + 2, y2 - 2), new Point(x1 + 2 + textSize.get(0), y2 - 2 - textSize.get(1)), colormap[obj.getPredictedClass()], FILLED, 0, 0);
-                                putText(rawImage, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0, 0, 0));
-                            }
+                            rawImage=drawResults(objects,rawImage,w,h);
                             canvas.showImage(converter.convert(rawImage));
                         } catch (Exception e) {
                             throw new RuntimeException(e);
@@ -342,6 +295,28 @@ public class AvocadoBananaDetector_TinyYOLO {
                 break;
             }
         }
+    }
+
+
+    private static Mat drawResults(List<DetectedObject> objects, Mat mat,int w,int h){
+        for (DetectedObject obj : objects) {
+            double[] xy1 = obj.getTopLeftXY();
+            double[] xy2 = obj.getBottomRightXY();
+            String label = labels.get(obj.getPredictedClass());
+            int x1 = (int) Math.round(w * xy1[0] / FruitDataSetIterator.gridWidth);
+            int y1 = (int) Math.round(h * xy1[1] / FruitDataSetIterator.gridHeight);
+            int x2 = (int) Math.round(w * xy2[0] / FruitDataSetIterator.gridWidth);
+            int y2 = (int) Math.round(h * xy2[1] / FruitDataSetIterator.gridHeight);
+            //Draw bounding box
+            rectangle(mat, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
+            //Display label text
+            labeltext =label+" "+String.format("%.2f",obj.getConfidence()*100)+"%";
+            int[] baseline ={0};
+            Size textSize=getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1,1,baseline);
+            rectangle(mat, new Point(x1 + 2, y2 - 2), new Point(x1 + 2+textSize.get(0), y2 - 2-textSize.get(1)), colormap[obj.getPredictedClass()], FILLED,0,0);
+            putText(mat, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0,0,0));
+        }
+        return mat;
     }
 }
 
