@@ -1,6 +1,13 @@
 package global.skymind.solution.segmentation.car;
 
 import global.skymind.Helper;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.datavec.image.transform.ImageTransform;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.datavec.api.io.filters.BalancedPathFilter;
@@ -13,6 +20,7 @@ import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import global.skymind.solution.segmentation.imageUtils.CustomLabelGenerator;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -26,8 +34,7 @@ public class CarDataSetIterator {
     private static final long seed = 12345;
     private static final Random random = new Random(seed);
     private static String inputDir;
-//    private static String labelPath;
-//    private static String downloadLink;
+    private static String downloadLink;
 
 
     private static InputSplit trainData,valData;
@@ -73,8 +80,10 @@ public class CarDataSetIterator {
         setup(batchSizeArg,trainPerc);
     }
 
-
     public static void setup(int batchSizeArg, double trainPerc) throws IOException {
+
+        downloadData();
+        unzipAllDataSet();
 
         batchSize = batchSizeArg;
 
@@ -97,5 +106,67 @@ public class CarDataSetIterator {
         valData = imagesSplits[1];
     }
 
+    // Download dataset
+    public static void downloadData() throws IOException {
+        downloadLink = Helper.getPropValues("dataset.segmentationCar.url");
+
+        inputDir =Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.data")
+        ).toString();
+
+        File dataZip = new File(Paths.get(inputDir, "data-science-bowl-2018", "data-science-bowl-2018.zip").toString());
+
+        if (!dataZip.exists()) {
+            System.out.println("Creating dataset folder ...");
+            dataZip.getParentFile().mkdir();
+            HttpClientBuilder builder = HttpClientBuilder.create();
+            CloseableHttpClient client = builder.build();
+            System.out.println("Downloading dataset ...");
+            try (CloseableHttpResponse response = client.execute(new HttpGet(downloadLink))) {
+                HttpEntity entity = response.getEntity();
+
+                System.out.println(entity);
+
+                if (entity != null) {
+                    try (FileOutputStream outstream = new FileOutputStream(dataZip)) {
+                        entity.writeTo(outstream);
+                        outstream.flush();
+                    }
+                }
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }
+
+
+        }
+
+    }
+
+    public static void unzip(String source, String destination){
+        try {
+            ZipFile zipFile = new ZipFile(source);
+            zipFile.extractAll(destination);
+        } catch (ZipException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void unzipAllDataSet() throws IOException {
+        //unzip training data set
+        inputDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.data")
+        ).toString();
+
+        File classFolder = new File(Paths.get(inputDir, "carvana-masking-challenge").toString());
+
+        if (!classFolder.exists()){
+            classFolder.mkdir();
+            File zipClassFilePath = new File(Paths.get(inputDir, "carvana-masking-challenge.zip").toString());
+            System.out.println("Unzipping dataset ...");
+            unzip(zipClassFilePath.toString(), classFolder.toString());
+        }
+    }
 
 }
