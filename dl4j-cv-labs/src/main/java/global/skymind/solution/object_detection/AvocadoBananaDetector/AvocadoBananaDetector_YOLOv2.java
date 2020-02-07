@@ -1,6 +1,5 @@
 package global.skymind.solution.object_detection.AvocadoBananaDetector;
 
-import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
@@ -22,6 +21,7 @@ import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
 import org.deeplearning4j.nn.conf.layers.objdetect.Yolo2OutputLayer;
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.layers.objdetect.DetectedObject;
+import org.deeplearning4j.nn.layers.objdetect.YoloUtils;
 import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.weights.WeightInit;
@@ -96,16 +96,14 @@ public class AvocadoBananaDetector_YOLOv2 {
             model = ModelSerializer.restoreComputationGraph(modelFilename);
         } else {
             Nd4j.getRandom().setSeed(seed);
-            ComputationGraph pretrained = null;
-            FineTuneConfiguration fineTuneConf = null;
             INDArray priors = Nd4j.create(priorBoxes);
             //     STEP 2 : Train the model using Transfer Learning
             //     STEP 2.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
             log.info("Build model...");
-            pretrained = (ComputationGraph) YOLO2.builder().build().initPretrained();
+            ComputationGraph pretrained = (ComputationGraph) YOLO2.builder().build().initPretrained();
 
             //     STEP 2.2: Transfer Learning steps - Model Configurations.
-            fineTuneConf = getFineTuneConfiguration();
+            FineTuneConfiguration fineTuneConf = getFineTuneConfiguration();
 
             //     STEP 2.3: Transfer Learning steps - Modify prebuilt model's architecture
             model = getNewComputationGraph(pretrained, priors, fineTuneConf);
@@ -193,13 +191,13 @@ public class AvocadoBananaDetector_YOLOv2 {
             INDArray features = ds.getFeatures();
             INDArray results = model.outputSingle(features);
             List<DetectedObject> objs = yout.getPredictedObjects(results, detectionThreshold);
-            List<DetectedObject> objects = NonMaxSuppression.getObjects(objs);
+            YoloUtils.nms(objs,0.4);
             Mat mat = imageLoader.asMat(features);
             mat.convertTo(convertedMat, CV_8U, 255, 0);
             int w = mat.cols() * 2;
             int h = mat.rows() * 2;
             resize(convertedMat, convertedMat_big, new Size(w, h));
-            convertedMat_big=drawResults(objects,convertedMat_big,w,h);
+            convertedMat_big=drawResults(objs,convertedMat_big,w,h);
             canvas.showImage(converter.convert(convertedMat_big));
             canvas.waitKey();
         }
@@ -241,14 +239,11 @@ public class AvocadoBananaDetector_YOLOv2 {
             e.printStackTrace();
         }
 
-        String winName = "Object Detection";
-        CanvasFrame canvas = new CanvasFrame(winName);
-
+        CanvasFrame canvas = new CanvasFrame("Object Detection");
         int w = grabber.getImageWidth();
         int h = grabber.getImageHeight();
-
-
         canvas.setCanvasSize(w, h);
+
         while (true) {
             try {
                 frame = grabber.grab();
@@ -274,14 +269,13 @@ public class AvocadoBananaDetector_YOLOv2 {
 
                             Mat resizeImage = new Mat();
                             resize(rawImage, resizeImage, new Size(FruitDataSetIterator.yolowidth, FruitDataSetIterator.yoloheight));
-
                             INDArray inputImage = loader.asMatrix(resizeImage);
                             scaler.transform(inputImage);
                             INDArray outputs = model.outputSingle(inputImage);
                             org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout = (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer) model.getOutputLayer(0);
                             List<DetectedObject> objs = yout.getPredictedObjects(outputs, detectionThreshold);
-                            List<DetectedObject> objects = NonMaxSuppression.getObjects(objs);
-                            rawImage=drawResults(objects,rawImage,w,h);
+                            YoloUtils.nms(objs,0.4);
+                            rawImage=drawResults(objs,rawImage,w,h);
                             canvas.showImage(converter.convert(rawImage));
                         } catch (Exception e) {
                             throw new RuntimeException(e);
