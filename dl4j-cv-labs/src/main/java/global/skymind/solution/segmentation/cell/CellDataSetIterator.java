@@ -17,11 +17,15 @@ import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
+import global.skymind.solution.segmentation.imageUtils.CustomLabelGenerator;
+import org.nd4j.linalg.primitives.Pair;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class CellDataSetIterator {
@@ -32,7 +36,10 @@ public class CellDataSetIterator {
     private static final Random random = new Random(seed);
     private static String inputDir;
     private static String downloadLink;
-    private static CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, channels);
+    private static List<Pair<String, String>> replacement = Arrays.asList(
+            new org.nd4j.linalg.primitives.Pair<>("inputs","masks")
+    );
+    private static CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, channels, replacement);
     private static InputSplit trainData,valData;
     private static int batchSize;
 
