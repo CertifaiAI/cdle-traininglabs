@@ -99,9 +99,6 @@ public class CarDataSetIterator {
         BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
         InputSplit[] imagesSplits = imageFileSplit.sample(imageSplitPathFilter, trainPerc, 1-trainPerc);
 
-//        labelPath = imageFileSplit.toString().replace("inputs", "masks").replace(".jpg","_mask.gif");
-//        labelMaker = new CustomLabelGenerator(height, width, channels, labelPath);
-
         trainData = imagesSplits[0];
         valData = imagesSplits[1];
     }
@@ -115,7 +112,7 @@ public class CarDataSetIterator {
                 Helper.getPropValues("dl4j_home.data")
         ).toString();
 
-        File dataZip = new File(Paths.get(inputDir, "data-science-bowl-2018", "data-science-bowl-2018.zip").toString());
+        File dataZip = new File(Paths.get(inputDir,  "carvana-masking-challenge.zip").toString());
 
         if (!dataZip.exists()) {
             System.out.println("Creating dataset folder ...");
@@ -159,7 +156,7 @@ public class CarDataSetIterator {
                 Helper.getPropValues("dl4j_home.data")
         ).toString();
 
-        File classFolder = new File(Paths.get(inputDir, "carvana-masking-challenge").toString());
+        File classFolder = new File(Paths.get(inputDir).toString());
 
         if (!classFolder.exists()){
             classFolder.mkdir();
