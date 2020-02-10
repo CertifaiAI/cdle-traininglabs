@@ -42,15 +42,12 @@ import static org.bytedeco.opencv.global.opencv_core.CV_8U;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
-///**
 // * This is an example of a metal surface defect detection using YOLOv2 architecture.
 // * This example uses transfer learning to fine tune the last few layers of a TinyYOLO pretrained model
 // * If no model exists, train a model using Transfer Learning, then validate with test set
 // * If model exists, Validate model with test set.
 // * Data Source: http://faculty.neu.edu.cn/yunhyan/NEU_surface_defect_database.html
-// *
 // * NOTE: DUE TO THE MEMORY CONSTRAINT, THE MODEL NEEDS TO BE TRAINED USING CPU
-// * **/
 
 public class MetalSurfaceDefectDetector_YOLOv2 {
     private static final Logger log = LoggerFactory.getLogger(MetalSurfaceDefectDetector_YOLOv2.class);

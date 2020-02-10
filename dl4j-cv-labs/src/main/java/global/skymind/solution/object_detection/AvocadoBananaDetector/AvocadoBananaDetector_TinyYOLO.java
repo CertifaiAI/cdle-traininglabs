@@ -42,19 +42,18 @@ import org.slf4j.LoggerFactory;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.List;
+
 import static org.bytedeco.opencv.global.opencv_core.CV_8U;
 import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
-///**
 // * This is an example of a object detection using TinyYOLO architecture.
 // * This example uses transfer learning to fine tune the last few layers of a TinyYOLO pretrained model
 // * If no model exists, train a new model, then validate with test set
 // * If model exists, Validate model with test set and run real time inference on webcam frames.
 // * This model is able to detect avocado and banana in images.
 // * Please adjust the batch size or switch between using CPU/GPU depending on your system's specifications (GPU RAM, CPU RAM and etc.)
-// * **/
 
 public class AvocadoBananaDetector_TinyYOLO {
     private static final Logger log = LoggerFactory.getLogger(AvocadoBananaDetector_TinyYOLO.class);
@@ -190,13 +189,13 @@ public class AvocadoBananaDetector_TinyYOLO {
             INDArray features = ds.getFeatures();
             INDArray results = model.outputSingle(features);
             List<DetectedObject> objs = yout.getPredictedObjects(results, detectionThreshold);
-            YoloUtils.nms(objs,0.4);
+            YoloUtils.nms(objs, 0.4);
             Mat mat = imageLoader.asMat(features);
             mat.convertTo(convertedMat, CV_8U, 255, 0);
             int w = mat.cols() * 2;
             int h = mat.rows() * 2;
             resize(convertedMat, convertedMat_big, new Size(w, h));
-            convertedMat_big=drawResults(objs,convertedMat_big,w,h);
+            convertedMat_big = drawResults(objs, convertedMat_big, w, h);
             canvas.showImage(converter.convert(convertedMat_big));
             canvas.waitKey();
         }
@@ -240,7 +239,7 @@ public class AvocadoBananaDetector_TinyYOLO {
 
         CanvasFrame canvas = new CanvasFrame("Object Detection");
         int w = grabber.getImageWidth();
-        int h= grabber.getImageHeight();
+        int h = grabber.getImageHeight();
         canvas.setCanvasSize(w, h);
 
         while (true) {
@@ -270,8 +269,8 @@ public class AvocadoBananaDetector_TinyYOLO {
                             INDArray outputs = model.outputSingle(inputImage);
                             org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout = (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer) model.getOutputLayer(0);
                             List<DetectedObject> objs = yout.getPredictedObjects(outputs, detectionThreshold);
-                            YoloUtils.nms(objs,0.4);
-                            rawImage=drawResults(objs,rawImage,w,h);
+                            YoloUtils.nms(objs, 0.4);
+                            rawImage = drawResults(objs, rawImage, w, h);
                             canvas.showImage(converter.convert(rawImage));
                         } catch (Exception e) {
                             throw new RuntimeException(e);
@@ -294,7 +293,7 @@ public class AvocadoBananaDetector_TinyYOLO {
         }
     }
 
-    private static Mat drawResults(List<DetectedObject> objects, Mat mat,int w,int h){
+    private static Mat drawResults(List<DetectedObject> objects, Mat mat, int w, int h) {
         for (DetectedObject obj : objects) {
             double[] xy1 = obj.getTopLeftXY();
             double[] xy2 = obj.getBottomRightXY();
@@ -306,11 +305,11 @@ public class AvocadoBananaDetector_TinyYOLO {
             //Draw bounding box
             rectangle(mat, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
             //Display label text
-            labeltext =label+" "+String.format("%.2f",obj.getConfidence()*100)+"%";
-            int[] baseline ={0};
-            Size textSize=getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1,1,baseline);
-            rectangle(mat, new Point(x1 + 2, y2 - 2), new Point(x1 + 2+textSize.get(0), y2 - 2-textSize.get(1)), colormap[obj.getPredictedClass()], FILLED,0,0);
-            putText(mat, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0,0,0));
+            labeltext = label + " " + String.format("%.2f", obj.getConfidence() * 100) + "%";
+            int[] baseline = {0};
+            Size textSize = getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1, 1, baseline);
+            rectangle(mat, new Point(x1 + 2, y2 - 2), new Point(x1 + 2 + textSize.get(0), y2 - 2 - textSize.get(1)), colormap[obj.getPredictedClass()], FILLED, 0, 0);
+            putText(mat, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0, 0, 0));
         }
         return mat;
     }
