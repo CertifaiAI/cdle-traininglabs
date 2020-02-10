@@ -48,7 +48,7 @@ import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
 ///**
-// * This is an example of a object detection using TinyYOLOv architecture.
+// * This is an example of a object detection using TinyYOLO architecture.
 // * This example uses transfer learning to fine tune the last few layers of a TinyYOLO pretrained model
 // * If no model exists, train a new model, then validate with test set
 // * If model exists, Validate model with test set and run real time inference on webcam frames.

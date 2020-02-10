@@ -1,9 +1,6 @@
-//This example uses transfer learning from YOLOv2 pretrained model
-
 package global.skymind.solution.object_detection.MetalDefectsDetector;
 
 import global.skymind.solution.object_detection.MetalDefectsDetector.MetalSurfaceDefectsPretrainedYoloV2.PRETRAINEDYOLO2;
-import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
@@ -23,6 +20,7 @@ import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
 import org.deeplearning4j.nn.conf.layers.objdetect.Yolo2OutputLayer;
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.layers.objdetect.DetectedObject;
+import org.deeplearning4j.nn.layers.objdetect.YoloUtils;
 import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.weights.WeightInit;
@@ -38,16 +36,15 @@ import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.learning.config.Adam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.util.List;
-
 import static org.bytedeco.opencv.global.opencv_core.CV_8U;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
 ///**
 // * This is an example of a metal surface defect detection using YOLOv2 architecture.
+// * This example uses transfer learning to fine tune the last few layers of a TinyYOLO pretrained model
 // * If no model exists, train a model using Transfer Learning, then validate with test set
 // * If model exists, Validate model with test set.
 // * Data Source: http://faculty.neu.edu.cn/yunhyan/NEU_surface_defect_database.html
@@ -64,7 +61,7 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
     private static double lambdaCoord = 5.0;
     private static double[][] priorBoxes = {{1, 4}, {2.5, 6}, {3, 1}, {3.5, 8}, {4, 9}};
 
-    private static int batchSize = 2;
+    private static int batchSize = 8;
     private static int nEpochs = 1;
     private static double learningRate = 1e-4;
     private static int nClasses = 6;
@@ -196,35 +193,38 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
             INDArray features = ds.getFeatures();
             INDArray results = model.outputSingle(features);
             List<DetectedObject> objs = yout.getPredictedObjects(results, detectionThreshold);
-            List<DetectedObject> objects = NonMaxSuppression.getObjects(objs);
-
+            YoloUtils.nms(objs,0.4);
             Mat mat = imageLoader.asMat(features);
             mat.convertTo(convertedMat, CV_8U, 255, 0);
             int w = mat.cols() * 2;
             int h = mat.rows() * 2;
             resize(convertedMat, convertedMat_big, new Size(w, h));
-
-            for (DetectedObject obj : objects) {
-                double[] xy1 = obj.getTopLeftXY();
-                double[] xy2 = obj.getBottomRightXY();
-                String label = labels.get(obj.getPredictedClass());
-                int x1 = (int) Math.round(w * xy1[0] / MetalDefectDataSetIterator.gridWidth);
-                int y1 = (int) Math.round(h * xy1[1] / MetalDefectDataSetIterator.gridHeight);
-                int x2 = (int) Math.round(w * xy2[0] / MetalDefectDataSetIterator.gridWidth);
-                int y2 = (int) Math.round(h * xy2[1] / MetalDefectDataSetIterator.gridHeight);
-                //Draw bounding box
-                rectangle(convertedMat_big, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
-                //Display label text
-                labeltext = label + " " + (Math.round(obj.getConfidence() * 100.0) / 100.0) * 100.0 + "%";
-                int[] baseline = {0};
-                Size textSize = getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1, 1, baseline);
-                rectangle(convertedMat_big, new Point(x1 + 2, y2 - 2), new Point(x1 + 2 + textSize.get(0), y2 - 2 - textSize.get(1)), colormap[obj.getPredictedClass()], FILLED, 0, 0);
-                putText(convertedMat_big, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0, 0, 0));
-            }
+            convertedMat_big=drawResults(objs,convertedMat_big,w,h);
             canvas.showImage(converter.convert(convertedMat_big));
             canvas.waitKey();
         }
         canvas.dispose();
+    }
+
+    private static Mat drawResults(List<DetectedObject> objects, Mat mat,int w,int h){
+        for (DetectedObject obj : objects) {
+            double[] xy1 = obj.getTopLeftXY();
+            double[] xy2 = obj.getBottomRightXY();
+            String label = labels.get(obj.getPredictedClass());
+            int x1 = (int) Math.round(w * xy1[0] / MetalDefectDataSetIterator.gridWidth);
+            int y1 = (int) Math.round(h * xy1[1] / MetalDefectDataSetIterator.gridHeight);
+            int x2 = (int) Math.round(w * xy2[0] / MetalDefectDataSetIterator.gridWidth);
+            int y2 = (int) Math.round(h * xy2[1] / MetalDefectDataSetIterator.gridHeight);
+            //Draw bounding box
+            rectangle(mat, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
+            //Display label text
+            labeltext =label+" "+String.format("%.2f",obj.getConfidence()*100)+"%";
+            int[] baseline ={0};
+            Size textSize=getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1,1,baseline);
+            rectangle(mat, new Point(x1 + 2, y2 - 2), new Point(x1 + 2+textSize.get(0), y2 - 2-textSize.get(1)), colormap[obj.getPredictedClass()], FILLED,0,0);
+            putText(mat, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0,0,0));
+        }
+        return mat;
     }
 
 }

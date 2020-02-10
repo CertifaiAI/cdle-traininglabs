@@ -3,7 +3,6 @@
 package global.skymind.training.object_detection.AvocadoBananaDetector;
 
 import global.skymind.solution.object_detection.AvocadoBananaDetector.FruitDataSetIterator;
-import global.skymind.solution.object_detection.dataHelpers.NonMaxSuppression;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
