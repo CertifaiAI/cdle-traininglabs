@@ -1,6 +1,5 @@
 package global.skymind.solution.object_detection.MetalDefectsDetector;
 
-import global.skymind.solution.object_detection.MetalDefectsDetector.MetalSurfaceDefectsPretrainedYoloV2.PRETRAINEDYOLO2;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
@@ -29,6 +28,7 @@ import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
+import org.deeplearning4j.zoo.model.YOLO2;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -43,7 +43,7 @@ import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
 // * This is an example of a metal surface defect detection using YOLOv2 architecture.
-// * This example uses transfer learning to fine tune the last few layers of a TinyYOLO pretrained model
+// * This example uses transfer learning to fine tune the last few layers of a YOLOv2 pretrained model
 // * If no model exists, train a model using Transfer Learning, then validate with test set
 // * If model exists, Validate model with test set.
 // * Data Source: http://faculty.neu.edu.cn/yunhyan/NEU_surface_defect_database.html
@@ -59,7 +59,7 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
     private static double[][] priorBoxes = {{1, 4}, {2.5, 6}, {3, 1}, {3.5, 8}, {4, 9}};
 
     private static int batchSize = 8;
-    private static int nEpochs = 1;
+    private static int nEpochs = 8;
     private static double learningRate = 1e-4;
     private static int nClasses = 6;
     private static List<String> labels;
@@ -100,7 +100,7 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
             //     STEP 2 : Train the model using Transfer Learning
             //     STEP 2.1: Transfer Learning steps - Load YOLO prebuilt model.
             log.info("Build model...");
-            pretrained = (ComputationGraph) PRETRAINEDYOLO2.builder().build().initPretrained();
+            pretrained = (ComputationGraph) YOLO2.builder().build().initPretrained();
 
             //     STEP 2.2: Transfer Learning steps - Model Configurations.
             fineTuneConf = getFineTuneConfiguration();

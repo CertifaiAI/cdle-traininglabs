@@ -68,7 +68,7 @@ public class MetalDefectDataSetIterator {
         ).toString();
         downloadLink = Helper.getPropValues("dataset.metaldefects.url");
 
-        File parentDir = new File(Paths.get(dataDir, "metaldefects").toString());
+        File parentDir = new File(Paths.get(dataDir, "metal-defects").toString());
         if (!parentDir.exists()) {
             downloadAndUnzip();
         }
