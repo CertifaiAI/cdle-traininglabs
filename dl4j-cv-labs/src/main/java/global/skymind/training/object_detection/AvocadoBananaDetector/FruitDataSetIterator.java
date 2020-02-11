@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
 
@@ -24,7 +25,7 @@ public class FruitDataSetIterator {
     private static Random rng = new Random(seed);
     private static String dataDir;
     private static String downloadLink;
-    private static String trainDir, testDir;
+    private static Path trainDir,testDir;
     private static FileSplit trainData, testData;
     private static final int nChannels = 3;
     public static final int gridWidth = 13;
@@ -32,10 +33,10 @@ public class FruitDataSetIterator {
     public static final int yolowidth = 416;
     public static final int yoloheight = 416;
 
-    private static RecordReaderDataSetIterator makeIterator(InputSplit split, String dir, int batchSize) throws Exception {
+    private static RecordReaderDataSetIterator makeIterator(InputSplit split, Path dir, int batchSize) throws Exception {
 
         ObjectDetectionRecordReader recordReader = new ObjectDetectionRecordReader(yoloheight, yolowidth, nChannels,
-                gridHeight, gridWidth, new VocLabelProvider(dir));
+                gridHeight, gridWidth, new VocLabelProvider(dir.toString()));
         recordReader.initialize(split);
         RecordReaderDataSetIterator iter = new RecordReaderDataSetIterator(recordReader, batchSize, 1, 1, true);
         iter.setPreProcessor(new ImagePreProcessingScaler(0, 1));
@@ -54,10 +55,10 @@ public class FruitDataSetIterator {
     public static void setup() throws IOException {
         log.info("Load data...");
         loadData();
-        trainDir = dataDir.concat("/fruits/train/");
-        testDir = dataDir.concat("/fruits/test/");
-        trainData = new FileSplit(new File(trainDir), NativeImageLoader.ALLOWED_FORMATS, rng);
-        testData = new FileSplit(new File(testDir), NativeImageLoader.ALLOWED_FORMATS, rng);
+        trainDir = Paths.get(dataDir, "fruits", "train");
+        testDir = Paths.get(dataDir, "fruits", "test");
+        trainData = new FileSplit(new File(trainDir.toString()), NativeImageLoader.ALLOWED_FORMATS, rng);
+        testData = new FileSplit(new File(testDir.toString()),NativeImageLoader.ALLOWED_FORMATS, rng);
     }
 
     private static void loadData() throws IOException {
