@@ -36,7 +36,7 @@ public class FruitDataSetIterator {
     private static RecordReaderDataSetIterator makeIterator(InputSplit split, Path dir, int batchSize) throws Exception {
 
         ObjectDetectionRecordReader recordReader = new ObjectDetectionRecordReader(yoloheight, yolowidth, nChannels,
-                gridHeight, gridWidth, new VocLabelProvider(dir.toString()));
+                gridHeight, gridWidth, new VocLabelProvider(""));
         recordReader.initialize(split);
         RecordReaderDataSetIterator iter = new RecordReaderDataSetIterator(recordReader, batchSize, 1, 1, true);
         iter.setPreProcessor(new ImagePreProcessingScaler(0, 1));
@@ -55,8 +55,8 @@ public class FruitDataSetIterator {
     public static void setup() throws IOException {
         log.info("Load data...");
         loadData();
-        trainDir = Paths.get(dataDir, "fruits", "train");
-        testDir = Paths.get(dataDir, "fruits", "test");
+        trainDir = Paths.get(dataDir, "fruits", "");
+        testDir = Paths.get(dataDir, "fruits", "");
         trainData = new FileSplit(new File(trainDir.toString()), NativeImageLoader.ALLOWED_FORMATS, rng);
         testData = new FileSplit(new File(testDir.toString()),NativeImageLoader.ALLOWED_FORMATS, rng);
     }

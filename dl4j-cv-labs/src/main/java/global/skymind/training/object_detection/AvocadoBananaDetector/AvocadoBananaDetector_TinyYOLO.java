@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.List;
+
 import static org.bytedeco.opencv.global.opencv_core.CV_8U;
 import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
@@ -57,16 +58,15 @@ import static org.bytedeco.opencv.helper.opencv_core.RGB;
 public class AvocadoBananaDetector_TinyYOLO {
     private static final Logger log = LoggerFactory.getLogger(AvocadoBananaDetector_TinyYOLO.class);
     private static int seed = 123;
-    private static double detectionThreshold = 0.3;
+    private static double detectionThreshold = 0.0;
     private static int nBoxes = 5;
     private static double lambdaNoObj = 0.5;
     private static double lambdaCoord = 5.0;
-    private static double[][] priorBoxes = {{1, 3}, {2.5, 6}, {3, 4}, {3.5, 8}, {4, 9}};
-
-//    private static int batchSize = ;
-//    private static int nEpochs = ;
-    private static double learningRate = 1e-4;
-//    private static int nClasses = ;
+    private static double[][] priorBoxes = {{}, {}, {}, {}, {}};
+    private static int batchSize = 0;
+    private static int nEpochs = 0;
+    private static double learningRate = 0;
+    private static int nClasses = 0;
     private static List<String> labels;
 
     private static File modelFilename = new File(System.getProperty("user.dir"), "generated-models/AvocadoBananaDetector_tinyyolo.zip");
@@ -81,9 +81,9 @@ public class AvocadoBananaDetector_TinyYOLO {
 
         //        STEP 1 : Create iterators
         FruitDataSetIterator.setup();
-//        RecordReaderDataSetIterator trainIter = FruitDataSetIterator.trainIterator(batchSize);
+        RecordReaderDataSetIterator trainIter = FruitDataSetIterator.trainIterator(batchSize);
         RecordReaderDataSetIterator testIter = FruitDataSetIterator.testIterator(1);
-//        labels = trainIter.getLabels();
+        labels = trainIter.getLabels();
 
         //        If model does not exist, train the model, else directly go to model evaluation and then run real time object detection inference.
         if (modelFilename.exists()) {
@@ -97,65 +97,58 @@ public class AvocadoBananaDetector_TinyYOLO {
             //     STEP 2 : Train the model using Transfer Learning
             //     STEP 2.1: Transfer Learning steps - Load TinyYOLO prebuilt model.
             log.info("Build model...");
-//            ComputationGraph pretrained =
+            ComputationGraph pretrained = (ComputationGraph) TinyYOLO.builder().build().initPretrained();
 
             //     STEP 2.2: Transfer Learning steps - Model Configurations.
-//            FineTuneConfiguration fineTuneConf = getFineTuneConfiguration();
+            FineTuneConfiguration fineTuneConf = getFineTuneConfiguration();
 
             //     STEP 2.3: Transfer Learning steps - Modify prebuilt model's architecture
-//            model = getNewComputationGraph(pretrained, priors, fineTuneConf);
-//            System.out.println(model.summary(InputType.convolutional(
-//                    FruitDataSetIterator.yoloheight,
-//                    FruitDataSetIterator.yolowidth,
-//                    nClasses)));
+            model = getNewComputationGraph(pretrained, priors, fineTuneConf);
+            System.out.println(model.summary(InputType.convolutional(
+                    FruitDataSetIterator.yoloheight,
+                    FruitDataSetIterator.yolowidth,
+                    nClasses)));
 
             //     STEP 2.4: Training and Save model.
-//            log.info("Train model...");
-//            UIServer server = UIServer.getInstance();
-//            StatsStorage storage = new InMemoryStatsStorage();
-//            server.attach(storage);
-//            model.setListeners(new ScoreIterationListener(1), new StatsListener(storage));
+            log.info("Train model...");
+            UIServer server = UIServer.getInstance();
+            StatsStorage storage = new InMemoryStatsStorage();
+            server.attach(storage);
+            model.setListeners(new ScoreIterationListener(1), new StatsListener(storage));
 
-//            for (int i = 1; i < nEpochs + 1; i++) {
-//                trainIter.reset();
-//                while (trainIter.hasNext()) {
-//
-//                }
-//                log.info("*** Completed epoch {} ***", i);
-//            }
-//            ModelSerializer.writeModel(model, modelFilename, true);
-//            System.out.println("Model saved.");
+            ModelSerializer.writeModel(model, modelFilename, true);
+            System.out.println("Model saved.");
         }
         //     STEP 3: Evaluate the model's accuracy by using the test iterator.
-//        OfflineValidationWithTestDataset(testIter);
+        OfflineValidationWithTestDataset(testIter);
         //     STEP 4: Inference the model and process the webcam stream and make predictions.
-//        doInference();
+        doInference();
     }
 
     private static ComputationGraph getNewComputationGraph(ComputationGraph pretrained, INDArray priors, FineTuneConfiguration fineTuneConf) {
 
         return new TransferLearning.GraphBuilder(pretrained)
                 .fineTuneConfiguration(fineTuneConf)
-                .removeVertexKeepConnections("conv2d_9")
-                .removeVertexKeepConnections("outputs")
-                .addLayer("conv2d_9",
+                .removeVertexKeepConnections("")
+                .removeVertexKeepConnections("")
+                .addLayer("",
                         new ConvolutionLayer.Builder(1, 1)
                                 .nIn(1024)
-//                                .nOut(nBoxes * (5 + nClasses))
+                                .nOut(nBoxes * (5 + nClasses))
                                 .stride(1, 1)
                                 .convolutionMode(ConvolutionMode.Same)
                                 .weightInit(WeightInit.XAVIER)
                                 .activation(Activation.IDENTITY)
                                 .build(),
-                        "leaky_re_lu_8")
+                        "")
                 .addLayer("outputs",
                         new Yolo2OutputLayer.Builder()
-                                .lambdaNoObj(lambdaNoObj)
-                                .lambdaCoord(lambdaCoord)
+                                .lambdaNoObj(0)
+                                .lambdaCoord(0)
                                 .boundingBoxPriors(priors.castTo(DataType.FLOAT))
                                 .build(),
                         "conv2d_9")
-                .setOutputs("outputs")
+                .setOutputs("")
                 .build();
     }
 
@@ -186,15 +179,16 @@ public class AvocadoBananaDetector_TinyYOLO {
         while (test.hasNext() && canvas.isVisible()) {
             org.nd4j.linalg.dataset.DataSet ds = test.next();
             INDArray features = ds.getFeatures();
-            INDArray results = model.outputSingle();
-//            List<DetectedObject> objs = yout.(results, detectionThreshold);
-//            YoloUtils.(objs,0.4);
+            INDArray results = model.outputSingle(features);
+            List<DetectedObject> objs = yout.getPredictedObjects(results, detectionThreshold);
+            YoloUtils.nms(objs, 0.4);
             Mat mat = imageLoader.asMat(features);
             mat.convertTo(convertedMat, CV_8U, 255, 0);
             int w = mat.cols() * 2;
             int h = mat.rows() * 2;
             resize(convertedMat, convertedMat_big, new Size(w, h));
-//            convertedMat_big=(objs,convertedMat_big,w,h);
+            //Use drawResults method to show the predictions of the model on the input image
+
             canvas.showImage(converter.convert(convertedMat_big));
             canvas.waitKey();
         }
@@ -238,7 +232,7 @@ public class AvocadoBananaDetector_TinyYOLO {
 
         CanvasFrame canvas = new CanvasFrame("Object Detection");
         int w = grabber.getImageWidth();
-        int h= grabber.getImageHeight();
+        int h = grabber.getImageHeight();
         canvas.setCanvasSize(w, h);
 
         while (true) {
@@ -268,8 +262,8 @@ public class AvocadoBananaDetector_TinyYOLO {
                             INDArray outputs = model.outputSingle(inputImage);
                             org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer yout = (org.deeplearning4j.nn.layers.objdetect.Yolo2OutputLayer) model.getOutputLayer(0);
                             List<DetectedObject> objs = yout.getPredictedObjects(outputs, detectionThreshold);
-                            YoloUtils.nms(objs,0.4);
-                            rawImage=drawResults(objs,rawImage,w,h);
+                            YoloUtils.nms(objs, 0.4);
+                            rawImage = drawResults(objs, rawImage, w, h);
                             canvas.showImage(converter.convert(rawImage));
                         } catch (Exception e) {
                             throw new RuntimeException(e);
@@ -292,7 +286,7 @@ public class AvocadoBananaDetector_TinyYOLO {
         }
     }
 
-    private static Mat drawResults(List<DetectedObject> objects, Mat mat,int w,int h){
+    private static Mat drawResults(List<DetectedObject> objects, Mat mat, int w, int h) {
         for (DetectedObject obj : objects) {
             double[] xy1 = obj.getTopLeftXY();
             double[] xy2 = obj.getBottomRightXY();
@@ -304,11 +298,11 @@ public class AvocadoBananaDetector_TinyYOLO {
             //Draw bounding box
             rectangle(mat, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
             //Display label text
-            labeltext =label+" "+String.format("%.2f",obj.getConfidence()*100)+"%";
-            int[] baseline ={0};
-            Size textSize=getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1,1,baseline);
-            rectangle(mat, new Point(x1 + 2, y2 - 2), new Point(x1 + 2+textSize.get(0), y2 - 2-textSize.get(1)), colormap[obj.getPredictedClass()], FILLED,0,0);
-            putText(mat, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0,0,0));
+            labeltext = label + " " + String.format("%.2f", obj.getConfidence() * 100) + "%";
+            int[] baseline = {0};
+            Size textSize = getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1, 1, baseline);
+            rectangle(mat, new Point(x1 + 2, y2 - 2), new Point(x1 + 2 + textSize.get(0), y2 - 2 - textSize.get(1)), colormap[obj.getPredictedClass()], FILLED, 0, 0);
+            putText(mat, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0, 0, 0));
         }
         return mat;
     }
