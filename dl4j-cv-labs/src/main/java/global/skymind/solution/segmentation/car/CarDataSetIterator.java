@@ -93,7 +93,7 @@ public class CarDataSetIterator {
         ).toString();
 
 
-        File imagesPath = new File(Paths.get(inputDir, "carvana-image-masking-challenge","train","inputs").toString());
+        File imagesPath = new File(Paths.get(inputDir, "carvana-masking-challenge","carvana-masking-challenge","train","inputs").toString());
         FileSplit imageFileSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
 
         BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
@@ -156,7 +156,7 @@ public class CarDataSetIterator {
                 Helper.getPropValues("dl4j_home.data")
         ).toString();
 
-        File classFolder = new File(Paths.get(inputDir).toString());
+        File classFolder = new File(Paths.get(inputDir,"carvana-masking-challenge").toString());
 
         if (!classFolder.exists()){
             classFolder.mkdir();
