@@ -11,6 +11,7 @@ import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.util.ArchiveUtils;
 import org.slf4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -25,7 +26,7 @@ public class FruitDataSetIterator {
     private static Random rng = new Random(seed);
     private static String dataDir;
     private static String downloadLink;
-    private static Path trainDir,testDir;
+    private static Path trainDir, testDir;
     private static FileSplit trainData, testData;
     private static final int nChannels = 3;
     public static final int gridWidth = 13;
@@ -36,7 +37,7 @@ public class FruitDataSetIterator {
     private static RecordReaderDataSetIterator makeIterator(InputSplit split, Path dir, int batchSize) throws Exception {
 
         ObjectDetectionRecordReader recordReader = new ObjectDetectionRecordReader(yoloheight, yolowidth, nChannels,
-            gridHeight, gridWidth, new VocLabelProvider(dir.toString()));
+                gridHeight, gridWidth, new VocLabelProvider(dir.toString()));
         recordReader.initialize(split);
         RecordReaderDataSetIterator iter = new RecordReaderDataSetIterator(recordReader, batchSize, 1, 1, true);
         iter.setPreProcessor(new ImagePreProcessingScaler(0, 1));
@@ -58,7 +59,7 @@ public class FruitDataSetIterator {
         trainDir = Paths.get(dataDir, "fruits", "train");
         testDir = Paths.get(dataDir, "fruits", "test");
         trainData = new FileSplit(new File(trainDir.toString()), NativeImageLoader.ALLOWED_FORMATS, rng);
-        testData = new FileSplit(new File(testDir.toString()),NativeImageLoader.ALLOWED_FORMATS, rng);
+        testData = new FileSplit(new File(testDir.toString()), NativeImageLoader.ALLOWED_FORMATS, rng);
     }
 
     private static void loadData() throws IOException {
@@ -67,18 +68,18 @@ public class FruitDataSetIterator {
                 Helper.getPropValues("dl4j_home.data")
         ).toString();
         downloadLink = Helper.getPropValues("dataset.fruits.url");
-        File parentDir = new File(Paths.get(dataDir,"fruits").toString());
-        if(!parentDir.exists()){
+        File parentDir = new File(Paths.get(dataDir, "fruits").toString());
+        if (!parentDir.exists()) {
             downloadAndUnzip();
         }
     }
 
     private static void downloadAndUnzip() throws IOException {
         String dataPath = new File(dataDir).getAbsolutePath();
-        File zipFile = new File (dataPath,"fruits-detection.zip");
+        File zipFile = new File(dataPath, "fruits-detection.zip");
 
-        if(!zipFile.isFile()){
-            log.info("Downloading the dataset from "+downloadLink+ "...");
+        if (!zipFile.isFile()) {
+            log.info("Downloading the dataset from " + downloadLink + "...");
             FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
         }
         ArchiveUtils.unzipFileTo(zipFile.getAbsolutePath(), dataPath);

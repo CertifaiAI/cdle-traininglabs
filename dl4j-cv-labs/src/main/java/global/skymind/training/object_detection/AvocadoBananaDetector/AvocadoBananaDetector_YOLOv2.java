@@ -51,9 +51,7 @@ import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
 /**
  * This is an example of a object detection using YOLOv2 architecture.
- * This example uses transfer learning to fine tune the last few layers of a YOLOv2 pretrained model
- * If no model exists, train a new model, then validate with test set
- * If model exists, Validate model with test set and run real time inference on webcam frames.
+ * This example illustrate a model training process with transfer learning approach by fine tuning the last few layers of a YOLOv2 pretrained model
  * This model is able to detect avocado and banana in images.
  * Please adjust the batch size or switch between using CPU/GPU depending on your system's specifications (GPU RAM, CPU RAM and etc.)
  */
