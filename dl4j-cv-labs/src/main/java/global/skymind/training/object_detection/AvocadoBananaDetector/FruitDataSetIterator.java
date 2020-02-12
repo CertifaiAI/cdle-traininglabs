@@ -11,6 +11,7 @@ import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.util.ArchiveUtils;
 import org.slf4j.Logger;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,14 +36,7 @@ public class FruitDataSetIterator {
     public static final int yoloheight = 416;
 
     private static RecordReaderDataSetIterator makeIterator(InputSplit split, Path dir, int batchSize) throws Exception {
-
-        ObjectDetectionRecordReader recordReader = new ObjectDetectionRecordReader(yoloheight, yolowidth, nChannels,
-                gridHeight, gridWidth, new VocLabelProvider(""));
-        recordReader.initialize(split);
-        RecordReaderDataSetIterator iter = new RecordReaderDataSetIterator(recordReader, batchSize, 1, 1, true);
-        iter.setPreProcessor(new ImagePreProcessingScaler(0, 1));
-
-        return iter;
+        throw new NotImplementedException();
     }
 
     public static RecordReaderDataSetIterator trainIterator(int batchSize) throws Exception {
