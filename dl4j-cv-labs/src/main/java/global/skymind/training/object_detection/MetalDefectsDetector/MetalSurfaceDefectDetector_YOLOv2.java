@@ -36,18 +36,24 @@ import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.learning.config.Adam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.io.File;
 import java.util.List;
 import static org.bytedeco.opencv.global.opencv_core.CV_8U;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
-// * This is an example of a metal surface defect detection using YOLOv2 architecture.
-// * This example uses transfer learning to fine tune the last few layers of a YOLOv2 pretrained model
-// * If no model exists, train a model using Transfer Learning, then validate with test set
-// * If model exists, Validate model with test set.
-// * Data Source: http://faculty.neu.edu.cn/yunhyan/NEU_surface_defect_database.html
-// * NOTE: DUE TO THE MEMORY CONSTRAINT, THE MODEL NEEDS TO BE TRAINED USING CPU
+/**
+ * This is an example of a metal surface defect detection using YOLOv2 architecture.
+ * This example uses transfer learning to fine tune the last few layers of a YOLOv2 pretrained model
+ * If no model exists, train a model using Transfer Learning, then validate with test set
+ * If model exists, Validate model with test set.
+ * Data Source: http://faculty.neu.edu.cn/yunhyan/NEU_surface_defect_database.html
+ *NOTE: DUE TO THE MEMORY CONSTRAINT, THE MODEL NEEDS TO BE TRAINED USING CPU
+ *
+ * Training Objective: To learn about how to remove different layers in pretrained model and replace them with the new ones.
+ */
 
 public class MetalSurfaceDefectDetector_YOLOv2 {
     private static final Logger log = LoggerFactory.getLogger(MetalSurfaceDefectDetector_YOLOv2.class);
@@ -106,7 +112,7 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
             fineTuneConf = getFineTuneConfiguration();
 
             //     STEP 2.3: Transfer Learning steps - Modify prebuilt model's architecture
-//            model = getNewComputationGraph(pretrained, priors, fineTuneConf);
+//            model = getComputationGraph(pretrained, priors, fineTuneConf);
             System.out.println(model.summary(InputType.convolutional(
                     MetalDefectDataSetIterator.yoloheight,
                     MetalDefectDataSetIterator.yolowidth,
@@ -133,10 +139,10 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
         OfflineValidationWithTestDataset(testIter);
     }
 
-//    private static ComputationGraph getNewComputationGraph(ComputationGraph pretrained, INDArray priors, FineTuneConfiguration fineTuneConf) {
-//
-//
-//    }
+    private static ComputationGraph getComputationGraph(ComputationGraph pretrained, INDArray priors, FineTuneConfiguration fineTuneConf) {
+
+        throw new NotImplementedException();
+    }
 
     private static FineTuneConfiguration getFineTuneConfiguration() {
 
@@ -174,16 +180,33 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
             int w = mat.cols() * 2;
             int h = mat.rows() * 2;
             resize(convertedMat, convertedMat_big, new Size(w, h));
-//            convertedMat_big=drawResults(objs,convertedMat_big,w,h);
+            convertedMat_big=drawResults(objs,convertedMat_big,w,h);
             canvas.showImage(converter.convert(convertedMat_big));
             canvas.waitKey();
         }
         canvas.dispose();
     }
 
-//    private static Mat drawResults(List<DetectedObject> objects, Mat mat,int w,int h){
-//
-//    }
+    private static Mat drawResults(List<DetectedObject> objects, Mat mat,int w,int h){
+        for (DetectedObject obj : objects) {
+            double[] xy1 = obj.getTopLeftXY();
+            double[] xy2 = obj.getBottomRightXY();
+            String label = labels.get(obj.getPredictedClass());
+            int x1 = (int) Math.round(w * xy1[0] / global.skymind.solution.object_detection.MetalDefectsDetector.MetalDefectDataSetIterator.gridWidth);
+            int y1 = (int) Math.round(h * xy1[1] / global.skymind.solution.object_detection.MetalDefectsDetector.MetalDefectDataSetIterator.gridHeight);
+            int x2 = (int) Math.round(w * xy2[0] / global.skymind.solution.object_detection.MetalDefectsDetector.MetalDefectDataSetIterator.gridWidth);
+            int y2 = (int) Math.round(h * xy2[1] / global.skymind.solution.object_detection.MetalDefectsDetector.MetalDefectDataSetIterator.gridHeight);
+            //Draw bounding box
+            rectangle(mat, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
+            //Display label text
+            labeltext =label+" "+String.format("%.2f",obj.getConfidence()*100)+"%";
+            int[] baseline ={0};
+            Size textSize=getTextSize(labeltext, FONT_HERSHEY_DUPLEX, 1,1,baseline);
+            rectangle(mat, new Point(x1 + 2, y2 - 2), new Point(x1 + 2+textSize.get(0), y2 - 2-textSize.get(1)), colormap[obj.getPredictedClass()], FILLED,0,0);
+            putText(mat, labeltext, new Point(x1 + 2, y2 - 2), FONT_HERSHEY_DUPLEX, 1, RGB(0,0,0));
+        }
+        return mat;
+    }
 
 }
 

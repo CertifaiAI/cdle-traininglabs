@@ -48,12 +48,14 @@ import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
-// * This is an example of a object detection using TinyYOLO architecture.
-// * This example uses transfer learning to fine tune the last few layers of a TinyYOLO pretrained model
-// * If no model exists, train a new model, then validate with test set
-// * If model exists, Validate model with test set and run real time inference on webcam frames.
-// * This model is able to detect avocado and banana in images.
-// * Please adjust the batch size or switch between using CPU/GPU depending on your system's specifications (GPU RAM, CPU RAM and etc.)
+/**
+ * This is an example of a object detection using TinyYOLO architecture.
+ * This example uses transfer learning to fine tune the last few layers of a TinyYOLO pretrained model.
+ * If no model exists, train a new model, then validate with test set.
+ * If model exists, Validate model with test set and run real time inference on webcam frames.
+ * This model is able to detect avocado and banana in images.
+ * Please adjust the batch size or switch between using CPU/GPU depending on your system's specifications (GPU RAM, CPU RAM and etc.)
+ */
 
 public class AvocadoBananaDetector_TinyYOLO {
     private static final Logger log = LoggerFactory.getLogger(AvocadoBananaDetector_TinyYOLO.class);
@@ -103,7 +105,7 @@ public class AvocadoBananaDetector_TinyYOLO {
             FineTuneConfiguration fineTuneConf = getFineTuneConfiguration();
 
             //     STEP 2.3: Transfer Learning steps - Modify prebuilt model's architecture
-            model = getNewComputationGraph(pretrained, priors, fineTuneConf);
+            model = getComputationGraph(pretrained, priors, fineTuneConf);
             System.out.println(model.summary(InputType.convolutional(
                     FruitDataSetIterator.yoloheight,
                     FruitDataSetIterator.yolowidth,
@@ -125,7 +127,7 @@ public class AvocadoBananaDetector_TinyYOLO {
         doInference();
     }
 
-    private static ComputationGraph getNewComputationGraph(ComputationGraph pretrained, INDArray priors, FineTuneConfiguration fineTuneConf) {
+    private static ComputationGraph getComputationGraph(ComputationGraph pretrained, INDArray priors, FineTuneConfiguration fineTuneConf) {
 
         return new TransferLearning.GraphBuilder(pretrained)
                 .fineTuneConfiguration(fineTuneConf)

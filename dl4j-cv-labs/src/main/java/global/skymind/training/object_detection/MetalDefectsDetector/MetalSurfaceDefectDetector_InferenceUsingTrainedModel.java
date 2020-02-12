@@ -28,9 +28,11 @@ import static org.bytedeco.opencv.global.opencv_core.CV_8U;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.helper.opencv_core.RGB;
 
-// * This is an example of a metal surface defect detection using YOLOv2 architecture.
-// * This example download a pretrained weights and performs inference on test datasets.
-// * NOTE: DUE TO THE MEMORY CONSTRAINT, THE MODEL NEEDS TO BE TRAINED USING CPU
+/**
+ * This is an example of a metal surface defect detection using YOLOv2 architecture.
+ * This example download a pretrained weights and performs inference on test datasets.
+ * NOTE: DUE TO THE MEMORY CONSTRAINT, THE MODEL NEEDS TO BE TRAINED USING CPU
+ */
 
 public class MetalSurfaceDefectDetector_InferenceUsingTrainedModel {
 
