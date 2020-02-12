@@ -73,7 +73,6 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
 
     private static File modelFilename = new File(System.getProperty("user.dir"), "generated-models/MetalSurfaceDefects_yolov2_CompleteRetrain.zip");
     private static ComputationGraph model;
-    private static Frame frame = null;
     public static final Scalar BLUE = RGB(0, 0, 255);
     public static final Scalar GREEN = RGB(0, 255, 0);
     public static final Scalar RED = RGB(255, 0, 0);

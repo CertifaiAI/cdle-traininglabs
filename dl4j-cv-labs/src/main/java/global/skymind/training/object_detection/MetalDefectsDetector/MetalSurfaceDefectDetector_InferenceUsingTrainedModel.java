@@ -66,11 +66,11 @@ public class MetalSurfaceDefectDetector_InferenceUsingTrainedModel {
         if (trainedModel.exists()) {
             Nd4j.getRandom().setSeed(seed);
             log.info("Load model...");
-//            model = null;
+            model = ModelSerializer.restoreComputationGraph(trainedModel);
         } else {
             //download and load trained model
             log.info("Download and load model");
-//            model = downloadAndLoadTrainedModel(trainedModel);
+            model = downloadAndLoadTrainedModel(trainedModel);
         }
         //      STEP 3: model inference
         OfflineValidationWithTestDataset(testIter);
