@@ -78,13 +78,13 @@ public class PretrainedUNET {
         // Set listeners
         StatsStorage statsStorage = new InMemoryStatsStorage();
         StatsListener statsListener = new StatsListener(statsStorage);
-        ScoreIterationListener scoreIterationListener= new ScoreIterationListener(1);
+        ScoreIterationListener scoreIterationListener = new ScoreIterationListener(1);
 
         //STEP 2: Configuration of transfer learning
         //STEP 2.1: Set updater and learning rate)
         FineTuneConfiguration fineTuneConf = new FineTuneConfiguration.Builder()
                 .trainingWorkspaceMode(WorkspaceMode.ENABLED)
-                .updater(new Adam(new StepSchedule(ScheduleType.EPOCH,3e-4,0.5,5 )))
+                .updater(new Adam(new StepSchedule(ScheduleType.EPOCH, 3e-4, 0.5, 5)))
                 .seed(seed)
                 .build();
 
@@ -95,8 +95,8 @@ public class PretrainedUNET {
                 .fineTuneConfiguration(fineTuneConf)
                 .setFeatureExtractor(featurizeExtractionLayer)
                 .removeVertexAndConnections("activation_23")
-                .nInReplace("conv2d_1",1, WeightInit.XAVIER)
-                .nOutReplace("conv2d_23",1, WeightInit.XAVIER)
+                .nInReplace("conv2d_1", 1, WeightInit.XAVIER)
+                .nOutReplace("conv2d_23", 1, WeightInit.XAVIER)
                 .addLayer("output",
                         new CnnLossLayer.Builder(LossFunctions.LossFunction.XENT)
                                 .activation(Activation.SIGMOID).build(),
@@ -130,19 +130,18 @@ public class PretrainedUNET {
         );
 
         //STEP 4: Run training
-        for(int i=0; i<nEpochs; i++){
+        for (int i = 0; i < nEpochs; i++) {
 
             log.info("Epoch: " + i);
 
-            while(imageDataSetTrain.hasNext())
-            {
+            while (imageDataSetTrain.hasNext()) {
                 DataSet imageSet = imageDataSetTrain.next();
 
                 unetTransfer.fit(imageSet);
 
                 INDArray predict = unetTransfer.output(imageSet.getFeatures())[0];
 
-                for (int n=0; n<imageSet.asList().size(); n++){
+                for (int n = 0; n < imageSet.asList().size(); n++) {
                     visualisation.visualize(
                             imageSet.get(n).getFeatures(),
                             imageSet.get(n).getLabels(),
@@ -176,20 +175,20 @@ public class PretrainedUNET {
         // EXPORT IMAGES
         File exportDir = new File("export");
 
-        if (!exportDir.exists() ) {
+        if (!exportDir.exists()) {
             exportDir.mkdir();
         }
 
         float IOUtotal = 0;
         int count = 0;
-        while(imageDataSetVal.hasNext()) {
+        while (imageDataSetVal.hasNext()) {
             DataSet imageSetVal = imageDataSetVal.next();
 
             INDArray predict = unetTransfer.output(imageSetVal.getFeatures())[0];
             INDArray labels = imageSetVal.getLabels();
 
-            if (count%5==0) {
-                visualisation.export(exportDir, imageSetVal.getFeatures(), imageSetVal.getLabels(), predict, count );
+            if (count % 5 == 0) {
+                visualisation.export(exportDir, imageSetVal.getFeatures(), imageSetVal.getLabels(), predict, count);
             }
 
             count++;
@@ -200,14 +199,14 @@ public class PretrainedUNET {
 
             //STEP 5: Complete the code for IOU calculation here
             //Intersection over Union:  TP / (TP + FN + FP)
-            float IOUNuclei = (float)eval.truePositives().get(1) / ((float)eval.truePositives().get(1) + (float)eval.falsePositives().get(1) + (float)eval.falseNegatives().get(1));
+            float IOUNuclei = (float) eval.truePositives().get(1) / ((float) eval.truePositives().get(1) + (float) eval.falsePositives().get(1) + (float) eval.falseNegatives().get(1));
             IOUtotal = IOUtotal + IOUNuclei;
 
-            System.out.println("IOU Cell Nuclei " + String.format("%.3f", IOUNuclei) );
+            System.out.println("IOU Cell Nuclei " + String.format("%.3f", IOUNuclei));
 
             eval.reset();
 
-            for (int n=0; n<imageSetVal.asList().size(); n++){
+            for (int n = 0; n < imageSetVal.asList().size(); n++) {
                 visualisation.visualize(
                         imageSetVal.get(n).getFeatures(),
                         imageSetVal.get(n).getLabels(),
@@ -221,7 +220,7 @@ public class PretrainedUNET {
             }
         }
 
-        System.out.print("Mean IOU: " + IOUtotal/count);
+        System.out.print("Mean IOU: " + IOUtotal / count);
 
         // WRITE MODEL TO DISK
         modelExportDir = Paths.get(
@@ -231,7 +230,7 @@ public class PretrainedUNET {
 
 
         File locationToSaveModel = new File(Paths.get(modelExportDir, "segmentUNET.zip").toString());
-        if (!locationToSaveModel.exists()){
+        if (!locationToSaveModel.exists()) {
             locationToSaveModel.getParentFile().mkdirs();
         }
 

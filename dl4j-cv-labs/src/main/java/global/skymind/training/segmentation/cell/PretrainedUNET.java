@@ -3,7 +3,6 @@ package global.skymind.training.segmentation.cell;
 import global.skymind.Helper;
 import global.skymind.solution.segmentation.car.CarDataSetIterator;
 import global.skymind.training.segmentation.imageUtils.visualisation;
-import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -95,7 +94,7 @@ public class PretrainedUNET {
         // Set listeners
         StatsStorage statsStorage = new InMemoryStatsStorage();
         StatsListener statsListener = new StatsListener(statsStorage);
-        ScoreIterationListener scoreIterationListener= new ScoreIterationListener(1);
+        ScoreIterationListener scoreIterationListener = new ScoreIterationListener(1);
 
         //STEP 2: Configuration of transfer learning
         //STEP 2.1: Set updater and learning rate)
@@ -193,7 +192,7 @@ public class PretrainedUNET {
         // EXPORT IMAGES
         File exportDir = new File("export");
 
-        if (!exportDir.exists() ) {
+        if (!exportDir.exists()) {
             exportDir.mkdir();
         }
 
@@ -248,7 +247,7 @@ public class PretrainedUNET {
 
 
         File locationToSaveModel = new File(Paths.get(modelExportDir).toString() + "/segmentUNET.zip");
-        if (!locationToSaveModel.exists()){
+        if (!locationToSaveModel.exists()) {
             locationToSaveModel.getParentFile().mkdirs();
         }
 
