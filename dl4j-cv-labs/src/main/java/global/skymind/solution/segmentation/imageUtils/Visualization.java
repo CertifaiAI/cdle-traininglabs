@@ -17,6 +17,7 @@ import java.io.IOException;
 
 public class Visualization {
 
+    private static final int MAX_SAMPLE_DISPLAY = 4;
     private static Logger log = LoggerFactory.getLogger(Visualization.class);
     private static int displayWidth = 256;
     private static int displayHeight = 256;
@@ -36,7 +37,7 @@ public class Visualization {
         _Java2DNativeImageLoader = new Java2DNativeImageLoader(inputHeight, inputWidth, channels);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(displaySamples, 3, 1, 1));
+        panel.setLayout(new GridLayout((displaySamples > MAX_SAMPLE_DISPLAY ? MAX_SAMPLE_DISPLAY : displaySamples), 3, 1, 1));
         frame.add(panel, BorderLayout.CENTER);
         frame.setVisible(true);
         return panel;
@@ -45,7 +46,7 @@ public class Visualization {
     public static void visualize(INDArray image, INDArray label, INDArray predict, JFrame frame, JPanel panel, int displaySamples, int outputHeight, int outputWidth) {
         panel.removeAll();
         for (int i = 0; i < displaySamples; i++) {
-            if (i < image.size(0)) {
+            if (i < image.size(0) && i < MAX_SAMPLE_DISPLAY) {
                 panel.add(BufferedImagetoJLabel(_Java2DNativeImageLoader.asBufferedImage(image.slice(i, 0).mul(255))));
                 panel.add(BufferedImagetoJLabel(_Java2DNativeImageLoader.asBufferedImage(label.slice(i, 0).mul(255))));
                 panel.add(BufferedImagetoJLabel(_Java2DNativeImageLoader.asBufferedImage(predict.slice(i, 0).mul(255))));

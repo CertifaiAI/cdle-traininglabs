@@ -44,7 +44,7 @@ public class PretrainedUNET {
     private static final int nEpochs = 1;
     private static final int height = 224;
     private static final int width = 224;
-    private static final int batchSize = 4;
+    private static final int batchSize = 5;
     private static final double trainPerc = 0.3;
     private static String modelExportDir;
 
@@ -115,7 +115,7 @@ public class PretrainedUNET {
         JFrame frame = Visualization.initFrame("Viz");
         JPanel panel = Visualization.initPanel(
                 frame,
-                4,
+                batchSize,
                 height,
                 width,
                 1
@@ -139,12 +139,11 @@ public class PretrainedUNET {
                         predict,
                         frame,
                         panel,
-                        4,
+                        batchSize,
                         224,
                         224
                 );
             }
-
             imageDataSetTrain.reset();
         }
 
