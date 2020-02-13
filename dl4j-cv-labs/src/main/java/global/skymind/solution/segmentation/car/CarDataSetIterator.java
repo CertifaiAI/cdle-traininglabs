@@ -40,8 +40,8 @@ public class CarDataSetIterator {
     private static InputSplit trainData,valData;
     private static int batchSize;
     private static List<org.nd4j.linalg.primitives.Pair<String, String>> replacement = Arrays.asList(
-            new org.nd4j.linalg.primitives.Pair<>("inputs","masks"),
-            new org.nd4j.linalg.primitives.Pair<>(".jpg","_mask.gif")
+            new org.nd4j.linalg.primitives.Pair<>("inputs","masks_png"),
+            new org.nd4j.linalg.primitives.Pair<>(".jpg","_mask.png")
     );
     private static CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, channels,replacement);
 

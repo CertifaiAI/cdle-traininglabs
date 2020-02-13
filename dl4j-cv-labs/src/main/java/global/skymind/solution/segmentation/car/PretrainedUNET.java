@@ -52,7 +52,7 @@ public class PretrainedUNET {
     private static final int nEpochs = 1;
     private static final int height = 224;
     private static final int width = 224;
-    private static final int batchSize = 4;
+    private static final int batchSize = 2;
     private static final double trainPerc = 0.7;
     private static String modelExportDir;
 
@@ -108,7 +108,7 @@ public class PretrainedUNET {
 
         unetTransfer.setListeners(statsListener, scoreIterationListener);
 
-        //Initialize the user interface backend
+//        Initialize the user interface backend
         UIServer uiServer = UIServer.getInstance();
         uiServer.attach(statsStorage);
 
@@ -120,14 +120,14 @@ public class PretrainedUNET {
         RecordReaderDataSetIterator imageDataSetVal = CarDataSetIterator.valIterator();
 
         // Visualisation -  training
-        JFrame frame = visualisation.initFrame("Viz");
-        JPanel panel = visualisation.initPanel(
-                frame,
-                1,
-                height,
-                width,
-                1
-        );
+//        JFrame frame = visualisation.initFrame("Viz");
+//        JPanel panel = visualisation.initPanel(
+//                frame,
+//                1,
+//                height,
+//                width,
+//                1
+//        );
 
         //STEP 4: Run training
         for(int i=0; i<nEpochs; i++){
@@ -142,18 +142,18 @@ public class PretrainedUNET {
 
                 INDArray predict = unetTransfer.output(imageSet.getFeatures())[0];
 
-                for (int n=0; n<imageSet.asList().size(); n++){
-                    visualisation.visualize(
-                            imageSet.get(n).getFeatures(),
-                            imageSet.get(n).getLabels(),
-                            predict.get(NDArrayIndex.point(n)),
-                            frame,
-                            panel,
-                            4,
-                            224,
-                            224
-                    );
-                }
+//                for (int n=0; n<imageSet.asList().size(); n++){
+//                    visualisation.visualize(
+//                            imageSet.get(n).getFeatures(),
+//                            imageSet.get(n).getLabels(),
+//                            predict.get(NDArrayIndex.point(n)),
+//                            frame,
+//                            panel,
+//                            4,
+//                            224,
+//                            224
+//                    );
+//                }
 
             }
 
@@ -164,14 +164,14 @@ public class PretrainedUNET {
         Evaluation eval = new Evaluation(2);
 
         // VISUALISATION -  validation
-        JFrame frameVal = visualisation.initFrame("Viz");
-        JPanel panelVal = visualisation.initPanel(
-                frame,
-                1,
-                height,
-                width,
-                1
-        );
+//        JFrame frameVal = visualisation.initFrame("Viz");
+//        JPanel panelVal = visualisation.initPanel(
+//                frame,
+//                1,
+//                height,
+//                width,
+//                1
+//        );
 
         // EXPORT IMAGES
         File exportDir = new File("export");
@@ -186,6 +186,7 @@ public class PretrainedUNET {
             DataSet imageSetVal = imageDataSetVal.next();
 
             INDArray predict = unetTransfer.output(imageSetVal.getFeatures())[0];
+
             INDArray labels = imageSetVal.getLabels();
 
             if (count%5==0) {
@@ -207,18 +208,18 @@ public class PretrainedUNET {
 
             eval.reset();
 
-            for (int n=0; n<imageSetVal.asList().size(); n++){
-                visualisation.visualize(
-                        imageSetVal.get(n).getFeatures(),
-                        imageSetVal.get(n).getLabels(),
-                        predict.get(NDArrayIndex.point(n)),
-                        frame,
-                        panel,
-                        4,
-                        224,
-                        224
-                );
-            }
+//            for (int n=0; n<imageSetVal.asList().size(); n++){
+//                visualisation.visualize(
+//                        imageSetVal.get(n).getFeatures(),
+//                        imageSetVal.get(n).getLabels(),
+//                        predict.get(NDArrayIndex.point(n)),
+//                        frame,
+//                        panel,
+//                        4,
+//                        224,
+//                        224
+//                );
+//            }
         }
 
         System.out.print("Mean IOU: " + IOUtotal/count);
