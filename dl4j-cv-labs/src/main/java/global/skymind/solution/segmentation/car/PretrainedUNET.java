@@ -250,5 +250,4 @@ public class PretrainedUNET {
         );
         return new PipelineImageTransform(pipeline, false);
     }
-
 }

@@ -37,7 +37,7 @@ public class CustomLabelGenerator implements PathLabelGenerator {
         return false;
     }
 
-    public CustomLabelGenerator(int height, int width, int channels){
+    public CustomLabelGenerator(int height, int width, int channels) {
         this.height = height;
         this.width = width;
         this.channels = channels;
@@ -47,22 +47,19 @@ public class CustomLabelGenerator implements PathLabelGenerator {
     // This custom label generator finds labels for each input image by replacing one the folders (inputs >> masks) in the path string.
     @Override
     public Writable getLabelForPath(String path) {
-        try
-        {
+        try {
             String labelPath = path.replace("inputs", "masks");
 
-            NDArrayWritable label = new NDArrayWritable(imageLoader.asMatrix(new File(labelPath)) );
+            NDArrayWritable label = new NDArrayWritable(imageLoader.asMatrix(new File(labelPath)));
 
             INDArray labelINDArray = label.get();
 
             // normalise to 0-1 scale
-            label.set( labelINDArray.div(255));
+            label.set(labelINDArray.div(255));
 
-            return label ;
+            return label;
 
-        }
-        catch (IOException ioe)
-        {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
             return null;
         }
@@ -72,8 +69,6 @@ public class CustomLabelGenerator implements PathLabelGenerator {
     public Writable getLabelForPath(URI uri) {
         return this.getLabelForPath(uri.getPath());
     }
-
-
 
 
 }
