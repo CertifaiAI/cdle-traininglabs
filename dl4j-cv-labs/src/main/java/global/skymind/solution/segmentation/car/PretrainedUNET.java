@@ -43,7 +43,7 @@ public class PretrainedUNET {
     private static final int nEpochs = 1;
     private static final int height = 224;
     private static final int width = 224;
-    private static final int batchSize = 4;
+    private static final int batchSize = 2;
     private static final double trainPerc = 0.7;
     private static String modelExportDir;
 
@@ -99,7 +99,7 @@ public class PretrainedUNET {
 
         unetTransfer.setListeners(statsListener, scoreIterationListener);
 
-        //Initialize the user interface backend
+//        Initialize the user interface backend
         UIServer uiServer = UIServer.getInstance();
         uiServer.attach(statsStorage);
 
@@ -114,7 +114,7 @@ public class PretrainedUNET {
         JFrame frame = Visualization.initFrame("Viz");
         JPanel panel = Visualization.initPanel(
                 frame,
-                4,
+                batchSize,
                 height,
                 width,
                 1
@@ -138,7 +138,7 @@ public class PretrainedUNET {
                         predict,
                         frame,
                         panel,
-                        4,
+                        batchSize,
                         224,
                         224
                 );

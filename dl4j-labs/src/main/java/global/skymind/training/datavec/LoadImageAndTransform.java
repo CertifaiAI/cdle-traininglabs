@@ -89,7 +89,7 @@ public class LoadImageAndTransform {
         int labelIndex = 1; // Index of the label Writable (usually an IntWritable), as obtained by recordReader.next()
         // List<Writable> lw = recordReader.next();
         // then lw[0] =  NDArray shaped [1,3,50,50] (1, channels, height, width)
-        //      lw[0] =  label as integer.
+        //      lw[1] =  label as integer.
 
         DataSetIterator trainIter = new RecordReaderDataSetIterator(trainRR, batchSize, labelIndex, numLabels);
 
