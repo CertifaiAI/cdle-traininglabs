@@ -42,12 +42,6 @@ public class Visualization {
         return panel;
     }
 
-    public static void clearPanel(JFrame frame, JPanel panel) {
-        panel.removeAll();
-        frame.revalidate();
-        frame.pack();
-    }
-
     public static void visualize(INDArray image, INDArray label, INDArray predict, JFrame frame, JPanel panel, int displaySamples, int outputHeight, int outputWidth) {
         panel.removeAll();
         for (int i = 0; i < displaySamples; i++) {
