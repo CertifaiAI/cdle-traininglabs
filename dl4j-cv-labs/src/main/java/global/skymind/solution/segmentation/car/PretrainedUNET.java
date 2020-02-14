@@ -2,7 +2,6 @@ package global.skymind.solution.segmentation.car;
 
 import global.skymind.Helper;
 import global.skymind.solution.segmentation.imageUtils.Visualization;
-import global.skymind.training.segmentation.imageUtils.visualisation;
 import org.datavec.image.transform.*;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
@@ -161,14 +160,17 @@ public class PretrainedUNET {
 
         // EXPORT IMAGES
 //        File exportDir = new File("export");
-//        File exportDir = Paths.get(
-//                System.getProperty("user.home"),
-//                Helper.getPropValues("dl4j_home.data")
-//        ).toFile();
-//
-//        if (!exportDir.exists()) {
-//            exportDir.mkdir();
-//        }
+
+
+        File exportDir = Paths.get(
+                System.getProperty("user.home"),
+                Helper.getPropValues("dl4j_home.export-images")
+        ).toFile();
+
+
+        if (!exportDir.exists()) {
+            exportDir.mkdir();
+        }
 
         float IOUTotal = 0;
         int count = 0;
@@ -178,9 +180,9 @@ public class PretrainedUNET {
             INDArray predictVal = unetTransfer.output(imageSetVal.getFeatures())[0];
             INDArray labels = imageSetVal.getLabels();
 
-//            if (count % 5 == 0) {
-//                visualisation.export(exportDir, imageSetVal.getFeatures(), imageSetVal.getLabels(), predictVal, count);
-//            }
+            if (count % 5 == 0) {
+                Visualization.export(exportDir, imageSetVal.getFeatures(), imageSetVal.getLabels(), predictVal, count);
+            }
 
             count++;
 
