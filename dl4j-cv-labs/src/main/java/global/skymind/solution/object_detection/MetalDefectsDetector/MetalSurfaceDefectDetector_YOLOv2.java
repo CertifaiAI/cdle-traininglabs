@@ -58,19 +58,19 @@ import static org.bytedeco.opencv.helper.opencv_core.RGB;
 public class MetalSurfaceDefectDetector_YOLOv2 {
     private static final Logger log = LoggerFactory.getLogger(MetalSurfaceDefectDetector_YOLOv2.class);
     private static int seed = 123;
-    private static double detectionThreshold = 0.15;
+    private static double detectionThreshold = 0.1;
     private static int nBoxes = 5;
-    private static double lambdaNoObj = 0.8;
-    private static double lambdaCoord = 1.0;
+    private static double lambdaNoObj = 0.7;
+    private static double lambdaCoord = 0.7;
     private static double[][] priorBoxes = {{1, 4}, {2.5, 6}, {3, 1}, {3.5, 8}, {4, 9}};
 
     private static int batchSize = 8;
-    private static int nEpochs = 10;
+    private static int nEpochs = 8;
     private static double learningRate = 1e-4;
     private static int nClasses = 6;
     private static List<String> labels;
 
-    private static File modelFilename = new File(System.getProperty("user.dir"), "generated-models/MetalSurfaceDefects_yolov2_CompleteRetrain.zip");
+    private static File modelFilename = new File(System.getProperty("user.dir"), "generated-models/MetalSurfaceDefects_yolov2_CompleteRetrain_forceretrain_10epochs_lr_1e-3_20022020_beta6_3.zip");
     private static ComputationGraph model;
     public static final Scalar BLUE = RGB(0, 0, 255);
     public static final Scalar GREEN = RGB(0, 255, 0);
