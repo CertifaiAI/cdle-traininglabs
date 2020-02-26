@@ -14,7 +14,8 @@ public class Ex11_BooleanIndexing {
     public static void main(String[] args) {
         int nRows = 3;
         int nColumns = 5;
-        INDArray myArray = Nd4j.randn(nRows, nColumns, 123);
+        INDArray shape = Nd4j.create(new int[]{nRows, nColumns});
+        INDArray myArray = Nd4j.randn(shape, 123);
         System.out.println(BLACK_BOLD + "Default array" + ANSI_RESET);
         System.out.println(myArray);
 
@@ -37,11 +38,11 @@ public class Ex11_BooleanIndexing {
         - Create arr1 with Nd4j.create(new float[]{1,1,1,2,2,2,3,3,3}, new int[]{3,3})
         - Set value that not equal to one to one
         */
-        System.out.println(BLACK_BOLD +"\nCreate arr1 with Nd4j.create(new float[]{1,1,1,2,2,2,3,3,3}, new int[]{3,3})" + ANSI_RESET);
-        INDArray arr1 = Nd4j.create(new float[]{1,1,1,2,2,2,3,3,3}, new int[]{3,3});
+        System.out.println(BLACK_BOLD + "\nCreate arr1 with Nd4j.create(new float[]{1,1,1,2,2,2,3,3,3}, new int[]{3,3})" + ANSI_RESET);
+        INDArray arr1 = Nd4j.create(new float[]{1, 1, 1, 2, 2, 2, 3, 3, 3}, new int[]{3, 3});
         System.out.println(arr1);
 
-        System.out.println(BLACK_BOLD +"\nSet value that not equal to one to one" + ANSI_RESET);
+        System.out.println(BLACK_BOLD + "\nSet value that not equal to one to one" + ANSI_RESET);
         BooleanIndexing.replaceWhere(arr1, 1, Conditions.notEquals(1));
         System.out.println(arr1);
     }

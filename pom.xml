@@ -21,14 +21,14 @@
         <shadedClassifier>bin</shadedClassifier>
 
         <java.version>1.8</java.version>
-        <nd4j.version>1.0.0-beta5</nd4j.version>
-        <dl4j.version>1.0.0-beta5</dl4j.version>
-        <datavec.version>1.0.0-beta5</datavec.version>
-        <arbiter.version>1.0.0-beta5</arbiter.version>
-        <rl4j.version>1.0.0-beta5</rl4j.version>
+        <nd4j.version>1.0.0-beta6</nd4j.version>
+        <dl4j.version>1.0.0-beta6</dl4j.version>
+        <datavec.version>1.0.0-beta6</datavec.version>
+        <arbiter.version>1.0.0-beta6</arbiter.version>
+        <rl4j.version>1.0.0-beta6</rl4j.version>
 
-        <dl4j.spark.version>1.0.0-beta5</dl4j.spark.version>
-        <datavec.spark.version>1.0.0-beta5</datavec.spark.version>
+        <dl4j.spark.version>1.0.0-beta6</dl4j.spark.version>
+        <datavec.spark.version>1.0.0-beta6</datavec.spark.version>
 
         <!-- Scala binary version: DL4J's Spark and UI functionality are released with both Scala 2.10 and 2.11 support -->
         <scala.binary.version>2.11</scala.binary.version>
@@ -50,6 +50,7 @@
         <javacpp.version>1.5.2</javacpp.version>
         <openblas-platform.version>0.3.7-1.5.2</openblas-platform.version>
         <opencv-platform.version>4.1.2-1.5.2</opencv-platform.version>
+        <ffmpeg-platform.version>4.2.1-1.5.2</ffmpeg-platform.version>
 
         <httpclient.version>4.3.5</httpclient.version>
         <zip4j.version>1.3.2</zip4j.version>
