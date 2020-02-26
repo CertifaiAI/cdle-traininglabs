@@ -1,5 +1,7 @@
 # DL4J Training Labs Materials
 This repo contains codes for hands-on purpose during training session.
+All codes had been tested using CPU.
+
 ## Contents
 
 #### DL4J-Lab
@@ -57,7 +59,7 @@ This repo contains codes for hands-on purpose during training session.
 - [HelloWorldSpark](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-spark-labs/src/main/java/global/skymind)
 
 ## Built with
-- deeplearning4j beta 4.0
+- deeplearning4j beta 6.0
 - CUDA 10.0 (Note: Optional if you are using CPU)
 - cuDNN 7.6 (Note: Optional if you are using CPU)
 

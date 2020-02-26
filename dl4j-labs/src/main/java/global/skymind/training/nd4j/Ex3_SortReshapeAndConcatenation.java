@@ -13,7 +13,8 @@ public class Ex3_SortReshapeAndConcatenation {
     public static void main(String[] args) {
         int nRows = 3;
         int nColumns = 5;
-        INDArray myArray = Nd4j.rand(nRows, nColumns, 123);
+        INDArray shape1 = Nd4j.create(new int[] {nRows, nColumns});
+        INDArray myArray = Nd4j.rand(shape1, 123);
         System.out.println(BLACK_BOLD + "Default array" + ANSI_RESET);
         System.out.println(myArray);
 
@@ -62,9 +63,9 @@ public class Ex3_SortReshapeAndConcatenation {
         System.out.println(hStacked);
 
         //Concatenation, combines arrays along a dimension
-        int[] shape = new int[]{2,3,2};
-        INDArray array1 = Nd4j.zeros(shape);
-        INDArray array2 = Nd4j.ones(shape);
+        int[] shape2 = new int[]{2,3,2};
+        INDArray array1 = Nd4j.zeros(shape2);
+        INDArray array2 = Nd4j.ones(shape2);
 
         INDArray concatenated = Nd4j.concat(0, array1, array2);
         System.out.println(BLACK_BOLD + "\nconcatenate array1 and array2 in dimension 0" + ANSI_RESET);

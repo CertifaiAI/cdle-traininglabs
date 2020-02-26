@@ -59,10 +59,10 @@ import static org.bytedeco.opencv.helper.opencv_core.RGB;
 public class MetalSurfaceDefectDetector_YOLOv2 {
     private static final Logger log = LoggerFactory.getLogger(MetalSurfaceDefectDetector_YOLOv2.class);
     private static int seed = 123;
-    private static double detectionThreshold = 0.5;
+    private static double detectionThreshold = 0.1;
     private static int nBoxes = 5;
-    private static double lambdaNoObj = 0.5;
-    private static double lambdaCoord = 5.0;
+    private static double lambdaNoObj = 0.7;
+    private static double lambdaCoord = 0.7;
     private static double[][] priorBoxes = {{1, 4}, {2.5, 6}, {3, 1}, {3.5, 8}, {4, 9}};
 
     private static int batchSize = 8;
