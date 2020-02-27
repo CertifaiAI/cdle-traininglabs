@@ -1,4 +1,4 @@
-package pro.skymind.ts;
+package pro.skymind.ts.arima;
 
 import com.github.signaflo.math.stats.distributions.Normal;
 import com.github.signaflo.timeseries.TimePeriod;
@@ -7,7 +7,7 @@ import com.github.signaflo.timeseries.forecast.Forecast;
 import com.github.signaflo.timeseries.model.arima.Arima;
 import com.github.signaflo.timeseries.model.arima.ArimaOrder;
 
-public class ARIMASeasonalExample {
+public class signafloARIMASeasonalExample {
     public static void main(String[] args) {
         // First, we'll fill in 15 weeks worth of daily data with an extremely simple
         // simulated data generating process.

@@ -1,4 +1,4 @@
-package pro.skymind.ts;
+package pro.skymind.ts.arima;
 
 import com.github.signaflo.timeseries.TestData;
 import com.github.signaflo.timeseries.TimeSeries;
@@ -11,7 +11,7 @@ import static com.github.signaflo.data.visualization.Plots.plot;
 /**
  * reference: https://github.com/signaflo/java-timeseries/wiki/ARIMA%20models
  */
-public class ARIMADebitCards {
+public class signafloARIMADebitCards {
 
     public static void main(String[] args){
 

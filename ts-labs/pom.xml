@@ -51,5 +51,19 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.servicenow.stl4j</groupId>
+            <artifactId>stl-decomp-4j</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.workday/timeseries-forecast -->
+        <dependency>
+            <groupId>com.workday</groupId>
+            <artifactId>timeseries-forecast</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+
     </dependencies>
 </project>
