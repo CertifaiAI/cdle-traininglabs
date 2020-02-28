@@ -1,4 +1,4 @@
-package pro.skymind.ts;
+package pro.skymind.ts.regression;
 
 import org.nd4j.linalg.io.ClassPathResource;
 import weka.classifiers.evaluation.NumericPrediction;
@@ -10,7 +10,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.List;
 
-public class WekaTimeSeriesExample {
+public class WekaSMOregExample {
     public static void main(String[] args) {
         try {
             // path to the Australian wine data included with the time series forecasting
