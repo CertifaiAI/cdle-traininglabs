@@ -28,24 +28,26 @@ public class signafloARIMADebitCards extends JFrame {
 
         Arima model = Arima.model(debitcards, modelOrder);
 
-//        System.out.println(model.aic()); // Get and display the model AIC
-//        System.out.println(model.coefficients()); // Get and display the estimated coefficients
-//        System.out.println(java.util.Arrays.toString(model.stdErrors()));
+        System.out.println(model.aic()); // Get and display the model AIC
+        System.out.println(model.coefficients()); // Get and display the estimated coefficients
+        System.out.println(java.util.Arrays.toString(model.stdErrors()));
 
 //        plot(model.predictionErrors());
 
         int forecast_steps = 12;
         Forecast forecast = model.forecast(forecast_steps); // To specify the alpha significance level, add it as a second argument.
 
-//        System.out.println(forecast);
-
+        System.out.println(forecast);
 
         XYDataset dataset = VisualizerHelper.createXYDatasetJoint(
                 new String[]{"debitcards"},
-                new String[]{"forecast"},
+                new String[]{"forecast", "lower", "upper"},
                 new double[][]{debitcards.asArray()},
-                new double[][]{forecast.pointEstimates().asArray()},
-                debitcards.asArray().length + forecast.pointEstimates().asArray().length
+                new double[][]{
+                        forecast.pointEstimates().asArray(),
+                        forecast.lowerPredictionInterval().asArray(),
+                        forecast.upperPredictionInterval().asArray()
+                }
         );
 
         JFreeChart chart = ChartFactory.createXYLineChart(
@@ -65,7 +67,7 @@ public class signafloARIMADebitCards extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            signafloARIMADebitCards example = new signafloARIMADebitCards("STL Decomposition");
+            signafloARIMADebitCards example = new signafloARIMADebitCards("ARIMA");
             example.setAlwaysOnTop(true);
             example.pack();
             example.setSize(1200, 800);

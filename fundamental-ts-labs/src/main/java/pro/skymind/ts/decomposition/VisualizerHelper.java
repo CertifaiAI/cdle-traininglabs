@@ -18,7 +18,7 @@ public class VisualizerHelper {
         return dataset;
     }
 
-    public static XYDataset createXYDatasetJoint(String[] seriesNames, String[] seriesNamesJoint, double[][] seriesValues, double[][] seriesValuesJoint, int length) {
+    public static XYDataset createXYDatasetJoint(String[] seriesNames, String[] seriesNamesJoint, double[][] seriesValues, double[][] seriesValuesJoint) {
         XYSeriesCollection dataset = new XYSeriesCollection();
 
         // data series
