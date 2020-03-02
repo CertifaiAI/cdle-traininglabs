@@ -6,9 +6,18 @@ import com.github.signaflo.timeseries.TimeSeries;
 import com.github.signaflo.timeseries.forecast.Forecast;
 import com.github.signaflo.timeseries.model.arima.Arima;
 import com.github.signaflo.timeseries.model.arima.ArimaOrder;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYDataset;
+import pro.skymind.ts.utilities.VisualizerHelper;
 
-public class signafloARIMASeasonalExample {
-    public static void main(String[] args) {
+import javax.swing.*;
+
+public class signafloARIMASeasonalExample extends JFrame {
+
+    public signafloARIMASeasonalExample(String title) {
         // First, we'll fill in 15 weeks worth of daily data with an extremely simple
         // simulated data generating process.
         Normal normal = new Normal(); // Create a normal distribution with mean 0 an sd of 1.
@@ -42,5 +51,42 @@ public class signafloARIMASeasonalExample {
         // Finally, generate a forecast for next week using the model
         Forecast forecast = model.forecast(7);
         System.out.println(forecast);
+
+        // visualization
+        XYDataset dataset = VisualizerHelper.createXYDatasetJoint(
+                new String[]{"series"},
+                new String[]{"forecast", "lower", "upper"},
+                new double[][]{series.asArray()},
+                new double[][]{
+                        forecast.pointEstimates().asArray(),
+                        forecast.lowerPredictionInterval().asArray(),
+                        forecast.upperPredictionInterval().asArray()
+                }
+        );
+
+        JFreeChart chart = ChartFactory.createXYLineChart(
+                title, // Chart title
+                "Key", // X-Axis Label
+                "Value", // Y-Axis Label
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                true
+        );
+        ChartPanel panel = new ChartPanel(chart);
+        setTitle(title);
+        setContentPane(panel);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            signafloARIMASeasonalExample example = new signafloARIMASeasonalExample("ARIMA Seasonal");
+            example.setAlwaysOnTop(true);
+            example.pack();
+            example.setSize(1200, 800);
+            example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            example.setVisible(true);
+        });
     }
 }

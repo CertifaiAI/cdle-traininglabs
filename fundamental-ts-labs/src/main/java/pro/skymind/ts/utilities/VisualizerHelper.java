@@ -1,4 +1,4 @@
-package pro.skymind.ts.decomposition;
+package pro.skymind.ts.utilities;
 
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
