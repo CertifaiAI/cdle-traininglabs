@@ -11,7 +11,6 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
-import java.util.Arrays;
 
 public class servicenowSTLDecompExample extends JFrame {
     public servicenowSTLDecompExample(String title) {
@@ -20,7 +19,7 @@ public class servicenowSTLDecompExample extends JFrame {
         SeasonalTrendLoess.Builder builder = new SeasonalTrendLoess.Builder();
         SeasonalTrendLoess smoother = builder.
                 setPeriodLength(12).    // Data has a period of 12
-                setSeasonalWidth(35).   // Monthly data smoothed over 35 years
+                setSeasonalWidth(156).   // Monthly data smoothed over 35 years
                 setNonRobust().         // Not expecting outliers, so no robustness iterations
                 buildSmoother(values);
 
@@ -29,24 +28,19 @@ public class servicenowSTLDecompExample extends JFrame {
         double[] trend = stl.getTrend();
         double[] residual = stl.getResidual();
 
-        Arrays.stream(seasonal).forEach(num -> System.out.print(num + ","));
-        System.out.println();
-        Arrays.stream(trend).forEach(num -> System.out.print(num + ","));
-        System.out.println();
-        Arrays.stream(residual).forEach(num -> System.out.print(num + ","));
-
+        XYDataset dataset = createDataset(values, seasonal, trend, residual);
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "STL Decomposition", // Chart title
+                title, // Chart title
                 "Month", // X-Axis Label
                 "Debit card usages", // Y-Axis Label
-                createDataset(values, seasonal, trend, residual),
+                dataset,
                 PlotOrientation.VERTICAL,
                 true,
                 true,
                 true
         );
         ChartPanel panel = new ChartPanel(chart);
-
+        setTitle(title);
         setContentPane(panel);
     }
 
@@ -63,7 +57,7 @@ public class servicenowSTLDecompExample extends JFrame {
         for (int i = 0; i < seriesArr.length; i++) {
             XYSeries series = new XYSeries(String.valueOf(seriesArr[i]));
             for (int j = 0; j < valueArr[i].length; j++) {
-                series.add( j, valueArr[i][j]);
+                series.add(j, valueArr[i][j]);
             }
             dataset.addSeries(series);
         }
@@ -72,7 +66,7 @@ public class servicenowSTLDecompExample extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            servicenowSTLDecompExample example = new servicenowSTLDecompExample("Line Chart Example");
+            servicenowSTLDecompExample example = new servicenowSTLDecompExample("STL Decomposition");
             example.setAlwaysOnTop(true);
             example.pack();
             example.setSize(1200, 800);
