@@ -37,21 +37,21 @@ public class timeserieMovingAverage extends ApplicationFrame {
         super(title);
 
         TimeSeries data = TestData.sydneyAir;
-        MovingAverage MA2 = new MovingAverage(data.asList(), 2);
-        MovingAverage MA4 = new MovingAverage(data.asList(), 4);
-        MovingAverage MA8 = new MovingAverage(data.asList(), 8);
-        MovingAverage MA16 = new MovingAverage(data.asList(), 16);
+        MovingAverage MA3 = new MovingAverage(data.asList(), 3);
+        MovingAverage MA5 = new MovingAverage(data.asList(), 5);
+        MovingAverage MA7 = new MovingAverage(data.asList(), 7);
+        MovingAverage MA9 = new MovingAverage(data.asList(), 9);
 
         final JFreeChart chart = createCombinedChart(
                 new String[]{"sydneyAir", "MA2", "MA4", "MA8", "MA16"},
                 new double[][]{
                         data.asList().stream().mapToDouble(Double::doubleValue).toArray(),
-                        MA2.trend().stream().mapToDouble(Double::doubleValue).toArray(),
-                        MA4.trend().stream().mapToDouble(Double::doubleValue).toArray(),
-                        MA8.trend().stream().mapToDouble(Double::doubleValue).toArray(),
-                        MA16.trend().stream().mapToDouble(Double::doubleValue).toArray()
+                        MA3.trend().stream().mapToDouble(Double::doubleValue).toArray(),
+                        MA5.trend().stream().mapToDouble(Double::doubleValue).toArray(),
+                        MA7.trend().stream().mapToDouble(Double::doubleValue).toArray(),
+                        MA9.trend().stream().mapToDouble(Double::doubleValue).toArray()
                 },
-                new int[]{0, 2, 4, 8, 16}
+                new int[]{0, 3, 5, 7, 9}
         );
 
         final ChartPanel panel = new ChartPanel(chart, true, true, true, false, true);
