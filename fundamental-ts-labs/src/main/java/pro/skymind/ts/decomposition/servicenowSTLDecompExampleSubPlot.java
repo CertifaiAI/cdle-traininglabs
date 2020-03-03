@@ -33,7 +33,6 @@ public class servicenowSTLDecompExampleSubPlot extends ApplicationFrame {
     public servicenowSTLDecompExampleSubPlot(final String title) {
 
         super(title);
-
         double[] values = TestData.debitcards.asArray(); // Monthly time-series data
 
         SeasonalTrendLoess smoother = new SeasonalTrendLoess.Builder().
@@ -82,7 +81,6 @@ public class servicenowSTLDecompExampleSubPlot extends ApplicationFrame {
         }
 
         return new JFreeChart(servicenowSTLDecompExampleSubPlot.class.getCanonicalName(), JFreeChart.DEFAULT_TITLE_FONT, plot, true);
-
     }
 
     /**

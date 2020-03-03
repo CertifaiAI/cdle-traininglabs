@@ -1,4 +1,4 @@
-package pro.skymind.ts;
+package pro.skymind.ts.visualization_examples;
 
 import java.awt.Color;
 import java.text.SimpleDateFormat;
