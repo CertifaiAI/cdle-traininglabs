@@ -1,40 +1,29 @@
 package pro.skymind.ts.decomposition;
 
-import com.github.manliogit.timeserie.Serie;
 import com.github.manliogit.timeserie.smooth.MovingAverage;
 import com.github.signaflo.timeseries.TestData;
 import com.github.signaflo.timeseries.TimeSeries;
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
-import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
-import pro.skymind.ts.utilities.VisualizerHelper;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * reference: https://github.com/manlioGit/time-serie/blob/master/src/test/java/com/github/manliogit/timeserie/SerieTest.java#L185
  */
-public class timeserieMovingAverage extends ApplicationFrame {
+public class timeserieMovingAverageNew extends ApplicationFrame {
     /**
      * Constructs a new demonstration application.
      *
      * @param title the frame title.
      */
-    public timeserieMovingAverage(final String title) {
+    public timeserieMovingAverageNew(final String title) {
 
         super(title);
 
@@ -53,7 +42,7 @@ public class timeserieMovingAverage extends ApplicationFrame {
                         MA7.trend().stream().mapToDouble(Double::doubleValue).toArray(),
                         MA9.trend().stream().mapToDouble(Double::doubleValue).toArray()
                 },
-                new int[]{0, 3/2, 5/2, 7/2, 9/2}
+                new int[]{0, 1, 2, 3, 4}
         );
 
         final ChartPanel panel = new ChartPanel(chart, true, true, true, false, true);
@@ -71,47 +60,29 @@ public class timeserieMovingAverage extends ApplicationFrame {
      */
     private JFreeChart createCombinedChart(String[] seriesNames, double[][] seriesValues, int[] startIndex) {
 
-        // parent plot...
-        final CombinedDomainXYPlot plot = new CombinedDomainXYPlot(new NumberAxis("Time"));
-        plot.setGap(10.0);
-        plot.setOrientation(PlotOrientation.VERTICAL);
-
+        XYSeriesCollection dataset = new XYSeriesCollection();
         for (int i = 0; i < seriesNames.length; i++) {
-            // create subplot 1...
-            final XYDataset data = createDataset(seriesNames[i], seriesValues[i], startIndex[i]);
-            final XYItemRenderer renderer = new StandardXYItemRenderer();
-            final NumberAxis rangeAxis = new NumberAxis(seriesNames[i]);
-            rangeAxis.setRange(2000, 4000);
-            rangeAxis.setTickUnit(new NumberTickUnit(500));
-            final XYPlot subplot = new XYPlot(data, null, rangeAxis, renderer);
-            subplot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-            plot.add(subplot, 1);
+            XYSeries series = new XYSeries(String.valueOf(seriesNames[i]));
+            for (int j = 0; j < seriesValues[i].length; j++) {
+                series.add(j + startIndex[i], seriesValues[i][j]);
+            }
+            dataset.addSeries(series);
         }
+        JFreeChart chart = ChartFactory.createXYLineChart(
+                "Moving Average", // Chart title
+                "Month", // X-Axis Label
+                "elecSales", // Y-Axis Label
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                true
+        );
 
-        return new JFreeChart(timeserieMovingAverage.class.getCanonicalName(), JFreeChart.DEFAULT_TITLE_FONT, plot, true);
-    }
-
-    /**
-     * Creates a sample dataset.
-     *
-     * @param seriesName
-     * @param seriesValue
-     * @param startIndex
-     * @return Series.
-     */
-    private XYDataset createDataset(String seriesName, double[] seriesValue, int startIndex) {
-
-        // create dataset 1...
-        final XYSeries series1 = new XYSeries(seriesName);
-
-        for (int i = 0; i < seriesValue.length; i++) {
-            series1.add(i + startIndex, seriesValue[i]);
-        }
-
-        final XYSeriesCollection collection = new XYSeriesCollection();
-        collection.addSeries(series1);
-
-        return collection;
+        NumberAxis range = (NumberAxis) chart.getXYPlot().getRangeAxis();
+        range.setRange(2000, 4000);
+        range.setTickUnit(new NumberTickUnit(200));
+        return chart;
     }
 
     /**
@@ -120,7 +91,7 @@ public class timeserieMovingAverage extends ApplicationFrame {
      * @param args ignored.
      */
     public static void main(final String[] args) {
-        final timeserieMovingAverage demo = new timeserieMovingAverage("Multiplicative Decomposition");
+        final timeserieMovingAverageNew demo = new timeserieMovingAverageNew("Moving Average");
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);
