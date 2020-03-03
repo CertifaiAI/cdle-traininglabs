@@ -44,8 +44,7 @@ public class signafloARIMADebitCards extends ApplicationFrame {
         System.out.println(model.coefficients()); // Get and display the estimated coefficients
         System.out.println(java.util.Arrays.toString(model.stdErrors()));
 
-
-        plot(model.predictionErrors());
+//        plot(model.predictionErrors());
 
         int forecast_steps = 12;
         Forecast forecast = model.forecast(forecast_steps); // To specify the alpha significance level, add it as a second argument.
