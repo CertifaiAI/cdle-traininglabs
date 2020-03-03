@@ -20,14 +20,14 @@ import org.jfree.ui.RefineryUtilities;
 import javax.swing.*;
 import java.awt.*;
 
-public class workdayARIMASeasonalExample extends ApplicationFrame {
+public class workdayARIMASeasonal extends ApplicationFrame {
 
     /**
      * Creates a new demo.
      *
      * @param title the frame title.
      */
-    public workdayARIMASeasonalExample(String title) {
+    public workdayARIMASeasonal(String title) {
         super(title);
 
         double[] dataArray = new double[]{2, 1, 2, 5, 2, 1, 2, 5, 2, 1, 2, 5, 2, 1, 2, 5};
@@ -103,7 +103,7 @@ public class workdayARIMASeasonalExample extends ApplicationFrame {
 
         // create the chart...
         JFreeChart chart = ChartFactory.createXYLineChart(
-                workdayARIMASeasonalExample.class.getCanonicalName(),      // chart title
+                workdayARIMASeasonal.class.getCanonicalName(),      // chart title
                 "X",                      // x axis label
                 "Y",                      // y axis label
                 dataset,                  // data
@@ -145,7 +145,7 @@ public class workdayARIMASeasonalExample extends ApplicationFrame {
      */
     public static void main(String[] args) {
 
-        workdayARIMASeasonalExample demo = new workdayARIMASeasonalExample("ARIMA Seasonal");
+        workdayARIMASeasonal demo = new workdayARIMASeasonal("ARIMA Seasonal");
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);

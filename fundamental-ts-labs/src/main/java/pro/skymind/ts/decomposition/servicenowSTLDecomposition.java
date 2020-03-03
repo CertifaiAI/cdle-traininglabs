@@ -4,7 +4,6 @@ import com.github.servicenow.ds.stats.stl.SeasonalTrendLoess;
 import com.github.signaflo.timeseries.TestData;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.annotations.XYTextAnnotation;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CombinedDomainXYPlot;
@@ -18,19 +17,17 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
-import java.awt.*;
-
 /**
  * A demonstration application showing how to create a vertical combined chart.
  */
-public class servicenowSTLDecompExampleSubPlot extends ApplicationFrame {
+public class servicenowSTLDecomposition extends ApplicationFrame {
 
     /**
      * Constructs a new demonstration application.
      *
      * @param title the frame title.
      */
-    public servicenowSTLDecompExampleSubPlot(final String title) {
+    public servicenowSTLDecomposition(final String title) {
 
         super(title);
         double[] values = TestData.debitcards.asArray(); // Monthly time-series data
@@ -80,7 +77,7 @@ public class servicenowSTLDecompExampleSubPlot extends ApplicationFrame {
             plot.add(subplot, 1);
         }
 
-        return new JFreeChart(servicenowSTLDecompExampleSubPlot.class.getCanonicalName(), JFreeChart.DEFAULT_TITLE_FONT, plot, true);
+        return new JFreeChart(servicenowSTLDecomposition.class.getCanonicalName(), JFreeChart.DEFAULT_TITLE_FONT, plot, true);
     }
 
     /**
@@ -112,7 +109,7 @@ public class servicenowSTLDecompExampleSubPlot extends ApplicationFrame {
      */
     public static void main(final String[] args) {
 
-        final servicenowSTLDecompExampleSubPlot demo = new servicenowSTLDecompExampleSubPlot("STL Decomposition");
+        final servicenowSTLDecomposition demo = new servicenowSTLDecomposition("STL Decomposition");
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);

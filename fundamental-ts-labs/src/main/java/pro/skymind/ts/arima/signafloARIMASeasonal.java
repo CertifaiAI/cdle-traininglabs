@@ -1,6 +1,7 @@
 package pro.skymind.ts.arima;
 
-import com.github.signaflo.timeseries.TestData;
+import com.github.signaflo.math.stats.distributions.Normal;
+import com.github.signaflo.timeseries.TimePeriod;
 import com.github.signaflo.timeseries.TimeSeries;
 import com.github.signaflo.timeseries.forecast.Forecast;
 import com.github.signaflo.timeseries.model.arima.Arima;
@@ -22,39 +23,55 @@ import org.jfree.ui.RefineryUtilities;
 import javax.swing.*;
 import java.awt.*;
 
-public class signafloARIMADebitCards extends ApplicationFrame {
+public class signafloARIMASeasonal extends ApplicationFrame {
 
     /**
      * Creates a new demo.
      *
      * @param title the frame title.
      */
-    public signafloARIMADebitCards(String title) {
+    public signafloARIMASeasonal(String title) {
         super(title);
 
-        TimeSeries debitcards = TestData.debitcards;
+        // First, we'll fill in 15 weeks worth of daily data with an extremely simple
+        // simulated data generating process.
+        Normal normal = new Normal(); // Create a normal distribution with mean 0 an sd of 1.
 
-        ArimaOrder modelOrder = ArimaOrder.order(0, 1, 1, 0, 1, 1); // Note that intercept fitting will automatically be turned off
+        double[] values = new double[105];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = normal.rand();
+        }
 
-        com.github.signaflo.timeseries.model.arima.Arima model = Arima.model(debitcards, modelOrder);
+        // Assumes Monday corresponds to 0.
+        for (int fri = 4; fri < values.length; fri += 7) {
+            values[fri] += 1.0;
+            values[fri + 1] += 2.0;
+            values[fri + 2] -= 1.0;
+        }
 
-        System.out.println(model.aic()); // Get and display the model AIC
-        System.out.println(model.coefficients()); // Get and display the estimated coefficients
-        System.out.println(java.util.Arrays.toString(model.stdErrors()));
+        // Second, we'll create a daily time series from those values.
+        TimePeriod day = TimePeriod.oneDay();
 
-//        plot(model.predictionErrors());
+        TimeSeries series = TimeSeries.from(day, values);
 
-        int forecast_steps = 12;
-        Forecast forecast = model.forecast(forecast_steps); // To specify the alpha significance level, add it as a second argument.
+        // Third, we'll create an ArimaOrder with a seasonal component.
+        ArimaOrder order = ArimaOrder.order(0, 0, 0, 1, 1, 1);
 
+        // Fourth, we create an ARIMA model with the series, the order,
+        // and the weekly seasonality.
+        TimePeriod week = TimePeriod.oneWeek();
+
+        com.github.signaflo.timeseries.model.arima.Arima model = Arima.model(series, order, week);
+
+        // Finally, generate a forecast for next week using the model
+        Forecast forecast = model.forecast(7);
         System.out.println(forecast);
-
 
         YIntervalSeriesCollection collection = new YIntervalSeriesCollection();
         XYDataset dataset = createYIntervalSeries(
                 collection,
                 "Data",
-                debitcards.asArray(),
+                series.asArray(),
                 "Forecast",
                 forecast.pointEstimates().asArray(),
                 forecast.lowerPredictionInterval().asArray(),
@@ -107,9 +124,9 @@ public class signafloARIMADebitCards extends ApplicationFrame {
 
         // create the chart...
         JFreeChart chart = ChartFactory.createXYLineChart(
-                signafloARIMADebitCards.class.getCanonicalName(),      // chart title
-                "Month",                      // x axis label
-                "Amount",                      // y axis label
+                signafloARIMASeasonal.class.getCanonicalName(),      // chart title
+                "X",                      // x axis label
+                "Y",                      // y axis label
                 dataset,                  // data
                 PlotOrientation.VERTICAL,
                 true,                     // include legend
@@ -149,7 +166,7 @@ public class signafloARIMADebitCards extends ApplicationFrame {
      */
     public static void main(String[] args) {
 
-        signafloARIMADebitCards demo = new signafloARIMADebitCards("ARIMA Debit Cards");
+        signafloARIMASeasonal demo = new signafloARIMASeasonal("ARIMA Seasonal (Syntactic Data)");
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);
