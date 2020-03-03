@@ -1,7 +1,6 @@
 package pro.skymind.ts.decomposition;
 
 import com.github.manliogit.timeserie.Serie;
-import org.apache.commons.lang3.ArrayUtils;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
@@ -18,31 +17,29 @@ import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 import pro.skymind.ts.utilities.VisualizerHelper;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
-public class timeserieMultiplicativeDecomposition extends ApplicationFrame {
+public class timeserieAdditiveDecomposition extends ApplicationFrame {
     /**
      * Constructs a new demonstration application.
      *
      * @param title the frame title.
      */
-    public timeserieMultiplicativeDecomposition(final String title) {
+    public timeserieAdditiveDecomposition(final String title) {
 
         super(title);
 
-
-        List<Double> airPassengers = Arrays.asList(112., 118., 132., 129., 121., 135., 148., 148., 136., 119., 104., 118., 115., 126., 141., 135., 125., 149., 170., 170., 158., 133., 114., 140., 145., 150., 178., 163., 172., 178., 199., 199., 184., 162., 146., 166., 171., 180., 193., 181., 183., 218., 230., 242., 209., 191., 172., 194., 196., 196., 236., 235., 229., 243., 264., 272., 237., 211., 180., 201., 204., 188., 235., 227., 234., 264., 302., 293., 259., 229., 203., 229., 242., 233., 267., 269., 270., 315., 364., 347., 312., 274., 237., 278., 284., 277., 317., 313., 318., 374., 413., 405., 355., 306., 271., 306., 315., 301., 356., 348., 355., 422., 465., 467., 404., 347., 305., 336., 340., 318., 362., 348., 363., 435., 491., 505., 404., 359., 310., 337., 360., 342., 406., 396., 420., 472., 548., 559., 463., 407., 362., 405., 417., 391., 419., 461., 472., 535., 622., 606., 508., 461., 390., 432.);
-
-        int movingAverageWindow = 12;
-        Serie serie = new Serie(airPassengers, movingAverageWindow).multiplicative();
+        int movingAverageWindow = 4;
+        Serie serie = new Serie(ausBeer(), movingAverageWindow);
 
         final JFreeChart chart = createCombinedChart(
                 new String[]{"airPassengers", "MA / Trend", "Season", "Residual"},
                 new double[][]{
-                        airPassengers.stream().mapToDouble(Double::doubleValue).toArray(),
+                        ausBeer().stream().mapToDouble(Double::doubleValue).toArray(),
                         serie.trend().stream().mapToDouble(Double::doubleValue).toArray(),
-                        VisualizerHelper.repeat(serie.season().stream().mapToDouble(Double::doubleValue).toArray(), airPassengers.size()),
+                        VisualizerHelper.repeat(serie.season().stream().mapToDouble(Double::doubleValue).toArray(), ausBeer().size()),
                         serie.residual().stream().mapToDouble(Double::doubleValue).toArray()
                 },
                 new int[]{0, movingAverageWindow, 0, movingAverageWindow}
@@ -51,6 +48,10 @@ public class timeserieMultiplicativeDecomposition extends ApplicationFrame {
         final ChartPanel panel = new ChartPanel(chart, true, true, true, false, true);
         panel.setPreferredSize(new java.awt.Dimension(1000, 600));
         setContentPane(panel);
+    }
+
+    private List<Double> ausBeer() {
+        return Arrays.asList(236.,320.,272.,233.,237.,313.,261.,227.,250.,314.,286.,227.,260.,311.,295.,233.,257.,339.,279.,250.,270.,346.,294.,255.,278.,363.,313.,273.,300.,370.,331.,288.,306.,386.,335.,288.,308.,402.,353.,316.,325.,405.,393.,319.,327.,442.,383.,332.,361.,446.,387.,357.,374.,466.,410.,370.,379.,487.,419.,378.,393.,506.,458.,387.);
     }
 
     /**
@@ -78,7 +79,7 @@ public class timeserieMultiplicativeDecomposition extends ApplicationFrame {
             plot.add(subplot, 1);
         }
 
-        return new JFreeChart(timeserieMultiplicativeDecomposition.class.getCanonicalName(), JFreeChart.DEFAULT_TITLE_FONT, plot, true);
+        return new JFreeChart(timeserieAdditiveDecomposition.class.getCanonicalName(), JFreeChart.DEFAULT_TITLE_FONT, plot, true);
     }
 
     /**
@@ -111,7 +112,7 @@ public class timeserieMultiplicativeDecomposition extends ApplicationFrame {
      */
     public static void main(final String[] args) {
 
-        final timeserieMultiplicativeDecomposition demo = new timeserieMultiplicativeDecomposition("Multiplicative Decomposition");
+        final timeserieAdditiveDecomposition demo = new timeserieAdditiveDecomposition("Multiplicative Decomposition");
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);

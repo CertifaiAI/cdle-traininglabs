@@ -4,6 +4,8 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import java.util.Arrays;
+
 public class VisualizerHelper {
 
     public static XYDataset createXYDataset(String[] seriesNames, double[][] seriesValues) {
@@ -41,5 +43,13 @@ public class VisualizerHelper {
         }
 
         return dataset;
+    }
+
+    public static <T> double[] repeat(double[] arr, int newLength) {
+        double[] dup = Arrays.copyOf(arr, newLength);
+        for (int last = arr.length; last != 0 && last < newLength; last <<= 1) {
+            System.arraycopy(dup, 0, dup, last, Math.min(last << 1, newLength) - last);
+        }
+        return dup;
     }
 }
