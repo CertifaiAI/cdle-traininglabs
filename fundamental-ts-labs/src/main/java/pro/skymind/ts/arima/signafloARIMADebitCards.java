@@ -22,6 +22,8 @@ import org.jfree.ui.RefineryUtilities;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.github.signaflo.data.visualization.Plots.plot;
+
 public class signafloARIMADebitCards extends ApplicationFrame {
 
     /**
@@ -42,7 +44,8 @@ public class signafloARIMADebitCards extends ApplicationFrame {
         System.out.println(model.coefficients()); // Get and display the estimated coefficients
         System.out.println(java.util.Arrays.toString(model.stdErrors()));
 
-//        plot(model.predictionErrors());
+
+        plot(model.predictionErrors());
 
         int forecast_steps = 12;
         Forecast forecast = model.forecast(forecast_steps); // To specify the alpha significance level, add it as a second argument.
@@ -127,11 +130,11 @@ public class signafloARIMADebitCards extends ApplicationFrame {
         plot.setRangeGridlinePaint(Color.white);
 
         DeviationRenderer renderer = new DeviationRenderer(true, false);
-        renderer.setSeriesStroke(0, new BasicStroke(3.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        renderer.setSeriesStroke(0, new BasicStroke(3.0f));
+        renderer.setSeriesStroke(0, new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        renderer.setSeriesStroke(0, new BasicStroke(1.0f));
         renderer.setSeriesFillPaint(0, Color.WHITE);
-        renderer.setSeriesStroke(1, new BasicStroke(3.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        renderer.setSeriesStroke(1, new BasicStroke(3.0f));
+        renderer.setSeriesStroke(1, new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        renderer.setSeriesStroke(1, new BasicStroke(1.0f));
         renderer.setSeriesFillPaint(1, Color.WHITE);
         plot.setRenderer(renderer);
 

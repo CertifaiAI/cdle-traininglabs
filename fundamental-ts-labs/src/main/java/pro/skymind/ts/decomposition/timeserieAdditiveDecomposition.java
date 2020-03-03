@@ -54,7 +54,7 @@ public class timeserieAdditiveDecomposition extends ApplicationFrame {
     }
 
     private List<Double> ausBeer() {
-        return Arrays.asList(236.,320.,272.,233.,237.,313.,261.,227.,250.,314.,286.,227.,260.,311.,295.,233.,257.,339.,279.,250.,270.,346.,294.,255.,278.,363.,313.,273.,300.,370.,331.,288.,306.,386.,335.,288.,308.,402.,353.,316.,325.,405.,393.,319.,327.,442.,383.,332.,361.,446.,387.,357.,374.,466.,410.,370.,379.,487.,419.,378.,393.,506.,458.,387.);
+        return Arrays.asList(236., 320., 272., 233., 237., 313., 261., 227., 250., 314., 286., 227., 260., 311., 295., 233., 257., 339., 279., 250., 270., 346., 294., 255., 278., 363., 313., 273., 300., 370., 331., 288., 306., 386., 335., 288., 308., 402., 353., 316., 325., 405., 393., 319., 327., 442., 383., 332., 361., 446., 387., 357., 374., 466., 410., 370., 379., 487., 419., 378., 393., 506., 458., 387.);
     }
 
     /**
@@ -114,11 +114,9 @@ public class timeserieAdditiveDecomposition extends ApplicationFrame {
      * @param args ignored.
      */
     public static void main(final String[] args) {
-
         final timeserieAdditiveDecomposition demo = new timeserieAdditiveDecomposition("Multiplicative Decomposition");
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);
-
     }
 }
