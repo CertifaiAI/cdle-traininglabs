@@ -21,6 +21,9 @@ import pro.skymind.ts.utilities.VisualizerHelper;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * reference: https://github.com/manlioGit/time-serie/blob/master/src/test/java/com/github/manliogit/timeserie/SerieTest.java#L160
+ */
 public class timeserieMultiplicativeDecomposition extends ApplicationFrame {
     /**
      * Constructs a new demonstration application.

@@ -21,6 +21,9 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * reference: https://github.com/manlioGit/time-serie/blob/master/src/test/java/com/github/manliogit/timeserie/SerieTest.java#L185
+ */
 public class timeserieAdditiveDecomposition extends ApplicationFrame {
     /**
      * Constructs a new demonstration application.
