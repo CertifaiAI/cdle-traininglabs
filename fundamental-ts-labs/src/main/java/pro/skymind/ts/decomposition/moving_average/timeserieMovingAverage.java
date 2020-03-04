@@ -1,4 +1,4 @@
-package pro.skymind.ts.decomposition;
+package pro.skymind.ts.decomposition.moving_average;
 
 import com.github.manliogit.timeserie.smooth.MovingAverage;
 import com.github.signaflo.timeseries.TestData;
@@ -17,13 +17,13 @@ import org.jfree.ui.RefineryUtilities;
 /**
  * reference: https://github.com/manlioGit/time-serie/blob/master/src/test/java/com/github/manliogit/timeserie/SerieTest.java#L185
  */
-public class timeserieMovingAverageNew extends ApplicationFrame {
+public class timeserieMovingAverage extends ApplicationFrame {
     /**
      * Constructs a new demonstration application.
      *
      * @param title the frame title.
      */
-    public timeserieMovingAverageNew(final String title) {
+    public timeserieMovingAverage(final String title) {
 
         super(title);
 
@@ -91,7 +91,7 @@ public class timeserieMovingAverageNew extends ApplicationFrame {
      * @param args ignored.
      */
     public static void main(final String[] args) {
-        final timeserieMovingAverageNew demo = new timeserieMovingAverageNew("Moving Average");
+        final timeserieMovingAverage demo = new timeserieMovingAverage("Moving Average");
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);

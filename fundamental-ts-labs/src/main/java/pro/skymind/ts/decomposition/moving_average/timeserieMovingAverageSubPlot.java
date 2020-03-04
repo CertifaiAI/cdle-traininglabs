@@ -1,6 +1,5 @@
-package pro.skymind.ts.decomposition;
+package pro.skymind.ts.decomposition.moving_average;
 
-import com.github.manliogit.timeserie.Serie;
 import com.github.manliogit.timeserie.smooth.MovingAverage;
 import com.github.signaflo.timeseries.TestData;
 import com.github.signaflo.timeseries.TimeSeries;
@@ -9,7 +8,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
-import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
@@ -20,21 +18,17 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
-import pro.skymind.ts.utilities.VisualizerHelper;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * reference: https://github.com/manlioGit/time-serie/blob/master/src/test/java/com/github/manliogit/timeserie/SerieTest.java#L185
  */
-public class timeserieMovingAverage extends ApplicationFrame {
+public class timeserieMovingAverageSubPlot extends ApplicationFrame {
     /**
      * Constructs a new demonstration application.
      *
      * @param title the frame title.
      */
-    public timeserieMovingAverage(final String title) {
+    public timeserieMovingAverageSubPlot(final String title) {
 
         super(title);
 
@@ -88,7 +82,7 @@ public class timeserieMovingAverage extends ApplicationFrame {
             plot.add(subplot, 1);
         }
 
-        return new JFreeChart(timeserieMovingAverage.class.getCanonicalName(), JFreeChart.DEFAULT_TITLE_FONT, plot, true);
+        return new JFreeChart(timeserieMovingAverageSubPlot.class.getCanonicalName(), JFreeChart.DEFAULT_TITLE_FONT, plot, true);
     }
 
     /**
@@ -120,7 +114,7 @@ public class timeserieMovingAverage extends ApplicationFrame {
      * @param args ignored.
      */
     public static void main(final String[] args) {
-        final timeserieMovingAverage demo = new timeserieMovingAverage("Multiplicative Decomposition");
+        final timeserieMovingAverageSubPlot demo = new timeserieMovingAverageSubPlot("Multiplicative Decomposition");
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);
