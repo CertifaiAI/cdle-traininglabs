@@ -42,7 +42,7 @@ public class timeserieMovingAverage extends ApplicationFrame {
                         MA7.trend().stream().mapToDouble(Double::doubleValue).toArray(),
                         MA9.trend().stream().mapToDouble(Double::doubleValue).toArray()
                 },
-                new int[]{0, 1, 2, 3, 4}
+                new int[]{1/2, 3/2, 5/2, 7/2, 9/2}
         );
 
         final ChartPanel panel = new ChartPanel(chart, true, true, true, false, true);

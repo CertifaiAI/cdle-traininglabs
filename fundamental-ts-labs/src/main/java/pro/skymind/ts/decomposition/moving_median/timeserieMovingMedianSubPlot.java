@@ -1,6 +1,7 @@
-package pro.skymind.ts.decomposition.moving_average;
+package pro.skymind.ts.decomposition.moving_median;
 
 import com.github.manliogit.timeserie.smooth.MovingAverage;
+import com.github.manliogit.timeserie.smooth.MovingMedian;
 import com.github.signaflo.timeseries.TestData;
 import com.github.signaflo.timeseries.TimeSeries;
 import org.jfree.chart.ChartPanel;
@@ -22,24 +23,24 @@ import org.jfree.ui.RefineryUtilities;
 /**
  * reference: https://github.com/manlioGit/time-serie/blob/master/src/test/java/com/github/manliogit/timeserie/SerieTest.java#L185
  */
-public class timeserieMovingAverageSubPlot extends ApplicationFrame {
+public class timeserieMovingMedianSubPlot extends ApplicationFrame {
     /**
      * Constructs a new demonstration application.
      *
      * @param title the frame title.
      */
-    public timeserieMovingAverageSubPlot(final String title) {
+    public timeserieMovingMedianSubPlot(final String title) {
 
         super(title);
 
         TimeSeries data = TestData.elecSales;
-        MovingAverage MA3 = new MovingAverage(data.asList(), 3);
-        MovingAverage MA5 = new MovingAverage(data.asList(), 5);
-        MovingAverage MA7 = new MovingAverage(data.asList(), 7);
-        MovingAverage MA9 = new MovingAverage(data.asList(), 9);
+        MovingMedian MA3 = new MovingMedian(data.asList(), 3);
+        MovingMedian MA5 = new MovingMedian(data.asList(), 5);
+        MovingMedian MA7 = new MovingMedian(data.asList(), 7);
+        MovingMedian MA9 = new MovingMedian(data.asList(), 9);
 
         final JFreeChart chart = createCombinedChart(
-                new String[]{"elecSales", "MA3", "MA5", "MA7", "MA9"},
+                new String[]{"elecSales", "MMed3", "MMed5", "MMed7", "MMed9"},
                 new double[][]{
                         data.asList().stream().mapToDouble(Double::doubleValue).toArray(),
                         MA3.trend().stream().mapToDouble(Double::doubleValue).toArray(),
@@ -82,7 +83,7 @@ public class timeserieMovingAverageSubPlot extends ApplicationFrame {
             plot.add(subplot, 1);
         }
 
-        return new JFreeChart(timeserieMovingAverageSubPlot.class.getCanonicalName(), JFreeChart.DEFAULT_TITLE_FONT, plot, true);
+        return new JFreeChart(timeserieMovingMedianSubPlot.class.getCanonicalName(), JFreeChart.DEFAULT_TITLE_FONT, plot, true);
     }
 
     /**
@@ -114,7 +115,7 @@ public class timeserieMovingAverageSubPlot extends ApplicationFrame {
      * @param args ignored.
      */
     public static void main(final String[] args) {
-        final timeserieMovingAverageSubPlot demo = new timeserieMovingAverageSubPlot("Moving Average");
+        final timeserieMovingMedianSubPlot demo = new timeserieMovingMedianSubPlot("Moving Median");
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);
