@@ -69,5 +69,13 @@
             <artifactId>time-serie</artifactId>
             <version>0.0.1</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.github.lbordowitz.openforecast/openforecast -->
+        <dependency>
+            <groupId>com.github.lbordowitz.openforecast</groupId>
+            <artifactId>openforecast</artifactId>
+            <version>0.5.0</version>
+        </dependency>
+
     </dependencies>
 </project>
