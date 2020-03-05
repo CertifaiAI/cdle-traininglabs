@@ -18,8 +18,70 @@ import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
 /**
- * A demonstration application showing how to create a vertical combined chart.
+ * Reference: http://netlib.org/a/stl
+ * fPeriodLength:
+ *          input, the period of the seasonal component. For example,
+ *          if the time series is monthly with a yearly cycle, then
+ *          np=12.
+ * fSeasonalWidth:
+ *          input, length of the seasonal smoother. The value of ns
+ *          should be an odd integer greater than or equal to 3; ns>6
+ *          is recommended. As ns increases the values of the
+ *          seasonal component at a given point in the seasonal cycle
+ *          (e.g., January values of a monthly series with a yearly
+ *          cycle) become smoother.
+ * fSeasonalJump:
+ *          input, skipping value for seasonal smoothing. The
+ *          seasonal smoother skips ahead nsjump points and then
+ *          linearly interpolates in between. The value of nsjump
+ *          should be a positive integer; if nsjump=1, a seasonal
+ *          smooth is calculated at all n points. To make the
+ *          procedure run faster, a reasonable choice for nsjump is
+ *          10%-20% of ns.
+ * fSeasonalDegree:
+ *          input, degree of locally-fitted polynomial in seasonal
+ *          smoothing. The value is 0 or 1.
+ * fTrendWidth:
+ *          input, length of the trend smoother. The value of nt
+ *          should be an odd integer greater than or equal to 3; a
+ *          value of nt between 1.5*np and 2*np is recommended. As
+ *          nt increases the values of the trend component become
+ *          smoother.
+ * fTrendJump:
+ *          input, skipping value for trend smoothing.
+ * fTrendDegree:
+ *          input, degree of locally-fitted polynomial in trend
+ *          smoothing. The value is 0 or 1.
+ * fLowpassWidth:
+ *          input, length of the low-pass filter. The value of nl
+ *          should be an odd integer greater than or equal to 3; the
+ *          smallest odd integer greater than or equal to np is
+ *          recommended.
+ * fLowpassJump:
+ *          input, skipping value for the low-pass filter.
+ * fLowpassDegree (1):
+ *          input, degree of locally-fitted polynomial in low-pass
+ *          smoothing. The value is 0 or 1.
+ * fInnerIterations (2):
+ *          input, number of loops for updating the seasonal and
+ *          trend components. The value of ni should be a positive
+ *          integer. See the next argument for advice on the choice
+ *          of ni.
+ * fRobustIterations (0):
+ *          input, number of iterations of robust fitting. The value
+ *          of no should be a nonnegative integer. If the data are
+ *          well behaved without outliers, then robustness iterations
+ *          are not needed. In this case set no=0, and set ni=2 to 5
+ *          depending on how much security you want that the
+ *          seasonal-trend looping converges. If outliers are
+ *          present then no=3 is a very secure value unless the
+ *          outliers are radical, in which case no=5 or even 10 might
+ *          be better. If no>0 then set ni to 1 or 2.
+ * fPeriodic (false):
+ * fFlatTrend (false):
+ * fLinearTrend (false):
  */
+
 public class servicenowSTLDecomposition extends ApplicationFrame {
 
     /**
@@ -32,11 +94,12 @@ public class servicenowSTLDecomposition extends ApplicationFrame {
         super(title);
         double[] values = TestData.debitcards.asArray(); // Monthly time-series data
 
-        SeasonalTrendLoess smoother = new SeasonalTrendLoess.Builder().
-                setPeriodLength(12).    // Data has a period of 12
-                setSeasonalWidth(156).   // Monthly data smoothed over 35 years
-                setNonRobust().         // Not expecting outliers, so no robustness iterations
-                buildSmoother(values);
+
+        SeasonalTrendLoess smoother = new SeasonalTrendLoess.Builder()
+                .setPeriodLength(12)    // Data has a period of 12
+                .setSeasonalWidth(156)   // Monthly data smoothed over 35 years
+                .setNonRobust()         // Not expecting outliers, so no robustness iterations
+                .buildSmoother(values);
 
         SeasonalTrendLoess.Decomposition stl = smoother.decompose();
 
@@ -83,16 +146,16 @@ public class servicenowSTLDecomposition extends ApplicationFrame {
     /**
      * Creates a sample dataset.
      *
-     * @return Series.
      * @param seriesName
      * @param seriesValue
+     * @return Series.
      */
     private XYDataset createDataset(String seriesName, double[] seriesValue) {
 
         // create dataset 1...
         final XYSeries series1 = new XYSeries(seriesName);
 
-        for(int i=0;i<seriesValue.length;i++){
+        for (int i = 0; i < seriesValue.length; i++) {
             series1.add(i, seriesValue[i]);
         }
 

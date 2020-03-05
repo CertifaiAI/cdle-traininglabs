@@ -19,7 +19,6 @@
 
 package pro.skymind.ts.visualization_examples;
 
-import java.util.Date;
 import java.util.Iterator;
 
 import org.jfree.chart.ChartFactory;
@@ -37,7 +36,6 @@ import org.jfree.ui.ApplicationFrame;
 
 import net.sourceforge.openforecast.DataPoint;
 import net.sourceforge.openforecast.DataSet;
-import net.sourceforge.openforecast.Forecaster;
 import net.sourceforge.openforecast.ForecastingModel;
 import net.sourceforge.openforecast.Observation;
 import net.sourceforge.openforecast.models.SimpleExponentialSmoothingModel;
@@ -55,7 +53,7 @@ import net.sourceforge.openforecast.models.TripleExponentialSmoothingModel;
  * a trend and seasonality. When double and triple exponential smoothing
  * have been implemented, they should be added to this demo.
  */
-public class ExponentialSmoothingChartDemo extends ApplicationFrame
+public class openforecastExponentialSmoothingChartDemo extends ApplicationFrame
 {
     /** The set of data points for which forecast values are required. */
     private TimeSeries fc;
@@ -65,7 +63,7 @@ public class ExponentialSmoothingChartDemo extends ApplicationFrame
      * along with the forecast values.
      * @param title the frame title.
      */
-    public ExponentialSmoothingChartDemo(String title)
+    public openforecastExponentialSmoothingChartDemo(String title)
     {
         super(title);
 
@@ -289,7 +287,7 @@ public class ExponentialSmoothingChartDemo extends ApplicationFrame
      */
     public static void main(String[] args)
     {
-        ExponentialSmoothingChartDemo demo = new ExponentialSmoothingChartDemo("Forecasting Demo: Time Series");
+        openforecastExponentialSmoothingChartDemo demo = new openforecastExponentialSmoothingChartDemo("Forecasting Demo: Time Series");
         demo.pack();
         demo.setVisible(true);
     }

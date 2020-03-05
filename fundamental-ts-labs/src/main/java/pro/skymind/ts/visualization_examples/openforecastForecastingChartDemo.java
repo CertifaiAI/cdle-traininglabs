@@ -1,6 +1,5 @@
 package pro.skymind.ts.visualization_examples;
 
-import java.util.Date;
 import java.util.Iterator;
 
 import org.jfree.chart.ChartFactory;
@@ -18,7 +17,6 @@ import org.jfree.ui.ApplicationFrame;
 
 import net.sourceforge.openforecast.DataPoint;
 import net.sourceforge.openforecast.DataSet;
-import net.sourceforge.openforecast.Forecaster;
 import net.sourceforge.openforecast.ForecastingModel;
 import net.sourceforge.openforecast.Observation;
 import net.sourceforge.openforecast.models.MovingAverageModel;
@@ -33,7 +31,7 @@ import net.sourceforge.openforecast.models.PolynomialRegressionModel;
  * the use of JFreeChart, as well as provides a graphical comparison of
  * some of the different forecasting models.
  */
-public class ForecastingChartDemo extends ApplicationFrame {
+public class openforecastForecastingChartDemo extends ApplicationFrame {
     /**
      * The set of data points for which forecast values are required.
      */
@@ -45,7 +43,7 @@ public class ForecastingChartDemo extends ApplicationFrame {
      *
      * @param title the frame title.
      */
-    public ForecastingChartDemo(String title) {
+    public openforecastForecastingChartDemo(String title) {
         super(title);
 
         // Create a title...
@@ -265,8 +263,8 @@ public class ForecastingChartDemo extends ApplicationFrame {
      * @param args ignored.
      */
     public static void main(String[] args) {
-        ForecastingChartDemo demo
-                = new ForecastingChartDemo("Forecasting Demo: Time Series");
+        openforecastForecastingChartDemo demo
+                = new openforecastForecastingChartDemo("Forecasting Demo: Time Series");
         demo.pack();
         demo.setVisible(true);
     }
