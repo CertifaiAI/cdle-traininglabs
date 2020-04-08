@@ -1,4 +1,9 @@
-# DL4J Training Labs Materials
+# Eclipse Deeplearning4j Training Labs
+
+Running examples strategically structured to enhance understanding of building models with Eclipse Deeplearning4j.
+
+[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/0)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/0)[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/1)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/1)[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/2)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/2)[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/3)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/3)[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/4)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/4)[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/5)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/5)[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/6)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/6)[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/7)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/7)
+
 This repo contains codes for hands-on purpose during training session.
 All codes had been tested using CPU.
 
