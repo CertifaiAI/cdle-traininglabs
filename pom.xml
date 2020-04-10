@@ -38,8 +38,8 @@
     <properties>
         <!-- Change the nd4j.backend property to nd4j-cuda-9.0-platform nd4j-cuda-9.2-platform or nd4j-cuda-10.0-platform to use CUDA GPUs -->
         <nd4j.backend>nd4j-cuda-10.0-platform</nd4j.backend>
-        <dl4j.cuda.backend>deeplearning4j-cuda-10.0</dl4j.cuda.backend>
         <!--<nd4j.backend>nd4j-cuda-9.2-platform</nd4j.backend>-->
+        <dl4j.cuda.backend>deeplearning4j-cuda-10.0</dl4j.cuda.backend>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <shadedClassifier>bin</shadedClassifier>
 
