@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -113,14 +114,20 @@ public class Exercise2 {
         System.out.println(trainIter.next());
     }
 
-    public static void downloadAndUnzip() throws IOException {
+    private static void downloadAndUnzip() throws IOException {
         String dataPath = new File(dataDir).getAbsolutePath();
         File zipFile = new File(dataPath, "plant-seedings-classification.zip");
 
-        if(!zipFile.isFile()){
-            log.info("Downloading the dataset from "+downloadLink+ "...");
-            FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
+        log.info("Downloading the dataset from "+downloadLink+ "...");
+        FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
+
+        if(!Helper.getCheckSum(zipFile.getAbsolutePath())
+                .equalsIgnoreCase(Helper.getPropValues("dataset.plant.seed.hash"))){
+            log.info("Downloaded file is incomplete");
+            System.exit(0);
         }
+
+        log.info("Unzipping "+zipFile.getAbsolutePath());
         ArchiveUtils.unzipFileTo(zipFile.getAbsolutePath(), dataPath);
     }
 }

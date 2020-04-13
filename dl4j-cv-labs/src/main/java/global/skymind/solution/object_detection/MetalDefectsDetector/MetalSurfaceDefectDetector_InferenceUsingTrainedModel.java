@@ -65,17 +65,18 @@ public class MetalSurfaceDefectDetector_InferenceUsingTrainedModel {
     private static List<String> labels;
     private static File trainedModel = new File(System.getProperty("user.dir"), "generated-models/MetalSurfaceDefects_yolov2_trained.zip");
     private static ComputationGraph model;
-    public static final Scalar BLUE = RGB(0, 0, 255);
-    public static final Scalar GREEN = RGB(0, 255, 0);
-    public static final Scalar RED = RGB(255, 0, 0);
+    private static final Scalar BLUE = RGB(0, 0, 255);
+    private static final Scalar GREEN = RGB(0, 255, 0);
+    private static final Scalar RED = RGB(255, 0, 0);
     public static final Scalar YELLOW = RGB(255, 225, 0);
-    public static final Scalar PINK = RGB(255, 0, 225);
-    public static final Scalar CYAN = RGB(0, 225, 225);
-    public static Scalar[] colormap = {BLUE, GREEN, RED, YELLOW, PINK, CYAN};
+    private static final Scalar PINK = RGB(255, 0, 225);
+    private static final Scalar CYAN = RGB(0, 225, 225);
+    private static Scalar[] colormap = {BLUE, GREEN, RED, YELLOW, PINK, CYAN};
     private static String labeltext = null;
 
     public static void main(String[] args) throws Exception {
         MetalDefectDataSetIterator.setup();
+        downloadModel();
 
         //        STEP 1 : Create iterators
         RecordReaderDataSetIterator trainIter = MetalDefectDataSetIterator.trainIterator(batchSize);
@@ -84,25 +85,21 @@ public class MetalSurfaceDefectDetector_InferenceUsingTrainedModel {
         labels = trainIter.getLabels();
 
         //      STEP 2: Load model
-        // If model exist load the model
-        if (trainedModel.exists()) {
-            Nd4j.getRandom().setSeed(seed);
-            log.info("Load model...");
-            model = ModelSerializer.restoreComputationGraph(trainedModel);
-        } else {
-            //download and load trained model
-            log.info("Download and load model");
-            model = downloadAndLoadTrainedModel(trainedModel);
-        }
+        Nd4j.getRandom().setSeed(seed);
+        log.info("Load model...");
+        model = ModelSerializer.restoreComputationGraph(trainedModel);
+
         //      STEP 3: model inference
         OfflineValidationWithTestDataset(testIter);
     }
 
-    private static ComputationGraph downloadAndLoadTrainedModel(File trainedModel) throws IOException {
+    private static void downloadModel() throws IOException {
         String remoteUrl = Helper.getPropValues("models.metaldefectsdetector.url");
-        log.info("Downloading model to " + trainedModel.toString());
-        FileUtils.copyURLToFile(new URL(remoteUrl), trainedModel);
-        return ModelSerializer.restoreComputationGraph(trainedModel);
+        if(!trainedModel.exists() || !Helper.getCheckSum(trainedModel.getAbsolutePath())
+                .equalsIgnoreCase(Helper.getPropValues("models.metaldefectsdetector.hash"))){
+            log.info("Downloading model to " + trainedModel.toString());
+            FileUtils.copyURLToFile(new URL(remoteUrl), trainedModel);
+        }
     }
 
     //    Evaluate visually the performance of the trained object detection model

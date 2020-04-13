@@ -23,8 +23,7 @@
 package global.skymind.training.segmentation;
 
 import global.skymind.Helper;
-import org.datavec.image.transform.ImageTransform;
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
+import global.skymind.solution.segmentation.CustomLabelGenerator;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.HttpEntity;
@@ -37,6 +36,8 @@ import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.InputSplit;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
+import org.datavec.image.transform.ImageTransform;
+import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 
@@ -53,7 +54,6 @@ public class CellDataSetIterator {
     private static final long seed = 12345;
     private static final Random random = new Random(seed);
     private static String inputDir;
-    private static String downloadLink;
     private static CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, channels);
     private static InputSplit trainData,valData;
     private static int batchSize;
@@ -62,7 +62,7 @@ public class CellDataSetIterator {
     private static DataNormalization scaler = new ImagePreProcessingScaler(0, 1);
     private static ImageTransform transform;
 
-    public CellDataSetIterator() throws IOException {
+    public CellDataSetIterator() {
     }
 
     //This method instantiates an ImageRecordReader and subsequently a RecordReaderDataSetIterator based on it
@@ -96,18 +96,18 @@ public class CellDataSetIterator {
     // 1. Download and unzip dataset if it hasn't been downloaded
     // 2. Split dataset into training set and validation set
     public static void setup(int batchSizeArg, double trainPerc) throws IOException {
-
-        downloadData();
-        unzipAllDataSet();
-
         batchSize = batchSizeArg;
-
         inputDir = Paths.get(
                 System.getProperty("user.home"),
                 Helper.getPropValues("dl4j_home.data")
         ).toString();
 
         File imagesPath = new File(Paths.get(inputDir, "data-science-bowl-2018","data-science-bowl-2018","data-science-bowl-2018-2","train","inputs").toString());
+        if(!imagesPath.exists()){
+            downloadData();
+            unzipAllDataSet();
+        }
+
         FileSplit imageFileSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
         BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
         InputSplit[] imagesSplits = imageFileSplit.sample(imageSplitPathFilter, trainPerc, 1-trainPerc);
@@ -117,43 +117,32 @@ public class CellDataSetIterator {
     }
 
     // Download dataset
-    public static void downloadData() throws IOException {
-        downloadLink = Helper.getPropValues("dataset.segmentationCell.url");
-
-        inputDir =Paths.get(
-                System.getProperty("user.home"),
-                Helper.getPropValues("dl4j_home.data")
-        ).toString();
+    private static void downloadData() throws IOException {
+        String downloadLink = Helper.getPropValues("dataset.segmentationCell.url");
 
         File dataZip = new File(Paths.get(inputDir, "data-science-bowl-2018", "data-science-bowl-2018.zip").toString());
 
-        if (!dataZip.exists()) {
-            System.out.println("Creating dataset folder ...");
-            dataZip.getParentFile().mkdir();
-            HttpClientBuilder builder = HttpClientBuilder.create();
-            CloseableHttpClient client = builder.build();
-            System.out.println("Downloading dataset ...");
-            try (CloseableHttpResponse response = client.execute(new HttpGet(downloadLink))) {
-                HttpEntity entity = response.getEntity();
+        System.out.println("Creating dataset folder ...");
+        dataZip.getParentFile().mkdir();
+        HttpClientBuilder builder = HttpClientBuilder.create();
+        CloseableHttpClient client = builder.build();
+        System.out.println("Downloading dataset ...");
+        try (CloseableHttpResponse response = client.execute(new HttpGet(downloadLink))) {
+            HttpEntity entity = response.getEntity();
+            System.out.println(entity);
 
-                System.out.println(entity);
-
-                if (entity != null) {
-                    try (FileOutputStream outstream = new FileOutputStream(dataZip)) {
-                        entity.writeTo(outstream);
-                        outstream.flush();
-                    }
+            if (entity != null) {
+                try (FileOutputStream outstream = new FileOutputStream(dataZip)) {
+                    entity.writeTo(outstream);
+                    outstream.flush();
                 }
-            } catch (IOException ex) {
-                System.out.println(ex);
             }
-
-
+        } catch (IOException ex) {
+            System.out.println(ex);
         }
-
     }
 
-    public static void unzip(String source, String destination){
+    private static void unzip(String source, String destination){
         try {
             ZipFile zipFile = new ZipFile(source);
             zipFile.extractAll(destination);
@@ -162,18 +151,20 @@ public class CellDataSetIterator {
         }
     }
 
-    public static void unzipAllDataSet() throws IOException {
+    private static void unzipAllDataSet() throws IOException {
         //unzip training data set
-        inputDir = Paths.get(
-                System.getProperty("user.home"),
-                Helper.getPropValues("dl4j_home.data")
-        ).toString();
-
         File classFolder = new File(Paths.get(inputDir, "data-science-bowl-2018","data-science-bowl-2018").toString());
 
         if (!classFolder.exists()){
             classFolder.mkdir();
             File zipClassFilePath = new File(Paths.get(inputDir, "data-science-bowl-2018","data-science-bowl-2018.zip").toString());
+
+            if(!Helper.getCheckSum(zipClassFilePath.getAbsolutePath())
+                    .equalsIgnoreCase(Helper.getPropValues("dataset.segmentationCell.hash"))){
+                System.out.println("Downloaded file is incomplete");
+                System.exit(0);
+            }
+
             System.out.println("Unzipping dataset ...");
             unzip(zipClassFilePath.toString(), classFolder.toString());
         }
