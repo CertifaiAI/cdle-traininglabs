@@ -77,6 +77,9 @@
         <httpclient.version>4.3.5</httpclient.version>
         <zip4j.version>1.3.2</zip4j.version>
 
+        <slf4j.version>2.0.0-alpha1</slf4j.version>
+        <log4j.version>1.2.17</log4j.version>
+
     </properties>
 
     <modules>
