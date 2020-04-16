@@ -83,12 +83,13 @@
             <artifactId>${nd4j.backend}</artifactId>
             <version>${nd4j.version}</version>
         </dependency>
-        <!--Comment out to disable GPU capability-->
-        <dependency>
+
+        <!--Uncomment to enable cudnn-->
+        <!--<dependency>
             <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-cuda-10.0</artifactId>
+            <artifactId>${dl4j.cuda.backend}</artifactId>
             <version>${dl4j.version}</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>org.deeplearning4j</groupId>
