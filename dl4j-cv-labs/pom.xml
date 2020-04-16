@@ -84,7 +84,7 @@
             <version>${nd4j.version}</version>
         </dependency>
 
-        <!--Comment out to disable GPU capability-->
+        <!--Uncomment to enable cudnn-->
         <!--<dependency>
             <groupId>org.deeplearning4j</groupId>
             <artifactId>${dl4j.cuda.backend}</artifactId>
