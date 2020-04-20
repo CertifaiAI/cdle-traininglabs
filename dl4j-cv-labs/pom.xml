@@ -194,12 +194,6 @@
             <version>${httpclient.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-
         <!--Used for Unzipping files in some of the examples-->
         <dependency>
             <groupId>net.lingala.zip4j</groupId>
@@ -207,7 +201,7 @@
             <version>${zip4j.version}</version>
         </dependency>
 
-      <!-- For running opencv and ffmpeg libraries -->
+        <!-- For running opencv and ffmpeg libraries -->
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>javacv</artifactId>

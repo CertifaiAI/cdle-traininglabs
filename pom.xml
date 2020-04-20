@@ -57,7 +57,6 @@
 
         <hadoop.version>2.2.0</hadoop.version>  <!-- Hadoop version used by Spark 1.6.3 and 2.2.1 (and likely others) -->
         <guava.version>19.0</guava.version>
-        <logback.version>1.1.7</logback.version>
         <jfreechart.version>1.0.13</jfreechart.version>
         <jcommon.version>1.0.23</jcommon.version>
         <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
