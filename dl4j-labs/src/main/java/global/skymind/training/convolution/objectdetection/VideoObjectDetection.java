@@ -20,7 +20,7 @@
  *
  */
 
-package global.skymind.solution.convolution.objectdetection;
+package global.skymind.training.convolution.objectdetection;
 
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
@@ -55,13 +55,13 @@ import java.util.List;
 public class VideoObjectDetection {
     private static final int gridWidth = 13;
     private static final int gridHeight = 13;
-    private static double detectionThreshold = 0.5;
-    private static final int tinyyolowidth = 416;
-    private static final int tinyyoloheight = 416;
+    private static double detectionThreshold = 0.0;
+    private static final int tinyyolowidth = 0;
+    private static final int tinyyoloheight = 0;
 
     public static void main(String[] args) throws Exception {
 
-        String videoPath = "D:\\videoSample.mp4";
+        String videoPath = "";
         FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoPath);
         grabber.setFormat("mp4");
         OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
@@ -70,12 +70,12 @@ public class VideoObjectDetection {
         String winName = "Object Detection";
         CanvasFrame canvas = new CanvasFrame(winName);
 
-        int w = grabber.getImageWidth();
-        int h = grabber.getImageHeight();
+        int w = 0;
+        int h = 0;
 
         canvas.setCanvasSize(w, h);
 
-        ZooModel model = TinyYOLO.builder().numClasses(0).build();
+        ZooModel model = TinyYOLO.builder().build();
         ComputationGraph initializedModel = (ComputationGraph) model.initPretrained();
 
         NativeImageLoader loader = new NativeImageLoader(tinyyolowidth, tinyyoloheight, 3, new ColorConversionTransform(COLOR_BGR2RGB));
