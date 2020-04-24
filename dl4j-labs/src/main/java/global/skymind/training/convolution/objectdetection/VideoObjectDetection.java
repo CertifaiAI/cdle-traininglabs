@@ -47,7 +47,7 @@ import java.awt.event.KeyEvent;
 import java.util.List;
 
 /**
- * This example shows how to infer a TinyYOLOv2 Object Detection model trained on Pascal VOC dataset.
+ * This example shows how to infer a TinyYOLOv2 Object Detection model trained on Pascal VOC dataset(20 classes).
  * The inference is done on a input video.
  * Change the videoPath to your own test video.
  */
