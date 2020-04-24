@@ -1,3 +1,25 @@
+/*
+ *
+ *  * ******************************************************************************
+ *  *  * Copyright (c) 2019 Skymind AI Bhd.
+ *  *  * Copyright (c) 2020 CertifAI Sdn. Bhd.
+ *  *  *
+ *  *  * This program and the accompanying materials are made available under the
+ *  *  * terms of the Apache License, Version 2.0 which is available at
+ *  *  * https://www.apache.org/licenses/LICENSE-2.0.
+ *  *  *
+ *  *  * Unless required by applicable law or agreed to in writing, software
+ *  *  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ *  *  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ *  *  * License for the specific language governing permissions and limitations
+ *  *  * under the License.
+ *  *  *
+ *  *  * SPDX-License-Identifier: Apache-2.0
+ *  *  *****************************************************************************
+ *
+ *
+ */
+
 package global.skymind.training.object_detection.AvocadoBananaDetector;
 
 import global.skymind.Helper;
@@ -11,7 +33,6 @@ import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.util.ArchiveUtils;
 import org.slf4j.Logger;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +57,14 @@ public class FruitDataSetIterator {
     public static final int yoloheight = 416;
 
     private static RecordReaderDataSetIterator makeIterator(InputSplit split, Path dir, int batchSize) throws Exception {
-        throw new NotImplementedException();
+
+        ObjectDetectionRecordReader recordReader = new ObjectDetectionRecordReader(yoloheight, yolowidth, nChannels,
+                gridHeight, gridWidth, new VocLabelProvider(dir.toString()));
+        recordReader.initialize(split);
+        RecordReaderDataSetIterator iter = new RecordReaderDataSetIterator(recordReader, batchSize, 1, 1, true);
+        iter.setPreProcessor(new ImagePreProcessingScaler(0, 1));
+
+        return iter;
     }
 
     public static RecordReaderDataSetIterator trainIterator(int batchSize) throws Exception {
@@ -50,8 +78,8 @@ public class FruitDataSetIterator {
     public static void setup() throws IOException {
         log.info("Load data...");
         loadData();
-        trainDir = Paths.get(dataDir, "fruits", "");
-        testDir = Paths.get(dataDir, "fruits", "");
+        trainDir = Paths.get(dataDir, "fruits", "train");
+        testDir = Paths.get(dataDir, "fruits", "test");
         trainData = new FileSplit(new File(trainDir.toString()), NativeImageLoader.ALLOWED_FORMATS, rng);
         testData = new FileSplit(new File(testDir.toString()), NativeImageLoader.ALLOWED_FORMATS, rng);
     }
@@ -68,14 +96,31 @@ public class FruitDataSetIterator {
         }
     }
 
+//    private static void downloadAndUnzip() throws IOException {
+//        String dataPath = new File(dataDir).getAbsolutePath();
+//        File zipFile = new File(dataPath, "fruits-detection.zip");
+//
+//        if (!zipFile.isFile()) {
+//            log.info("Downloading the dataset from " + downloadLink + "...");
+//            FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
+//        }
+//        ArchiveUtils.unzipFileTo(zipFile.getAbsolutePath(), dataPath);
+//    }
+
     private static void downloadAndUnzip() throws IOException {
         String dataPath = new File(dataDir).getAbsolutePath();
         File zipFile = new File(dataPath, "fruits-detection.zip");
 
-        if (!zipFile.isFile()) {
-            log.info("Downloading the dataset from " + downloadLink + "...");
-            FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
+        log.info("Downloading the dataset from "+downloadLink+ "...");
+        FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
+
+        if(!Helper.getCheckSum(zipFile.getAbsolutePath())
+                .equalsIgnoreCase(Helper.getPropValues("dataset.fruits.hash"))){
+            log.info("Downloaded file is incomplete");
+            System.exit(0);
         }
+
+        log.info("Unzipping "+zipFile.getAbsolutePath());
         ArchiveUtils.unzipFileTo(zipFile.getAbsolutePath(), dataPath);
     }
 }

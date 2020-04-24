@@ -1,3 +1,25 @@
+/*
+ *
+ *  * ******************************************************************************
+ *  *  * Copyright (c) 2019 Skymind AI Bhd.
+ *  *  * Copyright (c) 2020 CertifAI Sdn. Bhd.
+ *  *  *
+ *  *  * This program and the accompanying materials are made available under the
+ *  *  * terms of the Apache License, Version 2.0 which is available at
+ *  *  * https://www.apache.org/licenses/LICENSE-2.0.
+ *  *  *
+ *  *  * Unless required by applicable law or agreed to in writing, software
+ *  *  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ *  *  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ *  *  * License for the specific language governing permissions and limitations
+ *  *  * under the License.
+ *  *  *
+ *  *  * SPDX-License-Identifier: Apache-2.0
+ *  *  *****************************************************************************
+ *
+ *
+ */
+
 package global.skymind.solution.object_detection.AvocadoBananaDetector;
 
 import global.skymind.Helper;
@@ -74,14 +96,31 @@ public class FruitDataSetIterator {
         }
     }
 
+//    private static void downloadAndUnzip() throws IOException {
+//        String dataPath = new File(dataDir).getAbsolutePath();
+//        File zipFile = new File(dataPath, "fruits-detection.zip");
+//
+//        if (!zipFile.isFile()) {
+//            log.info("Downloading the dataset from " + downloadLink + "...");
+//            FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
+//        }
+//        ArchiveUtils.unzipFileTo(zipFile.getAbsolutePath(), dataPath);
+//    }
+
     private static void downloadAndUnzip() throws IOException {
         String dataPath = new File(dataDir).getAbsolutePath();
         File zipFile = new File(dataPath, "fruits-detection.zip");
 
-        if (!zipFile.isFile()) {
-            log.info("Downloading the dataset from " + downloadLink + "...");
-            FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
+        log.info("Downloading the dataset from "+downloadLink+ "...");
+        FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
+
+        if(!Helper.getCheckSum(zipFile.getAbsolutePath())
+                .equalsIgnoreCase(Helper.getPropValues("dataset.fruits.hash"))){
+            log.info("Downloaded file is incomplete");
+            System.exit(0);
         }
+
+        log.info("Unzipping "+zipFile.getAbsolutePath());
         ArchiveUtils.unzipFileTo(zipFile.getAbsolutePath(), dataPath);
     }
 }
