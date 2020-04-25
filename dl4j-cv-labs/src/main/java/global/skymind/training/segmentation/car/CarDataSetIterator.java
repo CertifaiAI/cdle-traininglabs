@@ -11,16 +11,20 @@ import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
+import global.skymind.solution.segmentation.imageUtils.CustomLabelGenerator;
 import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class CarDataSetIterator {
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(global.skymind.solution.segmentation.car.CarDataSetIterator.class);
+
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(CarDataSetIterator.class);
     private static final int height = 224;
     private static final int width = 224;
     private static final int channels = 1;
@@ -28,9 +32,14 @@ public class CarDataSetIterator {
     private static final Random random = new Random(seed);
     private static String inputDir;
     private static String downloadLink;
-    private static CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, channels);
     private static InputSplit trainData, valData;
     private static int batchSize;
+
+    private static List<org.nd4j.linalg.primitives.Pair<String, String>> replacement = Arrays.asList(
+            new org.nd4j.linalg.primitives.Pair<>("inputs", "masks_png"),
+            new org.nd4j.linalg.primitives.Pair<>(".jpg", "_mask.png")
+    );
+    private static CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, channels, replacement);
 
     //scale input to 0 - 1
     private static DataNormalization scaler = new ImagePreProcessingScaler(0, 1);
@@ -41,6 +50,7 @@ public class CarDataSetIterator {
 
     //This method instantiates an ImageRecordReader and subsequently a RecordReaderDataSetIterator based on it
     private static RecordReaderDataSetIterator makeIterator(InputSplit split, boolean training) throws IOException {
+
         ImageRecordReader recordReader = new ImageRecordReader(height, width, channels, labelMaker);
         if (training && transform != null) {
             recordReader.initialize(split, transform);
@@ -66,9 +76,6 @@ public class CarDataSetIterator {
         setup(batchSizeArg, trainPerc);
     }
 
-    //This method does the following:
-    // 1. Download and unzip dataset if it hasn't been downloaded
-    // 2. Split dataset into training set and validation set
     public static void setup(int batchSizeArg, double trainPerc) throws IOException {
 
         downloadLink = Helper.getPropValues("dataset.segmentationCar.url");
@@ -82,7 +89,7 @@ public class CarDataSetIterator {
 
         if (!dataZip.exists()) {
             log.info(String.format("Downloading %s from %s.", dataZip.getAbsolutePath(), downloadLink));
-            global.skymind.solution.utilities.DataUtilities.downloadFile(downloadLink, dataZip.getAbsolutePath());
+            DataUtilities.downloadFile(downloadLink, dataZip.getAbsolutePath());
         }
 
         if (!classFolder.exists()) {
@@ -105,8 +112,10 @@ public class CarDataSetIterator {
                 Helper.getPropValues("dl4j_home.data")
         ).toString();
 
-        File imagesPath = new File(Paths.get(inputDir, "carvana-image-masking-challenge", "train", "inputs").toString());
+
+        File imagesPath = new File(Paths.get(inputDir, "carvana-masking-challenge", "carvana-masking-challenge", "train", "inputs").toString());
         FileSplit imageFileSplit = new FileSplit(imagesPath, NativeImageLoader.ALLOWED_FORMATS, random);
+
         BalancedPathFilter imageSplitPathFilter = new BalancedPathFilter(random, NativeImageLoader.ALLOWED_FORMATS, labelMaker);
         InputSplit[] imagesSplits = imageFileSplit.sample(imageSplitPathFilter, trainPerc, 1 - trainPerc);
 
