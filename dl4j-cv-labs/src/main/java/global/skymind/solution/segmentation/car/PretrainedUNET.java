@@ -47,11 +47,11 @@ public class PretrainedUNET {
 
     private static final String featurizeExtractionLayer = "conv2d_4";
     private static final long seed = 12345;
-    private static final int nEpochs = 1;
+    private static final int nEpochs = 5;
     private static final int height = 224;
     private static final int width = 224;
     private static final int batchSize = 2;
-    private static final double trainPerc = 0.1;
+    private static final double trainPerc = 0.8;
     private static String modelExportDir;
 
     public static void main(String[] args) throws IOException {
@@ -159,14 +159,10 @@ public class PretrainedUNET {
         Evaluation eval = new Evaluation(2);
 
         // EXPORT IMAGES
-//        File exportDir = new File("export");
-
-
-        File exportDir = Paths.get(
+         File exportDir = Paths.get(
                 System.getProperty("user.home"),
                 Helper.getPropValues("dl4j_home.export-images")
         ).toFile();
-
 
         if (!exportDir.exists()) {
             exportDir.mkdir();
@@ -180,15 +176,15 @@ public class PretrainedUNET {
             INDArray predictVal = unetTransfer.output(imageSetVal.getFeatures())[0];
             INDArray labels = imageSetVal.getLabels();
 
-            if (count % 5 == 0) {
-                Visualization.export(exportDir, imageSetVal.getFeatures(), imageSetVal.getLabels(), predictVal, count);
-            }
+//            // Uncomment the following if there's a need to export images
+//            if (count % 5 == 0) {
+//                Visualization.export(exportDir, imageSetVal.getFeatures(), imageSetVal.getLabels(), predictVal, count);
+//            }
 
             count++;
 
             eval.eval(labels, predictVal);
 
-//            log.info(eval.stats());
 
             //STEP 5: Complete the code for IOU calculation here
             //Intersection over Union:  TP / (TP + FN + FP)
@@ -212,7 +208,7 @@ public class PretrainedUNET {
 
         }
 
-        System.out.print("Mean IOU: " + IOUTotal / count);
+        System.out.println("Mean IOU: " + IOUTotal / count);
 
         // WRITE MODEL TO DISK
         modelExportDir = Paths.get(
@@ -226,8 +222,8 @@ public class PretrainedUNET {
             locationToSaveModel.getParentFile().mkdirs();
         }
 
-        boolean saveUpdater = false;
-        ModelSerializer.writeModel(unetTransfer, locationToSaveModel, saveUpdater);
+
+        ModelSerializer.writeModel(unetTransfer, locationToSaveModel, false);
         log.info("Model saved");
 
     }

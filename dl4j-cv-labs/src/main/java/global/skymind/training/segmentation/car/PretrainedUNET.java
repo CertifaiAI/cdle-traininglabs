@@ -28,11 +28,11 @@ public class PretrainedUNET {
             PretrainedUNET.class);
     /*
      * Instructions for this lab exercise:
-     * STEP 1: Complete code in CustomLabelGenerator.java file
-     * STEP 2: Set training hypeparameters.
-     * STEP 3: Configuration of transfer learning.
-     * STEP 4: Load data into RecordReaderDataSetIterator.
-     * STEP 5: Run training anf evaluate model performance.
+     * STEP 1: Import pretrained UNET (provided in model zoo).
+     * STEP 2: Configuration of transfer learning.
+     * STEP 3: Load data into RecordReaderDataSetIterator.
+     * STEP 4: Run training.
+     * STEP 5: We will use IOU (Intersection Over Union) as our evaluation metric. Complete the code for IOU calculation.
      * STEP 6: Hyperparameter Tuning. (Epochs, learning rate etc.)
      *
      * */
