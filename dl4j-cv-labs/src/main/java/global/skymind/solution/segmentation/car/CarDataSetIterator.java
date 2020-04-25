@@ -94,6 +94,14 @@ public class CarDataSetIterator {
 
         if (!classFolder.exists()) {
             log.info(String.format("Extracting %s into %s.", dataZip.getAbsolutePath(), classFolder.getAbsolutePath()));
+
+            if(!Helper.getCheckSum(dataZip.getAbsolutePath())
+                    .equalsIgnoreCase(Helper.getPropValues("dataset.segmentationCar.hash"))){
+                System.out.println("Downloaded file is incomplete");
+                System.exit(0);
+            }
+
+
             DataUtilities.extractZip(dataZip.getAbsolutePath(), classFolder.getAbsolutePath());
         }
 

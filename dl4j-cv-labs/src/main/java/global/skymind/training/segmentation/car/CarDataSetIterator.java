@@ -1,7 +1,7 @@
 package global.skymind.training.segmentation.car;
 
 import global.skymind.Helper;
-import global.skymind.training.utilities.DataUtilities;
+import global.skymind.solution.utilities.DataUtilities;
 import org.datavec.image.transform.ImageTransform;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.datavec.api.io.filters.BalancedPathFilter;
@@ -11,6 +11,7 @@ import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.Random;
 
 public class CarDataSetIterator {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(global.skymind.solution.segmentation.car.CarDataSetIterator.class);
     private static final int height = 224;
     private static final int width = 224;
     private static final int channels = 1;
@@ -79,9 +81,21 @@ public class CarDataSetIterator {
         File classFolder = new File(Paths.get(inputDir, "carvana-masking-challenge").toString());
 
         if (!dataZip.exists()) {
-            if (DataUtilities.downloadFile(downloadLink, dataZip.getAbsolutePath())) {
-                DataUtilities.extractZip(dataZip.getAbsolutePath(), classFolder.getAbsolutePath());
+            log.info(String.format("Downloading %s from %s.", dataZip.getAbsolutePath(), downloadLink));
+            global.skymind.solution.utilities.DataUtilities.downloadFile(downloadLink, dataZip.getAbsolutePath());
+        }
+
+        if (!classFolder.exists()) {
+            log.info(String.format("Extracting %s into %s.", dataZip.getAbsolutePath(), classFolder.getAbsolutePath()));
+
+            if(!Helper.getCheckSum(dataZip.getAbsolutePath())
+                    .equalsIgnoreCase(Helper.getPropValues("dataset.segmentationCar.hash"))){
+                System.out.println("Downloaded file is incomplete");
+                System.exit(0);
             }
+
+
+            DataUtilities.extractZip(dataZip.getAbsolutePath(), classFolder.getAbsolutePath());
         }
 
         batchSize = batchSizeArg;
