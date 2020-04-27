@@ -26,11 +26,8 @@ import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
-
 import org.bytedeco.opencv.opencv_core.*;
-
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
-
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.transform.ColorConversionTransform;
 import org.deeplearning4j.nn.graph.ComputationGraph;
@@ -50,9 +47,16 @@ import java.util.List;
  * This example shows how to infer a TinyYOLOv2 Object Detection model trained on Pascal VOC dataset(20 classes).
  * The inference is done on a input video.
  * Change the videoPath to your own test video.
+ *
+  * This is a lab exercise and the code is not complete and functional. You need to modify it in order for it to work.
+ *  STEP 1: Fix the config for YOLO
+ *  STEP 2: Enter the PATH to your test video
+ *  STEP 3: Set width and height to camera's properties
+ *  STEP 4: Set output number of classes
  */
 
 public class VideoObjectDetection {
+//     STEP 1: Fix the config for YOLO
     private static final int gridWidth = 13;
     private static final int gridHeight = 13;
     private static double detectionThreshold = 0.0;
@@ -60,7 +64,7 @@ public class VideoObjectDetection {
     private static final int tinyyoloheight = 0;
 
     public static void main(String[] args) throws Exception {
-
+//      STEP 2: Enter the PATH to your test video
         String videoPath = "";
         FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoPath);
         grabber.setFormat("mp4");
@@ -69,12 +73,12 @@ public class VideoObjectDetection {
 
         String winName = "Object Detection";
         CanvasFrame canvas = new CanvasFrame(winName);
-
+//    STEP 3: Set width and height to camera's properties
         int w = 0;
         int h = 0;
-
         canvas.setCanvasSize(w, h);
 
+//      STEP 4: Set output number of classes
         ZooModel model = TinyYOLO.builder().build();
         ComputationGraph initializedModel = (ComputationGraph) model.initPretrained();
 
