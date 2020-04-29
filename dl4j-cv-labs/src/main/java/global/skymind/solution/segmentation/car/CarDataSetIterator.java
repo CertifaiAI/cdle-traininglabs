@@ -1,21 +1,20 @@
 package global.skymind.solution.segmentation.car;
 
 import global.skymind.Helper;
+import global.skymind.solution.segmentation.imageUtils.CustomLabelGenerator;
 import global.skymind.solution.utilities.DataUtilities;
-import org.datavec.image.transform.ImageTransform;
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.datavec.api.io.filters.BalancedPathFilter;
 import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.InputSplit;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
+import org.datavec.image.transform.ImageTransform;
+import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
-import global.skymind.solution.segmentation.imageUtils.CustomLabelGenerator;
 import org.slf4j.Logger;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -45,18 +44,15 @@ public class CarDataSetIterator {
     private static DataNormalization scaler = new ImagePreProcessingScaler(0, 1);
     private static ImageTransform transform;
 
-    public CarDataSetIterator() throws IOException {
+    public CarDataSetIterator() {
     }
 
     //This method instantiates an ImageRecordReader and subsequently a RecordReaderDataSetIterator based on it
-    private static RecordReaderDataSetIterator makeIterator(InputSplit split, boolean training) throws IOException {
+    private static RecordReaderDataSetIterator makeIterator(InputSplit split) throws IOException {
 
         ImageRecordReader recordReader = new ImageRecordReader(height, width, channels, labelMaker);
-        if (training && transform != null) {
-            recordReader.initialize(split, transform);
-        } else {
-            recordReader.initialize(split);
-        }
+//        Both train and val iterator need the preprocessing of converting RGB to Grayscale
+        recordReader.initialize(split, transform);
         RecordReaderDataSetIterator iter = new RecordReaderDataSetIterator(recordReader, batchSize, 1, 1, true);
         iter.setPreProcessor(scaler);
 
@@ -64,11 +60,11 @@ public class CarDataSetIterator {
     }
 
     public static RecordReaderDataSetIterator trainIterator() throws IOException {
-        return makeIterator(trainData, true);
+        return makeIterator(trainData);
     }
 
     public static RecordReaderDataSetIterator valIterator() throws IOException {
-        return makeIterator(valData, false);
+        return makeIterator(valData);
     }
 
     public static void setup(int batchSizeArg, double trainPerc, ImageTransform imageTransform) throws IOException {
@@ -100,7 +96,6 @@ public class CarDataSetIterator {
                 System.out.println("Downloaded file is incomplete");
                 System.exit(0);
             }
-
 
             DataUtilities.extractZip(dataZip.getAbsolutePath(), classFolder.getAbsolutePath());
         }
