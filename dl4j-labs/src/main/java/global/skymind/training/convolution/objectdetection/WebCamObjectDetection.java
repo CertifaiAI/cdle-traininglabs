@@ -20,10 +20,9 @@
  *
  */
 
-package global.skymind.solution.convolution.objectdetection;
+package global.skymind.training.convolution.objectdetection;
 
 import org.bytedeco.opencv.opencv_core.*;
-
 import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 
@@ -47,22 +46,26 @@ import java.util.List;
  * This example shows how to infer a TinyYOLOv2 Object Detection model trained on Pascal VOC dataset(20 classes).
  * The inference is done on your first camera, probably your webcam if you are using a laptop.
  * Change cameraNum to 1 if you wish to use your second camera.
+ *
+ * This is a lab exercise and the code is not complete and functional. You need to modify it in order for it to work.
+ * STEP 1: Set camera number
+ * STEP 2: Fix the config for YOLO
  */
 
 public class WebCamObjectDetection {
     //Camera position change between "front" and "back"
-    //front camera requires flipping of the image
+    //If you are using front camera, the program will flip the input frame to create a mirror effect
     private static String cameraPos = "front";
 
-    //swap between camera with 0 -? on the parameter
-    //Default is 0
-    private static int cameraNum = 0;
+    //     STEP 1: Set camera number
+    private static int cameraNum = 1;
     private static Thread thread;
-    private static final int gridWidth = 13;
-    private static final int gridHeight = 13;
+    //     STEP 2: Fix the config for YOLO
+    private static final int gridWidth = 0;
+    private static final int gridHeight = 0;
     private static double detectionThreshold = 0.5;
-    private static final int tinyyolowidth = 416;
-    private static final int tinyyoloheight = 416;
+    private static final int tinyyolowidth = 10;
+    private static final int tinyyoloheight = 20;
 
 
     public static void main(String[] args) throws Exception {
@@ -72,15 +75,17 @@ public class WebCamObjectDetection {
 
         FrameGrabber grabber = FrameGrabber.createDefault(cameraNum);
         OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
-
         grabber.start();
+
         String winName = "Object Detection";
         CanvasFrame canvas = new CanvasFrame(winName);
         int w = grabber.getImageWidth();
         int h = grabber.getImageHeight();
         canvas.setCanvasSize(w, h);
+
         ZooModel model = TinyYOLO.builder().numClasses(0).build();
         ComputationGraph initializedModel = (ComputationGraph) model.initPretrained();
+
         NativeImageLoader loader = new NativeImageLoader(tinyyolowidth, tinyyoloheight, 3, new ColorConversionTransform(COLOR_BGR2RGB));
         ImagePreProcessingScaler scaler = new ImagePreProcessingScaler(0, 1);
         VOCLabels labels = new VOCLabels();
@@ -95,6 +100,7 @@ public class WebCamObjectDetection {
                     while (frame != null) {
                         try {
                             Mat rawImage = new Mat();
+
                             //Flip the camera if opening front camera
                             if (cameraPos.equals("front")) {
                                 Mat inputImage = converter.convert(frame);
@@ -102,6 +108,7 @@ public class WebCamObjectDetection {
                             } else {
                                 rawImage = converter.convert(frame);
                             }
+
                             Mat resizeImage = new Mat();
                             resize(rawImage, resizeImage, new Size(tinyyolowidth, tinyyoloheight));
                             INDArray inputImage = loader.asMatrix(resizeImage);
@@ -128,6 +135,7 @@ public class WebCamObjectDetection {
                 });
                 thread.start();
             }
+
             KeyEvent t = canvas.waitKey(33);
             if ((t != null) && (t.getKeyCode() == KeyEvent.VK_Q)) {
                 break;
