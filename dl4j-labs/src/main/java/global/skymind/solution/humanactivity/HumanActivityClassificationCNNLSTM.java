@@ -21,7 +21,7 @@
  */
 
 package global.skymind.solution.humanactivity;
-import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.datavec.api.records.reader.SequenceRecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVSequenceRecordReader;
