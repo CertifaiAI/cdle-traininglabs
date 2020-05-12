@@ -1,4 +1,4 @@
-package global.skymind.solution.facial_recognition;/*
+package global.skymind.training.facial_recognition;/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.
@@ -53,11 +53,15 @@ public class FaceAnonymizationWebCam {
     private static final String outputWindowsName = "Face Recognition Example - DL4J";
 
     public static void main(String[] args) throws Exception {
-        //        STEP 1 : Select your face detector and face identifier
-        //        You can switch between different FaceDetector and FaceIdentifier options to test its performance
-        FaceDetector FaceDetector = getFaceDetector(OPENCV_HAAR_CASCADE_FACEDETECTOR);
+        /**
+         * STEP 1 : Select your face detector and face identifier
+         * You can switch between different FaceDetector and FaceIdentifier options to test its performance
+         *
+         * - COMPLETE THE FOLLOWING LINE OF CODE (LINE 62)
+         * */
+//        FaceDetector FaceDetector = getFaceDetector();
 
-        //        STEP 2 : Stream the video frame from camera
+
         VideoCapture capture = new VideoCapture();
         capture.set(CAP_PROP_FRAME_WIDTH, WIDTH);
         capture.set(CAP_PROP_FRAME_HEIGHT, HEIGHT);
@@ -74,11 +78,15 @@ public class FaceAnonymizationWebCam {
         while (capture.read(image)) {
             flip(image, image, 1);
 
-            //        STEP 3 : Perform face detection
-            image.copyTo(cloneCopy);
-            FaceDetector.detectFaces(cloneCopy);
-            List<FaceLocalization> faceLocalizations = FaceDetector.getFaceLocalization();
-            annotateFaces(faceLocalizations, image);
+
+            /**
+             *  STEP 2 : Perform face detection
+             * UNCOMMENT THE FOLLOWING PIECE OF CODE (LINE 87 - 90)
+             * **/
+//            image.copyTo(cloneCopy);
+//            FaceDetector.detectFaces(cloneCopy);
+//            List<FaceLocalization> faceLocalizations = FaceDetector.getFaceLocalization();
+//            annotateFaces(faceLocalizations, image);
 
             imshow(outputWindowsName, image);
 
@@ -110,8 +118,11 @@ public class FaceAnonymizationWebCam {
         for (FaceLocalization i : faceLocalizations){
             Rect roi = new Rect(new Point((int) i.getLeft_x(),(int) i.getLeft_y()), new Point((int) i.getRight_x(),(int) i.getRight_y()));
 
-            //        STEP 4: Add Gaussian blur here
-            GaussianBlur(image.apply(roi), image.apply(roi), new Size(15,15), 20);
+
+            /***
+             * STEP 3: Add Gaussian blur here
+            * ENTER YOUR CODE FOR HERE
+            * **/
 
             rectangle(image, roi, new Scalar(255, 255, 255, 0),0,8,0);
         }
