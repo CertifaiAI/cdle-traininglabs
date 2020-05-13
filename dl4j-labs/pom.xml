@@ -110,12 +110,6 @@
 
         <dependency>
             <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-nlp</artifactId>
-            <version>${dl4j.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
             <artifactId>deeplearning4j-zoo</artifactId>
             <version>${dl4j.version}</version>
         </dependency>
@@ -127,23 +121,10 @@
             <version>${dl4j.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-modelimport</artifactId>
-            <version>${dl4j.version}</version>
-        </dependency>
-
         <!-- deeplearning4j-ui is used for visualization: see http://deeplearning4j.org/visualization -->
         <dependency>
             <groupId>org.deeplearning4j</groupId>
             <artifactId>deeplearning4j-ui</artifactId>
-            <version>${dl4j.version}</version>
-        </dependency>
-
-        <!-- ParallelWrapper & ParallelInference live here -->
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-parallel-wrapper</artifactId>
             <version>${dl4j.version}</version>
         </dependency>
 
@@ -152,68 +133,6 @@
             <groupId>org.datavec</groupId>
             <artifactId>datavec-local</artifactId>
             <version>${datavec.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.datavec</groupId>
-            <artifactId>datavec-hadoop</artifactId>
-            <version>${datavec.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-common</artifactId>
-            <version>${hadoop.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>jdk.tools</groupId>
-                    <artifactId>jdk.tools</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- Arbiter - used for hyperparameter optimization (grid/random search) -->
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
-            <artifactId>arbiter-deeplearning4j</artifactId>
-            <version>${arbiter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
-            <artifactId>arbiter-ui</artifactId>
-            <version>${arbiter.version}</version>
-        </dependency>
-
-        <!-- datavec-data-codec: used only in video example for loading video data -->
-        <dependency>
-            <artifactId>datavec-data-codec</artifactId>
-            <groupId>org.datavec</groupId>
-            <version>${datavec.version}</version>
-        </dependency>
-
-        <!-- Used in the feedforward/classification/MLP* and feedforward/regression/RegressionMathFunctions example -->
-        <dependency>
-            <groupId>jfree</groupId>
-            <artifactId>jfreechart</artifactId>
-            <version>${jfreechart.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jfree</groupId>
-            <artifactId>jcommon</artifactId>
-            <version>${jcommon.version}</version>
-        </dependency>
-
-        <!-- Used for downloading data in some of the examples -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
         </dependency>
 
         <!--Used for Unzipping files in some of the examples-->
@@ -229,43 +148,6 @@
             <artifactId>javacv</artifactId>
             <version>${javacv.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>javacpp</artifactId>
-            <version>${javacpp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>opencv-platform</artifactId>
-            <version>${opencv-platform.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>ffmpeg-platform</artifactId>
-            <version>${ffmpeg-platform.version}</version>
-        </dependency>
-        <!--following 2 commented out dependency are needed for different platform if users intended to use GPU for training NN-->
-        <!--Please manually perform un-comment out these dependencies by referring to your system requirement-->
-        <!--Un-commented out all 3 following dependencies will causes heavy space consumption, advise do not commented out all together-->
-        <!--Please perform manual remove unnecessary classifier variable (choose the one that only match with your system)-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.bytedeco.javacpp-presets</groupId>-->
-        <!--            <artifactId>cuda</artifactId>-->
-        <!--            <version>${bytedeco-javacpp-presets-v9-2.version}</version>-->
-        <!--            <classifier>linux-x86_64-redist | linux-ppc64le-redist | macosx-x86_64-redist | windows-x86_64-redist</classifier>-->
-        <!--        </dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.bytedeco.javacpp-presets</groupId>-->
-        <!--            <artifactId>cuda</artifactId>-->
-        <!--            <version>${bytedeco-javacpp-presets-v10.version}</version>-->
-        <!--            <classifier>linux-x86_64-redist | linux-ppc64le-redist | macosx-x86_64-redist | windows-x86_64-redist</classifier>-->
-        <!--        </dependency>-->
-        <dependency>
-            <groupId>org.bytedeco</groupId>
-            <artifactId>openblas-platform</artifactId>
-            <version>${openblas-platform.version}</version>
-        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
         <dependency>
@@ -280,6 +162,8 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
+
+
 
     </dependencies>
 
