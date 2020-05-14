@@ -1,4 +1,4 @@
-package global.skymind.solution.regression.grabRidershipDemand;/*
+package global.skymind.solution.regression.demandRegression;/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.
@@ -42,13 +42,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class GrabDemandRegressionTest {
+public class RidershipDemandRegressionTest {
     public static void main (String[] args ) throws IOException, InterruptedException {
 
         File modelSave =  new File(System.getProperty("java.io.tmpdir"), "/trained_regression_model.zip");
         MultiLayerNetwork net = ModelSerializer.restoreMultiLayerNetwork(modelSave);
 
-        File inputFile = new File(System.getProperty("user.home"), ".deeplearning4j/data/grab/Traffic Management/test/test.csv");
+        File inputFile = new File(System.getProperty("user.home"), ".deeplearning4j/data/ridership/test/test.csv");
         CSVRecordReader csvRR = new CSVRecordReader(1,',');
         csvRR.initialize(new FileSplit(inputFile));
 
