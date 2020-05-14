@@ -47,39 +47,17 @@
         <nd4j.version>1.0.0-beta6</nd4j.version>
         <dl4j.version>1.0.0-beta6</dl4j.version>
         <datavec.version>1.0.0-beta6</datavec.version>
-        <arbiter.version>1.0.0-beta6</arbiter.version>
-        <rl4j.version>1.0.0-beta6</rl4j.version>
 
-        <dl4j.spark.version>1.0.0-beta6</dl4j.spark.version>
-        <datavec.spark.version>1.0.0-beta6</datavec.spark.version>
+        <javacv.version>1.5.2</javacv.version>
+        <zip4j.version>2.2.6</zip4j.version>
+        <slf4j.version>2.0.0-alpha1</slf4j.version>
+        <httpclient.version>4.5.12</httpclient.version>
 
-        <!-- Scala binary version: DL4J's Spark and UI functionality are released with both Scala 2.10 and 2.11 support -->
-        <scala.binary.version>2.11</scala.binary.version>
-
-        <hadoop.version>2.2.0</hadoop.version>  <!-- Hadoop version used by Spark 1.6.3 and 2.2.1 (and likely others) -->
-        <guava.version>19.0</guava.version>
-        <jfreechart.version>1.0.13</jfreechart.version>
-        <jcommon.version>1.0.23</jcommon.version>
         <maven-compiler-plugin.version>3.6.1</maven-compiler-plugin.version>
         <maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
         <exec-maven-plugin.version>1.4.0</exec-maven-plugin.version>
         <maven.minimum.version>3.3.1</maven.minimum.version>
         <javafx.version>2.2.3</javafx.version>
-        <jackson.version>2.5.1</jackson.version>
-        <scala.plugin.version>3.2.2</scala.plugin.version>
-
-        <javacv.version>1.5.2</javacv.version>
-        <javacpp.version>1.5.2</javacpp.version>
-        <openblas-platform.version>0.3.7-1.5.2</openblas-platform.version>
-        <opencv-platform.version>4.1.2-1.5.2</opencv-platform.version>
-        <ffmpeg-platform.version>4.2.1-1.5.2</ffmpeg-platform.version>
-
-        <httpclient.version>4.3.5</httpclient.version>
-        <zip4j.version>2.2.6</zip4j.version>
-
-        <slf4j.version>2.0.0-alpha1</slf4j.version>
-        <log4j.version>1.2.17</log4j.version>
-
     </properties>
 
     <modules>
@@ -138,7 +116,6 @@
             </plugin>
 
         </plugins>
-
 
         <pluginManagement>
             <plugins>
