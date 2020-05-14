@@ -67,7 +67,7 @@ public class GrabDemandRegression {
     public static final double learningRate = 0.01;
     public static final int nEpochs = 10;
     public static final int batchSize = 1000;
-    public static final int nTrain = 2500000;
+    public static final int nTrain = 2500000; // Num of training samples to use
     private static String dataDir;
     private static String downloadLink;
     
