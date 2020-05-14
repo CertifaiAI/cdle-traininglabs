@@ -1,4 +1,4 @@
-package global.skymind.solution.regression;/*
+package global.skymind.solution.regression.grabRidershipDemand;/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.
@@ -32,8 +32,6 @@ import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.evaluation.regression.RegressionEvaluation;
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
 import java.io.File;
@@ -85,8 +83,6 @@ public class GrabDemandRegressionTest {
         RecordReader collectionRecordReaderTest = new CollectionRecordReader(processedDataTest);
 
         DataSetIterator testIter = new RecordReaderDataSetIterator(collectionRecordReaderTest, processedDataTest.size(),4,4,true);
-
-//        System.out.println(testIter.getLabels());
 
         RegressionEvaluation eval = net.evaluateRegression(testIter);
         System.out.println(eval.stats());
