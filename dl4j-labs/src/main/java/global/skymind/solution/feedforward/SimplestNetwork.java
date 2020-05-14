@@ -22,6 +22,7 @@
 
 package global.skymind.solution.feedforward;
 
+
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
