@@ -20,6 +20,8 @@ package global.skymind.solution.regression.grabRidershipDemand;/*
  *
  */
 
+import global.skymind.Helper;
+import org.apache.commons.io.FileUtils;
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.collection.CollectionRecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
@@ -46,21 +48,28 @@ import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.nd4j.util.ArchiveUtils;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Pattern;
 
-// TO TRY
-//        System.out.println( (latlong.getLat() + 90)*180 + latlong.getLon());
+// Features to try
+// (latlong.getLat() + 90)*180 + latlong.getLon()
 
 public class GrabDemandRegression {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(GrabDemandRegression.class);
     public static final int seed = 12345;
     public static final double learningRate = 0.01;
     public static final int nEpochs = 10;
     public static final int batchSize = 1000;
     public static final int nTrain = 2500000;
+    private static String dataDir;
+    private static String downloadLink;
     
     public static void main(String[] args) throws IOException, InterruptedException  {
 
@@ -68,7 +77,13 @@ public class GrabDemandRegression {
         *  STEP 1: DATA PREPARATION
         *
         * */
-        File inputFile = new File(System.getProperty("user.home"), ".deeplearning4j/data/grab/Traffic Management/train/train.csv");
+        downloadLink= Helper.getPropValues("dataset.grab.demand.url");
+        dataDir= Paths.get(System.getProperty("user.home"),Helper.getPropValues("dl4j_home.data")).toString();
+
+        File parentDir = new File(Paths.get(dataDir,"grab").toString());
+        if(!parentDir.exists()) downloadAndUnzip();
+
+        File inputFile = new File(Paths.get(dataDir,"grab", "Traffic Management", "train", "train.csv").toString());
 
         CSVRecordReader csvRR = new CSVRecordReader(1,',');
         csvRR.initialize(new FileSplit(inputFile));
@@ -182,5 +197,22 @@ public class GrabDemandRegression {
         // ModelSerializer needs modelname, saveUpdater, Location
         ModelSerializer.writeModel(net,locationToSave,saveUpdater);
 
+    }
+
+    private static void downloadAndUnzip() throws IOException {
+        String dataPath = new File(dataDir).getAbsolutePath();
+        File zipFile = new File(dataPath, "grab.zip");
+
+        log.info("Downloading the dataset from "+downloadLink+ "...");
+        FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
+
+        if(!Helper.getCheckSum(zipFile.getAbsolutePath())
+                .equalsIgnoreCase(Helper.getPropValues("dataset.grab.demand.hash"))){
+            log.info("Downloaded file is incomplete");
+            System.exit(0);
+        }
+
+        log.info("Unzipping "+zipFile.getAbsolutePath());
+        ArchiveUtils.unzipFileTo(zipFile.getAbsolutePath(), dataPath);
     }
 }
