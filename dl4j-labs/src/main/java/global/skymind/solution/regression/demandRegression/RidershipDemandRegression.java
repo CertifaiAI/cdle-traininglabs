@@ -21,6 +21,7 @@ package global.skymind.solution.regression.demandRegression;/*
  */
 
 import global.skymind.Helper;
+import org.apache.commons.io.FileUtils;
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.collection.CollectionRecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
@@ -52,6 +53,7 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -201,8 +203,8 @@ public class RidershipDemandRegression {
         String dataPath = new File(dataDir).getAbsolutePath();
         File zipFile = new File(dataPath, "ridership.zip");
 
-//        log.info("Downloading the dataset from "+downloadLink+ "...");
-//        FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
+        log.info("Downloading the dataset from "+downloadLink+ "...");
+        FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
 
         if(!Helper.getCheckSum(zipFile.getAbsolutePath())
                 .equalsIgnoreCase(Helper.getPropValues("dataset.ridership.demand.hash"))){
