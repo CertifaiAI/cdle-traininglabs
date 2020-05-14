@@ -1,4 +1,4 @@
-package global.skymind.training.regression.grabRidershipDemand;/*
+package global.skymind.training.regression.demandRegression;/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.
@@ -21,34 +21,7 @@ package global.skymind.training.regression.grabRidershipDemand;/*
  */
 
 import global.skymind.Helper;
-import global.skymind.solution.regression.grabRidershipDemand.GeohashtoLatLonTransform;
 import org.apache.commons.io.FileUtils;
-import org.datavec.api.records.reader.RecordReader;
-import org.datavec.api.records.reader.impl.collection.CollectionRecordReader;
-import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
-import org.datavec.api.split.FileSplit;
-import org.datavec.api.transform.TransformProcess;
-import org.datavec.api.transform.schema.Schema;
-import org.datavec.api.writable.Writable;
-import org.datavec.local.transforms.LocalTransformExecutor;
-import org.deeplearning4j.api.storage.StatsStorage;
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.layers.DenseLayer;
-import org.deeplearning4j.nn.conf.layers.OutputLayer;
-import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import org.deeplearning4j.nn.weights.WeightInit;
-import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.deeplearning4j.ui.api.UIServer;
-import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
-import org.deeplearning4j.util.ModelSerializer;
-import org.nd4j.evaluation.regression.RegressionEvaluation;
-import org.nd4j.linalg.activations.Activation;
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
-import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
-import org.nd4j.linalg.learning.config.Nesterovs;
-import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.nd4j.util.ArchiveUtils;
 import org.slf4j.Logger;
 
@@ -56,14 +29,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 /*
-* In this lab, we work on a ridership demand dataset provided by Grab, where we will build a regression model to predict the demand at a given datetime and location.
+* In this lab, we work on a ridership demand dataset provided by an e-hailing company, where we will build a regression model to predict the demand at a given datetime and location.
 * The original dataset contains 4 columns:
 *       - geohash6: geohash location
 *       - day: the day when the ride happens
@@ -88,8 +56,8 @@ import java.util.regex.Pattern;
 *
 * */
 
-public class GrabDemandRegression {
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(global.skymind.solution.regression.grabRidershipDemand.GrabDemandRegression.class);
+public class RidershipDemandRegression {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(global.skymind.training.regression.demandRegression.RidershipDemandRegression.class);
     public static final int seed = 12345;
     public static final double learningRate = 0.01;
     public static final int nEpochs = 10;
@@ -101,13 +69,13 @@ public class GrabDemandRegression {
     public static void main(String[] args) throws IOException, InterruptedException  {
 
         //STEP 1: DATA PREPARATION
-        downloadLink= Helper.getPropValues("dataset.grab.demand.url");
+        downloadLink= Helper.getPropValues("dataset.ridership.demand.url");
         dataDir= Paths.get(System.getProperty("user.home"),Helper.getPropValues("dl4j_home.data")).toString();
 
         File parentDir = new File(Paths.get(dataDir,"grab").toString());
         if(!parentDir.exists()) downloadAndUnzip();
 
-//        File inputFile = new File(Paths.get(dataDir,"grab", "Traffic Management", "train", "train.csv").toString());
+//        File inputFile = new File(Paths.get(dataDir,"ridership", "train", "train.csv").toString());
 
                 /*
                 * COMPLETE THE FOLLOWING 2 LINES OF CODE
@@ -218,13 +186,13 @@ public class GrabDemandRegression {
 
     private static void downloadAndUnzip() throws IOException {
         String dataPath = new File(dataDir).getAbsolutePath();
-        File zipFile = new File(dataPath, "grab.zip");
+        File zipFile = new File(dataPath, "ridership.zip");
 
         log.info("Downloading the dataset from "+downloadLink+ "...");
         FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
 
         if(!Helper.getCheckSum(zipFile.getAbsolutePath())
-                .equalsIgnoreCase(Helper.getPropValues("dataset.grab.demand.hash"))){
+                .equalsIgnoreCase(Helper.getPropValues("dataset.ridership.demand.hash"))){
             log.info("Downloaded file is incomplete");
             System.exit(0);
         }

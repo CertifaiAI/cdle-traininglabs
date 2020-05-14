@@ -1,4 +1,4 @@
-package global.skymind.solution.regression.grabRidershipDemand;/*
+package global.skymind.solution.regression.demandRegression;/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.
@@ -21,7 +21,6 @@ package global.skymind.solution.regression.grabRidershipDemand;/*
  */
 
 import global.skymind.Helper;
-import org.apache.commons.io.FileUtils;
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.collection.CollectionRecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
@@ -53,7 +52,6 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -61,8 +59,8 @@ import java.util.regex.Pattern;
 // Features to try
 // (latlong.getLat() + 90)*180 + latlong.getLon()
 
-public class GrabDemandRegression {
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(GrabDemandRegression.class);
+public class RidershipDemandRegression {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(RidershipDemandRegression.class);
     public static final int seed = 12345;
     public static final double learningRate = 0.01;
     public static final int nEpochs = 10;
@@ -77,13 +75,13 @@ public class GrabDemandRegression {
         *  STEP 1: DATA PREPARATION
         *
         * */
-        downloadLink= Helper.getPropValues("dataset.grab.demand.url");
+        downloadLink= Helper.getPropValues("dataset.ridership.demand.url");
         dataDir= Paths.get(System.getProperty("user.home"),Helper.getPropValues("dl4j_home.data")).toString();
 
-        File parentDir = new File(Paths.get(dataDir,"grab").toString());
+        File parentDir = new File(Paths.get(dataDir,"ridership").toString());
         if(!parentDir.exists()) downloadAndUnzip();
 
-        File inputFile = new File(Paths.get(dataDir,"grab", "Traffic Management", "train", "train.csv").toString());
+        File inputFile = new File(Paths.get(dataDir,"ridership", "train", "train.csv").toString());
 
         CSVRecordReader csvRR = new CSVRecordReader(1,',');
         csvRR.initialize(new FileSplit(inputFile));
@@ -201,13 +199,13 @@ public class GrabDemandRegression {
 
     private static void downloadAndUnzip() throws IOException {
         String dataPath = new File(dataDir).getAbsolutePath();
-        File zipFile = new File(dataPath, "grab.zip");
+        File zipFile = new File(dataPath, "ridership.zip");
 
-        log.info("Downloading the dataset from "+downloadLink+ "...");
-        FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
+//        log.info("Downloading the dataset from "+downloadLink+ "...");
+//        FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
 
         if(!Helper.getCheckSum(zipFile.getAbsolutePath())
-                .equalsIgnoreCase(Helper.getPropValues("dataset.grab.demand.hash"))){
+                .equalsIgnoreCase(Helper.getPropValues("dataset.ridership.demand.hash"))){
             log.info("Downloaded file is incomplete");
             System.exit(0);
         }
