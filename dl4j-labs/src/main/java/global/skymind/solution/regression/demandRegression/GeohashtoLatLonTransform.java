@@ -1,4 +1,4 @@
-package global.skymind.training.regression.grabRidershipDemand;/*
+package global.skymind.solution.regression.demandRegression;/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.
@@ -31,8 +31,8 @@ import org.datavec.api.transform.schema.Schema;
 import org.datavec.api.writable.DoubleWritable;
 import org.datavec.api.writable.Writable;
 import org.nd4j.shade.jackson.annotation.JsonProperty;
-import static global.skymind.training.regression.grabRidershipDemand.CoordinatesType.LAT;
-import static global.skymind.training.regression.grabRidershipDemand.CoordinatesType.LON;
+import static global.skymind.solution.regression.demandRegression.CoordinatesType.LAT;
+import static global.skymind.solution.regression.demandRegression.CoordinatesType.LON;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -56,8 +56,8 @@ public class GeohashtoLatLonTransform implements Transform {
     }
 
     public GeohashtoLatLonTransform(@JsonProperty("columnName") String columnName,
-                                    @JsonProperty("insertAfter") String insertAfter,
-                                    @JsonProperty("derivedColumns") List<DerivedColumn> derivedColumns) {
+                                          @JsonProperty("insertAfter") String insertAfter,
+                                          @JsonProperty("derivedColumns") List<DerivedColumn> derivedColumns) {
         this.columnName = columnName;
         this.insertAfter = insertAfter;
         this.derivedColumns = derivedColumns;

@@ -1,4 +1,4 @@
-package global.skymind.training.regression.grabRidershipDemand;/*
+package global.skymind.solution.regression.demandRegression;/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.
