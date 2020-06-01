@@ -110,7 +110,7 @@
       Example way of doing in command line:
       mvn clean package
       cd target
-      java -cp my-first-dl4j-project.jar global.global.skymind.solution.convolution.mnist.MnistClassifier
+      java -cp global.skymind-1.0-SNAPSHOT-bin.jar global.skymind.MyFirstDL4JProject
       -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
