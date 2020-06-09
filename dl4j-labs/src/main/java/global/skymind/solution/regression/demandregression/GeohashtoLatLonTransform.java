@@ -1,4 +1,4 @@
-package global.skymind.solution.regression.demandRegression;/*
+package global.skymind.solution.regression.demandregression;/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.
@@ -36,10 +36,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static global.skymind.solution.regression.demandRegression.CoordinatesType.LAT;
-import static global.skymind.solution.regression.demandRegression.CoordinatesType.LON;
-
-
 public class GeohashtoLatLonTransform implements Transform {
 
     private final String columnName;
@@ -49,6 +45,9 @@ public class GeohashtoLatLonTransform implements Transform {
     private int insertAfterIdx = -1;
     private int deriveFromIdx = -1;
 
+    private enum CoordinatesType {
+        LAT, LON
+    }
 
     private GeohashtoLatLonTransform(Builder builder) {
         this.derivedColumns = builder.derivedColumns;
@@ -283,12 +282,12 @@ public class GeohashtoLatLonTransform implements Transform {
 
 
         public Builder addLatDerivedColumn(String columnName) {
-            derivedColumns.add(new DerivedColumn(columnName, ColumnType.Double, LAT));
+            derivedColumns.add(new DerivedColumn(columnName, ColumnType.Double, CoordinatesType.LAT));
             return this;
         }
 
         public Builder addLonDerivedColumn(String columnName) {
-            derivedColumns.add(new DerivedColumn(columnName, ColumnType.Double, LON));
+            derivedColumns.add(new DerivedColumn(columnName, ColumnType.Double, CoordinatesType.LON));
             return this;
         }
 

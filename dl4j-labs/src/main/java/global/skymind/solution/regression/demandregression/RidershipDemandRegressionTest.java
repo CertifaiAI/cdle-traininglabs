@@ -1,4 +1,4 @@
-package global.skymind.training.regression.demandRegression;/*
+package global.skymind.solution.regression.demandregression;/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.
@@ -31,25 +31,25 @@ import org.datavec.local.transforms.LocalTransformExecutor;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
-import org.nd4j.evaluation.regression.RegressionEvaluation;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
+import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
+import org.nd4j.linalg.factory.Nd4j;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.*;
 
 public class RidershipDemandRegressionTest {
-    public static void main (String[] args ) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
-        File modelSave =  new File(System.getProperty("java.io.tmpdir"), "/trained_regression_model.zip");
+        File modelSave = new File(System.getProperty("java.io.tmpdir"), "/trained_regression_model.zip");
         MultiLayerNetwork net = ModelSerializer.restoreMultiLayerNetwork(modelSave);
 
         File inputFile = new File(System.getProperty("user.home"), ".deeplearning4j/data/ridership/test/test.csv");
-        CSVRecordReader csvRR = new CSVRecordReader(1,',');
+        CSVRecordReader csvRR = new CSVRecordReader(1, ',');
         csvRR.initialize(new FileSplit(inputFile));
 
         Schema inputDataSchema = new Schema.Builder()
@@ -59,10 +59,9 @@ public class RidershipDemandRegressionTest {
                 .addColumnFloat("demand")
                 .build();
 
-        Pattern REPLACE_PATTERN = Pattern.compile("\\:\\d+");
 
-        Map<String,String> map = new HashMap<>();
-        map.put(REPLACE_PATTERN.toString(), "");
+        Map<String, String> map = new HashMap<>();
+        map.put("\\:\\d+", "");
 
         TransformProcess tp = new TransformProcess.Builder(inputDataSchema)
                 .replaceStringTransform("timestamp", map)
@@ -71,20 +70,38 @@ public class RidershipDemandRegressionTest {
                         .addLatDerivedColumn("latitude")
                         .addLonDerivedColumn("longitude").build())
                 .removeColumns("geohash6")
+                .renameColumn("timestamp", "hour")
                 .build();
 
         List<List<Writable>> testData = new ArrayList<>();
 
-        while(csvRR.hasNext()){
+        while (csvRR.hasNext()) {
             testData.add(csvRR.next());
         }
 
         List<List<Writable>> processedDataTest = LocalTransformExecutor.execute(testData, tp);
         RecordReader collectionRecordReaderTest = new CollectionRecordReader(processedDataTest);
 
-        DataSetIterator testIter = new RecordReaderDataSetIterator(collectionRecordReaderTest, processedDataTest.size(),4,4,true);
+        DataSetIterator testIter = new RecordReaderDataSetIterator(collectionRecordReaderTest, 512, 4, 4, true);
 
-        RegressionEvaluation eval = net.evaluateRegression(testIter);
-        System.out.println(eval.stats());
+        DataNormalization normalizer = new NormalizerStandardize();
+        normalizer.fit(testIter);
+        testIter.setPreProcessor(normalizer);
+
+//        RegressionEvaluation eval = net.evaluateRegression(testIter);
+//        System.out.println(eval.stats());
+
+        // test single batch
+        testIter.reset();
+        DataSet singleBatch = testIter.next(5);
+        INDArray features = singleBatch.getFeatures();
+        INDArray labels = singleBatch.getLabels();
+
+        INDArray output = net.output(features);
+
+        System.out.println("Actual label");
+        System.out.println(Nd4j.toFlattened(labels));
+        System.out.println("Predicted label");
+        System.out.println(Nd4j.toFlattened(output));
     }
 }
