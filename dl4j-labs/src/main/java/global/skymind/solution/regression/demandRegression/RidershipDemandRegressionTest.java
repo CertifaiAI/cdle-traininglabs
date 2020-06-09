@@ -62,10 +62,9 @@ public class RidershipDemandRegressionTest {
                 .addColumnFloat("demand")
                 .build();
 
-        Pattern REPLACE_PATTERN = Pattern.compile("\\:\\d+");
 
         Map<String, String> map = new HashMap<>();
-        map.put(REPLACE_PATTERN.toString(), "");
+        map.put("\\:\\d+", "");
 
         TransformProcess tp = new TransformProcess.Builder(inputDataSchema)
                 .replaceStringTransform("timestamp", map)
@@ -74,6 +73,7 @@ public class RidershipDemandRegressionTest {
                         .addLatDerivedColumn("latitude")
                         .addLonDerivedColumn("longitude").build())
                 .removeColumns("geohash6")
+                .renameColumn("timestamp", "hour")
                 .build();
 
         List<List<Writable>> testData = new ArrayList<>();
