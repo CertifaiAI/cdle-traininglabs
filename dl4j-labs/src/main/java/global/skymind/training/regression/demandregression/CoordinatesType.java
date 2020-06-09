@@ -1,4 +1,4 @@
-package global.skymind.training.regression.demandRegression;/*
+package global.skymind.training.regression.demandregression;/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.

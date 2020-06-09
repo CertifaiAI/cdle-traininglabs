@@ -1,4 +1,4 @@
-package global.skymind.training.regression.demandRegression;/*
+package global.skymind.training.regression.demandregression;/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.
@@ -31,8 +31,8 @@ import org.datavec.api.transform.schema.Schema;
 import org.datavec.api.writable.DoubleWritable;
 import org.datavec.api.writable.Writable;
 import org.nd4j.shade.jackson.annotation.JsonProperty;
-import static global.skymind.training.regression.demandRegression.CoordinatesType.LAT;
-import static global.skymind.training.regression.demandRegression.CoordinatesType.LON;
+import static global.skymind.training.regression.demandregression.CoordinatesType.LAT;
+import static global.skymind.training.regression.demandregression.CoordinatesType.LON;
 
 import java.io.Serializable;
 import java.util.ArrayList;

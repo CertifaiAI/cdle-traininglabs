@@ -1,4 +1,4 @@
-package global.skymind.training.regression.demandRegression;/*
+package global.skymind.training.regression.demandregression;/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.
@@ -57,7 +57,7 @@ import java.nio.file.Paths;
 * */
 
 public class RidershipDemandRegression {
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(global.skymind.training.regression.demandRegression.RidershipDemandRegression.class);
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(global.skymind.training.regression.demandregression.RidershipDemandRegression.class);
     public static final int seed = 12345;
     public static final double learningRate = 0.01;
     public static final int nEpochs = 10;
