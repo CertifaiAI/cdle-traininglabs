@@ -46,46 +46,51 @@ import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
+import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.nd4j.util.ArchiveUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 // Features to try
 // (latlong.getLat() + 90)*180 + latlong.getLon()
 
 public class RidershipDemandRegression {
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(RidershipDemandRegression.class);
-    public static final int seed = 12345;
-    public static final double learningRate = 0.01;
-    public static final int nEpochs = 10;
-    public static final int batchSize = 1000;
-    public static final int nTrain = 2500000; // Num of training samples to use
+    private static final int seed = 12345;
+    private static final double learningRate = 0.001;
+    private static final int nEpochs = 2;
+    private static final int batchSize = 512;
+    private static final int nTrain = 3000000; // Num of training samples to use
+    private static final Logger log = LoggerFactory.getLogger(RidershipDemandRegression.class);
     private static String dataDir;
     private static String downloadLink;
-    
-    public static void main(String[] args) throws IOException, InterruptedException  {
+
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         /*
-        *  STEP 1: DATA PREPARATION
-        *
-        * */
-        downloadLink= Helper.getPropValues("dataset.ridership.demand.url");
-        dataDir= Paths.get(System.getProperty("user.home"),Helper.getPropValues("dl4j_home.data")).toString();
+         *  STEP 1: DATA PREPARATION
+         *
+         * */
+        downloadLink = Helper.getPropValues("dataset.ridership.demand.url");
+        dataDir = Paths.get(System.getProperty("user.home"), Helper.getPropValues("dl4j_home.data")).toString();
 
-        File parentDir = new File(Paths.get(dataDir,"ridership").toString());
-        if(!parentDir.exists()) downloadAndUnzip();
+        File parentDir = new File(Paths.get(dataDir, "ridership").toString());
+        if (!parentDir.exists()) downloadAndUnzip();
 
-        File inputFile = new File(Paths.get(dataDir,"ridership", "train", "train.csv").toString());
+        File inputFile = new File(Paths.get(dataDir, "ridership", "train", "train.csv").toString());
 
-        CSVRecordReader csvRR = new CSVRecordReader(1,',');
+        CSVRecordReader csvRR = new CSVRecordReader(1, ',');
         csvRR.initialize(new FileSplit(inputFile));
 
         Schema inputDataSchema = new Schema.Builder()
@@ -97,7 +102,7 @@ public class RidershipDemandRegression {
 
         Pattern REPLACE_PATTERN = Pattern.compile("\\:\\d+");
 
-        Map<String,String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         map.put(REPLACE_PATTERN.toString(), "");
 
         TransformProcess tp = new TransformProcess.Builder(inputDataSchema)
@@ -119,10 +124,13 @@ public class RidershipDemandRegression {
         List<List<Writable>> trainData = new ArrayList<>();
         List<List<Writable>> valData = new ArrayList<>();
         int i = 0;
-        while(csvRR.hasNext()){
-            if (i < nTrain) {trainData.add(csvRR.next());}
-            else {valData.add(csvRR.next());}
-            i ++ ;
+        while (csvRR.hasNext()) {
+            if (i < nTrain) {
+                trainData.add(csvRR.next());
+            } else {
+                valData.add(csvRR.next());
+            }
+            i++;
         }
 
         List<List<Writable>> processedDataTrain = LocalTransformExecutor.execute(trainData, tp);
@@ -132,8 +140,8 @@ public class RidershipDemandRegression {
         RecordReader collectionRecordReaderTrain = new CollectionRecordReader(processedDataTrain);
         RecordReader collectionRecordReaderVal = new CollectionRecordReader(processedDataVal);
 
-        DataSetIterator trainIter = new RecordReaderDataSetIterator(collectionRecordReaderTrain,batchSize,4,4,true);
-        DataSetIterator valIter = new RecordReaderDataSetIterator(collectionRecordReaderVal, processedDataVal.size(),4,4,true);
+        DataSetIterator trainIter = new RecordReaderDataSetIterator(collectionRecordReaderTrain, batchSize, 4, 4, true);
+        DataSetIterator valIter = new RecordReaderDataSetIterator(collectionRecordReaderVal, batchSize, 4, 4, true);
 
 
         /*
@@ -142,43 +150,48 @@ public class RidershipDemandRegression {
          * */
         DataNormalization normalizer = new NormalizerStandardize();
         normalizer.fit(trainIter);           //Collect the statistics (mean/stdev) from the training data. This does not modify the input data
-        while (trainIter.hasNext()) {
-            normalizer.transform(trainIter.next());
-        }
-        while (valIter.hasNext()) {
-            normalizer.transform(valIter.next());
-        }
+        trainIter.setPreProcessor(normalizer);
+        valIter.setPreProcessor(normalizer);
+
+//        while (trainIter.hasNext()) {
+//            normalizer.transform(trainIter.next());
+//        }
+//        while (valIter.hasNext()) {
+//            normalizer.transform(valIter.next());
+//        }
 //        normalizer.transform(trainIter);     //Apply normalization to the training data
 //        normalizer.transform(valIter);         //Apply normalization to the val data
 
         //Create the network
         int numInput = 4;
         int numOutputs = 1;
-        int nHidden = 15;
+        int nHidden = 100;
         MultiLayerNetwork net = new MultiLayerNetwork(new NeuralNetConfiguration.Builder()
                 .seed(seed)
+                .l2(0.00001)
                 .weightInit(WeightInit.XAVIER)
-                .updater(new Nesterovs(learningRate, 0.9))
+                .updater(new Adam(learningRate))
                 .list()
-                .layer(0, new DenseLayer.Builder().nIn(numInput).nOut(nHidden)
-                        .activation(Activation.TANH)
+                .layer(0, new DenseLayer.Builder().nIn(numInput).nOut(400)
+                        .activation(Activation.RELU)
                         .build())
-                .layer(1, new OutputLayer.Builder(LossFunctions.LossFunction.MSE)
-                        .activation(Activation.IDENTITY)
-                        .nIn(nHidden).nOut(numOutputs).build())
+                .layer(1, new DenseLayer.Builder().nOut(200)
+                        .activation(Activation.RELU)
+                        .build())
+                .layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.MSE)
+                        .activation(Activation.SIGMOID)
+                        .nOut(numOutputs).build())
                 .build()
         );
         net.init();
-        net.setListeners(new ScoreIterationListener(10));
+        net.setListeners(new ScoreIterationListener(100));
 
         StatsStorage storage = new InMemoryStatsStorage();
         UIServer server = UIServer.getInstance();
         server.attach(storage);
 
-        trainIter.reset();
         net.fit(trainIter, nEpochs);
 
-        valIter.reset();
         RegressionEvaluation eval = net.evaluateRegression(valIter);
         System.out.println(eval.stats());
 
@@ -195,7 +208,7 @@ public class RidershipDemandRegression {
         boolean saveUpdater = false;
 
         // ModelSerializer needs modelname, saveUpdater, Location
-        ModelSerializer.writeModel(net,locationToSave,saveUpdater);
+        ModelSerializer.writeModel(net, locationToSave, saveUpdater);
 
     }
 
@@ -203,16 +216,16 @@ public class RidershipDemandRegression {
         String dataPath = new File(dataDir).getAbsolutePath();
         File zipFile = new File(dataPath, "ridership.zip");
 
-        log.info("Downloading the dataset from "+downloadLink+ "...");
+        log.info("Downloading the dataset from " + downloadLink + "...");
         FileUtils.copyURLToFile(new URL(downloadLink), zipFile);
 
-        if(!Helper.getCheckSum(zipFile.getAbsolutePath())
-                .equalsIgnoreCase(Helper.getPropValues("dataset.ridership.demand.hash"))){
+        if (!Helper.getCheckSum(zipFile.getAbsolutePath())
+                .equalsIgnoreCase(Helper.getPropValues("dataset.ridership.demand.hash"))) {
             log.info("Downloaded file is incomplete");
             System.exit(0);
         }
 
-        log.info("Unzipping "+zipFile.getAbsolutePath());
+        log.info("Unzipping " + zipFile.getAbsolutePath());
         ArchiveUtils.unzipFileTo(zipFile.getAbsolutePath(), dataPath);
     }
 }

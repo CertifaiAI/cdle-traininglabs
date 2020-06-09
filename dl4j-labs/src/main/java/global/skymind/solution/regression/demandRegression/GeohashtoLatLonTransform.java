@@ -31,12 +31,13 @@ import org.datavec.api.transform.schema.Schema;
 import org.datavec.api.writable.DoubleWritable;
 import org.datavec.api.writable.Writable;
 import org.nd4j.shade.jackson.annotation.JsonProperty;
-import static global.skymind.solution.regression.demandRegression.CoordinatesType.LAT;
-import static global.skymind.solution.regression.demandRegression.CoordinatesType.LON;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import static global.skymind.solution.regression.demandRegression.CoordinatesType.LAT;
+import static global.skymind.solution.regression.demandRegression.CoordinatesType.LON;
 
 
 public class GeohashtoLatLonTransform implements Transform {
@@ -56,8 +57,8 @@ public class GeohashtoLatLonTransform implements Transform {
     }
 
     public GeohashtoLatLonTransform(@JsonProperty("columnName") String columnName,
-                                          @JsonProperty("insertAfter") String insertAfter,
-                                          @JsonProperty("derivedColumns") List<DerivedColumn> derivedColumns) {
+                                    @JsonProperty("insertAfter") String insertAfter,
+                                    @JsonProperty("derivedColumns") List<DerivedColumn> derivedColumns) {
         this.columnName = columnName;
         this.insertAfter = insertAfter;
         this.derivedColumns = derivedColumns;
@@ -86,6 +87,11 @@ public class GeohashtoLatLonTransform implements Transform {
     }
 
     @Override
+    public Schema getInputSchema() {
+        return inputSchema;
+    }
+
+    @Override
     public void setInputSchema(Schema inputSchema) {
         insertAfterIdx = inputSchema.getColumnNames().indexOf(insertAfter);
         if (insertAfterIdx == -1) {
@@ -102,11 +108,6 @@ public class GeohashtoLatLonTransform implements Transform {
 
         this.inputSchema = inputSchema;
 
-    }
-
-    @Override
-    public Schema getInputSchema() {
-        return inputSchema;
     }
 
     @Override
@@ -245,7 +246,7 @@ public class GeohashtoLatLonTransform implements Transform {
      */
     @Override
     public String[] columnNames() {
-        return new String[] {columnName()};
+        return new String[]{columnName()};
     }
 
     /**
@@ -262,8 +263,8 @@ public class GeohashtoLatLonTransform implements Transform {
     public static class Builder {
 
         private final String columnName;
-        private String insertAfter;
         private final List<DerivedColumn> derivedColumns = new ArrayList<>();
+        private String insertAfter;
 
 
         /**
@@ -281,12 +282,12 @@ public class GeohashtoLatLonTransform implements Transform {
         }
 
 
-        public Builder addLatDerivedColumn(String columnName ) {
+        public Builder addLatDerivedColumn(String columnName) {
             derivedColumns.add(new DerivedColumn(columnName, ColumnType.Double, LAT));
             return this;
         }
 
-        public Builder addLonDerivedColumn(String columnName ) {
+        public Builder addLonDerivedColumn(String columnName) {
             derivedColumns.add(new DerivedColumn(columnName, ColumnType.Double, LON));
             return this;
         }
