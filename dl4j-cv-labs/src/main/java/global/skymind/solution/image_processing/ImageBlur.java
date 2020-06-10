@@ -20,7 +20,8 @@ package global.skymind.solution.image_processing;/*
  *
  */
 import org.bytedeco.opencv.opencv_core.*;
-import org.deeplearning4j.arbiter.util.ClassPathResource;
+//import org.deeplearning4j.arbiter.util.ClassPathResource;
+import org.nd4j.linalg.io.ClassPathResource;
 
 import java.io.IOException;
 
@@ -40,7 +41,7 @@ import static org.bytedeco.opencv.global.opencv_imgcodecs.*;
 public class ImageBlur {
     public static void main(String[] args) throws IOException {
         // Load image
-        Mat src = imread(new ClassPathResource("image/lena.png").getFile().getAbsolutePath());
+        Mat src = imread(new ClassPathResource("image_processing/lena.png").getFile().getAbsolutePath());
         Display.display(src, "Input");
 
         // Apply Gaussian blurring

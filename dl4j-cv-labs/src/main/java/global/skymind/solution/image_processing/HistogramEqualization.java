@@ -53,12 +53,5 @@ public class HistogramEqualization {
         Display.display(dest, "After Histogram Equalization");
 
 
-
-//        //CLAHE
-//        Mat dest2 = new Mat();
-//        CLAHE clahe = createCLAHE();
-//        clahe.apply(src, dest2);
-//        Display.display(dest2, "After CLAHE");
-
     }
 }

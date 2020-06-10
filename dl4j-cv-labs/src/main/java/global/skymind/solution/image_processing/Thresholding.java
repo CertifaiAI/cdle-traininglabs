@@ -21,7 +21,10 @@ package global.skymind.solution.image_processing;/*
  */
 
 import org.bytedeco.opencv.opencv_core.Mat;
+import org.datavec.image.loader.NativeImageLoader;
 import org.nd4j.linalg.io.ClassPathResource;
+
+import static org.bytedeco.opencv.global.opencv_imgcodecs.IMREAD_GRAYSCALE;
 import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
 import static org.bytedeco.opencv.global.opencv_imgproc.THRESH_BINARY;
 import static org.bytedeco.opencv.global.opencv_imgproc.threshold;
@@ -42,11 +45,15 @@ public class Thresholding {
     public static void main(String[] args) throws IOException {
         // load image
         Mat src = imread(new ClassPathResource("image_processing/sat_map3.jpg").getFile().getAbsolutePath());
+
+        //uncomment to try with gray scale image to see the difference
+        //Mat src = imread(new ClassPathResource("image_processing/sat_map3.jpg").getFile().getAbsolutePath(), IMREAD_GRAYSCALE);
+
         Display.display(src, "Original");
 
         // Apply threshold to the image
         Mat dest = new Mat();
-        threshold(src, dest, 50, 255, THRESH_BINARY);
+        threshold(src, dest, 180, 255, THRESH_BINARY);
         Display.display(dest, "Thresholding applied");
     }
 }
