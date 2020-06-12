@@ -1,4 +1,4 @@
-package global.skymind.solution.image_processing;/*
+package global.skymind.solution.image_processing.utils;/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.
@@ -22,6 +22,7 @@ package global.skymind.solution.image_processing;/*
 
 
 import org.bytedeco.javacv.CanvasFrame;
+import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.bytedeco.opencv.opencv_core.Mat;
 
@@ -39,6 +40,17 @@ public class Display {
         final OpenCVFrameConverter converter = new OpenCVFrameConverter.ToMat();
         // Show image on window.
         canvas.showImage(converter.convert(image));
+    }
+
+    public static void display(Frame frame, String caption){
+        // Create image window named "My Image".
+        final CanvasFrame canvas = new CanvasFrame(caption, 1.0);
+
+        // Request closing of the application when the image window is closed.
+        canvas.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        // Show image on window.
+        canvas.showImage(frame);
     }
 }
 

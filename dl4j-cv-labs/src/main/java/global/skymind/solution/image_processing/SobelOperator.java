@@ -20,6 +20,7 @@ package global.skymind.solution.image_processing;/*
  *
  */
 
+import global.skymind.solution.image_processing.utils.Display;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.nd4j.linalg.io.ClassPathResource;
 import static org.bytedeco.opencv.global.opencv_core.*;
