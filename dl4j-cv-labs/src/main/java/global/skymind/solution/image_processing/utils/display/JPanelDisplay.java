@@ -1,4 +1,4 @@
-package global.skymind.solution.image_processing.utils;
+package global.skymind.solution.image_processing.utils.display;
 
 import org.nd4j.linalg.api.ndarray.INDArray;
 

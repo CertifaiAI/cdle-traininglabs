@@ -20,8 +20,8 @@ package global.skymind.solution.image_processing;/*
  *
  */
 
-import global.skymind.solution.image_processing.utils.Display;
-import global.skymind.solution.image_processing.utils.JPanelDisplay;
+import global.skymind.solution.image_processing.utils.display.Display;
+import global.skymind.solution.image_processing.utils.display.JPanelDisplay;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.datavec.image.loader.NativeImageLoader;
 import org.nd4j.linalg.api.ndarray.INDArray;
