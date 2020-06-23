@@ -39,6 +39,13 @@ import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
  * floor (pixel_value / bin) * bin
  *
  * In this example, we will reduce the intensity of an image from 256 bits to 2 bits.
+ *
+ * TASKS:
+ * -----
+ * 1. Load and display lena.png from the resources/image_processing folder
+ * 2. Read the image to a mat file
+ * 3. Perform depth reduction algorithm using ND4J
+ * 4. Display the final image
  */
 
 public class Quantization {
@@ -55,13 +62,13 @@ public class Quantization {
         int height = src.arrayHeight();
 
         //reduce intensity
-        INDArray resultImgArray = reduceIntensity(imgArray, width, height, bit);
+        INDArray resultImgArray = reduceDepth(imgArray, width, height, bit);
         Display.display(src, "original");
         JPanelDisplay display = new JPanelDisplay(resultImgArray, "" + bit + " image");
         display.display();
     }
 
-    private static INDArray reduceIntensity(INDArray imgArray, int width, int height, int bit) {
+    private static INDArray reduceDepth(INDArray imgArray, int width, int height, int bit) {
         int bin = 256 / bit; //take the original max image depth divide by the bit size to calculate the level of pixel to reducr
         INDArray resultImgArray = Nd4j.create(1,1, width, height);
         for (int i = 0; i < width; i++) {

@@ -19,30 +19,18 @@ package global.skymind.training.image_processing;/*
  *
  *
  */
-
 import java.io.IOException;
 
 /*
- *
- * Apply Histogram Equalization to enhance contrast of an input image
  * TASKS:
  * -----
- * 1. Load x-ray.jpeg from the resources/image_processing folder
- * 2. Apply the Histogram Equalization function provided in JavaCV
- * 3. Display the image both "before" and "after" contrast enhancement
- * 4. You can create the histogram for an image by creating Histogram1DJava object and calling the getHistogramImage
- *    method.
+ * 1. Load and display x-ray.jpeg from the resources/image_processing folder
+ * 2. Add salt and pepper noise to the image
+ * 3. Apply median filter on the image which noise is added to denoise it
+ * 4. Display the denoised image
  * */
-
-public class HistogramEqualization {
-    public static void main () throws IOException {
-
-        /*
-        *
-        *
-        * ENTER YOUR CODE HERE
-        *
-        * */
+public class MedianFilter {
+    public static void main(String[] args) throws IOException {
 
     }
 }

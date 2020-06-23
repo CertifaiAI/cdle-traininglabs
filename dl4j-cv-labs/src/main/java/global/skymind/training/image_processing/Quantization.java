@@ -20,25 +20,25 @@ package global.skymind.training.image_processing;/*
  *
  */
 
+import java.io.IOException;
 
-import org.bytedeco.javacv.CanvasFrame;
-import org.bytedeco.javacv.OpenCVFrameConverter;
-import org.bytedeco.opencv.opencv_core.Mat;
+/**
+ * Quantization is the discretization of the image pixel value.
+ * The equation of quantization is given as follows:
+ * floor (pixel_value / bin) * bin
+ *
+ * In this example, we will reduce the intensity of an image from 256 bits to 2 bits.
+ *
+ * TASKS:
+ * -----
+ * 1. Load and display lena.png from the resources/image_processing folder
+ * 2. Read the image to a mat file
+ * 3. Perform depth reduction algorithm using ND4J
+ * 4. Display the final image
+ */
 
-import javax.swing.*;
+public class Quantization {
+    public static void main(String[] args) throws IOException {
 
-public class Display {
-    public static void display(Mat image, String caption) {
-        // Create image window named "My Image".
-        final CanvasFrame canvas = new CanvasFrame(caption, 1.0);
-
-        // Request closing of the application when the image window is closed.
-        canvas.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        // Convert from OpenCV Mat to Java Buffered image for display
-        final OpenCVFrameConverter converter = new OpenCVFrameConverter.ToMat();
-        // Show image on window.
-        canvas.showImage(converter.convert(image));
     }
 }
-

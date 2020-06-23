@@ -41,6 +41,8 @@ import static org.bytedeco.opencv.global.opencv_imgproc.equalizeHist;
  * 1. Load x-ray.jpeg from the resources/image_processing folder
  * 2. Apply the Histogram Equalization function provided in JavaCV
  * 3. Display the image both "before" and "after" contrast enhancement
+ * 4. You can create the histogram for an image by creating Histogram1DJava object and calling the getHistogramImage
+ *    method.
  *
  * */
 
