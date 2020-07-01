@@ -20,7 +20,7 @@
  *
  */
 
-package global.skymind.training.datavec.loadImage;
+package global.skymind.training.datavec.loadimage;
 
 import global.skymind.Helper;
 import org.apache.commons.io.FileUtils;

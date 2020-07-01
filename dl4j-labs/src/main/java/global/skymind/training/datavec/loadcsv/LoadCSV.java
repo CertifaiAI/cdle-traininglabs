@@ -20,7 +20,7 @@
  *
  */
 
-package global.skymind.solution.datavec.loadCSV;
+package global.skymind.training.datavec.loadcsv;
 
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
