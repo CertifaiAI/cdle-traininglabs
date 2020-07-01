@@ -20,7 +20,7 @@
  *
  */
 
-package global.skymind.training.datavec;
+package global.skymind.solution.datavec.loadcsv;
 
 import org.apache.commons.io.FileUtils;
 import org.datavec.api.records.reader.RecordReader;
@@ -40,12 +40,12 @@ import org.datavec.api.transform.schema.Schema;
 import org.datavec.api.transform.transform.time.DeriveColumnsFromTimeTransform;
 import org.datavec.api.writable.DoubleWritable;
 import org.datavec.api.writable.Writable;
-import org.datavec.local.transforms.LocalTransformExecutor;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.io.ClassPathResource;
+import org.datavec.local.transforms.LocalTransformExecutor;
 
 import java.io.File;
 import java.nio.charset.Charset;
