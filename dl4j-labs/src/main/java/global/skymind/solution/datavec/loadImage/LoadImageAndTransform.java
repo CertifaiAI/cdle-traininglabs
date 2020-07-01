@@ -20,7 +20,7 @@
  *
  */
 
-package global.skymind.training.datavec;
+package global.skymind.solution.datavec.loadImage;
 
 import org.datavec.api.io.filters.BalancedPathFilter;
 import org.datavec.api.io.labels.ParentPathLabelGenerator;

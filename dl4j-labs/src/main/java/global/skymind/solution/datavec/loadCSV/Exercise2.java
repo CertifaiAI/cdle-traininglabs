@@ -20,7 +20,7 @@
  *
  */
 
-package global.skymind.solution.datavec;
+package global.skymind.solution.datavec.loadCSV;
 
 import global.skymind.Helper;
 import org.apache.commons.io.FileUtils;
@@ -41,7 +41,6 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Arrays;

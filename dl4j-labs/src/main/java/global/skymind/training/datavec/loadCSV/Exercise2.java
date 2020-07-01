@@ -20,7 +20,7 @@
  *
  */
 
-package global.skymind.training.datavec;
+package global.skymind.training.datavec.loadCSV;
 
 import global.skymind.Helper;
 import org.apache.commons.io.FileUtils;

@@ -20,7 +20,7 @@
  *
  */
 
-package global.skymind.training.datavec;
+package global.skymind.training.datavec.loadCSV;
 
 import org.apache.commons.io.FileUtils;
 import org.datavec.api.records.writer.RecordWriter;

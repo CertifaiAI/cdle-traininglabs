@@ -1,4 +1,4 @@
-package global.skymind.solution.datavec;
+package global.skymind.solution.datavec.kfold;
 
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.collection.CollectionRecordReader;
