@@ -20,7 +20,7 @@
  *
  */
 
-package global.skymind.solution.datavec.loadCSV;
+package global.skymind.solution.datavec.loadImage;
 
 import global.skymind.Helper;
 import org.apache.commons.io.FileUtils;
