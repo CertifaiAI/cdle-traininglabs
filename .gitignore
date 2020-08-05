@@ -22,4 +22,4 @@ node_modules/
 .png
 export/*.png
 BasicDataVecExampleLocalOutput.csv
-dl4j-labs/src/main/resources/text/trained_alice.zip
+**/*.zip
