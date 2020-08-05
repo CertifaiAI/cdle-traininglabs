@@ -30,7 +30,7 @@
     <artifactId>dl4j-labs</artifactId>
 
     <parent>
-        <groupId>global.skymind</groupId>
+        <groupId>ai.certifai</groupId>
         <artifactId>traininglabs</artifactId>
         <version>1.0.0-alpha</version>
     </parent>
