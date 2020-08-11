@@ -1,7 +1,6 @@
-package ai.certifai.training.utilities;
-
-/*******************************************************************************
- * Copyright (c) 2015-2019 Skymind, Inc.
+/*
+ * Copyright (c) 2019 Skymind AI Bhd.
+ * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License, Version 2.0 which is available at
@@ -14,7 +13,9 @@ package ai.certifai.training.utilities;
  * under the License.
  *
  * SPDX-License-Identifier: Apache-2.0
- ******************************************************************************/
+ */
+
+package ai.certifai.training.utilities;
 
 import net.lingala.zip4j.ZipFile;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
