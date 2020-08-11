@@ -25,7 +25,6 @@ import org.nd4j.linalg.io.ClassPathResource;
 import static org.bytedeco.opencv.global.opencv_core.*;
 import static org.bytedeco.opencv.global.opencv_imgproc.Sobel;
 import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
-import static org.bytedeco.opencv.global.opencv_imgproc.filter2D;
 
 import java.io.IOException;
 
