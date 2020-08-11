@@ -15,7 +15,7 @@
  *  *****************************************************************************
  */
 
-package global.skymind;
+package ai.certifai;
 
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
