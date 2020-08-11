@@ -4,76 +4,59 @@ Running examples strategically structured to enhance understanding of building m
 
 [![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/0)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/0)[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/1)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/1)[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/2)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/2)[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/3)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/3)[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/4)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/4)[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/5)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/5)[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/6)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/6)[![](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/images/7)](https://sourcerer.io/fame/chiaweilim/skymindglobal/TrainingLabs/links/7)
 
-This repo contains codes for hands-on purpose during training session.
-All codes had been tested using CPU.
+This repo contains codes for hands-on purpose during training session. All codes had been tested using CPU.
 
 ## Contents
 
 #### DL4J-Lab
-- [convolution/MNIST](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/convolution/mnist):
-  Mnist classification using CNN.
-- [convolution/TransferLearning/TinyYoLo/TLDetectorActors](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/convolution/objectdetection/transferlearning/tinyyolo):Detect
-  actors face using CNN.
-- [dataexample/ImageDrawer](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/dataexamples):
-  Train neural network that learns to draw.
-- [feedforward/detectgender](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/feedforward/detectgender):
-  Detect the gender of a person based on his/her name.
-- [feedforward/SimplestNetwork](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/feedforward):
-  Simplest neural network to approximate a function that can map input
-  to an output.
-- [generative/MnistGAN](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/generative):
-  A GAN model to generate mnist digits. 
-- [humanactivity/CNNLSTM](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/humanactivity
-                                                                                                                                                    ):
-  A hybrid CNN-LSTM neural network to perform human activity
-  classification.
-- [humanactivity/LSTM](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/humanactivity):
-  An LSTM model to classify human activity.
-- [modelsaveload/MnistImageLoad](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/modelsaveload):
-  Step-by-step on how to save a model.
-- [modelsaveload/MnistImageSave](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/modelsaveload):
-  Step-by-step on how to load a model.
-- [recurrent/basic](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/recurrent/basic):
-  Basic RNN network that learns to create a string.
-- [recurrent/character](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/recurrent/character):
-  Texts generation using LSTM.
-- [recurrent/physionet](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/recurrent/physionet):
-  Mortality prediction using LSTM.
-- [VAE/VAECreditAnomaly](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/VAE):
-  Bank transaction anomaly detection using VAE.
-- [ND4J](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution/nd4j):
-  ND4J tutorial and exercise.
-- [DataVec](https://github.com/skymindglobal/TrainingLabs/tree/datavec/dl4j-labs/src/main/java/global/skymind/solution/datavec):
-  Load and transform CSV and Image files using DataVec
-  
+- [convolution](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/convolution):
+  This folder contains MNIST classification and object detection using transfer learning of TinyYOLO and VGG16.
+- [dataexamples](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/dataexamples):
+  This folder contains model that train neural network to learn drawing.
+- [datavec](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/datavec):
+  This folder contains K-Fold cross-validation tutorial, load and transform CSV and Image files using DataVec.
+- [feedforward](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/feedforward):
+  This folder contains simplest neural network to approximate a function that can map input to an output, and model that can detect the gender of a person based on his/her name.
+- [generative](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/generative):
+  This folder contains a GAN model that can generate MNIST digits. 
+- [humanactivity](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/humanactivity):
+  This folder contains a LSTM model and a hybrid CNN-LSTM neural network to perform human activity classification.
+- [modelsaveload](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/modelsaveload):
+  This folder contains step-by-step on how to save and load a model.
+- [nd4j](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/nd4j):
+  This folder contains ND4J tutorial and exercise.
+- [recurrent](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/recurrent):
+  This folder contains a basic RNN network that learn to create a string, a LSTM model to generate texts, and a LSTM model for mortality prediction.
+- [regression](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/regression):
+  This folder contains neural network that predict ridership demand.
+- [VAE](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/VAE):
+  This folder contains a VAE model for bank transaction anomaly detection.
 #### DL4J-cv-labs
-- [ImageClassification/CustomModel](https://github.com/skymindglobal/TrainingLabs/tree/imageclassification/dl4j-cv-labs/src/main/java/global/skymind/solution/classification):
-  Dog breed classification using custom model.
-- [ImageClassification/TransferLearning](https://github.com/skymindglobal/TrainingLabs/tree/imageclassification/dl4j-cv-labs/src/main/java/global/skymind/solution/classification/transferlearning):
-  Dog breed classification using transfer learning.
-- [ObjectDetection/YOLO](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-cv-labs/src/main/java/global/skymind/solution/object_detection):
-  - Avocado and Banana Object Detection model using Transfer learning of 
-    TinyYOLO and YOLOv2.
-  - Metal surface defects detection model using transfer learning of
-    pre-trained YOLOv2
-- [Segmentation/PretrainedUNET](https://github.com/skymindglobal/TrainingLabs/tree/segmentation/dl4j-cv-labs/src/main/java/global/skymind/solution/segmentation/PretrainedUNET): Semantic segmentation on the Cell nucleus image from Data Science Bowl 2018, using a Pre-trained U-Net.
-- [Segmentation/ImageAugmentation](https://github.com/skymindglobal/TrainingLabs/tree/segmentation/dl4j-cv-labs/src/main/java/global/skymind/solution/segmentation/ImageAugmentation): (Optional) Image augmentation to increase samples, if required.
-- [FacialRecognition](https://github.com/skymindglobal/TrainingLabs/blob/master/dl4j-cv-labs/src/main/java/global/skymind/solution/facial_recognition/FaceRecognitionWebcam.java) Perform facial recognition with a pipeline of video streaming->face detection->face recognition.
+- [classification](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-cv-labs/src/main/java/ai/certifai/solution/classification):
+  This folder contains a custom model and a VGG16 model for dog breed classification, and a ResNet-50 model for food classification.
+- [facial_recognition](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-cv-labs/src/main/java/ai/certifai/solution/facial_recognition):
+  This folder contains facial recognition with a pipeline of video streaming, face detection and face recognition.
+- [image processing](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-cv-labs/src/main/java/ai/certifai/solution/image_processing): 
+  This folder contains step-by-step on image processing.
+- [object_detection](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-cv-labs/src/main/java/ai/certifai/solution/object_detection): 
+  This folder contains a TinyYOLO model and a YOLOv2 model for Avocado and Banana Object Detection, and a pre-trained YOLOv2 model for metal surface defects detection.
+- [segmentation](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-cv-labs/src/main/java/ai/certifai/solution/segmentation): 
+  This folder contains semantic segmentation on the car images and the cell nucleus images from Data Science Bowl 2018 using a pre-trained U-Net.
 
 #### Spark-Lab
-- [HelloWorldSpark](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-spark-labs/src/main/java/global/skymind)
+- [HelloWorldSpark](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-spark-labs/src/main/java/global/skymind): 
+  This folder contains an example that reads in MNIST data, perform training using Spark, and output the data.
 
 ## Built with
 - deeplearning4j beta 6.0
 - CUDA 10.0 (Note: Optional if you are using CPU)
 - cuDNN 7.6 (Note: Optional if you are using CPU)
 
-## Getting Started ##
+## Getting Started
 
-### Install Java ###
+### Install Java
 
-Download Java JDK
-[here](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).  
+Download Java JDK [here](https://adoptopenjdk.net).  
 (Note: Use Java 8 for full support of DL4J operations)
 
 Check the version of Java using: 
@@ -83,53 +66,37 @@ java -version
 
 Make sure that 64-Bit version of Java is installed.
 
-### Install IntelliJ IDEA Community Edition ###
-Download and install 
-[IntelliJ IDEA](https://www.jetbrains.com/idea/download/).
+### Install IntelliJ IDEA Community Edition
+Download and install [IntelliJ IDEA](https://www.jetbrains.com/idea/download/).
 
-### Install Apache Maven  *Optional* ###
-IntelliJ provides a default Maven that is bundled with the installer.
-Follow these [instructions](https://maven.apache.org/install.html) to install Apache Maven.
+### Install Apache Maven  *Optional*
+IntelliJ provides a default Maven that is bundled with the installer. Follow these [instructions](https://maven.apache.org/install.html) to install Apache Maven.
 
-### GPU setup  *Optional* ##
+### GPU setup  *Optional*
 Follow the instructions below if you plan to use GPU setup.
-1. Install CUDA and cuDNN <br> 
+1. Install CUDA and cuDNN
     Requirements:
    -  CUDA 10.0 
    -  cuDNN 7.6
+  
+CUDA and cuDNN can be downloaded from [here](https://developer.nvidia.com/cuda-10.0-download-archive) and [here](https://developer.nvidia.com/cudnn). Step by step installation guides can be found [here](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html).
+
+2. Dependencies are needed to be included into Maven project if we wish to use GPU for training. Follow the links below for instructions in details.
+   -  [ND4J backends for GPUs](https://deeplearning4j.konduit.ai/config/backends#nd-4-j-backends-for-gpus-and-cpus)
+   - [Using Deeplearning4J with cuDNN](https://deeplearning4j.konduit.ai/config/backends/config-cudnn#using-deeplearning-4-j-with-cudnn)
+
+## Usage
+All examples are separated into [training](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/training) and [solution](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution) folders. The download will take some time to download dependencies from maven when you first run these examples.
+
+All codes in <b>training</b> folder have few lines commented out so that they can be taught and demonstrated in the class. The <b>solution</b> folder contains the un-commented version for every line of codes.
 
 
-CUDA and cuDNN can be downloaded from
-[here](https://developer.nvidia.com/cuda-10.0-download-archive) and
-[here](https://developer.nvidia.com/cudnn). Step by step installation
-guides can be found
-[here](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html).
-
-2. Dependencies are needed to be included into Maven project if we wish
-   to use GPU for training. Follow the links below for instructions in
-   details.
-   -  [ND4J backends for GPUs](https://deeplearning4j.org/docs/latest/deeplearning4j-config-gpu-cpu)
-   - [Using Deeplearning4J with cuDNN](https://deeplearning4j.org/docs/latest/deeplearning4j-config-cudnn)
-## Usage ##
-All examples are separated into
-[training](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/training)
-and
-[solution](https://github.com/skymindglobal/TrainingLabs/tree/master/dl4j-labs/src/main/java/global/skymind/solution)
-folders. The download will take some time to download dependencies from
-maven when you first run these examples.
-
-All codes in <b>training</b> folder have few lines commented out so that
-they can be taught and demonstrated in the class. The <b>solution</b>
-folder contains the un-commented version for every line of codes.
-
-
-## Known Issues ##
+## Known Issues
 <b>Problem</b>: 
 ```sh
 jnind4jcpu.dll: Can't find dependent libraries
 ```
-<b>Solution</b>: <br /> Change the maven dependencies of Javacpp to the
-latest (1.4.3 works).
+<b>Solution</b>: <br /> Change the maven dependencies of Javacpp to the latest (1.4.3 works).
 
 <b>Problem</b>: 
 ```sh
@@ -152,4 +119,4 @@ latest (1.4.3 works).
 
 
 
-   
+
