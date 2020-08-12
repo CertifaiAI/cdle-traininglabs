@@ -20,7 +20,6 @@ package ai.certifai.solution.nd4j;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.api.ops.impl.indexaccum.IMin;
 import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.ops.transforms.Transforms;
 
 public class Ex8_IndexReductionOperations {
     public static final String BLACK_BOLD = "\033[1;30m";
