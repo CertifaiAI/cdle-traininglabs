@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.solution.regression.demandregression.BostonHousePricePrediction;
+package ai.certifai.solution.regression.bostonhousepriceprediction;
 
 import org.datavec.api.records.reader.impl.collection.CollectionRecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
