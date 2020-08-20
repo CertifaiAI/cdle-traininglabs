@@ -37,9 +37,11 @@ import java.util.List;
 
 public class Multiclass {
 
+    private static final int totalData = 42151;
+    private static final double ratioTrainTestSplit = 0.8;
+
     // Training info
-    private static final int numTrainData = 7000;
-    private static final int epoch = 10;
+    private static final int epoch = 1000;
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -52,6 +54,8 @@ public class Multiclass {
         List<List<Writable>> rawTrainData = new ArrayList<>();
         List<List<Writable>> rawTestData = new ArrayList<>();
 
+        // Get total length of data
+        int numTrainData = (int) Math.round(ratioTrainTestSplit * totalData);
         int idx = 0;
         while (rr.hasNext()) {
             if(idx < numTrainData) {
@@ -62,7 +66,8 @@ public class Multiclass {
             idx++;
         }
 
-        System.out.println(rawTrainData.get(0));
+        System.out.println("Total train Data " + rawTrainData.size());
+        System.out.println("Total test Data " + rawTestData.size());
 
         List<List<Writable>> transformedTrainData = transformData(rawTrainData);
         List<List<Writable>> transformedTestData = transformData(rawTestData);
@@ -87,14 +92,14 @@ public class Multiclass {
                 .layer(0, new DenseLayer.Builder()
                         .activation(Activation.RELU)
                         .nIn(6)
-                        .nOut(20)
+                        .nOut(12)
                         .build())
-                .layer(1, new DenseLayer.Builder()
+                .layer(1, new DropoutLayer(0.3))
+                .layer(2, new DenseLayer.Builder()
                         .activation(Activation.RELU)
-                        .nOut(20)
+                        .nOut(6)
                         .build())
-                .layer(2, new DropoutLayer(0.3))
-                .layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.MCXENT)
                         .nOut(7)
                         .activation(Activation.SOFTMAX)
                         .build())
@@ -120,11 +125,11 @@ public class Multiclass {
 
         Evaluation eval;
         for(int i=0; i < epoch; i++) {
-            System.out.println("EPOCH: " + i);
             model.fit(trainData);
             eval = model.evaluate(testData);
-            System.out.println(eval.stats());
+            System.out.println("EPOCH: " + i + " Accuracy: " + eval.accuracy());
             testData.reset();
+            trainData.reset();
         }
 
     }
