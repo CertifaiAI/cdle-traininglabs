@@ -49,6 +49,7 @@ import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ai.certifai.solution.regression.PlotUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -213,10 +214,15 @@ public class MedicalCostPrediction {
 
         System.out.println("Target \t\t\t Predicted");
 
+
         for (int i = 0; i < targetLabels.rows(); i++) {
             System.out.println(targetLabels.getRow(i) + "\t\t" + predictions.getRow(i));
         }
 
+
+        System.out.println(predictions.max(0).data().asDouble()[0]);
+        System.out.println(targetLabels.max(0).data().asDouble()[0]);
+        PlotUtil.visualizeRegression(targetLabels, predictions );
         log.info(model.summary());
 
     }
