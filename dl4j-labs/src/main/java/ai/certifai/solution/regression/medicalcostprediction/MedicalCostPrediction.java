@@ -220,8 +220,6 @@ public class MedicalCostPrediction {
         }
 
 
-        System.out.println(predictions.max(0).data().asDouble()[0]);
-        System.out.println(targetLabels.max(0).data().asDouble()[0]);
         PlotUtil.visualizeRegression(targetLabels, predictions );
         log.info(model.summary());
 

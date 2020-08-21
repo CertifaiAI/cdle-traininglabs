@@ -41,7 +41,6 @@ import java.awt.*;
 /**
  * Regression scatterplot (actual vs fitted)
  *
- * @author Alex Black
  */
 public class PlotUtil {
 
@@ -63,8 +62,7 @@ public class PlotUtil {
         DefaultXYDataset dataset = new DefaultXYDataset();
         dataset.addSeries("Series 1",
                 new double[][]{xValues, yValues});
-        System.out.println("X" + dataset.getX(0,0));
-        System.out.println("Y" + dataset.getY(0,0));
+
         return dataset;
     }
 
