@@ -90,10 +90,13 @@ public class MedicalCostPrediction {
          *  STEP 1: DATA PREPARATION
          *
          * */
+
+        //  Preparing the data
         File file = new ClassPathResource("medicalCost/insurance.csv").getFile();
         RecordReader recordReader = new CSVRecordReader(1, ',');
         recordReader.initialize(new FileSplit(file));
 
+        // Declaring the feature names in schema
         Schema schema = new Schema.Builder()
                 .addColumnInteger("age")
                 .addColumnCategorical("sex", Arrays.asList("female", "male"))
@@ -103,27 +106,27 @@ public class MedicalCostPrediction {
                 .addColumnCategorical("region", Arrays.asList("northeast", "southeast", "southwest", "northwest"))
                 .addColumnDouble("charge")
                 .build();
-
         System.out.println("Initial Schema: " + schema);
 
+        // Building transform process schema
         TransformProcess transformProcess = new TransformProcess.Builder(schema)
                 .categoricalToInteger("sex", "smoker")
                 .categoricalToOneHot("region")
                 .build();
-
         System.out.println("Final Schema: " + transformProcess.getFinalSchema());
 
+        //  adding the original data to a list for later transform purpose
         List<List<Writable>> originalData = new ArrayList<>();
-
         while (recordReader.hasNext()) {
             List<Writable> data = recordReader.next();
             originalData.add(data);
         }
 
+        // transform data into final schema
         List<List<Writable>> transformedData = LocalTransformExecutor.execute(originalData, transformProcess);
 
+        //  Preparing to split the dataset into training set and test set
         CollectionRecordReader collectionRecordReader = new CollectionRecordReader(transformedData);
-
         DataSetIterator iterator = new RecordReaderDataSetIterator(collectionRecordReader, transformedData.size(), 9, 9, true);
 
         DataSet dataSet = iterator.next();
@@ -137,6 +140,7 @@ public class MedicalCostPrediction {
         INDArray features = train.getFeatures();
         System.out.println("\nFeature shape: " + features.shapeInfoToString() + "\n");
 
+        //  Assigning dataset iterator for training purpose
         ViewIterator trainIter = new ViewIterator(train, batchSize);
         ViewIterator testIter = new ViewIterator(test, batchSize);
 
@@ -145,6 +149,8 @@ public class MedicalCostPrediction {
          *  STEP 2: MODEL TRAINING
          *
          * */
+
+        //  Configuring the structure of the model
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .l2(reg)
@@ -177,13 +183,14 @@ public class MedicalCostPrediction {
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model.init();
 
+        // Initialize UI server for visualization model performance
         log.info("****************************************** UI SERVER **********************************************");
         UIServer uiServer = UIServer.getInstance();
         StatsStorage statsStorage = new InMemoryStatsStorage();
         uiServer.attach(statsStorage);
-
         model.setListeners(new ScoreIterationListener(10), new StatsListener(statsStorage));
 
+        // Model training - fit trainIter into model and evaluate model with testIter for each of nEpoch
         log.info("\n*************************************** TRAINING **********************************************\n");
 
         long timeX = System.currentTimeMillis();
@@ -194,14 +201,15 @@ public class MedicalCostPrediction {
             model.fit(trainIter);
             time = System.currentTimeMillis() - time;
             log.info("************************** Done an epoch, TIME TAKEN: " + time + "ms **************************");
+
             log.info("********************************** VALIDATING *************************************************");
             RegressionEvaluation evaluation = model.evaluateRegression(testIter);
             System.out.println(evaluation.stats());
         }
-
         long timeY = System.currentTimeMillis();
         log.info("\n******************** TOTAL TIME TAKEN: " + (timeY - timeX) + "ms ******************************\n");
 
+        // Print out target values and predicted values
         log.info("\n*************************************** PREDICTION **********************************************");
 
         testIter.reset();
@@ -219,8 +227,10 @@ public class MedicalCostPrediction {
             System.out.println(targetLabels.getRow(i) + "\t\t" + predictions.getRow(i));
         }
 
+        // Plot the target values and predicted values
         PlotUtil.visualizeRegression(targetLabels, predictions);
 
+        // Print out model summary
         log.info("\n************************************* MODEL SUMMARY *******************************************");
         System.out.println(model.summary());
 
