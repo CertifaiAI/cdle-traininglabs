@@ -104,14 +104,14 @@ public class MedicalCostPrediction {
                 .addColumnDouble("charge")
                 .build();
 
-        System.out.println(schema);
+        System.out.println("Initial Schema: " + schema);
 
         TransformProcess transformProcess = new TransformProcess.Builder(schema)
                 .categoricalToInteger("sex", "smoker")
                 .categoricalToOneHot("region")
                 .build();
 
-        System.out.println(transformProcess.getFinalSchema());
+        System.out.println("Final Schema: " + transformProcess.getFinalSchema());
 
         List<List<Writable>> originalData = new ArrayList<>();
 
@@ -135,7 +135,7 @@ public class MedicalCostPrediction {
         DataSet test = testAndTrain.getTest();
 
         INDArray features = train.getFeatures();
-        System.out.println("Feature shape: " + features.shapeInfoToString());
+        System.out.println("\nFeature shape: " + features.shapeInfoToString() + "\n");
 
         ViewIterator trainIter = new ViewIterator(train, batchSize);
         ViewIterator testIter = new ViewIterator(test, batchSize);
@@ -184,7 +184,7 @@ public class MedicalCostPrediction {
 
         model.setListeners(new ScoreIterationListener(10), new StatsListener(statsStorage));
 
-        log.info("***************************************** TRAINING ************************************************");
+        log.info("\n*************************************** TRAINING **********************************************\n");
 
         long timeX = System.currentTimeMillis();
         for (int i = 0; i < nEpoch; i++) {
@@ -193,24 +193,24 @@ public class MedicalCostPrediction {
             log.info("Epoch " + i);
             model.fit(trainIter);
             time = System.currentTimeMillis() - time;
-            log.info("*************************** Done an epoch, TIME TAKEN: " + time + "ms ****************************");
-            log.info("*********************************** VALIDATING *********b**************************************");
+            log.info("************************** Done an epoch, TIME TAKEN: " + time + "ms **************************");
+            log.info("********************************** VALIDATING *************************************************");
             RegressionEvaluation evaluation = model.evaluateRegression(testIter);
             System.out.println(evaluation.stats());
         }
 
         long timeY = System.currentTimeMillis();
-        log.info("******************** TOTAL TIME TAKEN: " + (timeY - timeX) + "ms ************************************");
+        log.info("\n******************** TOTAL TIME TAKEN: " + (timeY - timeX) + "ms ******************************\n");
 
-        log.info("*************************************** PREDICTION ************************************************");
+        log.info("\n*************************************** PREDICTION **********************************************");
 
         testIter.reset();
 
         INDArray targetLabels = test.getLabels();
-        System.out.println(targetLabels.shapeInfoToString());
+        System.out.println("\nTarget shape: " + targetLabels.shapeInfoToString());
 
         INDArray predictions = model.output(testIter);
-        System.out.println(predictions.shapeInfoToString());
+        System.out.println("\nPredictions shape: " + predictions.shapeInfoToString() + "\n");
 
         System.out.println("Target \t\t\t Predicted");
 
@@ -219,9 +219,10 @@ public class MedicalCostPrediction {
             System.out.println(targetLabels.getRow(i) + "\t\t" + predictions.getRow(i));
         }
 
+        PlotUtil.visualizeRegression(targetLabels, predictions);
 
-        PlotUtil.visualizeRegression(targetLabels, predictions );
-        log.info(model.summary());
+        log.info("\n************************************* MODEL SUMMARY *******************************************");
+        System.out.println(model.summary());
 
     }
 }
