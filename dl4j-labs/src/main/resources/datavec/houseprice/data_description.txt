@@ -1,0 +1,74 @@
+Id: Unique value for every examples
+
+MSZoning: Identifies the general zoning classification of the sale.
+		
+       A	Agriculture
+       C	Commercial
+       FV	Floating Village Residential
+       I	Industrial
+       RH	Residential High Density
+       RL	Residential Low Density
+       RP	Residential Low Density Park 
+       RM	Residential Medium Density
+	
+LotFrontage: Linear feet of street connected to property
+
+	
+OverallQual: Rates the overall material and finish of the house
+
+       10	Very Excellent
+       9	Excellent
+       8	Very Good
+       7	Good
+       6	Above Average
+       5	Average
+       4	Below Average
+       3	Fair
+       2	Poor
+       1	Very Poor
+	
+MasVnrArea: Masonry veneer area in square feet
+
+TotalBsmtSF: Total square feet of basement area
+		
+1stFlrSF: First Floor square feet
+ 
+2ndFlrSF: Second floor square feet
+
+GrLivArea: Above grade (ground) living area square feet
+		
+Fireplaces: Number of fireplaces
+		
+GarageType: Garage location
+		
+       2Types	More than one type of garage
+       Attchd	Attached to home
+       Basment	Basement Garage
+       BuiltIn	Built-In (Garage part of house - typically has room above garage)
+       CarPort	Car Port
+       Detchd	Detached from home
+       NA	No Garage
+		
+GarageCars: Size of garage in car capacity
+
+GarageArea: Size of garage in square feet
+
+OpenPorchSF: Open porch area in square feet
+
+PoolQC: Pool quality
+		
+       Ex	Excellent
+       Gd	Good
+       TA	Average/Typical
+       Fa	Fair
+		
+SaleCondition: Condition of sale
+
+       Normal	Normal Sale
+       Abnorml	Abnormal Sale -  trade, foreclosure, short sale
+       AdjLand	Adjoining Land Purchase
+       Alloca	Allocation - two linked properties with separate deeds, typically condo with a garage unit	
+       Family	Sale between family members
+       Partial	Home was not completed when last assessed (associated with New Homes)
+
+SalePrice - the property's sale price in dollars. This is the target variable that you're trying to predict.
