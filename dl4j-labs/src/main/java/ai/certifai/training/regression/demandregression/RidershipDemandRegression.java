@@ -49,7 +49,7 @@ import java.nio.file.Paths;
 * . Split the dataset into train and val set (** Use 2.5 million rows for training and the rest for validation)
 * . Build and train a neural network to predict the ridership demand
 * . Perform model evaluation (regression metrics) on validation set and tune hyperparameter
-* . Using your trained model, perform model evaluation on th test set, in GrabDemandRegressionTest.java
+* . Using your trained model, perform model evaluation on th test set, in RidershipDemandRegressionTest.java
 *
 * */
 
