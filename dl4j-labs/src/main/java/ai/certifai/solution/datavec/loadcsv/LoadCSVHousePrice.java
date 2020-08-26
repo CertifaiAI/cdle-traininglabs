@@ -57,17 +57,17 @@ import java.util.Collections;
 import java.util.List;
 
 public class LoadCSVHousePrice {
-    private static final int numLinesToSkip = 1;
-    private static final int nEpochs = 200;
-    private static final int seed = 123;
-    private static final double learningRate = 0.1;
+    private static final int NUMLINESTOSKIP = 1;
+    private static final int EPOCHS = 200;
+    private static final int SEED = 100;
+    private static final double LEARNINGRATE = 0.1;
 
     public static void main(String[] args) throws IOException, InterruptedException {
         //  Step 1 :    Input the file and load into record reader
         //  Always take a look at the data and the its description (if available) before starting
         //  In this case, the data and its description are stored in the resource/datavec/houseprice
         File inputFile = new ClassPathResource("datavec/houseprice/housePrice.csv").getFile();
-        RecordReader CSVreader = new CSVRecordReader(numLinesToSkip);
+        RecordReader CSVreader = new CSVRecordReader(NUMLINESTOSKIP);
         CSVreader.initialize(new FileSplit(inputFile));
 
         //  Step 2  :   Build up the schema of the data set by referring with the csv file
@@ -139,7 +139,7 @@ public class LoadCSVHousePrice {
 
     public static void modelTraining(DataSetIterator dataSetIterator) {
         DataSet allData = dataSetIterator.next();
-        allData.shuffle(100);
+        allData.shuffle(SEED);
 
         SplitTestAndTrain testTrainSplit = allData.splitTestAndTrain(0.7);
 
@@ -157,8 +157,8 @@ public class LoadCSVHousePrice {
 
         //  Configuring the structure of the NN
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                .seed(seed)
-                .updater(new Adam(learningRate))
+                .seed(SEED)
+                .updater(new Adam(LEARNINGRATE))
                 .weightInit(WeightInit.XAVIER)
                 .list()
                 .layer(new OutputLayer.Builder()
@@ -174,7 +174,7 @@ public class LoadCSVHousePrice {
         model.setListeners(new ScoreIterationListener(50));
 
         //  Fitting the model for nEpochs
-        model.fit(trainIter, nEpochs);
+        model.fit(trainIter, EPOCHS);
 
         INDArray predict = model.output(testIter);
         System.out.println("Predicted" + "\t" + "Ground Truth");
