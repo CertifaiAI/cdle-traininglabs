@@ -103,16 +103,16 @@ public class LoadCSVHousePrice {
             //  ENTER YOUR CODE HERE
         }
 
-//        //  Fill in the required arguments for the following Method
+//        //  Fill in the required arguments for the following code
 //          LocalTransformExecutor.execute()
 //          RecordReader collectionRecordReader = new CollectionRecordReader();
 //          DataSetIterator dataSetIterator = new RecordReaderDataSetIterator();
-
+//
 //           //  Method 2 :  Using TransformProcessRecordReader
-//        //  Fill in the required arguments for the following Method
+//        //  Fill in the required arguments for the following code
 //        TransformProcessRecordReader transformReader = new TransformProcessRecordReader();
 //        DataSetIterator dataSetIterator = new RecordReaderDataSetIterator();
-
+//
 //        //  OPTIONAL - Uncomment the method below to start training
 //        modelTraining(dataSetIterator);
     }
