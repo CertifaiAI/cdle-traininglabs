@@ -31,7 +31,6 @@ import org.datavec.api.writable.Writable;
 import org.datavec.local.transforms.LocalTransformExecutor;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
@@ -74,8 +73,7 @@ public class WomenChessPlayer {
     private static int hidden = 500;
     private static int output = 2;
     private static double lr = 0.0015;
-    private static double reg = 0.0001;
-    private static int epoch = 30;
+    private static int epoch = 5;
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -122,12 +120,13 @@ public class WomenChessPlayer {
         // Step 3: Using transform process for data preprocessing
         TransformProcess transformProcess = new TransformProcess.Builder(schema)
                 /*
+                 *
                  * TASK:
                  * -----------
                  * 1. remove null values in "year_of_birth" column
                  * 2. add new integer column named "this_year" with all values of 2020 for age calculation
                  * 3. perform math subtraction between "this_year" column and "year_of_birth" column and store in new column named "age"
-                 * 4. convert null values into string "NaN" in "title" column
+                 * 4. convert null values into string "Other" in "title" column
                  * 5. convert "title" column into categorical type
                  * 6. convert "title" column from categorical to one hot encoding
                  * 7. convert null values into string "0" in "rapid_rating" column
@@ -150,76 +149,30 @@ public class WomenChessPlayer {
 
         // Step 4: Transform schema
         // Method 1: Using LocalTransformExecutor
-        DataSetIterator iterator = localTransformExecutor(recordReader, transformProcess);
 
         // Method 2: Using TransformProcessRecordReader
-        // DataSetIterator iterator = transformProcessRR(recordReader, transformProcess);
 
         // Step 5: Data preparation
         // Shuffle dataset
-        DataSet dataSet = iterator.next();
-        dataSet.shuffle();
 
         // Split dataset into training set and test set
-        SplitTestAndTrain testAndTrain = dataSet.splitTestAndTrain(0.8);
-        DataSet train = testAndTrain.getTrain();
-        DataSet test = testAndTrain.getTest();
-
-        INDArray features = train.getFeatures();
-        System.out.println("\nFeatures shape: " + features.shapeInfoToString());
-
-        INDArray labels = train.getLabels();
-        System.out.println("Labels shape: " + labels.shapeInfoToString() + "\n");
 
         // Assigning dataset iterator for training purpose
-        ViewIterator trainIter = new ViewIterator(train, batchSize);
-        ViewIterator testIter = new ViewIterator(test, batchSize);
-
 
         // Data normalization
-        DataNormalization scaler = new NormalizerMinMaxScaler();
-        scaler.fit(trainIter);
-        trainIter.setPreProcessor(scaler);
-        testIter.setPreProcessor(scaler);
 
         // Step 6: Model training
         // OPTIONAL: Uncomment below to start model training
-        // classification(trainIter, testIter, test);
+        // train(trainIter, testIter, test);
 
         log.info("********************* END ****************************");
     }
 
-    private static DataSetIterator localTransformExecutor(RecordReader recordReader, TransformProcess transformProcess) {
-
-        List<List<Writable>> originalData = new ArrayList<>();
-        while (recordReader.hasNext()) {
-            List<Writable> data = recordReader.next();
-            originalData.add(data);
-        }
-        List<List<Writable>> transformedData = LocalTransformExecutor.execute(originalData, transformProcess);
-        CollectionRecordReader collectionRecordReader = new CollectionRecordReader(transformedData);
-        DataSetIterator iterator = new RecordReaderDataSetIterator(collectionRecordReader, transformedData.size(), label, output);
-
-        return iterator;
-    }
-
-    private static DataSetIterator transformProcessRR(RecordReader recordReader, TransformProcess transformProcess) {
-
-        TransformProcessRecordReader transformProcessRecordReader = new TransformProcessRecordReader(recordReader, transformProcess);
-        DataSetIterator iterator = new RecordReaderDataSetIterator.Builder(transformProcessRecordReader, Integer.MAX_VALUE)
-                .classification(label, output)
-                .build();
-
-        return iterator;
-    }
-
-    public static void classification(DataSetIterator trainIter, DataSetIterator testIter, DataSet test) {
+    public static void train(DataSetIterator trainIter, DataSetIterator testIter, DataSet test) {
 
         // Configuring the architecture of the model
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .updater(new Adam(lr))
-                .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-                .l2(reg)
                 .weightInit(WeightInit.XAVIER)
                 .list()
                 .layer(new DenseLayer.Builder()
@@ -261,7 +214,7 @@ public class WomenChessPlayer {
         long timeX = System.currentTimeMillis();
         for (int i = 0; i < epoch; i++) {
             long time = System.currentTimeMillis();
-            System.out.println("Epoch" + i);
+            System.out.println("Epoch" + i + "\n");
             model.fit(trainIter);
             time = System.currentTimeMillis() - time;
             log.info("************************** Done an epoch, TIME TAKEN: " + time + "ms **************************");
