@@ -20,18 +20,8 @@ package global.skymind.solution.image_processing;/*
  *
  */
 
-import global.skymind.solution.image_processing.utils.display.Display;
-import global.skymind.solution.image_processing.utils.display.JPanelDisplay;
-import org.bytedeco.opencv.opencv_core.Mat;
-import org.datavec.image.loader.NativeImageLoader;
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.indexing.INDArrayIndex;
-import org.nd4j.linalg.indexing.NDArrayIndex;
-import org.nd4j.linalg.io.ClassPathResource;
+
 import java.io.IOException;
-import static org.bytedeco.opencv.global.opencv_imgcodecs.IMREAD_GRAYSCALE;
-import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
 
 /**
  * Quantization is the discretization of the image pixel value.
@@ -49,37 +39,7 @@ import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
  */
 
 public class Quantization {
-    private static int bit = 2;
-    public static void main(String[] args) throws IOException {
-        // Load Image
-        String imgpath= new ClassPathResource("image_processing/lena.png").getFile().getAbsolutePath();
+    public static void main(String[] args) throws IOException{
 
-        //read img to mat
-        Mat src = imread(imgpath, IMREAD_GRAYSCALE);
-        NativeImageLoader loader = new NativeImageLoader();
-        INDArray imgArray = loader.asMatrix(src);
-        int width = src.arrayWidth();
-        int height = src.arrayHeight();
-
-        //reduce intensity
-        INDArray resultImgArray = reduceDepth(imgArray, width, height, bit);
-        Display.display(src, "original");
-        JPanelDisplay display = new JPanelDisplay(resultImgArray, "" + bit + " image");
-        display.display();
-    }
-
-    private static INDArray reduceDepth(INDArray imgArray, int width, int height, int bit) {
-        int bin = 256 / bit; //take the original max image depth divide by the bit size to calculate the level of pixel to reducr
-        INDArray resultImgArray = Nd4j.create(1,1, width, height);
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                double pixel = imgArray.getDouble(1,1, i,j);
-                double quantizedValue = Math.floor(pixel / bin) * bin;
-                resultImgArray.put(new INDArrayIndex[]{NDArrayIndex.all(), NDArrayIndex.all(),
-                                NDArrayIndex.point(i), NDArrayIndex.point(j)},
-                        quantizedValue);
-            }
-        }
-        return resultImgArray;
     }
 }

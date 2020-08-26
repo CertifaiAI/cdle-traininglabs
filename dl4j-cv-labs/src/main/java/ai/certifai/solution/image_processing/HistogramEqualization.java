@@ -14,14 +14,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
-<<<<<<< HEAD:dl4j-cv-labs/src/main/java/global/skymind/solution/image_processing/HistogramEqualization.java
-import global.skymind.solution.image_processing.utils.display.Display;
-import global.skymind.solution.image_processing.utils.histogram.Histogram1DJava;
-=======
 package ai.certifai.solution.image_processing;
 
->>>>>>> d5c299db000d096d5007e86bd1fd6af32d2b0bcd:dl4j-cv-labs/src/main/java/ai/certifai/solution/image_processing/HistogramEqualization.java
+import global.skymind.solution.image_processing.utils.histogram.Histogram1DJava;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.nd4j.linalg.io.ClassPathResource;
 

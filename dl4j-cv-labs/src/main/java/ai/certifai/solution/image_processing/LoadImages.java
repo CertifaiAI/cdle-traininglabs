@@ -15,17 +15,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-<<<<<<< HEAD:dl4j-cv-labs/src/main/java/global/skymind/solution/image_processing/LoadImages.java
-import global.skymind.solution.image_processing.utils.display.Display;
-import org.bytedeco.opencv.opencv_core.Mat;
-import org.bytedeco.opencv.opencv_core.Size;
-=======
 package ai.certifai.solution.image_processing;
 
-import org.bytedeco.opencv.opencv_core.*;
-import static org.bytedeco.opencv.global.opencv_imgproc.*;
-import static org.bytedeco.opencv.global.opencv_imgcodecs.*;
->>>>>>> d5c299db000d096d5007e86bd1fd6af32d2b0bcd:dl4j-cv-labs/src/main/java/ai/certifai/solution/image_processing/LoadImages.java
+import org.bytedeco.opencv.opencv_core.Mat;
+import org.bytedeco.opencv.opencv_core.Size;
 import org.nd4j.linalg.io.ClassPathResource;
 
 import java.io.IOException;

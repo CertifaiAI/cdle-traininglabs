@@ -15,12 +15,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-<<<<<<< HEAD:dl4j-cv-labs/src/main/java/global/skymind/solution/image_processing/UnsharpMasking.java
-import global.skymind.solution.image_processing.utils.display.Display;
-=======
 package ai.certifai.solution.image_processing;
 
->>>>>>> d5c299db000d096d5007e86bd1fd6af32d2b0bcd:dl4j-cv-labs/src/main/java/ai/certifai/solution/image_processing/UnsharpMasking.java
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.bytedeco.opencv.opencv_core.Size;
 import org.nd4j.linalg.io.ClassPathResource;
@@ -42,9 +38,9 @@ import static org.bytedeco.opencv.global.opencv_imgproc.GaussianBlur;
  * */
 
 public class UnsharpMasking {
-    public static void main (String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         // Load image
-        String imgpath= new ClassPathResource("image_processing/lena.png").getFile().getAbsolutePath();
+        String imgpath = new ClassPathResource("image_processing/lena.png").getFile().getAbsolutePath();
         Mat src = imread(imgpath);
 
         // smoothed = GaussianBlur(src)

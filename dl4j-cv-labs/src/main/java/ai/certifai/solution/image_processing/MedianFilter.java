@@ -1,4 +1,4 @@
-package global.skymind.training.image_processing;/*
+/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.
@@ -19,7 +19,18 @@ package global.skymind.training.image_processing;/*
  *
  *
  */
+package ai.certifai.solution.image_processing;
+
+import ai.certifai.training.image_processing.Display;
+import org.bytedeco.opencv.opencv_core.Mat;
+import org.nd4j.linalg.io.ClassPathResource;
+
 import java.io.IOException;
+
+import static org.bytedeco.opencv.global.opencv_core.*;
+import static org.bytedeco.opencv.global.opencv_imgcodecs.IMREAD_GRAYSCALE;
+import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
+import static org.bytedeco.opencv.global.opencv_imgproc.*;
 
 /*
  * TASKS:
@@ -32,5 +43,29 @@ import java.io.IOException;
 public class MedianFilter {
     public static void main(String[] args) throws IOException {
 
+        // Load Image
+        String imgpath = new ClassPathResource("image_processing/x-ray.jpeg").getFile().getAbsolutePath();
+        Mat img = imread(imgpath, IMREAD_GRAYSCALE);
+
+        //initialize a random Mat
+        Mat randomMat = new Mat(img.rows(), img.cols(), CV_8U);
+        randu(randomMat, new Mat(new int[]{0}), new Mat(new int[]{255}));
+
+        //perform thresholding on the random Mat to generate salt and pepper noise
+        Mat saltpepperNoise = new Mat();
+        threshold(randomMat, saltpepperNoise, 250, 255, THRESH_BINARY);
+
+        //add noise to the original image
+        Mat imgNoised = img.clone();
+        add(img, saltpepperNoise, imgNoised);
+
+        //perform median filtering on the image with noise
+        Mat filteredImg = new Mat();
+        medianBlur(imgNoised, filteredImg, 3);
+
+        //display all images
+        Display.display(img, "Original");
+        Display.display(imgNoised, "Noise");
+        Display.display(filteredImg, "Denoised with Median Filter");
     }
 }

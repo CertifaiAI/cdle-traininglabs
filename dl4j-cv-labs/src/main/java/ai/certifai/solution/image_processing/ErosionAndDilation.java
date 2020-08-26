@@ -1,4 +1,4 @@
-package ai.certifai.solution.image_processing;/*
+/*
  * Copyright (c) 2019 Skymind AI Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
@@ -14,31 +14,27 @@ package ai.certifai.solution.image_processing;/*
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
-<<<<<<< HEAD:dl4j-cv-labs/src/main/java/global/skymind/solution/image_processing/ErosionAndDilation.java
-import global.skymind.solution.image_processing.utils.display.Display;
-=======
 package ai.certifai.solution.image_processing;
 
->>>>>>> d5c299db000d096d5007e86bd1fd6af32d2b0bcd:dl4j-cv-labs/src/main/java/ai/certifai/solution/image_processing/ErosionAndDilation.java
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.nd4j.linalg.io.ClassPathResource;
+
+import java.io.IOException;
+
 import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
 import static org.bytedeco.opencv.global.opencv_imgproc.dilate;
 import static org.bytedeco.opencv.global.opencv_imgproc.erode;
 
-import java.io.IOException;
-
 /*
-*
-* TASKS:
-* -----
-* 1. Load and display lena.png from the resources/image_processing folder
-* 2. Apply erosion to the image
-* 3. Apply dilation to the image
-* 4. Display the input image, and the two images after applying erosion and dilation separately
-*
-* */
+ *
+ * TASKS:
+ * -----
+ * 1. Load and display lena.png from the resources/image_processing folder
+ * 2. Apply erosion to the image
+ * 3. Apply dilation to the image
+ * 4. Display the input image, and the two images after applying erosion and dilation separately
+ *
+ * */
 
 public class ErosionAndDilation {
     public static void main(String[] args) throws IOException {

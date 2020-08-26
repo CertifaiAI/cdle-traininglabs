@@ -14,20 +14,17 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-<<<<<<< HEAD:dl4j-cv-labs/src/main/java/global/skymind/solution/image_processing/ImageBlur.java
-import global.skymind.solution.image_processing.utils.display.Display;
-=======
-
 package ai.certifai.solution.image_processing;
 
->>>>>>> d5c299db000d096d5007e86bd1fd6af32d2b0bcd:dl4j-cv-labs/src/main/java/ai/certifai/solution/image_processing/ImageBlur.java
-import org.bytedeco.opencv.opencv_core.*;
+import org.bytedeco.opencv.opencv_core.Mat;
+import org.bytedeco.opencv.opencv_core.Size;
 import org.nd4j.linalg.io.ClassPathResource;
 
 import java.io.IOException;
 
-import static org.bytedeco.opencv.global.opencv_imgproc.*;
-import static org.bytedeco.opencv.global.opencv_imgcodecs.*;
+import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
+import static org.bytedeco.opencv.global.opencv_imgproc.GaussianBlur;
+import static org.bytedeco.opencv.global.opencv_imgproc.medianBlur;
 
 /*
  * Using code from LoadImages.java, read an image from the resources folder, and apply:

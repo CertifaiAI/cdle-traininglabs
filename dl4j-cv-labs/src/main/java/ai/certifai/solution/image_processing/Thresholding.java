@@ -14,31 +14,26 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
-<<<<<<< HEAD:dl4j-cv-labs/src/main/java/global/skymind/solution/image_processing/Thresholding.java
-import global.skymind.solution.image_processing.utils.display.Display;
-=======
 package ai.certifai.solution.image_processing;
 
->>>>>>> d5c299db000d096d5007e86bd1fd6af32d2b0bcd:dl4j-cv-labs/src/main/java/ai/certifai/solution/image_processing/Thresholding.java
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.nd4j.linalg.io.ClassPathResource;
+
+import java.io.IOException;
 
 import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
 import static org.bytedeco.opencv.global.opencv_imgproc.THRESH_BINARY;
 import static org.bytedeco.opencv.global.opencv_imgproc.threshold;
 
-import java.io.IOException;
-
 /*
-* TASKS:
-* -----
-* 1. Load and display sat_map3.jpg from the resources/image_processing folder
-* 2. Apply threshold(=50) to the image
-* 3. Display the thresholded image
-* * Change the threshold value to observe the effects
-*
-* */
+ * TASKS:
+ * -----
+ * 1. Load and display sat_map3.jpg from the resources/image_processing folder
+ * 2. Apply threshold(=50) to the image
+ * 3. Display the thresholded image
+ * * Change the threshold value to observe the effects
+ *
+ * */
 
 public class Thresholding {
     public static void main(String[] args) throws IOException {

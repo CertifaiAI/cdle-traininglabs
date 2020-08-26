@@ -17,27 +17,27 @@
 
 package ai.certifai.solution.image_processing;
 
-import global.skymind.solution.image_processing.utils.display.Display;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.nd4j.linalg.io.ClassPathResource;
+
+import java.io.IOException;
+
 import static org.bytedeco.opencv.global.opencv_core.CV_32F;
 import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
 import static org.bytedeco.opencv.global.opencv_imgproc.filter2D;
 
-import java.io.IOException;
-
 /*
-* TASKS:
-* -----
-* 1. Load and display sat_map3.jpg from the resources/image_processing folder
-* 2. Create a sharpening filter using the following values:
-*        0  -1   0
-*       -1   5  -1
-*        0  -1   0
-* 3. Apply the filter on to the input image
-* 4. Display the sharpened image
-*
-* */
+ * TASKS:
+ * -----
+ * 1. Load and display sat_map3.jpg from the resources/image_processing folder
+ * 2. Create a sharpening filter using the following values:
+ *        0  -1   0
+ *       -1   5  -1
+ *        0  -1   0
+ * 3. Apply the filter on to the input image
+ * 4. Display the sharpened image
+ *
+ * */
 
 public class ImageSharpening {
     public static void main(String[] args) throws IOException {
@@ -48,8 +48,8 @@ public class ImageSharpening {
         // Create the sharpening filter
         Mat dest = new Mat();
 
-        int data[] = new int[]{ 0, -1, 0, -1, 5, -1, 0, -1, 0};
-        Mat kernel = new Mat(3, 3,CV_32F);
+        int data[] = new int[]{0, -1, 0, -1, 5, -1, 0, -1, 0};
+        Mat kernel = new Mat(3, 3, CV_32F);
         kernel.put(new Mat(data));
 
         // Filter and display the image using the kernel created above
