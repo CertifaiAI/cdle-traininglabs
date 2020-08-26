@@ -58,14 +58,14 @@ import java.util.List;
 
 public class LoadCSVHousePrice {
     private static final int numLinesToSkip = 1;
-    private static final int nEpochs = 500;
+    private static final int nEpochs = 200;
     private static final int seed = 123;
     private static final double learningRate = 0.1;
 
     public static void main(String[] args) throws IOException, InterruptedException {
         //  Step 1 :    Input the file and load into record reader
         //  Always take a look at the data and the its description (if available) before starting
-        //  In this case, the data and its description is stored in the resource/datavec/houseprice
+        //  In this case, the data and its description are stored in the resource/datavec/houseprice
         File inputFile = new ClassPathResource("datavec/houseprice/housePrice.csv").getFile();
         RecordReader CSVreader = new CSVRecordReader(numLinesToSkip);
         CSVreader.initialize(new FileSplit(inputFile));
@@ -97,13 +97,13 @@ public class LoadCSVHousePrice {
         TransformProcess transformProcess = new TransformProcess.Builder(schema)
                 //  Remove the Id column which has all unique values that are not needed in training
                 .removeColumns("Id")
-                //  Scale the Label data with the equation log(1+y) to make the label data normally distributed
+                //  Perform log transform for the sales price
                 .doubleMathOp("SalesPrice", MathOp.Add, 1)
                 .doubleMathFunction("SalesPrice", MathFunction.LOG)
                 //  The data in csv file are different from the data_description file, standardize the value to prevent confusion
                 .stringMapTransform("MSZoning", Collections.singletonMap("C (all)", "C"))
                 .stringToCategorical("MSZoning", Arrays.asList("A", "C", "FV", "I", "RH", "RL", "RP", "RM"))
-                //  Removing the NA values in the dataset to prevent error when training
+                //  Removing the NA values in the dataset (from columns "LotFrontage" and "MasVnrArea") to prevent error when training
                 .filter(new ConditionFilter(new InvalidValueColumnCondition("LotFrontage")))
                 .filter(new ConditionFilter(new InvalidValueColumnCondition("MasVnrArea")))
                 //  In this case, we don't remove the NA values in the GarageType and PoolQC as according to the description, NA represent None
@@ -139,7 +139,7 @@ public class LoadCSVHousePrice {
 
     public static void modelTraining(DataSetIterator dataSetIterator) {
         DataSet allData = dataSetIterator.next();
-        allData.shuffle();
+        allData.shuffle(100);
 
         SplitTestAndTrain testTrainSplit = allData.splitTestAndTrain(0.7);
 
@@ -171,13 +171,13 @@ public class LoadCSVHousePrice {
 
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model.init();
-        model.setListeners(new ScoreIterationListener(100));
+        model.setListeners(new ScoreIterationListener(50));
 
         //  Fitting the model for nEpochs
         model.fit(trainIter, nEpochs);
 
         INDArray predict = model.output(testIter);
-
+        System.out.println("Predict" + "\t\t" + "Ground Truth");
         for (int i = 0; i < predict.length(); i++) {
             System.out.println(predict.getRow(i) + "\t" + testSet.getLabels().getRow(i));
         }

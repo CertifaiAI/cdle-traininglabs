@@ -51,14 +51,14 @@ import java.util.List;
 
 public class LoadCSVHousePrice {
     private static final int numLinesToSkip = 1;
-    private static final int nEpochs = 500;
+    private static final int nEpochs = 200;
     private static final int seed = 123;
     private static final double learningRate = 0.1;
 
     public static void main(String[] args) throws IOException, InterruptedException {
         //  Step 1 :    Input the file and load into record reader
         //  Always take a look at the data and the its description (if available) before starting
-        //  In this case, the data and its description is stored in the resource/datavec/houseprice
+        //  In this case, the data and its description are stored in the resource/datavec/houseprice
 
         File inputFile = new ClassPathResource("datavec/houseprice/housePrice.csv").getFile();
         RecordReader CSVreader = new CSVRecordReader(numLinesToSkip);
@@ -83,10 +83,10 @@ public class LoadCSVHousePrice {
                  *  ENTER YOUR CODE HERE
                  *
                  * 1.   Remove the Id column which has all unique values that are not needed in training
-                 * 2.   Scale the Label data with the equation log(1+y) to make the label data normally distributed
+                 * 2.   Perform log transformation on the Sales Price
                  * 3.   The data "MSZoning" in csv file are different from the data_description file, standardize the value to prevent confusion
                  * 4.   Removing the NA values in the dataset to prevent error when training
-                 * 5.   Does the NA values in GarageType and PoolQC need to remove? Why?
+                 * 5.   Does the NA values in GarageType and PoolQC need to be removed? Why?
                  * 6.   One Hot Encode the categorical features so that the machine could understand categorical features
                  *
                  */
@@ -119,7 +119,7 @@ public class LoadCSVHousePrice {
 
     public static void modelTraining(DataSetIterator dataSetIterator) {
         DataSet allData = dataSetIterator.next();
-        allData.shuffle();
+        allData.shuffle(100);
 
         SplitTestAndTrain testTrainSplit = allData.splitTestAndTrain(0.7);
 
@@ -151,13 +151,13 @@ public class LoadCSVHousePrice {
 
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model.init();
-        model.setListeners(new ScoreIterationListener(100));
+        model.setListeners(new ScoreIterationListener(50));
 
         //  Fitting the model for nEpochs
         model.fit(trainIter, nEpochs);
 
         INDArray predict = model.output(testIter);
-
+        System.out.println("Predict" + "\t\t" + "Ground Truth");
         for (int i = 0; i < predict.length(); i++) {
             System.out.println(predict.getRow(i) + "\t" + testSet.getLabels().getRow(i));
         }
