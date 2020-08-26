@@ -67,7 +67,7 @@ public class Quantization {
         //reduce intensity
         INDArray resultImgArray = reduceDepth(imgArray, width, height, bit);
         Display.display(src, "original");
-        JPanelDisplay display = new JPanelDisplay(resultImgArray, "" + bit + " image");
+        JPanelDisplay display = new JPanelDisplay(resultImgArray, "" + bit + "-bit image");
         display.display();
     }
 
