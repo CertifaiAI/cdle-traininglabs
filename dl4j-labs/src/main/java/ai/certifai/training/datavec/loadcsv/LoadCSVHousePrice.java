@@ -85,7 +85,7 @@ public class LoadCSVHousePrice {
                  * 1.   Remove the Id column which has all unique values that are not needed in training
                  * 2.   Perform log transformation on the Sales Price
                  * 3.   The data "MSZoning" in csv file are different from the data_description file, standardize the value to prevent confusion
-                 * 4.   Removing the NA values in the dataset to prevent error when training
+                 * 4.   Removing the NA values in the dataset (from columns "LotFrontage" and "MasVnrArea") to prevent error when training
                  * 5.   Does the NA values in GarageType and PoolQC need to be removed? Why?
                  * 6.   One Hot Encode the categorical features so that the machine could understand categorical features
                  *
