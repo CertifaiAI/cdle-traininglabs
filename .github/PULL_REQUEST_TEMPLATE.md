@@ -1,4 +1,4 @@
-When you added a new program / programs , put a cross on the  OS that you have test it on  
+    When you added a new program / programs , put a cross on the  OS that you have test it on  
 (Example: [ X ] Windows  )
 
 [  ] Windows  

@@ -26,7 +26,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 
-    <groupId>global.skymind</groupId>
+    <groupId>ai.certifai</groupId>
     <artifactId>traininglabs</artifactId>
     <packaging>pom</packaging>
     <modelVersion>4.0.0</modelVersion>

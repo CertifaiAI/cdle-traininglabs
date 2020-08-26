@@ -30,7 +30,7 @@
     <artifactId>dl4j-labs</artifactId>
 
     <parent>
-        <groupId>global.skymind</groupId>
+        <groupId>ai.certifai</groupId>
         <artifactId>traininglabs</artifactId>
         <version>1.0.0-alpha</version>
     </parent>
@@ -166,6 +166,11 @@
             <groupId>com.github.davidmoten</groupId>
             <artifactId>geo</artifactId>
             <version>0.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.0.13</version>
         </dependency>
     </dependencies>
 

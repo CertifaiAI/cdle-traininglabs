@@ -26,11 +26,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>my-first-dl4j-project</groupId>
-  <artifactId>global.skymind</artifactId>
+  <groupId>ai.certifai</groupId>
+  <artifactId>my-first-dl4j-project</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>global.skymind</name>
+  <name>my-first-dl4j-project</name>
   <url>http://www.certifai.ai</url>
 
   <properties>
@@ -110,7 +110,7 @@
       Example way of doing in command line:
       mvn clean package
       cd target
-      java -cp global.skymind-1.0-SNAPSHOT-bin.jar global.skymind.MyFirstDL4JProject
+      java -cp global.skymind-1.0-SNAPSHOT-bin.jar ai.certifai.MyFirstDL4JProject
       -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
