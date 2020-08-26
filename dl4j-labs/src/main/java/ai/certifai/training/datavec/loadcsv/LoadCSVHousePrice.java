@@ -25,6 +25,7 @@ import org.datavec.api.transform.schema.Schema;
 import org.datavec.api.writable.Writable;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
@@ -140,6 +141,11 @@ public class LoadCSVHousePrice {
                 .updater(new Adam(LEARNINGRATE))
                 .weightInit(WeightInit.XAVIER)
                 .list()
+                .layer(new DenseLayer.Builder()
+                        .nIn(trainingSet.numInputs())
+                        .nOut(5)
+                        .activation(Activation.RELU)
+                        .build())
                 .layer(new OutputLayer.Builder()
                         .nIn(trainingSet.numInputs())
                         .nOut(1)

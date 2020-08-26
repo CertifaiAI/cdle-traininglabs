@@ -32,6 +32,7 @@ import org.datavec.local.transforms.LocalTransformExecutor;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
@@ -161,8 +162,12 @@ public class LoadCSVHousePrice {
                 .updater(new Adam(LEARNINGRATE))
                 .weightInit(WeightInit.XAVIER)
                 .list()
-                .layer(new OutputLayer.Builder()
+                .layer(new DenseLayer.Builder()
                         .nIn(trainingSet.numInputs())
+                        .nOut(5)
+                        .activation(Activation.RELU)
+                        .build())
+                .layer(new OutputLayer.Builder()
                         .nOut(1)
                         .activation(Activation.IDENTITY)
                         .lossFunction(LossFunctions.LossFunction.MSE)
@@ -177,6 +182,7 @@ public class LoadCSVHousePrice {
         model.fit(trainIter, EPOCHS);
 
         INDArray predict = model.output(testIter);
+
         System.out.println("Predicted" + "\t" + "Ground Truth");
         for (int i = 0; i < predict.length(); i++) {
             System.out.println(predict.getRow(i) + "\t" + testSet.getLabels().getRow(i));
