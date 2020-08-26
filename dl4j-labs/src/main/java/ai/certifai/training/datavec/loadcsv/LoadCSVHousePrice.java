@@ -157,7 +157,7 @@ public class LoadCSVHousePrice {
         model.fit(trainIter, nEpochs);
 
         INDArray predict = model.output(testIter);
-        System.out.println("Predicted" + "\t\t" + "Ground Truth");
+        System.out.println("Predicted" + "\t" + "Ground Truth");
         for (int i = 0; i < predict.length(); i++) {
             System.out.println(predict.getRow(i) + "\t" + testSet.getLabels().getRow(i));
         }
