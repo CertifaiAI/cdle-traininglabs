@@ -14,27 +14,27 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
 package ai.certifai.solution.image_processing;
 
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.nd4j.linalg.io.ClassPathResource;
+
+import java.io.IOException;
+
 import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
 import static org.bytedeco.opencv.global.opencv_imgproc.dilate;
 import static org.bytedeco.opencv.global.opencv_imgproc.erode;
 
-import java.io.IOException;
-
 /*
-*
-* TASKS:
-* -----
-* 1. Load and display lena.png from the resources/image_processing folder
-* 2. Apply erosion to the image
-* 3. Apply dilation to the image
-* 4. Display the input image, and the two images after applying erosion and dilation separately
-*
-* */
+ *
+ * TASKS:
+ * -----
+ * 1. Load and display lena.png from the resources/image_processing folder
+ * 2. Apply erosion to the image
+ * 3. Apply dilation to the image
+ * 4. Display the input image, and the two images after applying erosion and dilation separately
+ *
+ * */
 
 public class ErosionAndDilation {
     public static void main(String[] args) throws IOException {

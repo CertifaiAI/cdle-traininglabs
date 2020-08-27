@@ -38,9 +38,9 @@ import static org.bytedeco.opencv.global.opencv_imgproc.GaussianBlur;
  * */
 
 public class UnsharpMasking {
-    public static void main (String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         // Load image
-        String imgpath= new ClassPathResource("image_processing/lena.png").getFile().getAbsolutePath();
+        String imgpath = new ClassPathResource("image_processing/lena.png").getFile().getAbsolutePath();
         Mat src = imread(imgpath);
 
         // smoothed = GaussianBlur(src)

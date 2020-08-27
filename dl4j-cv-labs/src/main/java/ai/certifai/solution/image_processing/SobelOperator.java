@@ -14,30 +14,31 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
 package ai.certifai.solution.image_processing;
 
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.nd4j.linalg.io.ClassPathResource;
-import static org.bytedeco.opencv.global.opencv_core.*;
-import static org.bytedeco.opencv.global.opencv_imgproc.Sobel;
-import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
 
 import java.io.IOException;
 
+import static org.bytedeco.opencv.global.opencv_core.BORDER_DEFAULT;
+import static org.bytedeco.opencv.global.opencv_core.add;
+import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
+import static org.bytedeco.opencv.global.opencv_imgproc.Sobel;
+
 /*
-* TASKS:
-* -----
-* 1. Load and display x-ray.jpeg from the resources/image_processing folder
-* 2. Create and apply the vertical operator onto the input image
-* 3. Create and apply the horizontal operator onto the input image
-* 4. Apply both operator onto the input image (by adding them)
-* 5. Display the follwing:
-*       - image after applying vertical operator
-*       - image after applying horizontal operator
-*       - image after combining both operators
-*
-* */
+ * TASKS:
+ * -----
+ * 1. Load and display x-ray.jpeg from the resources/image_processing folder
+ * 2. Create and apply the vertical operator onto the input image
+ * 3. Create and apply the horizontal operator onto the input image
+ * 4. Apply both operator onto the input image (by adding them)
+ * 5. Display the follwing:
+ *       - image after applying vertical operator
+ *       - image after applying horizontal operator
+ *       - image after combining both operators
+ *
+ * */
 
 public class SobelOperator {
     public static void main(String[] args) throws IOException {

@@ -14,27 +14,26 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
 package ai.certifai.solution.image_processing;
 
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.nd4j.linalg.io.ClassPathResource;
 
+import java.io.IOException;
+
 import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
 import static org.bytedeco.opencv.global.opencv_imgproc.THRESH_BINARY;
 import static org.bytedeco.opencv.global.opencv_imgproc.threshold;
 
-import java.io.IOException;
-
 /*
-* TASKS:
-* -----
-* 1. Load and display sat_map3.jpg from the resources/image_processing folder
-* 2. Apply threshold(=50) to the image
-* 3. Display the thresholded image
-* * Change the threshold value to observe the effects
-*
-* */
+ * TASKS:
+ * -----
+ * 1. Load and display sat_map3.jpg from the resources/image_processing folder
+ * 2. Apply threshold(=50) to the image
+ * 3. Display the thresholded image
+ * * Change the threshold value to observe the effects
+ *
+ * */
 
 public class Thresholding {
     public static void main(String[] args) throws IOException {

@@ -17,10 +17,18 @@
 
 package ai.certifai.solution.image_processing;
 
+import org.bytedeco.javacpp.indexer.DoubleIndexer;
+import org.bytedeco.javacpp.indexer.Indexer;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.bytedeco.opencv.opencv_core.Mat;
+
 import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+
+import static org.bytedeco.opencv.global.opencv_core.CV_8UC3;
 
 public class Display {
     public static void display(Mat image, String caption) {
@@ -34,6 +42,14 @@ public class Display {
         final OpenCVFrameConverter converter = new OpenCVFrameConverter.ToMat();
         // Show image on window.
         canvas.showImage(converter.convert(image));
+    }
+
+    public static void display(BufferedImage image, String caption){
+        JFrame frame = new JFrame(caption);
+        frame.getContentPane().setLayout(new FlowLayout());
+        frame.getContentPane().add(new JLabel(new ImageIcon(image)));
+        frame.pack();
+        frame.setVisible(true);
     }
 }
 

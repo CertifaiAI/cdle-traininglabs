@@ -14,35 +14,35 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-
 package ai.certifai.solution.image_processing;
 
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.nd4j.linalg.io.ClassPathResource;
+
+import java.io.IOException;
+
 import static org.bytedeco.opencv.global.opencv_core.BORDER_DEFAULT;
 import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
 import static org.bytedeco.opencv.global.opencv_imgproc.Laplacian;
 
-import java.io.IOException;
-
 /*
-* TASKS:
-* -----
-* 1. Load an image from the resources/image_processing folder
-* 2. Apply Laplacian filter
-* 3. Display the image before and after applying Laplacian filter
-*
-* */
+ * TASKS:
+ * -----
+ * 1. Load an image from the resources/image_processing folder
+ * 2. Apply Laplacian filter
+ * 3. Display the image before and after applying Laplacian filter
+ *
+ * */
 
 public class LaplacianFilter {
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         // Load & Display image
         Mat src = imread(new ClassPathResource("image_processing/lena.png").getFile().getAbsolutePath());
         Display.display(src, "Input");
 
         // Apply Laplacian filter & display image
         Mat dest = new Mat();
-        Laplacian(src, dest, src.depth(),3,3,0, BORDER_DEFAULT);
+        Laplacian(src, dest, src.depth(), 3, 3, 0, BORDER_DEFAULT);
         Display.display(dest, "Laplacian Filter");
 
     }
