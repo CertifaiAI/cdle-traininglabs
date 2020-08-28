@@ -45,13 +45,13 @@ import static org.bytedeco.opencv.global.opencv_imgproc.*;
  * The pipeline starts from loading image -> face detection -> face recognition
  * Face detection can be done using traditional CV ( Haar Cascade ) or Deep Learning ( Single Shot Detector(SSD) )
  * Face recognition is done by matching the input face with the face in the database that has the smallest distance
- *
+ * 
  * Distance can be calculated either by Euclidean distance or Cosine Similarity
  * Face database is located in the resource folder "FaceDB"
  * User can add or remove faces and group them in a same folder and the folder name will act as the Label
- *
+ * 
  * TODO
- *
+ * 
  *  1.  Inside the resources/FaceRecognition_input/img folder, create a folder and name the folder with your name,
  *      eg: KengHooi, store the images of your face inside the folder.
  *  2.  Upload your test image to resources/FaceRecognition_input/img folder
