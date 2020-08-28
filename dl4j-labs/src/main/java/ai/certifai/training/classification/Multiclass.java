@@ -1,4 +1,4 @@
-package ai.certifai.solution.classification;
+package ai.certifai.training.classification;
 
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.collection.CollectionRecordReader;
@@ -76,9 +76,9 @@ public class Multiclass {
         DataSetIterator testData = makeIterator(transformedTestData);
 
         DataNormalization normalizer = new NormalizerStandardize();
-        normalizer.fit(trainData);
+        normalizer.(trainData); // Fit the normalizer
         trainData.setPreProcessor(normalizer);
-        testData.setPreProcessor(normalizer);
+        .setPreProcessor(normalizer);
 
         //=====================================================================
         //            Step 2: Define Model
@@ -90,18 +90,18 @@ public class Multiclass {
                 .weightInit(WeightInit.XAVIER)
                 .list()
                 .layer(0, new DenseLayer.Builder()
-                        .activation(Activation.RELU)
+                        .activation() // Set the activation function to RELU
                         .nIn(6)
                         .nOut(12)
                         .build())
-                .layer(1, new DropoutLayer(0.3))
+                .layer(1, ) // Set dropout layer of 0.3
                 .layer(2, new DenseLayer.Builder()
                         .activation(Activation.RELU)
                         .nOut(6)
                         .build())
                 .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.MCXENT)
                         .nOut(7)
-                        .activation(Activation.SOFTMAX)
+                        .activation() // Set the activation function to SOFTMAX
                         .build())
                 .build();
 
@@ -114,10 +114,10 @@ public class Multiclass {
 
         StatsStorage storage = new InMemoryStatsStorage();
         UIServer server = UIServer.getInstance();
-        server.attach(storage);
+        server.attach(); // attach the storage to server
 
         // Set model listeners
-        model.setListeners(new StatsListener(storage, 10));
+        model.setListeners(); // Setup the StatsListener by setting the listenerfrequency to 10
 
         //=====================================================================
         //            Step 4: Train model
@@ -125,11 +125,8 @@ public class Multiclass {
 
         Evaluation eval;
         for(int i=0; i < epoch; i++) {
-            model.fit(trainData);
-            eval = model.evaluate(testData);
-            System.out.println("EPOCH: " + i + " Accuracy: " + eval.accuracy());
-            testData.reset();
-            trainData.reset();
+            // Perform training and print accuracy score for every epoch
+
         }
 
         System.out.println("=== Train data evaluation ===");
@@ -137,8 +134,9 @@ public class Multiclass {
         System.out.println(eval.stats());
 
         System.out.println("=== Test data evaluation ===");
-        eval = model.evaluate(testData);
-        System.out.println(eval.stats());
+        // Print test data evaluation
+
+        System.out.println(.stats());
 
     }
 
