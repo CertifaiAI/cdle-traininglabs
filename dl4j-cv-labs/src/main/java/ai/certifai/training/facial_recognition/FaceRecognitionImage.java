@@ -66,7 +66,7 @@ import static org.bytedeco.opencv.global.opencv_imgproc.*;
  *              to get similarity score and label them by using labelIndividual method.
  *          f.  Save the labeled image.
  *          g.  Display the result of the face recognition.
- *          
+ *
  **/
 
 public class FaceRecognitionImage {
@@ -74,6 +74,7 @@ public class FaceRecognitionImage {
     public static final String OUTPUT_PATH = System.getProperty("user.dir") + "/dl4j-cv-labs/src/main/resources/FaceRecognition_output/img/";
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
+        placeHolderRemover();
         //  STEP 1 : Store your images inside FaceDB
         //  STEP 2 : Upload test image to FaceRecognition_input/img
 
@@ -175,6 +176,26 @@ public class FaceRecognitionImage {
                         Scalar.YELLOW
                 );
             }
+        }
+    }
+
+    //  To commit empty folder to github, have to have file inside a folder, therefore this method is use to remove the placeholder.txt
+    public static void placeHolderRemover() {
+        if (new File(INPUT_PATH + "placeholder.txt").exists()) {
+            File file = new File(INPUT_PATH + "placeholder.txt");
+            file.delete();
+        }
+        if (new File(INPUT_PATH.replace("img", "video") + "placeholder.txt").exists()) {
+            File file = new File(INPUT_PATH.replace("img", "video") + "placeholder.txt");
+            file.delete();
+        }
+        if (new File(OUTPUT_PATH + "placeholder.txt").exists()) {
+            File file = new File(OUTPUT_PATH + "placeholder.txt");
+            file.delete();
+        }
+        if (new File(OUTPUT_PATH.replace("img", "video") + "placeholder.txt").exists()) {
+            File file = new File(OUTPUT_PATH.replace("img", "video") + "placeholder.txt");
+            file.delete();
         }
     }
 }
