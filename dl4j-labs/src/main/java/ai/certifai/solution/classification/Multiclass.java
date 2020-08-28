@@ -41,7 +41,7 @@ public class Multiclass {
     private static final double ratioTrainTestSplit = 0.8;
 
     // Training info
-    private static final int epoch = 500;
+    private static final int epoch = 1000;
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -92,12 +92,12 @@ public class Multiclass {
                 .layer(0, new DenseLayer.Builder()
                         .activation(Activation.RELU)
                         .nIn(6)
-                        .nOut(12)
+                        .nOut(32)
                         .build())
                 .layer(1, new DropoutLayer(0.3))
                 .layer(2, new DenseLayer.Builder()
                         .activation(Activation.RELU)
-                        .nOut(6)
+                        .nOut(64)
                         .build())
                 .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.MCXENT)
                         .nOut(7)

@@ -41,7 +41,7 @@ public class Multiclass {
     private static final double ratioTrainTestSplit = 0.8;
 
     // Training info
-    private static final int epoch = 500;
+    private static final int epoch = 1000;
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -76,9 +76,9 @@ public class Multiclass {
         DataSetIterator testData = makeIterator(transformedTestData);
 
         DataNormalization normalizer = new NormalizerStandardize();
-        normalizer.(trainData); // Fit the normalizer
+        // normalizer.(trainData); // Fit the normalizer
         trainData.setPreProcessor(normalizer);
-        .setPreProcessor(normalizer);
+        // .setPreProcessor(normalizer); // apply normalizer
 
         //=====================================================================
         //            Step 2: Define Model
@@ -90,18 +90,18 @@ public class Multiclass {
                 .weightInit(WeightInit.XAVIER)
                 .list()
                 .layer(0, new DenseLayer.Builder()
-                        .activation() // Set the activation function to RELU
+                        // .activation() // Set the activation function to RELU
                         .nIn(6)
-                        .nOut(12)
+                        // . // Set nodes to 32
                         .build())
-                .layer(1, ) // Set dropout layer of 0.3
+                // .layer(1, ) // define dropout layer of 0.3
                 .layer(2, new DenseLayer.Builder()
                         .activation(Activation.RELU)
-                        .nOut(6)
+                        .nOut(64)
                         .build())
                 .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.MCXENT)
                         .nOut(7)
-                        .activation() // Set the activation function to SOFTMAX
+                        // .activation() // Set the activation function to SOFTMAX
                         .build())
                 .build();
 
@@ -114,10 +114,10 @@ public class Multiclass {
 
         StatsStorage storage = new InMemoryStatsStorage();
         UIServer server = UIServer.getInstance();
-        server.attach(); // attach the storage to server
+        // server.attach(); // attach the storage to server
 
         // Set model listeners
-        model.setListeners(); // Setup the StatsListener by setting the listenerfrequency to 10
+        model.setListeners(); // Setup the StatsListener by setting the listener frequency to 10
 
         //=====================================================================
         //            Step 4: Train model
@@ -135,8 +135,8 @@ public class Multiclass {
 
         System.out.println("=== Test data evaluation ===");
         // Print test data evaluation
-
-        System.out.println(.stats());
+        //
+        // System.out.println(.stats());
 
     }
 
