@@ -53,7 +53,7 @@ import static org.bytedeco.opencv.global.opencv_imgproc.*;
  * TODO
  * 
  *  1.  Inside the resources/FaceRecognition_input/img folder, create a folder and name the folder with your name,
- *      eg: KengHooi, store the images of your face inside the folder.
+ *      eg: KengHooi, store the images of your face inside the folder. The images have to be cropped to remain face only.
  *  2.  Upload your test image to resources/FaceRecognition_input/img folder
  *  3.  Using the INPUT_PATH to load all the files inside the input folder in a File array.
  *  4.  Use a List of Mat to store the images.
