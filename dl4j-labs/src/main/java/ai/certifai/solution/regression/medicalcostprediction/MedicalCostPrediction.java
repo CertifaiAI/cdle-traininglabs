@@ -17,6 +17,7 @@
 
 package ai.certifai.solution.regression.medicalcostprediction;
 
+import ai.certifai.solution.regression.PlotUtil;
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.collection.CollectionRecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
@@ -49,7 +50,6 @@ import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ai.certifai.solution.regression.PlotUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -113,6 +113,7 @@ public class MedicalCostPrediction {
                 .categoricalToInteger("sex", "smoker")
                 .categoricalToOneHot("region")
                 .build();
+
         System.out.println("Final Schema: " + transformProcess.getFinalSchema());
 
         //  adding the original data to a list for later transform purpose

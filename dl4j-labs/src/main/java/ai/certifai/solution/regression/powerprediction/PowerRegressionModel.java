@@ -1,12 +1,13 @@
 package ai.certifai.solution.regression.powerprediction;
 
-import org.datavec.api.records.reader.RecordReader;
+import ai.certifai.solution.regression.PlotUtil;
 import org.datavec.api.records.reader.impl.collection.CollectionRecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
 import org.datavec.api.split.FileSplit;
 import org.datavec.api.transform.TransformProcess;
 import org.datavec.api.transform.schema.Schema;
 import org.datavec.api.writable.Writable;
+import org.datavec.local.transforms.LocalTransformExecutor;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -16,13 +17,20 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.api.UIServer;
+import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.nd4j.evaluation.regression.RegressionEvaluation;
 import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.dataset.SplitTestAndTrain;
+import org.nd4j.linalg.dataset.ViewIterator;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.io.ClassPathResource;
 import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,45 +38,56 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PowerRegressionModel {
+
+    private static Logger log = LoggerFactory.getLogger(PowerRegressionModel.class);
+
     public static void main(String[] args) throws IOException, InterruptedException {
         final int seed = 12345;
         final double learningRate = 0.001;
         final int nEpochs = 120;
         final int batchSize = 50;
-        final int nTrain = 6788; // Num of training samples to use
 
         String path = new ClassPathResource("/power/power.csv").getFile().getAbsolutePath();
         File file = new File(path);
-        RecordReader rr = new CSVRecordReader(1,",");
+        CSVRecordReader rr = new CSVRecordReader(1);
         rr.initialize(new FileSplit(file));
 //      schema of the data
         Schema InputDataSchema = new Schema.Builder()
                 .addColumnsDouble("Temperature","Ambient Pressure","Relative Humidity","Exhaust Vacuum","Electrical Output")
                 .build();
-        System.out.println(InputDataSchema);
+        System.out.println("Initial Schema: " + InputDataSchema);
 
         TransformProcess tp = new TransformProcess.Builder(InputDataSchema).build();
-        List<List<Writable>> trainData = new ArrayList<>();
-        List<List<Writable>> valData = new ArrayList<>();
-
-//      splitting the test and training set
-        int i=0;
-        while(rr.hasNext()){
-            if(i<nTrain) {
-                trainData.add(rr.next());
-            }else{
-                valData.add(rr.next());
-            }
-            i++;
+        //  adding the original data to a list for later transform purpose
+        List<List<Writable>> originalData = new ArrayList<>();
+        while (rr.hasNext()) {
+            List<Writable> data = rr.next();
+            originalData.add(data);
         }
-        RecordReader collectionRecordReaderTrain = new CollectionRecordReader(trainData);
-        RecordReader collectionRecordReaderVal = new CollectionRecordReader(valData);
 
-        DataSetIterator trainIter = new RecordReaderDataSetIterator(collectionRecordReaderTrain, batchSize, 4, 4, true);
-        DataSetIterator valIter = new RecordReaderDataSetIterator(collectionRecordReaderVal, batchSize, 4, 4, true);
+        // transform data into final schema
+        List<List<Writable>> transformedData = LocalTransformExecutor.execute(originalData, tp);
 
+        //  Preparing to split the dataset into training set and test set
+        CollectionRecordReader collectionRecordReader = new CollectionRecordReader(transformedData);
+        DataSetIterator iterator = new RecordReaderDataSetIterator(collectionRecordReader, transformedData.size(), 4, 4, true);
+
+        DataSet dataSet = iterator.next();
+        dataSet.shuffle();
+
+        SplitTestAndTrain testAndTrain = dataSet.splitTestAndTrain(0.7);
+
+        DataSet train = testAndTrain.getTrain();
+        DataSet test = testAndTrain.getTest();
+
+        INDArray features = train.getFeatures();
+        System.out.println("\nFeature shape: " + features.shapeInfoToString() + "\n");
+
+        //  Assigning dataset iterator for training purpose
+        ViewIterator trainIter = new ViewIterator(train, batchSize);
+        ViewIterator testIter = new ViewIterator(test, batchSize);
 //      NN initialization
-        MultiLayerNetwork net = new MultiLayerNetwork(new NeuralNetConfiguration.Builder()
+        MultiLayerNetwork model = new MultiLayerNetwork(new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .weightInit(WeightInit.XAVIER)
                 .updater(new Adam(learningRate))
@@ -88,17 +107,55 @@ public class PowerRegressionModel {
                         .activation(Activation.IDENTITY)
                         .build())
                 .build());
-        net.init();
-        net.setListeners(new ScoreIterationListener(100));
+        model.init();
+        log.info("****************************************** UI SERVER **********************************************");
+        UIServer uiServer = UIServer.getInstance();
+        StatsStorage statsStorage = new InMemoryStatsStorage();
+        uiServer.attach(statsStorage);
+        model.setListeners(new ScoreIterationListener(10), new StatsListener(statsStorage));
 
-        StatsStorage storage = new InMemoryStatsStorage();
-        UIServer server = UIServer.getInstance();
-        server.attach(storage);
-//        net.setListeners(new StatsListener(storage));
+        // Model training - fit trainIter into model and evaluate model with testIter for each of nEpoch
+        log.info("\n*************************************** TRAINING **********************************************\n");
 
-        net.fit(trainIter, nEpochs);
-        valIter.reset();
-        RegressionEvaluation eval = net.evaluateRegression(valIter);
-        System.out.println(eval.stats());
+        long timeX = System.currentTimeMillis();
+        for (int i = 0; i < nEpochs; i++) {
+            long time = System.currentTimeMillis();
+            trainIter.reset();
+            log.info("Epoch " + i);
+            model.fit(trainIter);
+            time = System.currentTimeMillis() - time;
+            log.info("************************** Done an epoch, TIME TAKEN: " + time + "ms **************************");
+
+            log.info("********************************** VALIDATING *************************************************");
+            RegressionEvaluation evaluation = model.evaluateRegression(testIter);
+            System.out.println(evaluation.stats());
+        }
+        long timeY = System.currentTimeMillis();
+        log.info("\n******************** TOTAL TIME TAKEN: " + (timeY - timeX) + "ms ******************************\n");
+
+        // Print out target values and predicted values
+        log.info("\n*************************************** PREDICTION **********************************************");
+
+        testIter.reset();
+
+        INDArray targetLabels = test.getLabels();
+        System.out.println("\nTarget shape: " + targetLabels.shapeInfoToString());
+
+        INDArray predictions = model.output(testIter);
+        System.out.println("\nPredictions shape: " + predictions.shapeInfoToString() + "\n");
+
+        System.out.println("Target \t\t\t Predicted");
+
+
+        for (int i = 0; i < targetLabels.rows(); i++) {
+            System.out.println(targetLabels.getRow(i) + "\t\t" + predictions.getRow(i));
+        }
+
+        // Plot the target values and predicted values
+        PlotUtil.visualizeRegression(targetLabels, predictions);
+
+        // Print out model summary
+        log.info("\n************************************* MODEL SUMMARY *******************************************");
+        System.out.println(model.summary());
     }
 }
