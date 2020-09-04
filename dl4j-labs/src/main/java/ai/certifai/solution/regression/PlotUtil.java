@@ -100,10 +100,19 @@ public class PlotUtil {
 
     public static void visualizeRegression (INDArray labels, INDArray pred ) {
 
-        double[] mins = new double[] {0, 0};
-
+        double pred_min = pred.min(0).data().asDouble()[0];
+        double label_min = labels.min(0).data().asDouble()[0];
         double pred_max = pred.max(0).data().asDouble()[0];
         double label_max = labels.max(0).data().asDouble()[0];
+
+        // Make sure both axes have same min values
+        double[] mins;
+        if (pred_min > label_min) {
+            mins = new double[]{pred_min, pred_min};
+        } else {
+            mins = new double[]{label_min, label_min};
+        }
+
 
         // Make sure both axes have same max values
         double[] maxs;
