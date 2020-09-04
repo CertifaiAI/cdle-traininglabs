@@ -1,24 +1,6 @@
-/*
- * Copyright (c) 2019 Skymind AI Bhd.
- * Copyright (c) 2020 CertifAI Sdn. Bhd.
- *
- * This program and the accompanying materials are made available under the
- * terms of the Apache License, Version 2.0 which is available at
- * https://www.apache.org/licenses/LICENSE-2.0.
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- *
- * SPDX-License-Identifier: Apache-2.0
- */
-
-package ai.certifai.solution.regression.medicalcostprediction;
+package ai.certifai.solution.regression.powerprediction;
 
 import ai.certifai.solution.regression.PlotUtil;
-import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.collection.CollectionRecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
 import org.datavec.api.split.FileSplit;
@@ -28,7 +10,6 @@ import org.datavec.api.writable.Writable;
 import org.datavec.local.transforms.LocalTransformExecutor;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
@@ -54,81 +35,42 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class MedicalCostPrediction {
+public class PowerRegressionModel {
 
-    private static Logger log = LoggerFactory.getLogger(MedicalCostPrediction.class);
+    private static Logger log = LoggerFactory.getLogger(PowerRegressionModel.class);
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        final int seed = 12345;
+        final double learningRate = 0.001;
+        final int nEpochs = 120;
+        final int batchSize = 50;
 
-        /*
-         *  We would be using the Boston Housing Dataset to be our regression example.
-         *  This dataset is obtained from https://www.kaggle.com/mirichoi0218/insurance
-         *  The description of the attributes:
-         *  age: age of primary beneficiary
-         *  sex: insurance contractor gender, female, male
-         *  bmi: Body mass index
-         *  children: Number of children covered by health insurance / Number of dependents
-         *  smoker: Smoking
-         *  region: the beneficiary's residential area in the US, northeast, southeast, southwest, northwest.
-         *  charges: Individual medical costs billed by health insurance
-         *
-         * */
-
-        int batchSize = 128;
-        double lr = 0.0015;
-        int input = 9;
-        int hidden = 1000;
-        int output = 1;
-        int nEpoch = 30;
-        double reg = 0.0001;
-        int seed = 428;
-
-        /*
-         *  STEP 1: DATA PREPARATION
-         *
-         * */
-
-        //  Preparing the data
-        File file = new ClassPathResource("medicalCost/insurance.csv").getFile();
-        RecordReader recordReader = new CSVRecordReader(1, ',');
-        recordReader.initialize(new FileSplit(file));
-
-        // Declaring the feature names in schema
-        Schema schema = new Schema.Builder()
-                .addColumnInteger("age")
-                .addColumnCategorical("sex", Arrays.asList("female", "male"))
-                .addColumnDouble("bmi")
-                .addColumnInteger("children")
-                .addColumnCategorical("smoker", Arrays.asList("yes", "no"))
-                .addColumnCategorical("region", Arrays.asList("northeast", "southeast", "southwest", "northwest"))
-                .addColumnDouble("charge")
+        String path = new ClassPathResource("/power/power.csv").getFile().getAbsolutePath();
+        File file = new File(path);
+        CSVRecordReader rr = new CSVRecordReader(1);
+        rr.initialize(new FileSplit(file));
+//      schema of the data
+        Schema InputDataSchema = new Schema.Builder()
+                .addColumnsDouble("Temperature","Ambient Pressure","Relative Humidity","Exhaust Vacuum","Electrical Output")
                 .build();
-        System.out.println("Initial Schema: " + schema);
+        System.out.println("Initial Schema: " + InputDataSchema);
 
-        // Building transform process schema
-        TransformProcess transformProcess = new TransformProcess.Builder(schema)
-                .categoricalToInteger("sex", "smoker")
-                .categoricalToOneHot("region")
-                .build();
-
-        System.out.println("Final Schema: " + transformProcess.getFinalSchema());
-
+        TransformProcess tp = new TransformProcess.Builder(InputDataSchema).build();
         //  adding the original data to a list for later transform purpose
         List<List<Writable>> originalData = new ArrayList<>();
-        while (recordReader.hasNext()) {
-            List<Writable> data = recordReader.next();
+        while (rr.hasNext()) {
+            List<Writable> data = rr.next();
             originalData.add(data);
         }
 
         // transform data into final schema
-        List<List<Writable>> transformedData = LocalTransformExecutor.execute(originalData, transformProcess);
+        List<List<Writable>> transformedData = LocalTransformExecutor.execute(originalData, tp);
 
         //  Preparing to split the dataset into training set and test set
         CollectionRecordReader collectionRecordReader = new CollectionRecordReader(transformedData);
-        DataSetIterator iterator = new RecordReaderDataSetIterator(collectionRecordReader, transformedData.size(), 9, 9, true);
+        DataSetIterator iterator = new RecordReaderDataSetIterator(collectionRecordReader, transformedData.size(), 4, 4, true);
 
         DataSet dataSet = iterator.next();
         dataSet.shuffle();
@@ -144,47 +86,28 @@ public class MedicalCostPrediction {
         //  Assigning dataset iterator for training purpose
         ViewIterator trainIter = new ViewIterator(train, batchSize);
         ViewIterator testIter = new ViewIterator(test, batchSize);
-
-
-        /*
-         *  STEP 2: MODEL TRAINING
-         *
-         * */
-
-        //  Configuring the structure of the model
-        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+//      NN initialization
+        MultiLayerNetwork model = new MultiLayerNetwork(new NeuralNetConfiguration.Builder()
                 .seed(seed)
-                .l2(reg)
                 .weightInit(WeightInit.XAVIER)
-                .updater(new Adam(lr))
+                .updater(new Adam(learningRate))
                 .list()
-                .layer(new DenseLayer.Builder()
-                        .nIn(input)
-                        .nOut(hidden)
-                        .activation(Activation.RELU)
-                        .build())
-                .layer(new DenseLayer.Builder()
-                        .nOut(hidden)
-                        .activation(Activation.RELU)
-                        .build())
-                .layer(new DenseLayer.Builder()
-                        .nOut(hidden)
-                        .activation(Activation.RELU)
-                        .build())
-                .layer(new DenseLayer.Builder()
-                        .nOut(hidden)
-                        .activation(Activation.RELU)
-                        .build())
-                .layer(new OutputLayer.Builder(LossFunctions.LossFunction.MSE)
-                        .nOut(output)
+                .layer(0, new DenseLayer.Builder()
+                        .nIn(4)
+                        .nOut(400)
                         .activation(Activation.IDENTITY)
                         .build())
-                .build();
-
-        MultiLayerNetwork model = new MultiLayerNetwork(conf);
+                .layer(1, new DenseLayer.Builder()
+                        .nIn(400)
+                        .nOut(200)
+                        .activation(Activation.IDENTITY)
+                        .build())
+                .layer(2, new OutputLayer.Builder(LossFunctions.LossFunction.MSE)
+                        .nOut(1)
+                        .activation(Activation.IDENTITY)
+                        .build())
+                .build());
         model.init();
-
-        // Initialize UI server for visualization model performance
         log.info("****************************************** UI SERVER **********************************************");
         UIServer uiServer = UIServer.getInstance();
         StatsStorage statsStorage = new InMemoryStatsStorage();
@@ -195,7 +118,7 @@ public class MedicalCostPrediction {
         log.info("\n*************************************** TRAINING **********************************************\n");
 
         long timeX = System.currentTimeMillis();
-        for (int i = 0; i < nEpoch; i++) {
+        for (int i = 0; i < nEpochs; i++) {
             long time = System.currentTimeMillis();
             trainIter.reset();
             log.info("Epoch " + i);
@@ -234,7 +157,5 @@ public class MedicalCostPrediction {
         // Print out model summary
         log.info("\n************************************* MODEL SUMMARY *******************************************");
         System.out.println(model.summary());
-
     }
 }
-
