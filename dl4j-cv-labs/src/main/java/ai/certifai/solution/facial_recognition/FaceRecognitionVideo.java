@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
  * Copyright (c) 2019 Skymind AI Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
@@ -250,7 +249,7 @@ public class FaceRecognitionVideo {
                 resize(cropImg, cropImg, new Size(224, 224));
 
 //                Display.display(cropImg, "Cropped_Img " + (i + 1));
-                imwrite(faceDBPath+ filename, cropImg);
+                imwrite(faceDBPath + filename, cropImg);
             }
         }
     }
@@ -264,10 +263,4 @@ public class FaceRecognitionVideo {
         Mat img_roi = new Mat(image, rect);
         return img_roi;
     }
-
-=======
-package ai.certifai.solution.facial_recognition;
-
-public class FaceRecognitionVideo {
->>>>>>> origin/new_example_faceRecognition
 }
