@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static org.bytedeco.opencv.global.opencv_core.flip;
@@ -61,8 +62,8 @@ import static org.bytedeco.opencv.global.opencv_videoio.CAP_PROP_FRAME_WIDTH;
  *
  * TODO
  * -------------------------------------------
- * 1.   Create a folder with your name (eg. KengHooi) under "dl4j-cv-labs/src/main/resources/FaceDB"
- * 2.   Place some of your cropped face images under the folder you created
+ * 1.   Create a folder with your name (eg. Alex) under "dl4j-cv-labs/src/main/resources/FaceDB"
+ * 2.   Place your face images under the folder you created
  * 3.   Place your video file under "dl4j-cv-labs/src/main/resources/FaceRecognition_input/video/"
  * 4.   Run this java file
  * 5.   You can find the output under "dl4j-cv-labs/src/main/resources/FaceRecognition_output/video/"
@@ -94,7 +95,7 @@ public class FaceRecognitionVideo {
 
         // Print out error message if there is no input video file inside input folder
         if (folder.listFiles().length < 1) {
-            System.out.println("Please place your video under the input folder!");
+            System.out.println("Please place your video under " + Paths.get(System.getProperty("user.dir"), inputPath));
         } else {
             // STEP 5: Select your FaceDetector
             // ENTER YOUR CODE HERE
