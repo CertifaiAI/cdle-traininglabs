@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * Copyright (c) 2019 Skymind AI Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
@@ -264,4 +265,9 @@ public class FaceRecognitionVideo {
         return img_roi;
     }
 
+=======
+package ai.certifai.solution.facial_recognition;
+
+public class FaceRecognitionVideo {
+>>>>>>> origin/new_example_faceRecognition
 }
