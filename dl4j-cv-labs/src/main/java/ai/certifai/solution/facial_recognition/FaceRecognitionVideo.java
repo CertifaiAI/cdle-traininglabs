@@ -26,6 +26,7 @@ import ai.certifai.solution.facial_recognition.identification.FaceIdentifier;
 import ai.certifai.solution.facial_recognition.identification.Prediction;
 import ai.certifai.solution.facial_recognition.identification.feature.RamokFaceNetFeatureProvider;
 import ai.certifai.solution.facial_recognition.identification.feature.VGG16FeatureProvider;
+import ai.certifai.training.image_processing.Display;
 import org.bytedeco.opencv.opencv_core.*;
 import org.bytedeco.opencv.opencv_videoio.VideoCapture;
 import org.bytedeco.opencv.opencv_videoio.VideoWriter;
@@ -40,6 +41,8 @@ import java.util.List;
 
 import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_highgui.*;
+import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
+import static org.bytedeco.opencv.global.opencv_imgcodecs.imwrite;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.global.opencv_videoio.CAP_PROP_FRAME_HEIGHT;
 import static org.bytedeco.opencv.global.opencv_videoio.CAP_PROP_FRAME_WIDTH;
@@ -77,11 +80,15 @@ public class FaceRecognitionVideo {
     private static final String outputWindowsName = "Face Recognition in Processing......";
     private static final String inputPath = "dl4j-cv-labs/src/main/resources/FaceRecognition_input/video/";
     private static final String outputPath = "dl4j-cv-labs/src/main/resources/FaceRecognition_output/video/";
+    private static final String faceDBPath = "dl4j-cv-labs/src/main/resources/FaceDB/Yeoh/";
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         // Remove placeholder.txt
         placeHolderRemover();
+
+        // CropDB
+        cropDB();
 
         // Read folder
         File folder = new File(inputPath);
@@ -91,10 +98,10 @@ public class FaceRecognitionVideo {
             System.out.println("Please place your video under the input folder!");
         } else {
             // Select your FaceDetector
-            FaceDetector FaceDetector = getFaceDetector(ai.certifai.solution.facial_recognition.detection.FaceDetector.OPENCV_HAAR_CASCADE_FACEDETECTOR);
+            FaceDetector FaceDetector = getFaceDetector(ai.certifai.solution.facial_recognition.detection.FaceDetector.OPENCV_DL_FACEDETECTOR);
 
             // Select your FaceIdentifier
-            FaceIdentifier FaceIdentifier = getFaceIdentifier(ai.certifai.solution.facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_RAMOK_FACENET_PREBUILT);
+            FaceIdentifier FaceIdentifier = getFaceIdentifier(ai.certifai.solution.facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_VGG16_PREBUILT);
 
             // Loop all the video files inside the input folder and process them
             for (int i = 0; i < folder.listFiles().length; i++) {
@@ -219,4 +226,42 @@ public class FaceRecognitionVideo {
             outputPlaceHolder.delete();
         }
     }
+
+    public static void cropDB() throws IOException {
+        File folder = new File(faceDBPath);
+
+        // Print out error message if there is no input image file inside input folder
+        if (folder.listFiles().length < 1) {
+            System.out.println("Please place your images under the input folder!");
+        } else {
+            FaceDetector FaceDetector = getFaceDetector(ai.certifai.solution.facial_recognition.detection.FaceDetector.OPENCV_DL_FACEDETECTOR);
+            for (int i = 0; i < folder.listFiles().length; i++) {
+                String filename = folder.listFiles()[i].getName();
+                Mat rawImg = imread(faceDBPath + filename);
+//                Display.display(rawImg, "Input_Img " + (i + 1));
+
+                // assuming detectFaces() will shrink img, that's why need cloneCopy
+                Mat cloneCopy = new Mat();
+                rawImg.copyTo(cloneCopy);
+                FaceDetector.detectFaces(cloneCopy);
+                List<FaceLocalization> faceLocalizations = FaceDetector.getFaceLocalization();
+                Mat cropImg = crop(faceLocalizations, rawImg);
+                resize(cropImg, cropImg, new Size(224, 224));
+
+//                Display.display(cropImg, "Cropped_Img " + (i + 1));
+                imwrite(faceDBPath+ filename, cropImg);
+            }
+        }
+    }
+
+    // Crop the detected face
+    private static Mat crop(List<FaceLocalization> faceLocalizations, Mat image) {
+        Rect rect = null;
+        for (FaceLocalization i : faceLocalizations) {
+            rect = new Rect(new Point((int) i.getLeft_x(), (int) i.getLeft_y()), new Point((int) i.getRight_x(), (int) i.getRight_y()));
+        }
+        Mat img_roi = new Mat(image, rect);
+        return img_roi;
+    }
+
 }
