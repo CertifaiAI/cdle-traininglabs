@@ -61,7 +61,7 @@ public class VGG16FeatureProvider extends FaceFeatureProvider {
         //  Looping through the main folder (eg: FaceDB)
         for (File folder : dir) {
             File[] each_folder = folder.listFiles();
-            //  Looping inside the subfolder (eg: Kenghooi)
+            //  Looping inside the subfolder (eg: AndrewNg)
             for (File each_file : each_folder) {
                 //  Get matrix of each image
                 Mat image = imread(each_file.getAbsolutePath());

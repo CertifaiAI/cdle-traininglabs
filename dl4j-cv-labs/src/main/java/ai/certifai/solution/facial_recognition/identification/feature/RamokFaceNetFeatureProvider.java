@@ -76,7 +76,7 @@ public class RamokFaceNetFeatureProvider extends FaceFeatureProvider {
         //  Looping through the main folder (eg: FaceDB)
         for (File folder : dir) {
             File[] each_folder = folder.listFiles();
-            //  Looping inside the subfolder (eg: Kenghooi)
+            //  Looping inside the subfolder (eg: AndrewNg)
             for (File each_file : each_folder) {
                 //  Get matrix of each image
                 Mat image = imread(each_file.getAbsolutePath());
@@ -99,7 +99,7 @@ public class RamokFaceNetFeatureProvider extends FaceFeatureProvider {
                         Mat detectedFace = new Mat(image, new Rect((int) i.getLeft_x(), (int) i.getLeft_y(),
                                 i.getValidWidth(image.size().width()), i.getValidHeight(image.size().height())));
                         //  Resize for desired input
-                        resize(detectedFace, detectedFace, new Size(224, 224));
+                        resize(detectedFace, detectedFace, new Size(96, 96));
                         //  Load into INDArray for getting embedding
                         INDArray arr = nativeImageLoader.asMatrix(detectedFace);
                         INDArray embedding = this.getEmbeddings(arr);
