@@ -113,7 +113,7 @@ public class OpenCV_DeepLearningFaceDetector extends FaceDetector {
                 bx = bx+w;
                 by = by+w;
 
-                //  Filter invalid boxes 
+                //  Filter invalid boxes
                 if (tx > inputImageWidth || bx > inputImageWidth){
                     continue;
                 }
