@@ -18,19 +18,17 @@
 package ai.certifai.solution.facial_recognition.identification.feature;
 
 import ai.certifai.solution.facial_recognition.detection.FaceLocalization;
+import ai.certifai.solution.facial_recognition.detection.OpenCV_DeepLearningFaceDetector;
 import ai.certifai.solution.facial_recognition.identification.Prediction;
 import org.bytedeco.opencv.opencv_core.Mat;
+import org.bytedeco.opencv.opencv_core.Rect;
 import org.bytedeco.opencv.opencv_core.Size;
 import org.datavec.api.io.labels.ParentPathLabelGenerator;
-import org.datavec.api.split.FileSplit;
 import org.datavec.image.loader.NativeImageLoader;
-import org.datavec.image.recordreader.ImageRecordReader;
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.zoo.PretrainedType;
 import org.deeplearning4j.zoo.model.VGG16;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.preprocessor.VGG16ImagePreProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +39,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
 import static org.bytedeco.opencv.global.opencv_imgproc.resize;
 import static org.nd4j.linalg.ops.transforms.Transforms.cosineSim;
 
@@ -55,21 +54,49 @@ public class VGG16FeatureProvider extends FaceFeatureProvider {
     }
 
     public ArrayList<LabelFeaturePair> setupAnchor(File dictionary) throws IOException, ClassNotFoundException {
-        ImageRecordReader recordReader = new ImageRecordReader(224, 224, 3, new ParentPathLabelGenerator());
-        recordReader.initialize(new FileSplit(dictionary));
-        RecordReaderDataSetIterator iter = new RecordReaderDataSetIterator(recordReader, 1, 1, dictionary.listFiles().length);
-        List<String> labels = iter.getLabels();
-        generateEmbeddings(iter, labels);
-        return labelFeaturePairList;
-    }
+        //  This method will crop the face for user and get embedding of the face
+        File[] dir = dictionary.listFiles();
+        NativeImageLoader nativeImageLoader = new NativeImageLoader();
 
-    private void generateEmbeddings(RecordReaderDataSetIterator iter, List<String> labels) {
-        while (iter.hasNext()) {
-            DataSet Ds = iter.next();
-            INDArray embedding = this.getEmbeddings(Ds.getFeatures());
-            String label = labels.get(decodeLabelID(Ds.getLabels()));
-            labelFeaturePairList.add(new LabelFeaturePair(label, embedding));
+        //  Looping through the main folder (eg: FaceDB)
+        for (File folder : dir) {
+            File[] each_folder = folder.listFiles();
+            //  Looping inside the subfolder (eg: Kenghooi)
+            for (File each_file : each_folder) {
+                //  Get matrix of each image
+                Mat image = imread(each_file.getAbsolutePath());
+                Mat CloneCopy = new Mat();
+                image.copyTo(CloneCopy);
+                //  Perform face detection
+                OpenCV_DeepLearningFaceDetector FaceDetector = new OpenCV_DeepLearningFaceDetector(300, 300, 0.8);
+                FaceDetector.detectFaces(CloneCopy);
+
+                //  Handling potential error
+                if (FaceDetector.getFaceLocalization().isEmpty() || FaceDetector.getFaceLocalization().size() == 0) {
+                    System.out.println("Unable to detect face, please upload another image with clearer front face! \n File at:  ");
+                    System.out.println(each_file.getPath());
+                } else if (FaceDetector.getFaceLocalization().size() > 1) {
+                    System.out.println("Image not clear, please try upload another image with clearer front face! \n File at:");
+                    System.out.println(each_file.getPath());
+                } else {
+                    for (FaceLocalization i : FaceDetector.getFaceLocalization()) {
+                        //  Get the bounding box of the image
+                        Mat detectedFace = new Mat(image, new Rect((int) i.getLeft_x(), (int) i.getLeft_y(),
+                                i.getValidWidth(image.size().width()), i.getValidHeight(image.size().height())));
+                        //  Resize for desired input
+                        resize(detectedFace, detectedFace, new Size(224, 224));
+                        //  Load into INDArray for getting embedding
+                        INDArray arr = nativeImageLoader.asMatrix(detectedFace);
+                        INDArray embedding = this.getEmbeddings(arr);
+                        //  Getting the label of each image by returning parent path name
+                        String label = new ParentPathLabelGenerator().getLabelForPath(each_file.getAbsolutePath()).toString();
+                        //  Storing the embedding of the face with its respective label
+                        labelFeaturePairList.add(new LabelFeaturePair(label, embedding));
+                    }
+                }
+            }
         }
+        return labelFeaturePairList;
     }
 
     public INDArray getEmbeddings(INDArray arr) {
@@ -90,7 +117,7 @@ public class VGG16FeatureProvider extends FaceFeatureProvider {
         INDArray _image = nativeImageLoader.asMatrix(image);
         INDArray anchor = getEmbeddings(_image);
         List<Prediction> predicted = new ArrayList<>();
-        for (LabelFeaturePair i: labelFeaturePairList){
+        for (LabelFeaturePair i : labelFeaturePairList) {
             INDArray embed = i.getEmbedding();
             double distance = cosineSim(anchor, embed);
             predicted.add(new Prediction(i.getLabel(), distance, faceLocalization));
@@ -110,7 +137,7 @@ public class VGG16FeatureProvider extends FaceFeatureProvider {
                     .mapToDouble(num -> (double) num / 10000)
                     .average()
                     .getAsDouble();
-            if(topNAvg >= threshold) {
+            if (topNAvg >= threshold) {
                 summary.add(new Prediction(entry.getKey(), topNAvg, faceLocalization));
             }
         }
@@ -120,9 +147,9 @@ public class VGG16FeatureProvider extends FaceFeatureProvider {
         Collections.reverse(summary);
 
         List<Prediction> result = new ArrayList();
-        for(int i=0; i<1; i++){
-            if(i<summary.size()) {
-            result.add(summary.get(i));
+        for (int i = 0; i < 1; i++) {
+            if (i < summary.size()) {
+                result.add(summary.get(i));
             }
         }
         return result;

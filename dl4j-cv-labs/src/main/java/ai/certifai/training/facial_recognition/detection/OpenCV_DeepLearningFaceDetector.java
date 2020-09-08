@@ -113,6 +113,13 @@ public class OpenCV_DeepLearningFaceDetector extends FaceDetector {
                 bx = bx+w;
                 by = by+w;
 
+                //  Filter invalid boxes
+                if (tx > inputImageWidth || bx > inputImageWidth){
+                    continue;
+                }
+                else if (ty > inputImageHeight || by > inputImageHeight){
+                    continue;
+                }
                 faceLocalizations.add(new FaceLocalization(tx, ty, bx, by));
             }
         }

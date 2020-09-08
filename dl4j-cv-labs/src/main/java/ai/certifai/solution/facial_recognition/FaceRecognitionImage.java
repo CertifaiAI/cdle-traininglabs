@@ -53,7 +53,7 @@ import static org.bytedeco.opencv.global.opencv_imgproc.*;
  *
  *  1.  Inside the resources/FaceDB folder, create a folder and name the folder with your name,
  *      eg: KengHooi, store the images of your face inside the folder. The images have to be cropped to remain face only
- *  2.  Upload your test image to resources/FaceRecognition_input/img folder
+ *  2.  Upload your test image(s) to resources/FaceRecognition_input/img folder
  *  3.  Using the INPUT_PATH to load all the files inside the input folder in a File array.
  *  4.  Use a List of Mat to store the images.
  *  5.  By looping through each file , perform following actions:
@@ -78,7 +78,7 @@ public class FaceRecognitionImage {
         File[] folder = new File(INPUT_PATH).listFiles();
 
         FaceDetector FaceDetector = getFaceDetector(ai.certifai.solution.facial_recognition.detection.FaceDetector.OPENCV_DL_FACEDETECTOR);
-        FaceIdentifier FaceIdentifier = getFaceIdentifier(ai.certifai.solution.facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_VGG16_PREBUILT);
+        FaceIdentifier FaceIdentifier = getFaceIdentifier(ai.certifai.solution.facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_RAMOK_FACENET_PREBUILT);
 
         //  Using List to store a list of image
         List<Mat> image = new ArrayList<>();
@@ -195,25 +195,6 @@ public class FaceRecognitionImage {
         if (new File(OUTPUT_PATH.replace("img", "video") + "placeholder.txt").exists()) {
             File file = new File(OUTPUT_PATH.replace("img", "video") + "placeholder.txt");
             file.delete();
-        }
-    }
-
-    public static void cropFaceFromOriginalImage(String folderName) throws IOException {
-        String FaceDB_PATH = System.getProperty("user.dir")+"/dl4j-cv-labs/src/main/resources/FaceDB/"+folderName+"/";
-        // If run second time it will have error
-        File[] folder = new File(FaceDB_PATH).listFiles();
-        for (File each_file : folder) {
-            Mat image = imread(each_file.getAbsolutePath());
-            Mat CloneCopy = new Mat();
-            image.copyTo(CloneCopy);
-            OpenCV_DeepLearningFaceDetector FaceDetector = new OpenCV_DeepLearningFaceDetector(300, 300, 0.8);
-            FaceDetector.detectFaces(CloneCopy);
-            FaceLocalization faceLocalizations = FaceDetector.getFaceLocalization().get(0);
-            System.out.println(each_file.getAbsolutePath());
-            Mat detectedFace = new Mat(image, new Rect((int) faceLocalizations.getLeft_x(), (int) faceLocalizations.getLeft_y(),
-                    faceLocalizations.getValidHeight(image.size().width()), faceLocalizations.getValidHeight(image.size().height())));
-            resize(detectedFace, detectedFace, new Size(224, 224));
-            imwrite(each_file.getAbsolutePath(), detectedFace);
         }
     }
 }
