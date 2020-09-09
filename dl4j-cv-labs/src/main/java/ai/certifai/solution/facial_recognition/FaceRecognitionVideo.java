@@ -17,6 +17,7 @@
 
 package ai.certifai.solution.facial_recognition;
 
+import ai.certifai.Helper;
 import ai.certifai.solution.facial_recognition.detection.FaceDetector;
 import ai.certifai.solution.facial_recognition.detection.FaceLocalization;
 import ai.certifai.solution.facial_recognition.detection.OpenCV_DeepLearningFaceDetector;
@@ -26,6 +27,7 @@ import ai.certifai.solution.facial_recognition.identification.FaceIdentifier;
 import ai.certifai.solution.facial_recognition.identification.Prediction;
 import ai.certifai.solution.facial_recognition.identification.feature.InceptionResNetFeatureProvider;
 import ai.certifai.solution.facial_recognition.identification.feature.VGG16FeatureProvider;
+import org.apache.commons.io.FileUtils;
 import org.bytedeco.opencv.opencv_core.*;
 import org.bytedeco.opencv.opencv_videoio.VideoCapture;
 import org.bytedeco.opencv.opencv_videoio.VideoWriter;
@@ -36,13 +38,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_highgui.*;
-import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
-import static org.bytedeco.opencv.global.opencv_imgcodecs.imwrite;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.global.opencv_videoio.CAP_PROP_FRAME_HEIGHT;
 import static org.bytedeco.opencv.global.opencv_videoio.CAP_PROP_FRAME_WIDTH;
@@ -80,11 +82,16 @@ public class FaceRecognitionVideo {
     private static final String outputWindowsName = "Face Recognition in Processing......";
     private static final String inputPath = "dl4j-cv-labs/src/main/resources/FaceRecognition_input/video/";
     private static final String outputPath = "dl4j-cv-labs/src/main/resources/FaceRecognition_output/video/";
+    private static String downloadLink;
+
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         // Remove placeholder.txt
         placeHolderRemover();
+
+        // Init with sample video
+        initSetup();
 
         // Read folder
         File folder = new File(inputPath);
@@ -197,7 +204,7 @@ public class FaceRecognitionVideo {
             for (int j = 0; j < i.size(); j++) {
                 putText(
                         image,
-                        i.get(j).toString(),
+                        i.get(j).toString() + " (" + new DecimalFormat("0.00").format(i.get(j).getScore() * 100.00) + "%)",
                         new Point(
                                 (int) i.get(j).getFaceLocalization().getLeft_x() + 2,
                                 (int) i.get(j).getFaceLocalization().getLeft_y() - 5
@@ -211,7 +218,7 @@ public class FaceRecognitionVideo {
     }
 
     // To commit empty folder to github, have to have file inside a folder, therefore this method is use to remove the placeholder.txt
-    public static void placeHolderRemover() {
+    private static void placeHolderRemover() {
         File inputPlaceHolder = new File(inputPath + "placeholder.txt");
         File outputPlaceHolder = new File(outputPath + "placeholder.txt");
 
@@ -222,4 +229,26 @@ public class FaceRecognitionVideo {
             outputPlaceHolder.delete();
         }
     }
+
+    // Init with sample video
+    private static void initSetup() throws IOException {
+        downloadLink = Helper.getPropValues("dataset.sample.url");
+        File file = new File(Paths.get(inputPath, "sample.mp4").toString());
+        if (!file.exists()) {
+            downloadSampleVideo();
+        }
+    }
+
+    // Download sample video
+    private static void downloadSampleVideo() throws IOException {
+        File sampleVideo = new File(inputPath, "sample.mp4");
+        log.info("Downloading the sample video from " + downloadLink);
+        FileUtils.copyURLToFile(new URL(downloadLink), sampleVideo);
+        if (!Helper.getCheckSum(sampleVideo.getAbsolutePath())
+                .equalsIgnoreCase(Helper.getPropValues("dataset.sample.hash"))) {
+            log.info("Downloaded file is incomplete");
+            System.exit(0);
+        }
+    }
+
 }

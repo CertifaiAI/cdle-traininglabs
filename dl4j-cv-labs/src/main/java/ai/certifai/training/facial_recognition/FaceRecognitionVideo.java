@@ -17,6 +17,7 @@
 
 package ai.certifai.training.facial_recognition;
 
+import ai.certifai.Helper;
 import ai.certifai.training.facial_recognition.detection.FaceDetector;
 import ai.certifai.training.facial_recognition.detection.FaceLocalization;
 import ai.certifai.training.facial_recognition.detection.OpenCV_DeepLearningFaceDetector;
@@ -26,6 +27,7 @@ import ai.certifai.training.facial_recognition.identification.FaceIdentifier;
 import ai.certifai.training.facial_recognition.identification.Prediction;
 import ai.certifai.training.facial_recognition.identification.feature.InceptionResNetFeatureProvider;
 import ai.certifai.training.facial_recognition.identification.feature.VGG16FeatureProvider;
+import org.apache.commons.io.FileUtils;
 import org.bytedeco.opencv.opencv_core.*;
 import org.bytedeco.opencv.opencv_videoio.VideoCapture;
 import org.bytedeco.opencv.opencv_videoio.VideoWriter;
@@ -36,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -78,6 +81,7 @@ public class FaceRecognitionVideo {
     private static final String outputWindowsName = "Face Recognition in Processing......";
     private static final String inputPath = "dl4j-cv-labs/src/main/resources/FaceRecognition_input/video/";
     private static final String outputPath = "dl4j-cv-labs/src/main/resources/FaceRecognition_output/video/";
+    private static String downloadLink;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
@@ -89,6 +93,9 @@ public class FaceRecognitionVideo {
 
         // Remove placeholder.txt
         placeHolderRemover();
+
+        // Init with sample video
+        initSetup();
 
         // Read folder
         File folder = new File(inputPath);
@@ -219,6 +226,27 @@ public class FaceRecognitionVideo {
         }
         if (outputPlaceHolder.exists()) {
             outputPlaceHolder.delete();
+        }
+    }
+
+    // Init with sample video
+    private static void initSetup() throws IOException {
+        downloadLink = Helper.getPropValues("dataset.sample.url");
+        File file = new File(Paths.get(inputPath, "sample.mp4").toString());
+        if (!file.exists()) {
+            downloadSampleVideo();
+        }
+    }
+
+    // Download sample video
+    private static void downloadSampleVideo() throws IOException {
+        File sampleVideo = new File(inputPath, "sample.mp4");
+        log.info("Downloading the sample video from " + downloadLink);
+        FileUtils.copyURLToFile(new URL(downloadLink), sampleVideo);
+        if (!Helper.getCheckSum(sampleVideo.getAbsolutePath())
+                .equalsIgnoreCase(Helper.getPropValues("dataset.sample.hash"))) {
+            log.info("Downloaded file is incomplete");
+            System.exit(0);
         }
     }
 }
