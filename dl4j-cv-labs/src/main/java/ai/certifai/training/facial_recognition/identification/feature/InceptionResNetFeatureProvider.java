@@ -49,13 +49,13 @@ import static org.nd4j.linalg.ops.transforms.Transforms.euclideanDistance;
  * generates embedding based on pre-built model, inspiration and reference https://github.com/klevis/Java-Machine-Learning-for-Computer-Vision/tree/master/FaceRecognition
  */
 
-public class RamokFaceNetFeatureProvider extends FaceFeatureProvider {
+public class InceptionResNetFeatureProvider extends FaceFeatureProvider {
     private ComputationGraph genEmbd_model;
     private static ArrayList<LabelFeaturePair> labelFeaturePairList = new ArrayList<>();
-    private static final Logger log = LoggerFactory.getLogger(RamokFaceNetFeatureProvider.class);
+    private static final Logger log = LoggerFactory.getLogger(InceptionResNetFeatureProvider.class);
 
 
-    public RamokFaceNetFeatureProvider() throws IOException {
+    public InceptionResNetFeatureProvider() throws IOException {
 
         ComputationGraph model = ModelSerializer.restoreComputationGraph(new ClassPathResource("EmbeddingGenerator/EmbeddingGenerator.zip").getFile(), false);
 
@@ -88,11 +88,11 @@ public class RamokFaceNetFeatureProvider extends FaceFeatureProvider {
 
                 //  Handling potential error
                 if (FaceDetector.getFaceLocalization().isEmpty() || FaceDetector.getFaceLocalization().size() == 0) {
-                    System.out.println("Unable to detect face, please upload another image with clearer front face! \n File at:  ");
-                    System.out.println(each_file.getPath());
+                    System.out.println("Unable to detect face, please upload another image with clearer front face!");
+                    System.out.println("File at: " + each_file.getPath());
                 } else if (FaceDetector.getFaceLocalization().size() > 1) {
-                    System.out.println("Image not clear, please try upload another image with clearer front face! \n File at:");
-                    System.out.println(each_file.getPath());
+                    System.out.println("Multiple face detected, please try upload another image!");
+                    System.out.println("File at: " + each_file.getPath());
                 } else {
                     for (FaceLocalization i : FaceDetector.getFaceLocalization()) {
                         //  Get the bounding box of the image

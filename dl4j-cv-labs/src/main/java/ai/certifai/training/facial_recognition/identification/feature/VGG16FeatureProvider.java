@@ -73,11 +73,11 @@ public class VGG16FeatureProvider extends FaceFeatureProvider {
 
                 //  Handling potential error
                 if (FaceDetector.getFaceLocalization().isEmpty() || FaceDetector.getFaceLocalization().size() == 0) {
-                    System.out.println("Unable to detect face, please upload another image with clearer front face! \n File at:  ");
-                    System.out.println(each_file.getPath());
+                    System.out.println("Unable to detect face, please upload another image with clearer front face!");
+                    System.out.println("File at: " + each_file.getPath());
                 } else if (FaceDetector.getFaceLocalization().size() > 1) {
-                    System.out.println("Image not clear, please try upload another image with clearer front face! \n File at:");
-                    System.out.println(each_file.getPath());
+                    System.out.println("Multiple face detected, please try upload another image!");
+                    System.out.println("File at: " + each_file.getPath());
                 } else {
                     for (FaceLocalization i : FaceDetector.getFaceLocalization()) {
                         //  Get the bounding box of the image

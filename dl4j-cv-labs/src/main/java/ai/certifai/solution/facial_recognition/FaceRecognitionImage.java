@@ -24,13 +24,14 @@ import ai.certifai.solution.facial_recognition.detection.OpenCV_HaarCascadeFaceD
 import ai.certifai.solution.facial_recognition.identification.DistanceFaceIdentifier;
 import ai.certifai.solution.facial_recognition.identification.FaceIdentifier;
 import ai.certifai.solution.facial_recognition.identification.Prediction;
-import ai.certifai.solution.facial_recognition.identification.feature.RamokFaceNetFeatureProvider;
+import ai.certifai.solution.facial_recognition.identification.feature.InceptionResNetFeatureProvider;
 import ai.certifai.solution.facial_recognition.identification.feature.VGG16FeatureProvider;
 import org.bytedeco.opencv.opencv_core.*;
 import org.nd4j.linalg.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class FaceRecognitionImage {
         File[] folder = new File(INPUT_PATH).listFiles();
 
         FaceDetector FaceDetector = getFaceDetector(ai.certifai.solution.facial_recognition.detection.FaceDetector.OPENCV_DL_FACEDETECTOR);
-        FaceIdentifier FaceIdentifier = getFaceIdentifier(ai.certifai.solution.facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_RAMOK_FACENET_PREBUILT);
+        FaceIdentifier FaceIdentifier = getFaceIdentifier(ai.certifai.solution.facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_VGG16_PREBUILT);
 
         //  Using List to store a list of image
         List<Mat> image = new ArrayList<>();
@@ -143,9 +144,9 @@ public class FaceRecognitionImage {
                 return new DistanceFaceIdentifier(
                         new VGG16FeatureProvider(),
                         new ClassPathResource("FaceDB").getFile(), 0.3, 3);
-            case FaceIdentifier.FEATURE_DISTANCE_RAMOK_FACENET_PREBUILT:
+            case FaceIdentifier.FEATURE_DISTANCE_INCEPTION_RESNET_PREBUILT:
                 return new DistanceFaceIdentifier(
-                        new RamokFaceNetFeatureProvider(),
+                        new InceptionResNetFeatureProvider(),
                         new ClassPathResource("FaceDB").getFile(), 0.3, 3);
             default:
                 return null;
@@ -165,7 +166,7 @@ public class FaceRecognitionImage {
             for (int j = 0; j < i.size(); j++) {
                 putText(
                         image,
-                        i.get(j).toString(),
+                        i.get(j).toString() + " (" + new DecimalFormat("0.00").format(i.get(j).getScore() * 100.00) + "%)",
                         new Point(
                                 (int) i.get(j).getFaceLocalization().getLeft_x() + 2,
                                 (int) i.get(j).getFaceLocalization().getLeft_y() - 5

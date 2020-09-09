@@ -24,9 +24,8 @@ import ai.certifai.solution.facial_recognition.detection.OpenCV_HaarCascadeFaceD
 import ai.certifai.solution.facial_recognition.identification.DistanceFaceIdentifier;
 import ai.certifai.solution.facial_recognition.identification.FaceIdentifier;
 import ai.certifai.solution.facial_recognition.identification.Prediction;
-import ai.certifai.solution.facial_recognition.identification.feature.RamokFaceNetFeatureProvider;
+import ai.certifai.solution.facial_recognition.identification.feature.InceptionResNetFeatureProvider;
 import ai.certifai.solution.facial_recognition.identification.feature.VGG16FeatureProvider;
-import ai.certifai.training.image_processing.Display;
 import org.bytedeco.opencv.opencv_core.*;
 import org.bytedeco.opencv.opencv_videoio.VideoCapture;
 import org.bytedeco.opencv.opencv_videoio.VideoWriter;
@@ -176,9 +175,9 @@ public class FaceRecognitionVideo {
                 return new DistanceFaceIdentifier(
                         new VGG16FeatureProvider(),
                         new ClassPathResource("FaceDB").getFile(), 0.3, 3);
-            case FaceIdentifier.FEATURE_DISTANCE_RAMOK_FACENET_PREBUILT:
+            case FaceIdentifier.FEATURE_DISTANCE_INCEPTION_RESNET_PREBUILT:
                 return new DistanceFaceIdentifier(
-                        new RamokFaceNetFeatureProvider(),
+                        new InceptionResNetFeatureProvider(),
                         new ClassPathResource("FaceDB").getFile(), 0.3, 3);
             default:
                 return null;
