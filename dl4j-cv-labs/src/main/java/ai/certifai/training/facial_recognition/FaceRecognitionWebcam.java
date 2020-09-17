@@ -24,7 +24,7 @@
 //import global.skymind.training.facial_recognition.identification.DistanceFaceIdentifier;
 //import global.skymind.training.facial_recognition.identification.FaceIdentifier;
 //import global.skymind.training.facial_recognition.identification.Prediction;
-//import global.skymind.training.facial_recognition.identification.feature.RamokFaceNetFeatureProvider;
+//import global.skymind.training.facial_recognition.identification.feature.InceptionResNetFeatureProvider;
 //import global.skymind.training.facial_recognition.identification.feature.VGG16FeatureProvider;
 //import org.bytedeco.opencv.opencv_core.Mat;
 //import org.bytedeco.opencv.opencv_core.Point;
@@ -40,7 +40,7 @@
 //
 //import static global.skymind.training.facial_recognition.detection.FaceDetector.OPENCV_DL_FACEDETECTOR;
 //import static global.skymind.training.facial_recognition.detection.FaceDetector.OPENCV_HAAR_CASCADE_FACEDETECTOR;
-//import static global.skymind.training.facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_RAMOK_FACENET_PREBUILT;
+//import static global.skymind.training.facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_INCEPTION_RESNET_PREBUILT;
 //import static org.bytedeco.opencv.global.opencv_core.flip;
 //import static org.bytedeco.opencv.global.opencv_highgui.*;
 //import static org.bytedeco.opencv.global.opencv_imgproc.*;
@@ -126,7 +126,7 @@
 //            case FaceIdentifier.FEATURE_DISTANCE_VGG16_PREBUILT:
 //                return new DistanceFaceIdentifier(
 //                        );
-//            case FaceIdentifier.FEATURE_DISTANCE_RAMOK_FACENET_PREBUILT:
+//            case FaceIdentifier.FEATURE_DISTANCE_INCEPTION_RESNET_PREBUILT:
 //                return new DistanceFaceIdentifier(
 //                       );
 //            default:

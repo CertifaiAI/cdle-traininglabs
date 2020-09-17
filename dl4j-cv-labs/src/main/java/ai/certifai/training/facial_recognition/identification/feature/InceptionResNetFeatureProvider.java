@@ -15,24 +15,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.solution.facial_recognition.identification.feature;
+package ai.certifai.training.facial_recognition.identification.feature;
 
 import ai.certifai.solution.facial_recognition.detection.FaceLocalization;
+import ai.certifai.solution.facial_recognition.detection.OpenCV_DeepLearningFaceDetector;
 import ai.certifai.solution.facial_recognition.identification.Prediction;
 import org.bytedeco.opencv.opencv_core.Mat;
+import org.bytedeco.opencv.opencv_core.Rect;
 import org.bytedeco.opencv.opencv_core.Size;
 import org.datavec.api.io.labels.ParentPathLabelGenerator;
-import org.datavec.api.split.FileSplit;
 import org.datavec.image.loader.NativeImageLoader;
-import org.datavec.image.recordreader.ImageRecordReader;
-import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.graph.vertex.GraphVertex;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.workspace.LayerWorkspaceMgr;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.io.ClassPathResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +41,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
 import static org.bytedeco.opencv.global.opencv_imgproc.resize;
 import static org.nd4j.linalg.ops.transforms.Transforms.euclideanDistance;
 
@@ -50,15 +49,15 @@ import static org.nd4j.linalg.ops.transforms.Transforms.euclideanDistance;
  * generates embedding based on pre-built model, inspiration and reference https://github.com/klevis/Java-Machine-Learning-for-Computer-Vision/tree/master/FaceRecognition
  */
 
-public class RamokFaceNetFeatureProvider extends FaceFeatureProvider {
+public class InceptionResNetFeatureProvider extends FaceFeatureProvider {
     private ComputationGraph genEmbd_model;
     private static ArrayList<LabelFeaturePair> labelFeaturePairList = new ArrayList<>();
-    private static final Logger log = LoggerFactory.getLogger(RamokFaceNetFeatureProvider.class);
+    private static final Logger log = LoggerFactory.getLogger(InceptionResNetFeatureProvider.class);
 
 
-    public RamokFaceNetFeatureProvider() throws IOException {
+    public InceptionResNetFeatureProvider() throws IOException {
 
-        ComputationGraph model = ModelSerializer.restoreComputationGraph(new ClassPathResource("EmbeddingGenerator/EmbeddingGenerator.zip").getFile(),false);
+        ComputationGraph model = ModelSerializer.restoreComputationGraph(new ClassPathResource("EmbeddingGenerator/EmbeddingGenerator.zip").getFile(), false);
 
         genEmbd_model = new TransferLearning.GraphBuilder(model)
                 .setFeatureExtractor("embeddings") // the L2Normalize vertex and layers below are frozen
@@ -69,28 +68,55 @@ public class RamokFaceNetFeatureProvider extends FaceFeatureProvider {
         System.out.println(genEmbd_model.summary());
     }
 
-    public ArrayList<LabelFeaturePair> setupAnchor(File dictionary) throws IOException {
-        ImageRecordReader recordReader = new ImageRecordReader(96, 96, 3, new ParentPathLabelGenerator());
-        recordReader.initialize(new FileSplit(dictionary));
-        RecordReaderDataSetIterator iter = new RecordReaderDataSetIterator(recordReader, 1, 1, dictionary.listFiles().length);
-        List<String> labels = iter.getLabels();
+    public ArrayList<LabelFeaturePair> setupAnchor(File dictionary) throws IOException, ClassNotFoundException {
+        //  This method will crop the face for user and get embedding of the face
+        File[] dir = dictionary.listFiles();
+        NativeImageLoader nativeImageLoader = new NativeImageLoader();
 
-        generateEmbeddings(iter, labels);
+        //  Looping through the main folder (eg: FaceDB)
+        for (File folder : dir) {
+            File[] each_folder = folder.listFiles();
+            //  Looping inside the subfolder (eg: AndrewNg)
+            for (File each_file : each_folder) {
+                //  Get matrix of each image
+                Mat image = imread(each_file.getAbsolutePath());
+                Mat CloneCopy = new Mat();
+                image.copyTo(CloneCopy);
+                //  Perform face detection
+                OpenCV_DeepLearningFaceDetector FaceDetector = new OpenCV_DeepLearningFaceDetector(300, 300, 0.8);
+                FaceDetector.detectFaces(CloneCopy);
 
+                //  Handling potential error
+                if (FaceDetector.getFaceLocalization().isEmpty() || FaceDetector.getFaceLocalization().size() == 0) {
+                    System.out.println("Unable to detect face, please upload another image with clearer front face!");
+                    System.out.println("File at: " + each_file.getPath());
+                } else if (FaceDetector.getFaceLocalization().size() > 1) {
+                    System.out.println("Multiple face detected, please try upload another image!");
+                    System.out.println("File at: " + each_file.getPath());
+                } else {
+                    for (FaceLocalization i : FaceDetector.getFaceLocalization()) {
+                        //  Get the bounding box of the image
+                        Mat detectedFace = new Mat(image, new Rect((int) i.getLeft_x(), (int) i.getLeft_y(),
+                                i.getValidWidth(image.size().width()), i.getValidHeight(image.size().height())));
+                        //  Resize for desired input
+                        resize(detectedFace, detectedFace, new Size(96, 96));
+                        //  Load into INDArray for getting embedding
+                        INDArray arr = nativeImageLoader.asMatrix(detectedFace);
+                        INDArray embedding = this.getEmbeddings(arr);
+                        //  Getting the label of each image by returning parent path name
+                        String label = new ParentPathLabelGenerator().getLabelForPath(each_file.getAbsolutePath()).toString();
+                        //  Storing the embedding of the face with its respective label
+                        labelFeaturePairList.add(new LabelFeaturePair(label, embedding));
+                    }
+                }
+            }
+        }
         return labelFeaturePairList;
     }
 
-    private void generateEmbeddings(RecordReaderDataSetIterator iter, List<String> labels) {
-        while (iter.hasNext()) {
-            DataSet Ds = iter.next();
-            INDArray embedding = this.getEmbeddings(Ds.getFeatures());
-            String label = labels.get(decodeLabelID(Ds.getLabels()));
-            labelFeaturePairList.add(new LabelFeaturePair(label, embedding));
-        }
-    }
-//    Method to generate embeddings from a INDArray
+    //    Method to generate embeddings from a INDArray
     public INDArray getEmbeddings(INDArray arr) {
-        Map<String, INDArray> output  = genEmbd_model.feedForward(normalize(arr),false);
+        Map<String, INDArray> output = genEmbd_model.feedForward(normalize(arr), false);
         GraphVertex embeddings = genEmbd_model.getVertex("embeddings");
         INDArray dense = output.get("dense");
         embeddings.setInputs(dense);
@@ -110,11 +136,11 @@ public class RamokFaceNetFeatureProvider extends FaceFeatureProvider {
         INDArray _image = nativeImageLoader.asMatrix(image);
         INDArray anchor = getEmbeddings(_image);
         List<Prediction> predicted = new ArrayList<>();
-        for (LabelFeaturePair i: labelFeaturePairList){
+        for (LabelFeaturePair i : labelFeaturePairList) {
             INDArray embed = i.getEmbedding();
 //            Switch between methods to calculate distance, Cosine Similarity or Euclidean Distance
 //            double distance = cosineSim(anchor, embed);
-            double distance = 1-euclideanDistance(anchor, embed);
+            double distance = 1 - euclideanDistance(anchor, embed);
             predicted.add(new Prediction(i.getLabel(), distance, faceLocalization));
         }
 
@@ -133,7 +159,7 @@ public class RamokFaceNetFeatureProvider extends FaceFeatureProvider {
                     .mapToDouble(num -> (double) num / 10000)
                     .average()
                     .getAsDouble();
-            if(topNAvg >= threshold) {
+            if (topNAvg >= threshold) {
                 summary.add(new Prediction(entry.getKey(), topNAvg, faceLocalization));
             }
         }
@@ -143,8 +169,8 @@ public class RamokFaceNetFeatureProvider extends FaceFeatureProvider {
         Collections.reverse(summary);
 
         List<Prediction> result = new ArrayList();
-        for(int i=0; i<1; i++){
-            if(i<summary.size()) {
+        for (int i = 0; i < 1; i++) {
+            if (i < summary.size()) {
                 result.add(summary.get(i));
             }
         }

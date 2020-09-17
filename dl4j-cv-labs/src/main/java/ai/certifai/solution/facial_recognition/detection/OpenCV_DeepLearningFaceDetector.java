@@ -49,8 +49,6 @@ public class OpenCV_DeepLearningFaceDetector extends FaceDetector {
     }
 
     private void setModel() {
-
-
         String PROTO_FILE = null;
         String CAFFE_MODEL_FILE = null;
         try {
@@ -106,13 +104,19 @@ public class OpenCV_DeepLearningFaceDetector extends FaceDetector {
                 float by = f4 * inputImageHeight;
 
                 // add margin
-                int w = (int) ((bx-tx)*margin_percent/100);
-                int h = (int) ((by-ty)*margin_percent/100);
-                tx = tx-w;
-                ty = ty-h;
-                bx = bx+w;
-                by = by+w;
+                int w = (int) ((bx - tx) * margin_percent / 100);
+                int h = (int) ((by - ty) * margin_percent / 100);
+                tx = tx - w;
+                ty = ty - h;
+                bx = bx + w;
+                by = by + w;
 
+                //  Filter invalid boxes
+                if (tx > inputImageWidth || bx > inputImageWidth) {
+                    continue;
+                } else if (ty > inputImageHeight || by > inputImageHeight) {
+                    continue;
+                }
                 faceLocalizations.add(new FaceLocalization(tx, ty, bx, by));
             }
         }

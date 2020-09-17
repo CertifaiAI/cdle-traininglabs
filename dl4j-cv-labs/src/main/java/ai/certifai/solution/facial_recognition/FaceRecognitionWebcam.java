@@ -24,7 +24,7 @@ import ai.certifai.solution.facial_recognition.detection.OpenCV_HaarCascadeFaceD
 import ai.certifai.solution.facial_recognition.identification.DistanceFaceIdentifier;
 import ai.certifai.solution.facial_recognition.identification.FaceIdentifier;
 import ai.certifai.solution.facial_recognition.identification.Prediction;
-import ai.certifai.solution.facial_recognition.identification.feature.RamokFaceNetFeatureProvider;
+import ai.certifai.solution.facial_recognition.identification.feature.InceptionResNetFeatureProvider;
 import ai.certifai.solution.facial_recognition.identification.feature.VGG16FeatureProvider;
 import org.bytedeco.opencv.opencv_core.*;
 import org.bytedeco.opencv.opencv_videoio.VideoCapture;
@@ -61,7 +61,7 @@ public class FaceRecognitionWebcam {
         //        STEP 1 : Select your face detector and face identifier
         //        You can switch between different FaceDetector and FaceIdentifier options to test its performance
         FaceDetector FaceDetector = getFaceDetector(ai.certifai.solution.facial_recognition.detection.FaceDetector.OPENCV_HAAR_CASCADE_FACEDETECTOR);
-        FaceIdentifier FaceIdentifier = getFaceIdentifier(ai.certifai.solution.facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_RAMOK_FACENET_PREBUILT);
+        FaceIdentifier FaceIdentifier = getFaceIdentifier(ai.certifai.solution.facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_INCEPTION_RESNET_PREBUILT);
 
         //        STEP 2 : Stream the video frame from camera
         VideoCapture capture = new VideoCapture();
@@ -125,9 +125,9 @@ public class FaceRecognitionWebcam {
                 return new DistanceFaceIdentifier(
                         new VGG16FeatureProvider(),
                         new ClassPathResource("FaceDB").getFile(), 0.3, 3);
-            case FaceIdentifier.FEATURE_DISTANCE_RAMOK_FACENET_PREBUILT:
+            case FaceIdentifier.FEATURE_DISTANCE_INCEPTION_RESNET_PREBUILT:
                 return new DistanceFaceIdentifier(
-                        new RamokFaceNetFeatureProvider(),
+                        new InceptionResNetFeatureProvider(),
                         new ClassPathResource("FaceDB").getFile(), 0.3, 3);
             default:
                 return null;
