@@ -17,7 +17,7 @@
 
 package ai.certifai.solution.segmentation.car;
 
-import ai.certifai.solution.segmentation.imageUtils.CustomLabelGenerator;
+import ai.certifai.solution.segmentation.CustomLabelGenerator;
 import ai.certifai.Helper;
 import ai.certifai.utilities.DataUtilities;
 import org.datavec.api.io.filters.BalancedPathFilter;

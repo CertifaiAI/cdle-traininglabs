@@ -28,7 +28,7 @@ import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
-import ai.certifai.solution.segmentation.imageUtils.CustomLabelGenerator;
+import ai.certifai.training.segmentation.CustomLabelGenerator;
 import org.slf4j.Logger;
 
 import java.io.File;
