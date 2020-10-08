@@ -18,7 +18,7 @@
 package ai.certifai.training.segmentation.cell;
 
 import ai.certifai.Helper;
-import ai.certifai.training.segmentation.imageUtils.visualisation;
+import ai.certifai.solution.segmentation.imageUtils.Visualization;
 import org.datavec.image.transform.ColorConversionTransform;
 import org.datavec.image.transform.ImageTransform;
 import org.datavec.image.transform.PipelineImageTransform;
@@ -111,8 +111,8 @@ public class PretrainedUNET {
 //        RecordReaderDataSetIterator imageDataSetVal = CellDataSetIterator.valIterator();
 
         // Visualisation -  training
-        JFrame frame = visualisation.initFrame("Viz");
-        JPanel panel = visualisation.initPanel(
+        JFrame frame = Visualization.initFrame("Viz");
+        JPanel panel = Visualization.initPanel(
                 frame,
                 1,
                 height,
@@ -160,8 +160,8 @@ public class PretrainedUNET {
 //        Evaluation eval = new Evaluation(2);
 
         // VISUALISATION -  validation
-        JFrame frameVal = visualisation.initFrame("Viz");
-        JPanel panelVal = visualisation.initPanel(
+        JFrame frameVal = Visualization.initFrame("Viz");
+        JPanel panelVal = Visualization.initPanel(
                 frame,
                 1,
                 height,
@@ -207,8 +207,8 @@ public class PretrainedUNET {
 //                        imageSetVal.get(n).getFeatures(),
 //                        imageSetVal.get(n).getLabels(),
 //                        predict.get(NDArrayIndex.point(n)),
-//                        frame,
-//                        panel,
+//                        frameVal,
+//                        panelVal,
 //                        4,
 //                        224,
 //                        224
