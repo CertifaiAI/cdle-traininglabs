@@ -56,7 +56,8 @@ public class VideoObjectDetection {
 
     public static void main(String[] args) throws Exception {
 
-        String videoPath = "D:\\videoSample.mp4";
+        // Change the videoPath to your own test video
+        String videoPath = "";
         FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoPath);
         grabber.setFormat("mp4");
         OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();

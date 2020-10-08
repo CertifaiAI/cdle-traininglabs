@@ -41,7 +41,7 @@ import static org.bytedeco.opencv.global.opencv_imgproc.*;
 /**
  * This example shows how to infer a YOLOv2 Object Detection model trained on COCO dataset(80 classes).
  * The inference is done on a input image.
- * Change the videoPath to your own test image.
+ * Change the testImagePATH to your own test image.
  */
 
 public class ImageObjectDetection {
@@ -53,7 +53,8 @@ public class ImageObjectDetection {
 
     public static void main(String[] args) throws Exception {
 
-        String testImagePATH = "C:\\Users\\choowilson\\Pictures\\sabah.jpg";
+        // Change the testImagePATH to your own test image
+        String testImagePATH = "";
         File file = new File(testImagePATH);
         System.out.println(String.format("You are using this image file located at %s", testImagePATH));
         COCOLabels labels = new COCOLabels();
