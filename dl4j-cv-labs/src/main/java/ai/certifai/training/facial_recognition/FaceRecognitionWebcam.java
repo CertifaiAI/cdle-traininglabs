@@ -15,17 +15,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-//package global.skymind.training.facial_recognition;
+//package ai.certifai.training.facial_recognition;
 //
-//import global.skymind.training.facial_recognition.detection.FaceDetector;
-//import global.skymind.training.facial_recognition.detection.FaceLocalization;
-//import global.skymind.training.facial_recognition.detection.OpenCV_DeepLearningFaceDetector;
-//import global.skymind.training.facial_recognition.detection.OpenCV_HaarCascadeFaceDetector;
-//import global.skymind.training.facial_recognition.identification.DistanceFaceIdentifier;
-//import global.skymind.training.facial_recognition.identification.FaceIdentifier;
-//import global.skymind.training.facial_recognition.identification.Prediction;
-//import global.skymind.training.facial_recognition.identification.feature.InceptionResNetFeatureProvider;
-//import global.skymind.training.facial_recognition.identification.feature.VGG16FeatureProvider;
+//import ai.certifai.training.facial_recognition.detection.FaceDetector;
+//import ai.certifai.training.facial_recognition.detection.FaceLocalization;
+//import ai.certifai.training.facial_recognition.detection.OpenCV_DeepLearningFaceDetector;
+//import ai.certifai.training.facial_recognition.detection.OpenCV_HaarCascadeFaceDetector;
+//import ai.certifai.training.facial_recognition.identification.DistanceFaceIdentifier;
+//import ai.certifai.training.facial_recognition.identification.FaceIdentifier;
+//import ai.certifai.training.facial_recognition.identification.Prediction;
+//import ai.certifai.training.facial_recognition.identification.feature.InceptionResNetFeatureProvider;
+//import ai.certifai.training.facial_recognition.identification.feature.VGG16FeatureProvider;
 //import org.bytedeco.opencv.opencv_core.Mat;
 //import org.bytedeco.opencv.opencv_core.Point;
 //import org.bytedeco.opencv.opencv_core.Rect;
@@ -38,9 +38,6 @@
 //import java.io.IOException;
 //import java.util.List;
 //
-//import static global.skymind.training.facial_recognition.detection.FaceDetector.OPENCV_DL_FACEDETECTOR;
-//import static global.skymind.training.facial_recognition.detection.FaceDetector.OPENCV_HAAR_CASCADE_FACEDETECTOR;
-//import static global.skymind.training.facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_INCEPTION_RESNET_PREBUILT;
 //import static org.bytedeco.opencv.global.opencv_core.flip;
 //import static org.bytedeco.opencv.global.opencv_highgui.*;
 //import static org.bytedeco.opencv.global.opencv_imgproc.*;
