@@ -1,4 +1,4 @@
-package global.skymind.solution.image_processing;/*
+package ai.certifai.training.image_processing;/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2019 Skymind AI Bhd.
