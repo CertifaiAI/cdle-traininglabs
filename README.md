@@ -56,7 +56,7 @@ This repo contains codes for hands-on purpose during training session. All codes
 
 ### Install Java
 
-Download Java JDK [here](https://adoptopenjdk.net).  
+Download Java JDK [here](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html).  
 (Note: Use Java 8 for full support of DL4J operations)
 
 Check the version of Java using: 
