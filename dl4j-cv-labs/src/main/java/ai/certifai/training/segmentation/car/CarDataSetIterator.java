@@ -18,7 +18,7 @@
 package ai.certifai.training.segmentation.car;
 
 import ai.certifai.Helper;
-import ai.certifai.solution.utilities.DataUtilities;
+import ai.certifai.utilities.DataUtilities;
 import org.datavec.image.transform.ImageTransform;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.datavec.api.io.filters.BalancedPathFilter;

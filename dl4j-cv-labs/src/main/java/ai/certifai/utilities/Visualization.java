@@ -1,4 +1,4 @@
-package ai.certifai.training.segmentation.imageUtils;
+package ai.certifai.utilities;
 
 import org.datavec.image.loader.Java2DNativeImageLoader;
 import org.nd4j.linalg.api.ndarray.INDArray;

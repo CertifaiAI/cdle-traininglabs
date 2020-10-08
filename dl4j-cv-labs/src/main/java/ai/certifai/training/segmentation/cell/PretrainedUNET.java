@@ -18,7 +18,7 @@
 package ai.certifai.training.segmentation.cell;
 
 import ai.certifai.Helper;
-import ai.certifai.solution.segmentation.imageUtils.Visualization;
+import ai.certifai.utilities.Visualization;
 import org.datavec.image.transform.ColorConversionTransform;
 import org.datavec.image.transform.ImageTransform;
 import org.datavec.image.transform.PipelineImageTransform;

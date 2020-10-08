@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.solution.utilities;
+package ai.certifai.utilities;
 
 import net.lingala.zip4j.ZipFile;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;

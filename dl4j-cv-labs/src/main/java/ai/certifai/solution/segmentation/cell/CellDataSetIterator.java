@@ -19,7 +19,7 @@ package ai.certifai.solution.segmentation.cell;
 
 import ai.certifai.solution.segmentation.imageUtils.CustomLabelGenerator;
 import ai.certifai.Helper;
-import ai.certifai.solution.utilities.DataUtilities;
+import ai.certifai.utilities.DataUtilities;
 import org.datavec.api.io.filters.BalancedPathFilter;
 import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.InputSplit;

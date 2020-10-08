@@ -1,6 +1,6 @@
 package ai.certifai.solution.segmentation.cell;
 
-import ai.certifai.solution.segmentation.imageUtils.Visualization;
+import ai.certifai.utilities.Visualization;
 import org.datavec.image.transform.*;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
@@ -21,7 +21,6 @@ import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
-import org.nd4j.linalg.indexing.NDArrayIndex;
 import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.nd4j.linalg.primitives.Pair;
