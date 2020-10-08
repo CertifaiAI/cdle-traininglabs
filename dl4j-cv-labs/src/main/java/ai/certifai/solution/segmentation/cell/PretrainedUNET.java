@@ -1,23 +1,6 @@
-/*
- * Copyright (c) 2019 Skymind AI Bhd.
- * Copyright (c) 2020 CertifAI Sdn. Bhd.
- *
- * This program and the accompanying materials are made available under the
- * terms of the Apache License, Version 2.0 which is available at
- * https://www.apache.org/licenses/LICENSE-2.0.
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- *
- * SPDX-License-Identifier: Apache-2.0
- */
-
 package ai.certifai.solution.segmentation.cell;
 
-import ai.certifai.solution.segmentation.imageUtils.Visualization;
+import ai.certifai.utilities.Visualization;
 import org.datavec.image.transform.*;
 import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
@@ -34,6 +17,7 @@ import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.deeplearning4j.zoo.PretrainedType;
 import org.deeplearning4j.zoo.ZooModel;
 import org.deeplearning4j.zoo.model.UNet;
+import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -45,6 +29,7 @@ import org.nd4j.linalg.schedule.StepSchedule;
 import org.slf4j.Logger;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -61,7 +46,7 @@ public class PretrainedUNET {
     private static final int height = 224;
     private static final int width = 224;
     private static final int batchSize = 5;
-    private static final double trainPerc = 0.3;
+    private static final double trainPerc = 0.1;
     private static String modelExportDir;
 
     public static void main(String[] args) throws IOException {
@@ -163,69 +148,69 @@ public class PretrainedUNET {
             imageDataSetTrain.reset();
         }
 
-//        // VALIDATION
-//        Evaluation eval = new Evaluation(2);
-//
-//        // VISUALISATION -  validation
-//        JFrame frameVal = Visualizer.initFrame("Viz");
-//        JPanel panelVal = Visualizer.initPanel(
-//                frame,
-//                1,
-//                height,
-//                width,
-//                1
-//        );
-//
-//        // EXPORT IMAGES
-//        File exportDir = new File("export");
-//
-//        if (!exportDir.exists()) {
-//            exportDir.mkdir();
-//        }
-//
-//        float IOUtotal = 0;
-//        int count = 0;
-//        while (imageDataSetVal.hasNext()) {
-//            DataSet imageSetVal = imageDataSetVal.next();
-//
-//            INDArray predict = unetTransfer.output(imageSetVal.getFeatures())[0];
-//            INDArray labels = imageSetVal.getLabels();
-//
-//            if (count % 5 == 0) {
-//                Visualizer.export(exportDir, imageSetVal.getFeatures(), imageSetVal.getLabels(), predict, count);
-//            }
-//
-//            count++;
-//
-//            eval.eval(labels, predict);
-//
-//            log.info(eval.stats());
-//
-//            //STEP 5: Complete the code for IOU calculation here
-//            //Intersection over Union:  TP / (TP + FN + FP)
-//            float IOUNuclei = (float) eval.truePositives().get(1) / ((float) eval.truePositives().get(1) + (float) eval.falsePositives().get(1) + (float) eval.falseNegatives().get(1));
-//            IOUtotal = IOUtotal + IOUNuclei;
-//
-//            System.out.println("IOU Cell Nuclei " + String.format("%.3f", IOUNuclei));
-//
-//            eval.reset();
-//
-//            for (int n = 0; n < imageSetVal.asList().size(); n++) {
-//                Visualizer.visualize(
-//                        imageSetVal.get(n).getFeatures(),
-//                        imageSetVal.get(n).getLabels(),
-//                        predict.get(NDArrayIndex.point(n)),
-//                        frame,
-//                        panel,
-//                        4,
-//                        224,
-//                        224
-//                );
-//            }
-//        }
-//
-//        System.out.print("Mean IOU: " + IOUtotal / count);
-//
+
+        // VALIDATION
+        Evaluation eval = new Evaluation(2);
+
+        // VISUALISATION -  validation
+        JFrame frameVal = Visualization.initFrame("Viz");
+        JPanel panelVal = Visualization.initPanel(
+                frameVal,
+                1,
+                height,
+                width,
+                1
+        );
+
+        // EXPORT IMAGES
+        File exportDir = new File("export");
+
+        if (!exportDir.exists()) {
+            exportDir.mkdir();
+        }
+
+        float IOUtotal = 0;
+        int count = 0;
+        while (imageDataSetVal.hasNext()) {
+            DataSet imageSetVal = imageDataSetVal.next();
+
+            INDArray predict = unetTransfer.output(imageSetVal.getFeatures())[0];
+            INDArray labels = imageSetVal.getLabels();
+
+            if (count % 5 == 0) {
+                Visualization.export(exportDir, imageSetVal.getFeatures(), imageSetVal.getLabels(), predict, count);
+            }
+
+            count++;
+
+            eval.eval(labels, predict);
+            log.info(eval.stats());
+
+            //STEP 5: Complete the code for IOU calculation here
+            //Intersection over Union:  TP / (TP + FN + FP)
+            float IOUNuclei = (float) eval.truePositives().get(1) / ((float) eval.truePositives().get(1) + (float) eval.falsePositives().get(1) + (float) eval.falseNegatives().get(1));
+            IOUtotal = IOUtotal + IOUNuclei;
+
+            System.out.println("IOU Cell Nuclei " + String.format("%.3f", IOUNuclei));
+
+            eval.reset();
+
+            for (int n = 0; n < imageSetVal.asList().size(); n++) {
+                Visualization.visualize(
+                        imageSetVal.get(n).getFeatures(),
+                        imageSetVal.get(n).getLabels(),
+                        predict,
+                        frameVal,
+                        panelVal,
+                        1,
+                        224,
+                        224
+                );
+            }
+        }
+
+        System.out.print("Mean IOU: " + IOUtotal / count);
+
 //        // WRITE MODEL TO DISK
 //        modelExportDir = Paths.get(
 //                System.getProperty("user.home"),

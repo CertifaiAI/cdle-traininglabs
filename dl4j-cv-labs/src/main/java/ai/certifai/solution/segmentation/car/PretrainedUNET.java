@@ -17,7 +17,7 @@
 
 package ai.certifai.solution.segmentation.car;
 
-import ai.certifai.solution.segmentation.imageUtils.Visualization;
+import ai.certifai.utilities.Visualization;
 import ai.certifai.Helper;
 import org.datavec.image.transform.*;
 import org.deeplearning4j.api.storage.StatsStorage;

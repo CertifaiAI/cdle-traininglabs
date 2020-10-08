@@ -1,21 +1,4 @@
-/*
- * Copyright (c) 2019 Skymind AI Bhd.
- * Copyright (c) 2020 CertifAI Sdn. Bhd.
- *
- * This program and the accompanying materials are made available under the
- * terms of the Apache License, Version 2.0 which is available at
- * https://www.apache.org/licenses/LICENSE-2.0.
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- *
- * SPDX-License-Identifier: Apache-2.0
- */
-
-package ai.certifai.solution.segmentation.imageUtils;
+package ai.certifai.utilities;
 
 import org.datavec.image.loader.Java2DNativeImageLoader;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -85,21 +68,21 @@ public class Visualization {
         ImageIcon scaled = new ImageIcon(imageScaled);
         return new JLabel(scaled);
     }
-    
 
-public static void export(File dir, INDArray image, INDArray label, INDArray predict, int count) throws IOException {
-    for (int i = 0; i < image.size(0); i++) {
-        BufferedImage oriImage = _Java2DNativeImageLoader.asBufferedImage(image.slice(i, 0).mul(255));
-        ImageIO.write(oriImage, "png", new File(dir.getAbsolutePath() + "/" + (i + count) + "_image.png"));
 
-        BufferedImage labelImage = _Java2DNativeImageLoader.asBufferedImage(label.slice(i, 0).mul(255));
-        ImageIO.write(labelImage, "png", new File(dir.getAbsolutePath() + "/" + (i + count) + "_label.png"));
+    public static void export(File dir, INDArray image, INDArray label, INDArray predict, int count) throws IOException {
+        for (int i = 0; i < image.size(0); i++) {
+            BufferedImage oriImage = _Java2DNativeImageLoader.asBufferedImage(image.slice(i, 0).mul(255));
+            ImageIO.write(oriImage, "png", new File(dir.getAbsolutePath() + "/" + (i + count) + "_image.png"));
 
-        BufferedImage predictImage = _Java2DNativeImageLoader.asBufferedImage(predict.slice(i, 0).mul(255));
-        ImageIO.write(predictImage, "png", new File(dir.getAbsolutePath() +"/" + (i + count) + "_predict.png"));
+            BufferedImage labelImage = _Java2DNativeImageLoader.asBufferedImage(label.slice(i, 0).mul(255));
+            ImageIO.write(labelImage, "png", new File(dir.getAbsolutePath() + "/" + (i + count) + "_label.png"));
 
+            BufferedImage predictImage = _Java2DNativeImageLoader.asBufferedImage(predict.slice(i, 0).mul(255));
+            ImageIO.write(predictImage, "png", new File(dir.getAbsolutePath() +"/" + (i + count) + "_predict.png"));
+
+        }
     }
-}
 
 
 }
