@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2019 Skymind AI Bhd.
+ * Copyright (c) 2020 CertifAI Sdn. Bhd.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License, Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package ai.certifai.training.classification;
 
 import org.datavec.api.records.reader.RecordReader;
@@ -38,14 +55,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class heartDiseaseBinaryClassification {
+/**
+ * Author: Kian Yang, Lee
+ * Binary Classification Task with Heart Disease DataSet
+ *
+ ******************************************************
+ *
+ * This is a binary classification task example of using feedforward neural network.
+ * Refer to instructions below for clarifications.
+ *
+ * *****************************************************
+ */
+
+public class HeartDiseaseBinaryClassification {
     private static final int totalData = 303;
     private static final double ratioTrainTestSplit = 0.8;
 
     // Training info
     private static final int epoch = 1000;
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws Exception {
 
         //=====================================================================
         //            Step 1: Load & Transform data
@@ -126,7 +155,7 @@ public class heartDiseaseBinaryClassification {
         //=====================================================================
 
         Evaluation eval;
-        for(int i=0; i < epoch; i++) {
+        for(int i = 0; i < epoch; ++i) {
             model.fit(trainData);
             eval = model.evaluate(testData);
             System.out.println("EPOCH: " + i + " Accuracy: " + eval.accuracy());
@@ -144,7 +173,7 @@ public class heartDiseaseBinaryClassification {
 
     }
 
-    private static RecordReader loadData() throws IOException, InterruptedException {
+    private static RecordReader loadData() throws Exception {
 
         int numLinesToSkip = 1; // how many rows to skip. Skip header row.
         char delimiter = ',';
