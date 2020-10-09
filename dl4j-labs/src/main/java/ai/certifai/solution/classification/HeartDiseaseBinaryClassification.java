@@ -58,7 +58,14 @@ import java.util.List;
  ******************************************************
  *
  * This is a binary classification task example of using feedforward neural network.
- * Refer to instructions below for clarifications.
+ * The code for dataset loading and preparation was done for you.
+ * Also, the code to iterate through training epochs and evaluating the model were provided.
+ *
+ * Please complete this exercise by configuring a neural network that can perform a binary classification task.
+ * Take special note of the different input and output number that is required in order to run the dataset
+ * successfully.
+ *
+ * Remember to uncomment certain parts of code to run the entire script.
  * 
  * *****************************************************
  */
