@@ -62,7 +62,14 @@ import java.util.List;
  ******************************************************
  *
  * This is a binary classification task example of using feedforward neural network.
- * Refer to instructions below for clarifications.
+ * The code for dataset loading and preparation was done for you.
+ * Also, the code to iterate through training epochs and evaluating the model were provided.
+ *
+ * Please complete this exercise by configuring a neural network that can perform a binary classification task.
+ * Take special note of the different input and output number that is required in order to run the dataset
+ * successfully.
+ *
+ * Remember to uncomment certain parts of code to run the entire script.
  *
  * *****************************************************
  */
@@ -115,29 +122,11 @@ public class HeartDiseaseBinaryClassification {
         //            Step 2: Define Model
         //=====================================================================
 
-        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
-                .seed(1234)
-                .updater(new Nesterovs(0.001, Nesterovs.DEFAULT_NESTEROV_MOMENTUM))
-                .weightInit(WeightInit.XAVIER)
-                .list()
-                .layer(0, new DenseLayer.Builder()
-                        .activation(Activation.RELU)
-                        .nIn(13)
-                        .nOut(32)
-                        .build())
-                .layer(1, new DropoutLayer(0.3))
-                .layer(2, new DenseLayer.Builder()
-                        .activation(Activation.RELU)
-                        .nOut(64)
-                        .build())
-                .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.MCXENT)
-                        .nOut(2)
-                        .activation(Activation.SOFTMAX)
-                        .build())
-                .build();
+//        There are subtle differences in model configuration for different classification task.
+//        Since this is a binary classification task, please remember to configure the correct number of outputs for
+//        output layer. With this said, please configure a model using your own learning rate, activation function,
+//        and number of neural network layer and nodes. Feel free to experiment with it to achieve best result.
 
-        MultiLayerNetwork model = new MultiLayerNetwork(conf);
-        model.init();
 
         //=====================================================================
         //            Step 3: Set Listener
@@ -148,28 +137,28 @@ public class HeartDiseaseBinaryClassification {
         server.attach(storage);
 
         // Set model listeners
-        model.setListeners(new StatsListener(storage, 10));
+//        model.setListeners(new StatsListener(storage, 10));
 
         //=====================================================================
         //            Step 4: Train model
         //=====================================================================
 
-        Evaluation eval;
-        for(int i = 0; i < epoch; ++i) {
-            model.fit(trainData);
-            eval = model.evaluate(testData);
-            System.out.println("EPOCH: " + i + " Accuracy: " + eval.accuracy());
-            testData.reset();
-            trainData.reset();
-        }
-
-        System.out.println("=== Train data evaluation ===");
-        eval = model.evaluate(trainData);
-        System.out.println(eval.stats());
-
-        System.out.println("=== Test data evaluation ===");
-        eval = model.evaluate(testData);
-        System.out.println(eval.stats());
+//        Evaluation eval;
+//        for(int i = 0; i < epoch; ++i) {
+//            model.fit(trainData);
+//            eval = model.evaluate(testData);
+//            System.out.println("EPOCH: " + i + " Accuracy: " + eval.accuracy());
+//            testData.reset();
+//            trainData.reset();
+//        }
+//
+//        System.out.println("=== Train data evaluation ===");
+//        eval = model.evaluate(trainData);
+//        System.out.println(eval.stats());
+//
+//        System.out.println("=== Test data evaluation ===");
+//        eval = model.evaluate(testData);
+//        System.out.println(eval.stats());
 
     }
 
