@@ -18,7 +18,7 @@ package ai.certifai.solution.image_processing;
 
 import global.skymind.solution.image_processing.utils.histogram.Histogram1DJava;
 import org.bytedeco.opencv.opencv_core.Mat;
-import org.nd4j.linalg.io.ClassPathResource;
+import org.nd4j.common.io.ClassPathResource;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
