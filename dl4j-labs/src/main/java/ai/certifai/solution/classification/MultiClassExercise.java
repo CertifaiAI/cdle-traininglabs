@@ -1,4 +1,4 @@
-package ai.certifai.training.classification.Multiclass_boon_khai;
+package ai.certifai.solution.classification;
 
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.collection.CollectionRecordReader;
@@ -16,8 +16,8 @@ import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
-import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.api.UIServer;
+import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
@@ -31,37 +31,45 @@ import org.nd4j.linalg.io.ClassPathResource;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/***
+ * Loader status for project loading
+ *
+ * @author BoonKhai Yeoh
+ */
 
 //Dataset
 //https://www.kaggle.com/zhangjuefei/birds-bones-and-living-habits
-public class MulticlassExcercise {
+public class MultiClassExercise {
     static int seed =123;
     static int numInput=10;
     static int numClass=6;
-    static int epoch=9000;
-    static int batch_size=64;
-    static double splitratio =0.7;
-    static double learningrate=1e-3;
+    static int epoch=2300;
+    static double splitRatio =0.8;
+    static double learningRate=1e-2;
+
 
 
     public static void main(String[] args) throws Exception{
 
         //set filepath
-        File datafile = new ClassPathResource("/birdclassify/bird.csv").getFile();
+        File dataFile = new ClassPathResource("/birdclassify/bird.csv").getFile();
 
         //File split
-        FileSplit fileSplit = new FileSplit(datafile);
+        FileSplit fileSplit = new FileSplit(dataFile);
 
 
         //set CSV Record Reader and initialize it
-        RecordReader rr= new CSVRecordReader(1,',');
+        RecordReader rr = new CSVRecordReader(1,',');
         rr.initialize(fileSplit);
+
+//=========================================================================
+        //  Step 1 : Build Schema to prepare the data
+//=========================================================================
 
         //Build Schema to prepare the data
         Schema sc = new Schema.Builder()
@@ -70,41 +78,48 @@ public class MulticlassExcercise {
                 .addColumnCategorical("type", Arrays.asList("SW","W","T", "R", "P", "SO"))
                 .build();
 
+//=========================================================================
+        //  Step 2 : Build TransformProcess to transform the data
+//=========================================================================
+
         TransformProcess tp = new TransformProcess.Builder(sc)
                 .removeColumns("id")
                 .categoricalToInteger("type")
                 .build();
 
 //        Checking the schema
-        Schema outputschema=tp.getFinalSchema();
-        System.out.println(outputschema);
+        Schema outputSchema = tp.getFinalSchema();
+        System.out.println(outputSchema);
 
 
-        List<List<Writable>> alldata = new ArrayList<>();
+        List<List<Writable>> allData = new ArrayList<>();
 
         while(rr.hasNext()){
-            alldata.add(rr.next());
+            allData.add(rr.next());
         }
 
-        List<List<Writable>> processdata =LocalTransformExecutor.execute(alldata, tp);
+        List<List<Writable>> processData = LocalTransformExecutor.execute(allData, tp);
+
+//========================================================================
+        //  Step 3 : Create Iterator ,splitting trainData and testData
+//========================================================================
 
         //Create iterator from process data
-        CollectionRecordReader collectionRR = new CollectionRecordReader(processdata);
+        CollectionRecordReader collectionRR = new CollectionRecordReader(processData);
 
         //Input batch size , label index , and number of label
-        DataSetIterator dataSetIterator = new RecordReaderDataSetIterator(collectionRR, processdata.size(),10,6);
+        DataSetIterator dataSetIterator = new RecordReaderDataSetIterator(collectionRR, processData.size(),-1,6);
 
-//        //Create Iterator and shuffle the data
-        //Error due to zero data is obtain
-        DataSet fulldataset = dataSetIterator.next();
-        fulldataset.shuffle();
+//        //Create Iterator and shuffle the dat
+        DataSet fullDataset = dataSetIterator.next();
+        fullDataset.shuffle();
 //
 //        //Input split ratio
-        SplitTestAndTrain testAndTrain = fulldataset.splitTestAndTrain(splitratio);
+        SplitTestAndTrain testAndTrain = fullDataset.splitTestAndTrain(splitRatio);
 //
           //Get train and test dataset
-        DataSet trainData =testAndTrain.getTrain();
-        DataSet testData =testAndTrain.getTest();
+        DataSet trainData = testAndTrain.getTrain();
+        DataSet testData = testAndTrain.getTest();
 
         //printout size
         System.out.println("Training vector : ");
@@ -112,37 +127,63 @@ public class MulticlassExcercise {
         System.out.println("Test vector : ");
         System.out.println(Arrays.toString(testData.getFeatures().shape()));
 
+//========================================================================
+        //  Step 4 : DataNormalization
+//========================================================================
+
         //Data normalization
         DataNormalization normalizer = new NormalizerMinMaxScaler();
         normalizer.fit(trainData);
         normalizer.transform(trainData);
         normalizer.transform(testData);
 
+//========================================================================
+        //  Step 5 : Network Configuration
+//========================================================================
 
         //Get network configuration
-        MultiLayerConfiguration config = getConfig(numInput, numClass, learningrate);
-
-
+        MultiLayerConfiguration config = getConfig(numInput, numClass, learningRate);
 
         //Define network
         MultiLayerNetwork model = new MultiLayerNetwork(config);
-        model.setListeners(new ScoreIterationListener(10));
         model.init();
 
-        //Evaluator
-        UIServer server = UIServer.getInstance();
+//========================================================================
+        //  Step 6 : Setup UI , listeners
+//========================================================================
+
+        //UI-Evaluator
         StatsStorage storage = new InMemoryStatsStorage();
+        UIServer server = UIServer.getInstance();
         server.attach(storage);
 
+        //Set model listeners
+        model.setListeners(new StatsListener(storage, 10));
+
+//========================================================================
+        //  Step 7 : Training
+//========================================================================
+
         //Training
-        for (int i = 0; i < epoch; ++i) {
+        Evaluation eval;
+        for(int i=0; i < epoch; i++) {
             model.fit(trainData);
+            eval = model.evaluate(new ViewIterator(testData, processData.size()));
+            System.out.println("EPOCH: " + i + " Accuracy: " + eval.accuracy());
         }
 
+//========================================================================
+        //  Step 8 : Evaluation
+//========================================================================
 
         //Confusion matrix
-        Evaluation eval = model.evaluate(new ViewIterator(testData, processdata.size()));
-        System.out.println(eval.stats());
+        Evaluation evalTrain = model.evaluate(new ViewIterator(trainData, processData.size()));
+        Evaluation evalTest = model.evaluate(new ViewIterator(testData,processData.size()));
+        System.out.print("Train Data");
+        System.out.println(evalTrain.stats());
+
+        System.out.print("Test Data");
+        System.out.print(evalTest.stats());
 
 
 
@@ -157,26 +198,26 @@ public class MulticlassExcercise {
                 .list()
                 .layer(0, new DenseLayer.Builder()
                         .nIn(numInputs)
-                        .nOut(50)
-                        .activation(Activation.RELU)
-                        .build())
-                .layer(1, new DenseLayer.Builder()
-                        .nIn(50)
                         .nOut(100)
                         .activation(Activation.RELU)
                         .build())
-                .layer(2, new DenseLayer.Builder()
+                .layer(1, new DenseLayer.Builder()
                         .nIn(100)
-                        .nOut(200)
-                        .activation(Activation.RELU)
-                        .build())
-                .layer(3, new DenseLayer.Builder()
-                        .nIn(200)
                         .nOut(300)
                         .activation(Activation.RELU)
                         .build())
-                .layer(4, new OutputLayer.Builder()
+                .layer(2, new DenseLayer.Builder()
                         .nIn(300)
+                        .nOut(400)
+                        .activation(Activation.RELU)
+                        .build())
+                .layer(3, new DenseLayer.Builder()
+                        .nIn(400)
+                        .nOut(500)
+                        .activation(Activation.RELU)
+                        .build())
+                .layer(4, new OutputLayer.Builder()
+                        .nIn(500)
                         .nOut(numOutputs)
                         .lossFunction(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                         .activation(Activation.SOFTMAX)
