@@ -43,9 +43,9 @@
         <shadedClassifier>bin</shadedClassifier>
 
         <java.version>1.8</java.version>
-        <nd4j.version>1.0.0-beta6</nd4j.version>
-        <dl4j.version>1.0.0-beta6</dl4j.version>
-        <datavec.version>1.0.0-beta6</datavec.version>
+        <nd4j.version>1.0.0-beta7</nd4j.version>
+        <dl4j.version>1.0.0-beta7</dl4j.version>
+        <datavec.version>1.0.0-beta7</datavec.version>
 
         <javacv.version>1.5.2</javacv.version>
         <ffmpeg.version>3.2.1-1.3</ffmpeg.version>
