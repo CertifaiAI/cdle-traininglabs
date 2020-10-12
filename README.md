@@ -49,14 +49,14 @@ This repo contains codes for hands-on purpose during training session. All codes
 
 ## Built with
 - deeplearning4j beta 6.0
-- CUDA 10.0 (Note: Optional if you are using CPU)
+- CUDA 10.1 (Note: Optional if you are using CPU)
 - cuDNN 7.6 (Note: Optional if you are using CPU)
 
 ## Getting Started
 
 ### Install Java
 
-Download Java JDK [here](https://adoptopenjdk.net).  
+Download Java JDK [here](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html).  
 (Note: Use Java 8 for full support of DL4J operations)
 
 Check the version of Java using: 
@@ -76,13 +76,13 @@ IntelliJ provides a default Maven that is bundled with the installer. Follow the
 Follow the instructions below if you plan to use GPU setup.
 1. Install CUDA and cuDNN
     Requirements:
-   -  CUDA 10.0 
+   -  CUDA 10.1
    -  cuDNN 7.6
   
-CUDA and cuDNN can be downloaded from [here](https://developer.nvidia.com/cuda-10.0-download-archive) and [here](https://developer.nvidia.com/cudnn). Step by step installation guides can be found [here](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html).
+CUDA and cuDNN can be downloaded from [here](https://developer.nvidia.com/cuda-10.1-download-archive-base) and [here](https://developer.nvidia.com/rdp/cudnn-archive). Step by step installation guides can be found [here](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html).
 
 2. Dependencies are needed to be included into Maven project if we wish to use GPU for training. Follow the links below for instructions in details.
-   -  [ND4J backends for GPUs](https://deeplearning4j.konduit.ai/config/backends#nd-4-j-backends-for-gpus-and-cpus)
+   - [ND4J backends for GPUs](https://deeplearning4j.konduit.ai/config/backends#nd-4-j-backends-for-gpus-and-cpus)
    - [Using Deeplearning4J with cuDNN](https://deeplearning4j.konduit.ai/config/backends/config-cudnn#using-deeplearning-4-j-with-cudnn)
 
 ## Usage
