@@ -27,7 +27,7 @@ import ai.certifai.solution.facial_recognition.identification.Prediction;
 import ai.certifai.solution.facial_recognition.identification.feature.InceptionResNetFeatureProvider;
 import ai.certifai.solution.facial_recognition.identification.feature.VGG16FeatureProvider;
 import org.bytedeco.opencv.opencv_core.*;
-import org.nd4j.linalg.io.ClassPathResource;
+import org.nd4j.common.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
