@@ -17,9 +17,10 @@
 
 package ai.certifai.training.recurrent.basic;
 
-import org.deeplearning4j.api.storage.StatsStorage;
+import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.ui.api.UIServer;
-import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
+import org.deeplearning4j.ui.model.storage.InMemoryStatsStorage;
+
 import java.io.IOException;
 
 /**

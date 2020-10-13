@@ -18,9 +18,8 @@
 package ai.certifai.solution.recurrent.character;
 
 import ai.certifai.training.recurrent.character.CharacterIterator;
+import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.nn.conf.layers.LSTM;
-import org.nd4j.linalg.io.ClassPathResource;
-import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.BackpropType;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
@@ -30,9 +29,10 @@ import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.ui.api.UIServer;
-import org.deeplearning4j.ui.stats.StatsListener;
-import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
+import org.deeplearning4j.ui.model.stats.StatsListener;
+import org.deeplearning4j.ui.model.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
+import org.nd4j.common.io.ClassPathResource;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -120,40 +120,40 @@ public class GravesLSTMWeatherForecasts
         */
         // String generationInitialization = null;		//Optional: random character is used if null
         String generationInitialization = "WVZ006-171700-\n" +
-            "CABELL-\n" +
-            "INCLUDING THE CITY OF...HUNTINGTON\n" +
-            "932 PM EST FRI JUN 16 2016";
+                "CABELL-\n" +
+                "INCLUDING THE CITY OF...HUNTINGTON\n" +
+                "932 PM EST FRI JUN 16 2016";
 
         /*
 		#### LAB STEP 3 #####
 		Configure network setting
 		*/
         MultiLayerConfiguration config = new NeuralNetConfiguration.Builder()
-            .seed(seedNumber)
-            .weightInit(WeightInit.XAVIER)
-            .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-            .updater(new RmsProp(learningRate))
-            .l2(l2Value)
-            .list()
-            .layer(0, new LSTM.Builder()
-                .nIn(inputLayerSize)
-                .nOut(lstmLayerSize)
-                .activation(Activation.TANH)
-                .build())
-            .layer(1, new LSTM.Builder()
-                .nIn(lstmLayerSize)
-                .nOut(lstmLayerSize)
-                .activation(Activation.TANH)
-                .build())
-            .layer(2, new RnnOutputLayer.Builder()
-                .nIn(lstmLayerSize)
-                .nOut(outputLayerSize)
-                .activation(Activation.SOFTMAX)
-                .lossFunction(LossFunction.MCXENT)
-                .build())
-            .backpropType(BackpropType.TruncatedBPTT)
-            .tBPTTLength(tbpttLength)
-            .build();
+                .seed(seedNumber)
+                .weightInit(WeightInit.XAVIER)
+                .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
+                .updater(new RmsProp(learningRate))
+                .l2(l2Value)
+                .list()
+                .layer(0, new LSTM.Builder()
+                        .nIn(inputLayerSize)
+                        .nOut(lstmLayerSize)
+                        .activation(Activation.TANH)
+                        .build())
+                .layer(1, new LSTM.Builder()
+                        .nIn(lstmLayerSize)
+                        .nOut(lstmLayerSize)
+                        .activation(Activation.TANH)
+                        .build())
+                .layer(2, new RnnOutputLayer.Builder()
+                        .nIn(lstmLayerSize)
+                        .nOut(outputLayerSize)
+                        .activation(Activation.SOFTMAX)
+                        .lossFunction(LossFunction.MCXENT)
+                        .build())
+                .backpropType(BackpropType.TruncatedBPTT)
+                .tBPTTLength(tbpttLength)
+                .build();
 
 
         MultiLayerNetwork network = new MultiLayerNetwork(config);
@@ -369,7 +369,7 @@ public class GravesLSTMWeatherForecasts
         char[] validCharacters = ai.certifai.training.recurrent.character.CharacterIterator.getMinimalCharacterSet();
 
         return new CharacterIterator(fileLocation, Charset.forName("UTF-8"),
-            miniBatchSize, sequenceLength, validCharacters, new Random(seedNumber));
+                miniBatchSize, sequenceLength, validCharacters, new Random(seedNumber));
     }
 
 
