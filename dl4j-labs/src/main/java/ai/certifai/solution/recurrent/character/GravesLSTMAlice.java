@@ -90,15 +90,15 @@ public class GravesLSTMAlice
     public static void main(String[] args) throws Exception
     {
         int miniBatchSize = 20;                         //Number of text segments in each training mini-batch
-        int exampleLength = 500;                     //Number of characters in each text segment.
+        int exampleLength = 500;                        //Number of characters in each text segment.
         int tbpttLength = 50;                           //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
         double learningRate = 0.005;
-        double l2Value = 0.0001;                         //Regularization l2 value - to prevent big weight value initialization
+        double l2Value = 0.0001;                        //Regularization l2 value - to prevent big weight value initialization
         int lstmLayerSize = 200;                        //Number of units in each GravesLSTM hiddenlayer
         int epochs = 5;                                 //Total number of training epochs
-        int generateSamplesEveryNMinibatches = 5;      //How frequently to generate samples from the network?
+        int generateSamplesEveryNMinibatches = 5;       //How frequently to generate samples from the network?
         int numSamples = 2;					            //Number of samples to generate after each training epoch
-        int charactersInEachSample = 500;              //Lenght of each sample to generate
+        int charactersInEachSample = 500;               //Length of each sample to generate
 
        /*
 		#### LAB STEP 1 #####

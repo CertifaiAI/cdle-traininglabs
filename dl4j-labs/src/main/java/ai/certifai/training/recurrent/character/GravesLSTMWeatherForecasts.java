@@ -109,7 +109,7 @@ public class GravesLSTMWeatherForecasts
         int epochs = 1;                                 //Total number of training epochs
         int generateSamplesEveryNMinibatches = 30;      //How frequently to generate samples from the network?
         int numSamples = 4;					            //Number of samples to generate after each training epoch
-        int charactersInEachSample = 1200;              //Lenght of each sample to generate
+        int charactersInEachSample = 1200;              //Length of each sample to generate
 
         /*
 		#### LAB STEP 1 #####
