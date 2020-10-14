@@ -19,7 +19,7 @@ package ai.certifai.training.classification.transferlearning;
 
 import ai.certifai.training.classification.DogBreedDataSetIterator;
 import org.datavec.image.transform.*;
-import org.deeplearning4j.api.storage.StatsStorage;
+import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.graph.ComputationGraph;
@@ -30,15 +30,15 @@ import org.deeplearning4j.optimize.api.InvocationType;
 import org.deeplearning4j.optimize.listeners.EvaluativeListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.api.UIServer;
-import org.deeplearning4j.ui.stats.StatsListener;
-import org.deeplearning4j.ui.storage.FileStatsStorage;
+import org.deeplearning4j.ui.model.stats.StatsListener;
+import org.deeplearning4j.ui.model.storage.FileStatsStorage;
 import org.deeplearning4j.zoo.ZooModel;
 import org.deeplearning4j.zoo.model.VGG16;
+import org.nd4j.common.primitives.Pair;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
-import org.nd4j.linalg.primitives.Pair;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -114,7 +114,7 @@ public class EditAtBottleneckAndExtendModel {
                 // configurations on a new layer here will be override the finetune confs.
                 // For eg. activation function will be softmax not RELU
                 .setOutputs("newpredictions") //since we removed the output vertex and it's connections we need to specify outputs for the graph
-            .build();
+                .build();
         log.info(vgg16Transfer.summary());
 
         /*
