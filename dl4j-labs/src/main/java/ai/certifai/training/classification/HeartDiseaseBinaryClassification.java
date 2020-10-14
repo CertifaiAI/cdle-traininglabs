@@ -1,5 +1,4 @@
 /*
- * Copyright (c) 2019 Skymind AI Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
@@ -75,11 +74,11 @@ import java.util.List;
  */
 
 public class HeartDiseaseBinaryClassification {
-    private static final int totalData = 303;
-    private static final double ratioTrainTestSplit = 0.8;
+    private static final int TOTAL_DATA = 303;
+    private static final double RATIO_TRAIN_TEST_SPLIT = 0.8;
 
     // Training info
-    private static final int epoch = 1000;
+    private static final int EPOCH = 1000;
 
     public static void main(String[] args) throws Exception {
 
@@ -93,7 +92,7 @@ public class HeartDiseaseBinaryClassification {
         List<List<Writable>> rawTestData = new ArrayList<>();
 
         // Get total length of data
-        int numTrainData = (int) Math.round(ratioTrainTestSplit * totalData);
+        int numTrainData = (int) Math.round(RATIO_TRAIN_TEST_SPLIT * TOTAL_DATA);
         int idx = 0;
         while (rr.hasNext()) {
             if(idx < numTrainData) {
@@ -144,7 +143,7 @@ public class HeartDiseaseBinaryClassification {
         //=====================================================================
 
 //        Evaluation eval;
-//        for(int i = 0; i < epoch; ++i) {
+//        for(int i = 0; i < EPOCH; ++i) {
 //            model.fit(trainData);
 //            eval = model.evaluate(testData);
 //            System.out.println("EPOCH: " + i + " Accuracy: " + eval.accuracy());
