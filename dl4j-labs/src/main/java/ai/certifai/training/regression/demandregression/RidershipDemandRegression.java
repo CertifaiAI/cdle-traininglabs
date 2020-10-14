@@ -19,7 +19,7 @@ package ai.certifai.training.regression.demandregression;
 
 import ai.certifai.Helper;
 import org.apache.commons.io.FileUtils;
-import org.nd4j.util.ArchiveUtils;
+import org.nd4j.common.util.ArchiveUtils;
 import org.slf4j.Logger;
 
 import java.io.File;

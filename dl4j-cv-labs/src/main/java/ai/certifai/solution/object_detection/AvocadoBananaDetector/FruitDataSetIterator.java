@@ -25,8 +25,8 @@ import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.objdetect.ObjectDetectionRecordReader;
 import org.datavec.image.recordreader.objdetect.impl.VocLabelProvider;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
+import org.nd4j.common.util.ArchiveUtils;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
-import org.nd4j.util.ArchiveUtils;
 import org.slf4j.Logger;
 
 import java.io.File;
