@@ -43,8 +43,6 @@ import java.util.List;
  * @author BoonKhai Yeoh
  */
 
-//Dataset
-//https://www.kaggle.com/zhangjuefei/birds-bones-and-living-habits
 public class BirdClassification {
     static int seed = 123;
     static int numInput = 10;
