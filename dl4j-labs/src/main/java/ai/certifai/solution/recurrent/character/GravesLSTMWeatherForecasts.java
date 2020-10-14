@@ -17,7 +17,6 @@
 
 package ai.certifai.solution.recurrent.character;
 
-import ai.certifai.training.recurrent.character.CharacterIterator;
 import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.nn.conf.layers.LSTM;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
@@ -110,7 +109,7 @@ public class GravesLSTMWeatherForecasts
         int numSamples = 4;					            //Number of samples to generate after each training epoch
         int charactersInEachSample = 1200;              //Length of each sample to generate
 
-        ai.certifai.training.recurrent.character.CharacterIterator characterIter = getCharacterIterator(miniBatchSize, exampleLength);
+        CharacterIterator characterIter = getCharacterIterator(miniBatchSize, exampleLength);
         int inputLayerSize = characterIter.inputColumns();
         int outputLayerSize = characterIter.totalOutcomes(); //both are same ( minimal characters length)
 
@@ -246,7 +245,7 @@ public class GravesLSTMWeatherForecasts
      * @param numSamples Number of samples to generate
      * @return
      */
-    private static String[] sampleCharactersFromNetwork(String initString, MultiLayerNetwork network, ai.certifai.training.recurrent.character.CharacterIterator characterIter, Random rng,
+    private static String[] sampleCharactersFromNetwork(String initString, MultiLayerNetwork network, CharacterIterator characterIter, Random rng,
                                                         int charactersInEachSample, int numSamples)
     {
         //Set up initialization. If no initialization: use a random character
@@ -359,14 +358,14 @@ public class GravesLSTMWeatherForecasts
      * @param miniBatchSize Number of text segments in each training mini-batch
      * @param sequenceLength Number of characters in each text segment.
      */
-    public static ai.certifai.training.recurrent.character.CharacterIterator getCharacterIterator(int miniBatchSize, int sequenceLength) throws Exception
+    public static CharacterIterator getCharacterIterator(int miniBatchSize, int sequenceLength) throws Exception
     {
         File file = new ClassPathResource("text/weather.txt").getFile();
         String fileLocation = file.getAbsolutePath();
 
         if(!file.exists()) throw new IOException("File does not exist");
 
-        char[] validCharacters = ai.certifai.training.recurrent.character.CharacterIterator.getMinimalCharacterSet();
+        char[] validCharacters = CharacterIterator.getMinimalCharacterSet();
 
         return new CharacterIterator(fileLocation, Charset.forName("UTF-8"),
                 miniBatchSize, sequenceLength, validCharacters, new Random(seedNumber));
