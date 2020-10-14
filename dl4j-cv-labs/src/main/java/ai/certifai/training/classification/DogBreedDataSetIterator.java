@@ -40,7 +40,7 @@ import java.nio.file.Paths;
 import java.util.Random;
 
 public class DogBreedDataSetIterator {
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(ai.certifai.solution.classification.DogBreedDataSetIterator.class);
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(DogBreedDataSetIterator.class);
 
     //DIRECTORY STRUCTURE:
     //Images in the dataset have to be organized in directories by class/label.
