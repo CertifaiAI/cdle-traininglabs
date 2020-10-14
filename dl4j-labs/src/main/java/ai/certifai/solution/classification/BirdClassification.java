@@ -38,13 +38,13 @@ import java.util.Arrays;
 import java.util.List;
 
 /***
- * Loader status for project loading
+ * Dataset
+ * https://www.kaggle.com/zhangjuefei/birds-bones-and-living-habits
  *
  * @author BoonKhai Yeoh
  */
 
-//Dataset
-//https://www.kaggle.com/zhangjuefei/birds-bones-and-living-habits
+
 public class BirdClassification {
     static int seed = 123;
     static int numInput = 10;
