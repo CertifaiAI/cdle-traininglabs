@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Skymind AI Bhd.
+ * Copyright (c) 2019 Skymind Holdings Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +24,7 @@ import org.datavec.api.split.InputSplit;
 import org.datavec.api.split.InputStreamInputSplit;
 import org.datavec.api.writable.DoubleWritable;
 import org.datavec.api.writable.Writable;
-import org.nd4j.linalg.primitives.Pair;
+import org.nd4j.common.primitives.Pair;
 
 import java.io.File;
 import java.io.IOException;
