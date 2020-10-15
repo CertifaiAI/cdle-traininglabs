@@ -3,7 +3,7 @@
 <!--
   ~ /*
   ~  * ******************************************************************************
-  ~  *  * Copyright (c) 2019 Skymind AI Bhd.
+  ~  *  * Copyright (c) 2019 Skymind Holdings Bhd.
   ~  *  * Copyright (c) 2020 CertifAI Sdn. Bhd.
   ~  *  *
   ~  *  * This program and the accompanying materials are made available under the
@@ -145,7 +145,7 @@
         <!-- For running opencv and ffmpeg libraries -->
         <dependency>
             <groupId>org.bytedeco</groupId>
-            <artifactId>javacv</artifactId>
+            <artifactId>javacv-platform</artifactId>
             <version>${javacv.version}</version>
         </dependency>
 
