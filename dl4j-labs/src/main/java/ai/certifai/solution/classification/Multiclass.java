@@ -51,6 +51,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
+/**
+ * Multiclass classification example
+ *
+ * @author devenyantis
+ */
 public class Multiclass {
 
     private static final int totalData = 42151;
