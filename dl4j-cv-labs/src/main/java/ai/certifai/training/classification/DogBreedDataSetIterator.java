@@ -30,7 +30,7 @@ import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
-import org.nd4j.util.ArchiveUtils;
+import org.nd4j.common.util.ArchiveUtils;
 import org.slf4j.Logger;
 
 import java.io.File;
