@@ -27,7 +27,6 @@ import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
 import org.datavec.image.transform.ImageTransform;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.nd4j.common.primitives.Pair;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.slf4j.Logger;
@@ -52,9 +51,9 @@ public class CarDataSetIterator {
     private static InputSplit trainData, valData;
     private static int batchSize;
 
-    private static List<Pair<String, String>> replacement = Arrays.asList(
-            new Pair<>("inputs", "masks_png"),
-            new Pair<>(".jpg", "_mask.png")
+    private static List<org.nd4j.linalg.primitives.Pair<String, String>> replacement = Arrays.asList(
+            new org.nd4j.linalg.primitives.Pair<>("inputs", "masks_png"),
+            new org.nd4j.linalg.primitives.Pair<>(".jpg", "_mask.png")
     );
     private static CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, channels, replacement);
 

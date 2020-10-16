@@ -22,13 +22,13 @@ import ai.certifai.utilities.Visualization;
 import org.datavec.image.transform.ColorConversionTransform;
 import org.datavec.image.transform.ImageTransform;
 import org.datavec.image.transform.PipelineImageTransform;
-import org.deeplearning4j.core.storage.StatsStorage;
+import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.nn.conf.WorkspaceMode;
 import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.deeplearning4j.ui.model.stats.StatsListener;
-import org.deeplearning4j.ui.model.storage.InMemoryStatsStorage;
-import org.nd4j.common.primitives.Pair;
+import org.deeplearning4j.ui.stats.StatsListener;
+import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
+import org.nd4j.linalg.primitives.Pair;
 import org.slf4j.Logger;
 
 import javax.swing.*;
