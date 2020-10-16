@@ -29,7 +29,7 @@ import org.datavec.image.transform.ImageTransform;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
-import org.nd4j.linalg.primitives.Pair;
+import org.nd4j.common.primitives.Pair;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -50,7 +50,7 @@ public class CellDataSetIterator {
     private static String inputDir;
     private static String downloadLink;
     private static List<Pair<String, String>> replacement = Arrays.asList(
-            new org.nd4j.linalg.primitives.Pair<>("inputs", "masks")
+            new Pair<>("inputs", "masks")
     );
     private static CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, channels, replacement);
     private static InputSplit trainData, valData;

@@ -24,7 +24,7 @@ import org.datavec.image.loader.NativeImageLoader;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.nd4j.common.primitives.Pair;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -37,7 +37,7 @@ public class CustomLabelGenerator implements PathLabelGenerator{
     private final int width;
     private final int channels;
     private final NativeImageLoader imageLoader;
-    private static List<org.nd4j.linalg.primitives.Pair<String, String>> replacement;
+    private static List<Pair<String, String>> replacement;
 
 
     //DIRECTORY STRUCTURE:
