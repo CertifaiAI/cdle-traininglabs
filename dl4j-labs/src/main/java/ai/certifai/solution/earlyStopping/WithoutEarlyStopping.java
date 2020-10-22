@@ -138,6 +138,11 @@ public class WithoutEarlyStopping {
         normalizer.transform(trainData);
         normalizer.transform(testData);
 
+        //Create Dataset Iterator
+        DataSetIterator trainIterator = new ViewIterator(trainData, trainData.numExamples());
+        DataSetIterator testIterator = new ViewIterator(testData, testData.numExamples());
+
+
 //========================================================================
         //  Step 5 : Network Configuration
 //========================================================================
@@ -160,7 +165,7 @@ public class WithoutEarlyStopping {
 
 
         //Set model listeners
-        model.setListeners(new StatsListener(storage, 10));
+        model.setListeners(new StatsListener(storage, 1));
 
 //========================================================================
         //  Step 7 : Training
@@ -170,7 +175,7 @@ public class WithoutEarlyStopping {
         Evaluation eval;
         for(int i = 0; i < epoch; i++) {
             model.fit(trainData);
-            eval = model.evaluate(new ViewIterator(testData, processData.size()));
+            eval = model.evaluate(testIterator);
             System.out.println("EPOCH: " + i + " Accuracy: " + eval.accuracy());
         }
 
@@ -179,8 +184,8 @@ public class WithoutEarlyStopping {
 //========================================================================
 
         //Confusion matrix
-        Evaluation evalTrain = model.evaluate(new ViewIterator(trainData, processData.size()));
-        Evaluation evalTest = model.evaluate(new ViewIterator(testData,processData.size()));
+        Evaluation evalTrain = model.evaluate(trainIterator);
+        Evaluation evalTest = model.evaluate(testIterator);
         System.out.print("Train Data");
         System.out.println(evalTrain.stats());
 

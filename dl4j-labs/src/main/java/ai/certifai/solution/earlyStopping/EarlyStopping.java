@@ -36,6 +36,7 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.NormalizerMinMaxScaler;
 import org.nd4j.linalg.factory.Nd4j;
+
 import org.nd4j.linalg.io.ClassPathResource;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.impl.LossMCXENT;
@@ -57,7 +58,10 @@ public class EarlyStopping {
     static int epoch = 4000;
     static double splitRatio = 0.8;
     static double learningRate = 0.03;
-    static INDArray array = Nd4j.create(new double[]{0.4 ,1});
+
+    //weightArray = weighted loss for data contain imbalance class
+    //1- more emphasize to the class , 0.4 - less emphasize to the class
+    static INDArray weightArray = Nd4j.create(new double[]{0.4 ,1});
 
 
 
@@ -94,7 +98,7 @@ public class EarlyStopping {
                 .categoricalToInteger("Class")
                 .build();
 
-//        Checking the schema
+        //Checking the schema
         Schema outputSchema = tp.getFinalSchema();
         System.out.println(outputSchema);
 
@@ -117,13 +121,13 @@ public class EarlyStopping {
         //Input batch size , label index , and number of label
         DataSetIterator dataSetIterator = new RecordReaderDataSetIterator(collectionRR, processData.size(),8,numClass);
 
-//        //Create Iterator and shuffle the dat
+        //Create Iterator and shuffle the dat
         DataSet fullDataset = dataSetIterator.next();
         fullDataset.shuffle(seed);
-//
-//        //Input split ratio
+
+        //Input split ratio
         SplitTestAndTrain testAndTrain = fullDataset.splitTestAndTrain(splitRatio);
-//
+
         //Get train and test dataset
         DataSet trainData = testAndTrain.getTrain();
         DataSet testData = testAndTrain.getTest();
@@ -144,28 +148,33 @@ public class EarlyStopping {
         normalizer.transform(trainData);
         normalizer.transform(testData);
 
+
+        //Create Dataset Iterator
+        DataSetIterator trainIterator = new ViewIterator(trainData, trainData.numExamples());
+        DataSetIterator testIterator = new ViewIterator(testData, testData.numExamples());
+
 //========================================================================
         //  Step 5 : Network Configuration
 //========================================================================
 
-        //Get network configuration
+        //Get network configuration for Early Stopping Training
         MultiLayerConfiguration modelConfig = getConfig(numInput, numClass, learningRate);
-
-        //Define network
-        MultiLayerNetwork model = new MultiLayerNetwork(modelConfig);
-
 
 //========================================================================
         //  Step 6 : Early Stopping Configuration
 //========================================================================
 
        EarlyStoppingConfiguration esConfig = new EarlyStoppingConfiguration.Builder()
+               //use to terminate the Early Stopping when epoch is reach
                .epochTerminationConditions(new MaxEpochsTerminationCondition(epoch))
-               .scoreCalculator(new DataSetLossCalculator(new ViewIterator(testData, processData.size()),true))
+               //use to calculate the score for Early Stopping
+               .scoreCalculator(new DataSetLossCalculator(testIterator,true))
+               //number of epoch to evaluate when running
                .evaluateEveryNEpochs(1)
                .build();
 
-       EarlyStoppingTrainer trainer = new EarlyStoppingTrainer(esConfig,modelConfig,new ViewIterator(trainData, processData.size()));
+       // Input Early Stopping Configuration , Network Configuration , trainIterator
+       EarlyStoppingTrainer trainer = new EarlyStoppingTrainer(esConfig,modelConfig,trainIterator);
 
 //========================================================================
         //  Step 7 : Training
@@ -175,19 +184,26 @@ public class EarlyStopping {
 
         //UI-Evaluator
         StatsStorage storage = new InMemoryStatsStorage();
-        System.out.println(storage.listSessionIDs());
         UIServer server = UIServer.getInstance();
         server.attach(storage);
 
+        //Define modelConfig again to refresh the UI
+        MultiLayerConfiguration modelConfig2 = getConfig(numInput, numClass, learningRate);
+
+        //Define network
+        MultiLayerNetwork model = new MultiLayerNetwork(modelConfig2);
+
         //Set model listeners
         model.init();
-        model.setListeners(new StatsListener(storage, 10));
+        model.setListeners(new StatsListener(storage, 1));
 
-        //Training
+        //Fit in the best epoch number and retrain the model
+        System.out.println("Retraining model ........ ");
+
         Evaluation eval;
         for(int i = 0; i < result.getBestModelEpoch(); i++) {
             model.fit(trainData);
-            eval = model.evaluate(new ViewIterator(testData,processData.size()));
+            eval = model.evaluate(testIterator);
             System.out.println("EPOCH: " + i + " Accuracy: " + eval.accuracy());
         }
 
@@ -197,8 +213,8 @@ public class EarlyStopping {
 //========================================================================
 
         //Confusion matrix
-        Evaluation evalTrain = model.evaluate(new ViewIterator(trainData,processData.size()));
-        Evaluation evalTest = model.evaluate(new ViewIterator(testData,processData.size()));
+        Evaluation evalTrain = model.evaluate(trainIterator);
+        Evaluation evalTest = model.evaluate(testIterator);
         System.out.print("Train Data");
         System.out.println(evalTrain.stats());
 
@@ -245,7 +261,7 @@ public class EarlyStopping {
                 .layer(4, new OutputLayer.Builder()
                         .nIn(40)
                         .nOut(numOutputs)
-                        .lossFunction(new LossMCXENT(array))
+                        .lossFunction(new LossMCXENT(weightArray))
                         .activation(Activation.SOFTMAX)
                         .build())
                 .build();
