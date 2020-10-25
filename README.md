@@ -12,7 +12,7 @@
         <img alt="Documentation" src="https://img.shields.io/website/http/certifai.ai">
     </a>
     <a href="https://github.com/CertifaiAI/TrainingLabs/releases">
-        <img alt="GitHub release" src="https://img.shields.io/github/release/CertifaiAI/TrainingLabs">
+        <img alt="GitHub release" src="https://img.shields.io/github/release/CertifaiAI/TrainingLabs.svg">
     </a>
 </p>
 
