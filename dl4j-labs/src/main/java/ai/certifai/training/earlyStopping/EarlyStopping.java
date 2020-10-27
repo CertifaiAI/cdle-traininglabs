@@ -47,6 +47,7 @@ import java.util.List;
 /**
  * Early Stopping
  *
+ * Dataset: https://www.kaggle.com/kumargh/pimaindiansdiabetescsv
  * @author boonkhai yeoh
  */
 public class EarlyStopping {
@@ -57,8 +58,11 @@ public class EarlyStopping {
     static double splitRatio = 0.8;
     static double learningRate = 0.03;
 
-    //weightArray = weighted loss for data contain imbalance class
-    //1- more emphasize to the class , 0.4 - less emphasize to the class
+    //weightArray = use weighted loss for data contain imbalance class
+    //600 data point for class 0 , 267 data point for class 1
+    //1 meant put more weightage to the class (more emphasize to the class)
+    //0.4 meant put less weightage to the class (less emphasize to the class)
+    //the sum of weightArray does not need to be sum up to 1
     static INDArray weightArray = Nd4j.create(new double[]{0.4 ,1});
 
 
@@ -161,6 +165,10 @@ public class EarlyStopping {
 //========================================================================
         //  Step 6 : Early Stopping Configuration
 //========================================================================
+        //Early Stopping will run the model 1 time first and find the epoch that give optimal result
+        //epochTerminationConditions - terminate when the epoch of the model match the user define epoch
+        //scoreCalculator - what type of score should be calculated at every epoch? [Here use test set loss]
+        //evaluateEveryNEpochs - the frequent of score calculate [Here use 1 means count every epoch ]
 
         EarlyStoppingConfiguration esConfig = new EarlyStoppingConfiguration.Builder()
                 .build();
@@ -198,7 +206,9 @@ public class EarlyStopping {
         model.init();
         model.setListeners(new StatsListener(storage, 1));
 
-        //Fit in the best epoch number and retrain the model
+        //after get the best epoch number from Early Stopping
+        //fit in the best epoch number and retrain the model
+        //result.getBestModelEpoch() - the optimal epoch number
         System.out.println("Retraining model ........ ");
 
         Evaluation eval;
