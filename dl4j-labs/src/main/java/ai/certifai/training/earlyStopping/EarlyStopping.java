@@ -58,11 +58,11 @@ public class EarlyStopping {
     static double splitRatio = 0.8;
     static double learningRate = 0.03;
 
-    //weightArray = use weighted loss for data contain imbalance class
+    //weightArray = use weighted loss for imbalanced class
     //600 data point for class 0 , 267 data point for class 1
-    //1 meant put more weightage to the class (more emphasize to the class)
-    //0.4 meant put less weightage to the class (less emphasize to the class)
-    //the sum of weightArray does not need to be sum up to 1
+    //1 means putting more weightage to the class (more emphasis to the class)
+    //0.4 means putting less weightage to the class (less emphasis to the class)
+    //the sum of weightArray does not need to be 1
     static INDArray weightArray = Nd4j.create(new double[]{0.4 ,1});
 
 
@@ -117,24 +117,24 @@ public class EarlyStopping {
         //  Step 3 : Create Iterator ,splitting trainData and testData
 //========================================================================
 
-        //Create iterator from process data
+        //Create iterator from processed data
         CollectionRecordReader collectionRR = new CollectionRecordReader(processData);
 
-        //Input batch size , label index , and number of label
+        //Input batch size , label index , and number of labels
         DataSetIterator dataSetIterator = new RecordReaderDataSetIterator(collectionRR, processData.size(),8,numClass);
 
-        //Create Iterator and shuffle the dat
+        //Create Iterator and shuffle the data
         DataSet fullDataset = dataSetIterator.next();
         fullDataset.shuffle(seed);
 
-        //Input split ratio
+        //Ratio for train-test split
         SplitTestAndTrain testAndTrain = fullDataset.splitTestAndTrain(splitRatio);
 
         //Get train and test dataset
         DataSet trainData = testAndTrain.getTrain();
         DataSet testData = testAndTrain.getTest();
 
-        //printout size
+        //print size of train and test vectors
         System.out.println("Training vector : ");
         System.out.println(Arrays.toString(trainData.getFeatures().shape()));
         System.out.println("Test vector : ");
@@ -165,10 +165,10 @@ public class EarlyStopping {
 //========================================================================
         //  Step 6 : Early Stopping Configuration
 //========================================================================
-        //Early Stopping will run the model 1 time first and find the epoch that give optimal result
-        //epochTerminationConditions - terminate when the epoch of the model match the user define epoch
-        //scoreCalculator - what type of score should be calculated at every epoch? [Here use test set loss]
-        //evaluateEveryNEpochs - the frequent of score calculate [Here use 1 means count every epoch ]
+        // Early Stopping performs model training for 1 full cycle and identifies the number of epochs tha results in optimal results
+        //epochTerminationConditions - termination condition set by user in terms of maximum number of epochs
+        //scoreCalculator - which score should be calculated every epoch? [using test set loss here]
+        //evaluateEveryNEpochs - the frequency of model evaluation
 
         EarlyStoppingConfiguration esConfig = new EarlyStoppingConfiguration.Builder()
                 .build();
@@ -183,7 +183,7 @@ public class EarlyStopping {
 //========================================================================
         //  Step 7 : Training
 //========================================================================
-        //Train for Early Stopping
+        // Perform model training with Early Stopping configuration
         /**
          * EarlyStoppingResult result = [Code Here]
          *
@@ -191,23 +191,20 @@ public class EarlyStopping {
          */
 
 
-        //UI-Evaluator
+        // Instantiate UI server to visualize training process
         StatsStorage storage = new InMemoryStatsStorage();
         UIServer server = UIServer.getInstance();
         server.attach(storage);
 
-        //Define modelConfig again to refresh the UI
+        // Re-initialize model to for new training cycle
         MultiLayerConfiguration modelConfig2 = getConfig(numInput, numClass, learningRate);
-
-        //Define network
         MultiLayerNetwork model = new MultiLayerNetwork(modelConfig2);
 
         //Set model listeners
         model.init();
         model.setListeners(new StatsListener(storage, 1));
 
-        //after get the best epoch number from Early Stopping
-        //fit in the best epoch number and retrain the model
+        //Set the number of epoch using the best results from the first Early Stopping training to retrain the model
         //result.getBestModelEpoch() - the optimal epoch number
         System.out.println("Retraining model ........ ");
 
@@ -234,7 +231,7 @@ public class EarlyStopping {
         System.out.print("Test Data");
         System.out.println(evalTest.stats());
 
-        //Early Stopping Detail
+        //Early Stopping Details
 
         /**
          System.out.println("Termination reason: " + result.getTerminationReason());
