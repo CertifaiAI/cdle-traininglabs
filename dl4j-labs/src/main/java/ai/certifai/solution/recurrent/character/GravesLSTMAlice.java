@@ -19,9 +19,8 @@ package ai.certifai.solution.recurrent.character;
 
 
 import ai.certifai.training.recurrent.character.CharacterIterator;
+import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.nn.conf.layers.LSTM;
-import org.nd4j.linalg.io.ClassPathResource;
-import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.nn.conf.BackpropType;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -30,9 +29,10 @@ import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.ui.api.UIServer;
-import org.deeplearning4j.ui.stats.StatsListener;
-import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
+import org.deeplearning4j.ui.model.stats.StatsListener;
+import org.deeplearning4j.ui.model.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
+import org.nd4j.common.io.ClassPathResource;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
@@ -90,15 +90,15 @@ public class GravesLSTMAlice
     public static void main(String[] args) throws Exception
     {
         int miniBatchSize = 20;                         //Number of text segments in each training mini-batch
-        int exampleLength = 500;                     //Number of characters in each text segment.
+        int exampleLength = 500;                        //Number of characters in each text segment.
         int tbpttLength = 50;                           //Length for truncated backpropagation through time. i.e., do parameter updates ever 50 characters
         double learningRate = 0.005;
-        double l2Value = 0.0001;                         //Regularization l2 value - to prevent big weight value initialization
+        double l2Value = 0.0001;                        //Regularization l2 value - to prevent big weight value initialization
         int lstmLayerSize = 200;                        //Number of units in each GravesLSTM hiddenlayer
         int epochs = 5;                                 //Total number of training epochs
-        int generateSamplesEveryNMinibatches = 5;      //How frequently to generate samples from the network?
+        int generateSamplesEveryNMinibatches = 5;       //How frequently to generate samples from the network?
         int numSamples = 2;					            //Number of samples to generate after each training epoch
-        int charactersInEachSample = 500;              //Lenght of each sample to generate
+        int charactersInEachSample = 500;               //Length of each sample to generate
 
        /*
 		#### LAB STEP 1 #####
@@ -112,7 +112,7 @@ public class GravesLSTMAlice
 		#### LAB STEP 2 #####
 		Setup character initalization -> to prompt the LSTM with a character sequence to continue/complete
         */
-         String generationInitialization = null;		//Optional: random character is used if null
+        String generationInitialization = null;		//Optional: random character is used if null
 //        String generationInitialization = "CHAPTER ";
 
         /*

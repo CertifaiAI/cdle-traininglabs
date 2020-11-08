@@ -31,7 +31,7 @@
 //import org.bytedeco.opencv.opencv_core.Rect;
 //import org.bytedeco.opencv.opencv_core.Scalar;
 //import org.bytedeco.opencv.opencv_videoio.VideoCapture;
-//import org.nd4j.linalg.io.ClassPathResource;
+//import org.nd4j.common.io.ClassPathResource;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 //
