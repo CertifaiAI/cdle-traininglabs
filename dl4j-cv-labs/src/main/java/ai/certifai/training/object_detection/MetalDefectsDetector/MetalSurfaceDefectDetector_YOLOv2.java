@@ -24,7 +24,7 @@ import org.bytedeco.opencv.opencv_core.Point;
 import org.bytedeco.opencv.opencv_core.Scalar;
 import org.bytedeco.opencv.opencv_core.Size;
 import org.datavec.image.loader.NativeImageLoader;
-import org.deeplearning4j.api.storage.StatsStorage;
+import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.GradientNormalization;
@@ -36,8 +36,8 @@ import org.deeplearning4j.nn.layers.objdetect.YoloUtils;
 import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.api.UIServer;
-import org.deeplearning4j.ui.stats.StatsListener;
-import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
+import org.deeplearning4j.ui.model.stats.StatsListener;
+import org.deeplearning4j.ui.model.storage.InMemoryStatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
 import org.deeplearning4j.zoo.model.YOLO2;
 import org.nd4j.linalg.activations.Activation;
@@ -202,10 +202,10 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
             double[] xy1 = obj.getTopLeftXY();
             double[] xy2 = obj.getBottomRightXY();
             String label = labels.get(obj.getPredictedClass());
-            int x1 = (int) Math.round(w * xy1[0] / ai.certifai.solution.object_detection.MetalDefectsDetector.MetalDefectDataSetIterator.gridWidth);
-            int y1 = (int) Math.round(h * xy1[1] / ai.certifai.solution.object_detection.MetalDefectsDetector.MetalDefectDataSetIterator.gridHeight);
-            int x2 = (int) Math.round(w * xy2[0] / ai.certifai.solution.object_detection.MetalDefectsDetector.MetalDefectDataSetIterator.gridWidth);
-            int y2 = (int) Math.round(h * xy2[1] / ai.certifai.solution.object_detection.MetalDefectsDetector.MetalDefectDataSetIterator.gridHeight);
+            int x1 = (int) Math.round(w * xy1[0] / MetalDefectDataSetIterator.gridWidth);
+            int y1 = (int) Math.round(h * xy1[1] / MetalDefectDataSetIterator.gridHeight);
+            int x2 = (int) Math.round(w * xy2[0] / MetalDefectDataSetIterator.gridWidth);
+            int y2 = (int) Math.round(h * xy2[1] / MetalDefectDataSetIterator.gridHeight);
             //Draw bounding box
             rectangle(mat, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
             //Display label text
