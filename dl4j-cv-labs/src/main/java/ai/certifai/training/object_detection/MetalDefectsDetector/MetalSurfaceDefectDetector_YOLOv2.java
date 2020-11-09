@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Skymind AI Bhd.
+ * Copyright (c) 2019 Skymind Holdings Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
@@ -202,10 +202,10 @@ public class MetalSurfaceDefectDetector_YOLOv2 {
             double[] xy1 = obj.getTopLeftXY();
             double[] xy2 = obj.getBottomRightXY();
             String label = labels.get(obj.getPredictedClass());
-            int x1 = (int) Math.round(w * xy1[0] / ai.certifai.solution.object_detection.MetalDefectsDetector.MetalDefectDataSetIterator.gridWidth);
-            int y1 = (int) Math.round(h * xy1[1] / ai.certifai.solution.object_detection.MetalDefectsDetector.MetalDefectDataSetIterator.gridHeight);
-            int x2 = (int) Math.round(w * xy2[0] / ai.certifai.solution.object_detection.MetalDefectsDetector.MetalDefectDataSetIterator.gridWidth);
-            int y2 = (int) Math.round(h * xy2[1] / ai.certifai.solution.object_detection.MetalDefectsDetector.MetalDefectDataSetIterator.gridHeight);
+            int x1 = (int) Math.round(w * xy1[0] / MetalDefectDataSetIterator.gridWidth);
+            int y1 = (int) Math.round(h * xy1[1] / MetalDefectDataSetIterator.gridHeight);
+            int x2 = (int) Math.round(w * xy2[0] / MetalDefectDataSetIterator.gridWidth);
+            int y2 = (int) Math.round(h * xy2[1] / MetalDefectDataSetIterator.gridHeight);
             //Draw bounding box
             rectangle(mat, new Point(x1, y1), new Point(x2, y2), colormap[obj.getPredictedClass()], 2, 0, 0);
             //Display label text

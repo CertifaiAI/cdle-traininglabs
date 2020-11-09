@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Skymind AI Bhd.
+ * Copyright (c) 2019 Skymind Holdings Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
@@ -27,10 +27,10 @@ import org.datavec.image.loader.BaseImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
 import org.datavec.image.transform.ImageTransform;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
+import org.nd4j.common.util.ArchiveUtils;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
-import org.nd4j.common.util.ArchiveUtils;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -40,7 +40,7 @@ import java.nio.file.Paths;
 import java.util.Random;
 
 public class DogBreedDataSetIterator {
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(ai.certifai.solution.classification.DogBreedDataSetIterator.class);
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(DogBreedDataSetIterator.class);
 
     //DIRECTORY STRUCTURE:
     //Images in the dataset have to be organized in directories by class/label.
