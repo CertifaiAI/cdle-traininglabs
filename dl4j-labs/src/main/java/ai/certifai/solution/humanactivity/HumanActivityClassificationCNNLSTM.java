@@ -21,7 +21,7 @@ import net.lingala.zip4j.exception.ZipException;
 import org.datavec.api.records.reader.SequenceRecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVSequenceRecordReader;
 import org.datavec.api.split.NumberedFileInputSplit;
-import org.deeplearning4j.api.storage.StatsStorage;
+import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.SequenceRecordReaderDataSetIterator;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.ComputationGraphConfiguration;

@@ -26,7 +26,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 import javafx.stage.Stage;
-import org.deeplearning4j.api.storage.StatsStorage;
+import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.nn.conf.BackpropType;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;

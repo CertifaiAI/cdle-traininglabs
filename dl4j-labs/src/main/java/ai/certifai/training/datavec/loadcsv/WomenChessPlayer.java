@@ -28,7 +28,7 @@ import org.datavec.api.transform.filter.ConditionFilter;
 import org.datavec.api.transform.schema.Schema;
 import org.datavec.api.writable.Writable;
 import org.datavec.local.transforms.LocalTransformExecutor;
-import org.deeplearning4j.api.storage.StatsStorage;
+import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;

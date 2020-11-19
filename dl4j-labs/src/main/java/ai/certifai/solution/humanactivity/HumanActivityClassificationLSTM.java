@@ -19,7 +19,7 @@ package ai.certifai.solution.humanactivity;
 
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
-import org.deeplearning4j.api.storage.StatsStorage;
+import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.evaluation.classification.Evaluation;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
