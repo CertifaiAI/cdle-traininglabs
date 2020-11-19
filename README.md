@@ -25,6 +25,8 @@ This repo contains codes for hands-on purpose during training session. All codes
 ## Contents
 
 #### DL4J-Lab
+- [classification](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/classification):
+  This folder contains various binary and multiple classification task exercises for learners to practice and solutions to refer to.
 - [convolution](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/convolution):
   This folder contains MNIST classification and object detection using transfer learning of TinyYOLO and VGG16.
 - [dataexamples](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/dataexamples):
