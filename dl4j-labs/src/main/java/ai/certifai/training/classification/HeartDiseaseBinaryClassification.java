@@ -125,7 +125,20 @@ public class HeartDiseaseBinaryClassification {
 //        Since this is a binary classification task, please remember to configure the correct number of outputs for
 //        output layer. With this said, please configure a model using your own learning rate, activation function,
 //        and number of neural network layer and nodes. Feel free to experiment with it to achieve best result.
+//        PS: There is no line limitations for your code. Don't worry about it and just get your code working.
+//        The first line has been written for you.
 
+// ########################### Configure your model here ######################
+//        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder() // uncomment here
+//                .seed(1234) // uncomment here
+
+
+
+//                .build(); // uncomment here
+// ########################### END ############################################
+
+//        MultiLayerNetwork model = new MultiLayerNetwork(conf); // uncomment here
+//        model.init(); // uncomment here
 
         //=====================================================================
         //            Step 3: Set Listener
@@ -136,12 +149,13 @@ public class HeartDiseaseBinaryClassification {
         server.attach(storage);
 
         // Set model listeners
-//        model.setListeners(new StatsListener(storage, 10));
+//        model.setListeners(new StatsListener(storage, 10)); // uncomment here
 
         //=====================================================================
         //            Step 4: Train model
         //=====================================================================
 
+//        ####################### Uncomment this section #########################
 //        Evaluation eval;
 //        for(int i = 0; i < EPOCH; ++i) {
 //            model.fit(trainData);
