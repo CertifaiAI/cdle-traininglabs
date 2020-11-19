@@ -24,7 +24,7 @@ import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.partition.NumberOfRecordsPartitioner;
 import org.datavec.api.split.partition.Partitioner;
 import org.datavec.api.writable.Writable;
-import org.nd4j.linalg.io.ClassPathResource;
+import org.nd4j.common.io.ClassPathResource;
 
 import java.io.File;
 import java.nio.charset.Charset;

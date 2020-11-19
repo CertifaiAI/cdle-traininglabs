@@ -40,7 +40,7 @@ import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-import org.nd4j.linalg.io.ClassPathResource;
+import org.nd4j.common.io.ClassPathResource;
 
 import java.io.File;
 import java.nio.charset.Charset;
