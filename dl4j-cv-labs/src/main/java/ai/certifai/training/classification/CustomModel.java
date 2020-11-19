@@ -186,7 +186,7 @@ public class CustomModel {
         Setup listener to capture useful information during training.
         */
         UIServer uiServer = UIServer.getInstance();
-        StatsStorage statsStorage = new FileStatsStorage(new File(System.getProperty("java.io.tmpdir"), "ui-stats.dl4j"));
+        StatsStorage statsStorage = new InMemoryStatsStorage();
         uiServer.attach(statsStorage);
         model.setListeners(
                 new StatsListener( statsStorage),

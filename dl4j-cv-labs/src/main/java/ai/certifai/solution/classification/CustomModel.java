@@ -33,6 +33,7 @@ import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.model.stats.StatsListener;
 import org.deeplearning4j.ui.model.storage.FileStatsStorage;
+import org.deeplearning4j.ui.model.storage.InMemoryStatsStorage;
 import org.nd4j.common.primitives.Pair;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -174,7 +175,7 @@ public class CustomModel {
         log.info(model.summary());
 
         UIServer uiServer = UIServer.getInstance();
-        StatsStorage statsStorage = new FileStatsStorage(new File(System.getProperty("java.io.tmpdir"), "ui-stats.dl4j"));
+        StatsStorage statsStorage = new InMemoryStatsStorage();
         uiServer.attach(statsStorage);
         model.setListeners(
                 new StatsListener( statsStorage),

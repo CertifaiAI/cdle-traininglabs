@@ -103,7 +103,7 @@ public class EditLastLayerOthersFrozen {
         log.info(vgg16Transfer.summary());
 
         UIServer uiServer = UIServer.getInstance();
-        StatsStorage statsStorage = new FileStatsStorage(new File(System.getProperty("java.io.tmpdir"), "ui-stats.dl4j"));
+        StatsStorage statsStorage = new InMemoryStatsStorage();
         uiServer.attach(statsStorage);
         vgg16Transfer.setListeners(
                 new StatsListener( statsStorage),
