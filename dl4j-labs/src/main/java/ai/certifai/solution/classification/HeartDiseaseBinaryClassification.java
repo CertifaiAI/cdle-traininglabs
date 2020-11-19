@@ -42,6 +42,7 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
 import org.nd4j.linalg.io.ClassPathResource;
+import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
@@ -51,7 +52,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Author: Kian Yang, Lee
+ * Authored by: Kian Yang, Lee
+ * Reviewed by: Amelie Peter Affery
  * Binary Classification Task with Heart Disease DataSet
  *
  ******************************************************
@@ -127,14 +129,15 @@ public class HeartDiseaseBinaryClassification {
                         .nIn(13)
                         .nOut(32)
                         .build())
-                .layer(1, new DropoutLayer(0.3))
-                .layer(2, new DenseLayer.Builder()
+                .layer(1, new DropoutLayer(0.2))
+                .layer(2, new DropoutLayer(0.2))
+                .layer(3, new DenseLayer.Builder()
                         .activation(Activation.RELU)
                         .nOut(64)
                         .build())
-                .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.MCXENT)
+                .layer(4, new OutputLayer.Builder(LossFunctions.LossFunction.XENT)
                         .nOut(2)
-                        .activation(Activation.SOFTMAX)
+                        .activation(Activation.SIGMOID)
                         .build())
                 .build();
 
