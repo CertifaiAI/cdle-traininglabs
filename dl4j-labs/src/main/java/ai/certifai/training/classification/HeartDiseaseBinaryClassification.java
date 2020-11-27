@@ -26,30 +26,15 @@ import org.datavec.api.writable.Writable;
 import org.datavec.local.transforms.LocalTransformExecutor;
 import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
-import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
-import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
-import org.deeplearning4j.nn.conf.layers.DenseLayer;
-import org.deeplearning4j.nn.conf.layers.DropoutLayer;
-import org.deeplearning4j.nn.conf.layers.OutputLayer;
-import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.ui.api.UIServer;
-import org.deeplearning4j.ui.model.stats.StatsListener;
 import org.deeplearning4j.ui.model.storage.InMemoryStatsStorage;
-import org.nd4j.evaluation.classification.Evaluation;
-import org.nd4j.linalg.activations.Activation;
-import org.nd4j.linalg.dataset.DataSet;
-import org.nd4j.linalg.dataset.SplitTestAndTrain;
-import org.nd4j.linalg.dataset.ViewIterator;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
 import org.nd4j.common.io.ClassPathResource;
-import org.nd4j.linalg.learning.config.Nesterovs;
-import org.nd4j.linalg.lossfunctions.LossFunctions;
+
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -165,11 +150,11 @@ public class HeartDiseaseBinaryClassification {
 //            trainData.reset();
 //        }
 //
-//        System.out.println("=== Train data evaluation ===");
+//        System.out.println("\n\n\n=== Train data evaluation ===");
 //        eval = model.evaluate(trainData);
 //        System.out.println(eval.stats());
 //
-//        System.out.println("=== Test data evaluation ===");
+//        System.out.println("\n\n\n=== Test data evaluation ===");
 //        eval = model.evaluate(testData);
 //        System.out.println(eval.stats());
 
@@ -221,7 +206,14 @@ public class HeartDiseaseBinaryClassification {
         //=====================================================================
 
         TransformProcess tp = new TransformProcess.Builder(inputDataSchema)
+                .categoricalToOneHot("sex", "cp", "fbs", "restecg", "exang", "slope", "ca", "thal")
                 .build();
+
+        //After executing all of these operations, we have a new and different schema:
+        Schema outputSchema = tp.getFinalSchema();
+
+        System.out.println("\n\n\nSchema after transforming data:");
+        System.out.println(outputSchema);
 
         //=====================================================================
         //            Perform transformation
@@ -233,7 +225,7 @@ public class HeartDiseaseBinaryClassification {
     private static DataSetIterator makeIterator(List<List<Writable>> data) {
 
         // Data info
-        int labelIndex = 13; // Index of column of the labels
+        int labelIndex = 30; // Index of column of the labels
         int numClasses = 2; // Number of unique classes for the labels
 
         RecordReader collectionRecordReaderData = new CollectionRecordReader(data);

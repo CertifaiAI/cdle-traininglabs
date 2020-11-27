@@ -42,7 +42,6 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
 import org.nd4j.common.io.ClassPathResource;
-import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
@@ -123,19 +122,19 @@ public class HeartDiseaseBinaryClassification {
                 .seed(1234)
                 .updater(new Nesterovs(0.001, Nesterovs.DEFAULT_NESTEROV_MOMENTUM))
                 .weightInit(WeightInit.XAVIER)
+                .l2(0.001)
                 .list()
                 .layer(0, new DenseLayer.Builder()
                         .activation(Activation.RELU)
-                        .nIn(13)
-                        .nOut(32)
-                        .build())
-                .layer(1, new DropoutLayer(0.2))
-                .layer(2, new DropoutLayer(0.2))
-                .layer(3, new DenseLayer.Builder()
-                        .activation(Activation.RELU)
+                        .nIn(30) // since we have 29 features after transformation
                         .nOut(64)
                         .build())
-                .layer(4, new OutputLayer.Builder(LossFunctions.LossFunction.XENT)
+                .layer(1, new DropoutLayer(0.8))
+                .layer(2, new DenseLayer.Builder()
+                        .activation(Activation.RELU)
+                        .nOut(32)
+                        .build())
+                .layer(3, new OutputLayer.Builder(LossFunctions.LossFunction.XENT)
                         .nOut(2)
                         .activation(Activation.SIGMOID)
                         .build())
@@ -168,11 +167,11 @@ public class HeartDiseaseBinaryClassification {
             trainData.reset();
         }
 
-        System.out.println("=== Train data evaluation ===");
+        System.out.println("\n\n\n=== Train data evaluation ===");
         eval = model.evaluate(trainData);
         System.out.println(eval.stats());
 
-        System.out.println("=== Test data evaluation ===");
+        System.out.println("\n\n\n=== Test data evaluation ===");
         eval = model.evaluate(testData);
         System.out.println(eval.stats());
 
@@ -224,8 +223,14 @@ public class HeartDiseaseBinaryClassification {
         //=====================================================================
 
         TransformProcess tp = new TransformProcess.Builder(inputDataSchema)
+                .categoricalToOneHot("sex", "cp", "fbs", "restecg", "exang", "slope", "ca", "thal")
                 .build();
 
+        //After executing all of these operations, we have a new and different schema:
+        Schema outputSchema = tp.getFinalSchema();
+
+        System.out.println("\n\n\nSchema after transforming data:");
+        System.out.println(outputSchema);
         //=====================================================================
         //            Perform transformation
         //=====================================================================
@@ -236,8 +241,8 @@ public class HeartDiseaseBinaryClassification {
     private static DataSetIterator makeIterator(List<List<Writable>> data) {
 
         // Data info
-        int labelIndex = 13; // Index of column of the labels
-        int numClasses = 2; // Number of unique classes for the labels
+        int labelIndex = 30; // Index of column of the label
+        int numClasses = 2; // Number of unique classes for the label
 
         RecordReader collectionRecordReaderData = new CollectionRecordReader(data);
 
