@@ -66,7 +66,7 @@ This repo contains codes for hands-on purpose during training session. All codes
   This folder contains an example that reads in MNIST data, perform training using Spark, and output the data.
 
 ## Built with
-- deeplearning4j beta 6.0
+- deeplearning4j beta 7.0
 - CUDA 10.1 (Note: Optional if you are using CPU)
 - cuDNN 7.6 (Note: Optional if you are using CPU)
 
