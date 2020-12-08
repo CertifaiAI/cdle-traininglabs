@@ -27,6 +27,29 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.IOException;
 
+/*
+This exercise allows you to build a CNN classifier from a multi-class weather image dataset by using transfer learning.
+The dataset consists of 4 classes and the dataset ("WeatherImage") is located in the "resources" folder.
+There are various pre-trained image classification models. Thus, you are asked to compare between the pre-trained
+models  (i.e. VGG16, VGG19 and SqueezeNet). You could use the same set of hyper-parameters (e.g. updater,
+learning rate, etc..).
+
+Dataset source:
+Ajayi, Gbeminiyi (2018), “Multi-class Weather Dataset for Image Classification”, Mendeley Data, V1, doi: 10.17632/4drtyfjtfy.1
+
+STEPS:
+1. Load VGG16 model from ZooModel. View the summary of the model.
+2. Configure the model configuration for layers that are not frozen.
+3. Build the neural network configuration by using ComputationGraph.
+4. Initialize dataset and create training and testing dataset iterator.
+5. Start a dashboard to visualize network training and setup listener to capture useful information during training.
+6. Train and evaluate the model.
+7. Repeat STEP 1 - STEP 6 for VGG19 and SqueezeNet.
+8. Compare the findings between the pre-trained models used.
+ */
+
+
+
 public class CNN {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(CNN.class);
 
@@ -42,18 +65,21 @@ public class CNN {
         // Weather image classifier built with VGG16 pre-trained model
         // =================================================================================
 
+
         /**
+        // STEP 1: Load VGG16 model from ZooModel. View the summary.
         ZooModel zooModel = VGG16.builder().build();
         ComputationGraph vgg16 = (ComputationGraph) zooModel.initPretrained();
         log.info(vgg16.summary());
 
 
-
+        // STEP 2: Configure the model configurations for layers that are not frozen by using FineTuneConfiguration
         FineTuneConfiguration fineTuneCOnf = new FineTuneConfiguration.Builder()
                 .updater(new Nesterovs(5e-5))
                 .seed(seed)
                 .build();
 
+        // STEP 3: Build the neural network configuration by using ComputationGraph
         ComputationGraph vgg16Transfer = new TransferLearning.GraphBuilder(vgg16)
                 .fineTuneConfiguration(fineTuneCOnf)
                 .setFeatureExtractor(featureExtractionLayer)
@@ -68,10 +94,12 @@ public class CNN {
         log.info(vgg16Transfer.summary());
 
 
+        // STEP 4: Initialize dataset and create training and testing dataset iterator
         WeatherDataSetIterator.setup(batchSize, trainPerc);
         DataSetIterator trainIter = WeatherDataSetIterator.trainIterator();
         DataSetIterator testIter = WeatherDataSetIterator.testIterator();
 
+        // STEP 5: Visualize network training using dashboard and set up listener to capture information during training.
          UIServer uiServer = UIServer.getInstance();
          StatsStorage statsStorage = new FileStatsStorage(new File(System.getProperty("java.io.tmpdir"), "ui-stats.dl4j"));
          uiServer.attach(statsStorage);
@@ -81,6 +109,7 @@ public class CNN {
          new EvaluativeListener(trainIter, 1, InvocationType.EPOCH_END),
          new EvaluativeListener(testIter, 1, InvocationType.EPOCH_END));
 
+        // STEP 6: Train and evaluate the model
         int iter = 0;
         while(trainIter.hasNext()) {
             vgg16Transfer.fit(trainIter.next());
@@ -106,6 +135,7 @@ public class CNN {
         // Weather image classifier built with VGG19 pre-trained model
         // ==============================================================================
 
+        // REPEAT STEP 1 - STEP 6 for VGG19
         /**
         ZooModel zooModel2 = VGG19.builder().build();
         ComputationGraph vgg19 = (ComputationGraph) zooModel2.initPretrained();

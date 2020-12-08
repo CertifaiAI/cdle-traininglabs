@@ -1,4 +1,4 @@
-package ai.certifai.training.classification.transferlearning;
+package ai.certifai.training.classification;
 
 import ai.certifai.solution.classification.WeatherDataSetIterator;
 import org.deeplearning4j.api.storage.StatsStorage;
@@ -26,11 +26,14 @@ import java.io.IOException;
 
 
 /*
-You are asked to build a CNN classifier from a weather image dataset by using transfer learning.
+This exercise allows you to build a CNN classifier from a multi-class weather image dataset by using transfer learning.
 The dataset consists of 4 classes and the dataset ("WeatherImage") is located in the "resources" folder.
 There are various pre-trained image classification models. Thus, you are asked to compare between the pre-trained
 models  (i.e. VGG16, VGG19 and SqueezeNet). You could use the same set of hyper-parameters (e.g. updater,
 learning rate, etc..).
+
+Dataset source:
+Ajayi, Gbeminiyi (2018), “Multi-class Weather Dataset for Image Classification”, Mendeley Data, V1, doi: 10.17632/4drtyfjtfy.1
 
 STEPS:
 1. Load VGG16 model from ZooModel. View the summary of the model.
