@@ -47,6 +47,7 @@ import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.stats.StatsListener;
 import org.deeplearning4j.ui.storage.FileStatsStorage;
+import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -122,9 +123,9 @@ public class OverfittingGermanCreditClassification {
 
 
         // 6. ======== configure listener (UI & Training Loss Value) ========
-        UIServer uiServer = UIServer.getInstance();
-        StatsStorage statsStorage = new FileStatsStorage(new File(System.getProperty("java.io.tmpdir"), "ui-stats.dl4j"));
-        uiServer.attach(statsStorage);
+        StatsStorage statsStorage = new InMemoryStatsStorage();
+        UIServer server = UIServer.getInstance();
+        server.attach(statsStorage);
         model.setListeners(
                 new StatsListener( statsStorage),
                 new ScoreIterationListener(10)
