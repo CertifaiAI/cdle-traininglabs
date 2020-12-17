@@ -88,7 +88,6 @@ public class OverfittingGermanCreditClassification {
     private static int labelIndex = 63; // index of the column of the labels/classes
     private static int numOfClasses = 2; // number of classification labels/classes
     private static int numOfFeatures = 63; // number of features to be fed to the model
-//    private static int batchSize = 128; // batch size
     private static int numOfEpochs = 10000; // number of Epochs for model training
     private static int numOfHiddenNodes = 50; // number of hidden nodes for classification model
     private static INDArray weightsArray = Nd4j.create(new double[]{1.0, 0.43}); // weights array for weighted loss function for imbalance data.
@@ -185,10 +184,14 @@ public class OverfittingGermanCreditClassification {
 
 
         // 8. ======== evaluate model using test set ========
+        Evaluation evalTrainSet = model.evaluate(trainIterator);
+        System.out.print("Evaluation on Train Set");
+        System.out.println(evalTrainSet.stats());
+
         // if there is a bigger dataset, it is better to evaluate on a separate test set that your model has never seen before during training
-        Evaluation evalTest = model.evaluate(testIterator);
+        Evaluation evalTestSet = model.evaluate(testIterator);
         System.out.print("Evaluation on Test Set");
-        System.out.println(evalTest.stats());
+        System.out.println(evalTestSet.stats());
     }
 
 
@@ -221,7 +224,7 @@ public class OverfittingGermanCreditClassification {
     /*
      ************** 2. function to transform data **************
      */
-    private static List<List<Writable>> transform_data(RecordReader data){ // TODO: change return type
+    private static List<List<Writable>> transform_data(RecordReader data){
 
         // build a schema to define the layout of the tabular data
         Schema schema = new Schema.Builder()
