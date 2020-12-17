@@ -66,6 +66,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ai.certifai.solution.classification.PlotUtil.plotLossGraph;
+
 /***
  * Dataset: https://archive.ics.uci.edu/ml/datasets/statlog+(german+credit+data)
  *
@@ -132,12 +134,12 @@ public class OverfittingGermanCreditClassification {
         );
 
 
-        // 7. ======== fit the model ========
+        // 7. ======== get optimal number of epochs and fit the model ========
         // **Solution 1**: early stopping - train the model with optimal number of Epochs from performing early stopping
         EarlyStoppingConfiguration esConfig = new EarlyStoppingConfiguration.Builder()
                 // @param1: Max of 5000 epochs if model is not early stopped,
                 // @param2: model will train an additional of 500 epochs if there is no improvement on validation loss
-                .epochTerminationConditions(new MaxEpochsTerminationCondition(numOfEpochs), new ScoreImprovementEpochTerminationCondition(500))
+                .epochTerminationConditions(new MaxEpochsTerminationCondition(numOfEpochs), new ScoreImprovementEpochTerminationCondition(10))
                 .evaluateEveryNEpochs(1)
                 .scoreCalculator(new DataSetLossCalculator(testIterator, true)) //Calculate validation set score/loss
                 .build();
@@ -153,38 +155,40 @@ public class OverfittingGermanCreditClassification {
         System.out.println("Best epoch number: " + result.getBestModelEpoch());
         System.out.println("Score at best epoch: " + result.getBestModelScore());
 
-//        //  ======== Uncomment this section to train the model without Early Stopping ========
-//        // 7. ======== fit the model ========
-//        // This is for training without Early Stopping
-//        // declare variables for model evaluation during training
-//        Evaluation evalTrain;
-//        Evaluation evalValid;
-//        DataSetLossCalculator trainLossCalculator = new DataSetLossCalculator(trainIterator, true);
-//        DataSetLossCalculator validLossCalculator = new DataSetLossCalculator(testIterator, true);
-//        double trainingLoss;
-//        double validationLoss;
-//
-//        // fit model
-//        for(int i = 0; i<numOfEpochs; i++){
-//            model.fit(trainIterator); // fit the train set to the model
-//
-//            // logging of model performance
-//            trainingLoss = trainLossCalculator.calculateScore(model); // calculate training loss
-//            validationLoss = validLossCalculator.calculateScore(model); // calculate validation loss
-//            System.out.println("EPOCH: " + i + ", trainLoss " + trainingLoss);
-//            System.out.println("EPOCH: " + i + ", validationLoss " + validationLoss);
-//
-//            evalTrain = model.evaluate(trainIterator); // evaluate the model using train set
-//            evalValid = model.evaluate(testIterator); // evaluate the model using test set as the validation set -> if there is a bigger dataset, it is better to not use the test set as the validation set
-//            System.out.println("EPOCH: " + i + ", Train f1: " + evalTrain.f1());
-//            System.out.println("EPOCH: " + i + ", Validation f1: " + evalValid.f1());
-//
-//            trainIterator.reset(); // reset train iterator back to the beginning
-//            testIterator.reset(); // reset test iterator back to the beginning
-//        }
+        // retrain the model with the best number of epochs
+        // declare variables for model evaluation during training
+        Evaluation evalTrain;
+        Evaluation evalValid;
+        DataSetLossCalculator trainLossCalculator = new DataSetLossCalculator(trainIterator, true);
+        DataSetLossCalculator validLossCalculator = new DataSetLossCalculator(testIterator, true);
+        ArrayList<Double> trainingLoss = new ArrayList<>();
+        ArrayList<Double> validationLoss = new ArrayList<>();
+        numOfEpochs = result.getBestModelEpoch(); // set the optimal number of epochs
 
 
-        // 8. ======== evaluate model using test set ========
+        // fit model
+        for(int i = 0; i<numOfEpochs; i++){
+            model.fit(trainIterator); // fit the train set to the model
+
+            // logging of model performance
+            trainingLoss.add(trainLossCalculator.calculateScore(model)); // calculate training loss and add to trainingLoss ArrayList
+            validationLoss.add(validLossCalculator.calculateScore(model)); // calculate validation loss and add to validationLoss ArrayList
+
+            evalTrain = model.evaluate(trainIterator); // evaluate the model using train set
+            evalValid = model.evaluate(testIterator); // evaluate the model using test set as the validation set -> if there is a bigger dataset, it is better to not use the test set as the validation set
+            System.out.println("EPOCH: " + i + ", Train f1: " + evalTrain.f1());
+            System.out.println("EPOCH: " + i + ", Validation f1: " + evalValid.f1());
+
+            trainIterator.reset(); // reset train iterator back to the beginning
+            testIterator.reset(); // reset test iterator back to the beginning
+        }
+
+
+        // 8. ======== evaluate model  ========
+        // plot training/validation loss graph
+        plotLossGraph("Number of Epochs", "Training/Validation Loss", trainingLoss, validationLoss, numOfEpochs);
+
+        // evaluate on train set
         Evaluation evalTrainSet = model.evaluate(trainIterator);
         System.out.print("Evaluation on Train Set");
         System.out.println(evalTrainSet.stats());

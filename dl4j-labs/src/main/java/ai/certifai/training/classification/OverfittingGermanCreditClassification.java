@@ -66,6 +66,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ai.certifai.training.classification.PlotUtil.plotLossGraph;
+
 /***
  * Dataset: https://archive.ics.uci.edu/ml/datasets/statlog+(german+credit+data)
  *
@@ -132,7 +134,7 @@ public class OverfittingGermanCreditClassification {
         );
 
         // 7. ======== fit the model ========
-        // **Solution 1**: early stopping - train the model with optimal number of Epochs from performing early stopping
+        // **Solution 1**: early stopping - get optimal number of Epochs from performing early stopping
         // Add your code here
 
 
@@ -149,26 +151,22 @@ public class OverfittingGermanCreditClassification {
 
 
 
-        // ======== Comment out this section to use Early Stopping to train your model instead ========
-        // 7. ======== fit the model ========
         // This is for training without Early Stopping
         // declare variables for model evaluation during training
         Evaluation evalTrain;
         Evaluation evalValid;
         DataSetLossCalculator trainLossCalculator = new DataSetLossCalculator(trainIterator, true);
         DataSetLossCalculator validLossCalculator = new DataSetLossCalculator(testIterator, true);
-        double trainingLoss;
-        double validationLoss;
+        ArrayList<Double> trainingLoss = new ArrayList<>();
+        ArrayList<Double> validationLoss = new ArrayList<>();
 
         // fit model
         for(int i = 0; i<numOfEpochs; i++){
             model.fit(trainIterator); // fit the train set to the model
 
             // logging of model performance
-            trainingLoss = trainLossCalculator.calculateScore(model); // calculate training loss
-            validationLoss = validLossCalculator.calculateScore(model); // calculate validation loss
-            System.out.println("EPOCH: " + i + ", trainLoss " + trainingLoss);
-            System.out.println("EPOCH: " + i + ", validationLoss " + validationLoss);
+            trainingLoss.add(trainLossCalculator.calculateScore(model)); // calculate training loss and add to trainingLoss ArrayList
+            validationLoss.add(validLossCalculator.calculateScore(model)); // calculate validation loss and add to validationLoss ArrayList
 
             evalTrain = model.evaluate(trainIterator); // evaluate the model using train set
             evalValid = model.evaluate(testIterator); // evaluate the model using test set as the validation set -> if there is a bigger dataset, it is better to not use the test set as the validation set
@@ -181,6 +179,10 @@ public class OverfittingGermanCreditClassification {
 
 
         // 8. ======== evaluate model ========
+        // plot training/validation loss graph
+        plotLossGraph("Number of Epochs", "Training/Validation Loss", trainingLoss, validationLoss, numOfEpochs);
+
+        // evaluate on train set
         Evaluation evalTrainSet = model.evaluate(trainIterator);
         System.out.print("Evaluation on Train Set");
         System.out.println(evalTrainSet.stats());
