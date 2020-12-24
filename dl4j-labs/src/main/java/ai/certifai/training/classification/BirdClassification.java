@@ -114,11 +114,11 @@ public class BirdClassification {
         DataSet trainData = null;
         DataSet testData = null ;
 
-        //printout size
-        System.out.println("Training vector : ");
-        System.out.println(Arrays.toString(trainData.getFeatures().shape()));
-        System.out.println("Test vector : ");
-        System.out.println(Arrays.toString(testData.getFeatures().shape()));
+        //printout size ( uncomment these lines )
+//        System.out.println("Training vector : ");
+//        System.out.println(Arrays.toString(trainData.getFeatures().shape()));
+//        System.out.println("Test vector : ");
+//        System.out.println(Arrays.toString(testData.getFeatures().shape()));
 
 //========================================================================
         //  Step 4 : DataNormalization
@@ -131,12 +131,12 @@ public class BirdClassification {
         //  Step 5 : Network Configuration
 //========================================================================
 
-        //Get network configuration
-        MultiLayerConfiguration config = getConfig(numInput, numClass, learningRate);
+        //Get network configuration ( uncomment these lines )
+//        MultiLayerConfiguration config = getConfig(numInput, numClass, learningRate);
 
-        //Define network
-        MultiLayerNetwork model = new MultiLayerNetwork(config);
-        model.init();
+        //Define network ( uncomment these lines )
+//        MultiLayerNetwork model = new MultiLayerNetwork(config);
+//        model.init();
 
 //========================================================================
         //  Step 6 : Setup UI , listeners
@@ -147,8 +147,8 @@ public class BirdClassification {
         UIServer server = UIServer.getInstance();
         server.attach(storage);
 
-        //Set model listeners
-        model.setListeners(new StatsListener(storage, 10));
+        //Set model listeners ( uncomment these lines )
+//        model.setListeners(new StatsListener(storage, 10));
 
 //========================================================================
         //  Step 7 : Training
