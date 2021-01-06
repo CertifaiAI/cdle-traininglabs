@@ -1,5 +1,4 @@
 /*
- * Copyright (c) 2019 Skymind AI Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
@@ -43,7 +42,7 @@ import static org.bytedeco.opencv.global.opencv_videoio.CAP_PROP_FRAME_WIDTH;
 import org.bytedeco.opencv.opencv_core.*;
 
 public class FaceAnonymizationWebCam {
-    private static final Logger log = LoggerFactory.getLogger(ai.certifai.training.facial_recognition.FaceAnonymizationWebCam.class);
+    private static final Logger log = LoggerFactory.getLogger(FaceAnonymizationWebCam.class);
     private static final int WIDTH = 1280;
     private static final int HEIGHT = 720;
     private static final String outputWindowsName = "Face Recognition Example - DL4J";

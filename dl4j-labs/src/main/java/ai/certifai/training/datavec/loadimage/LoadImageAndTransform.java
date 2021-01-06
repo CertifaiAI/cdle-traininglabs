@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Skymind AI Bhd.
+ * Copyright (c) 2019 Skymind Holdings Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
@@ -27,8 +27,8 @@ import org.datavec.image.transform.*;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-import org.nd4j.linalg.io.ClassPathResource;
-import org.nd4j.linalg.primitives.Pair;
+import org.nd4j.common.io.ClassPathResource;
+import org.nd4j.common.primitives.Pair;
 
 import java.io.File;
 import java.util.Arrays;

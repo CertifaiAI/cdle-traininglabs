@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Skymind AI Bhd.
+ * Copyright (c) 2019 Skymind Holdings Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package ai.certifai.training.recurrent.basic;
 
-import org.deeplearning4j.api.storage.StatsStorage;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -26,8 +25,6 @@ import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.ui.api.UIServer;
-import org.deeplearning4j.ui.stats.StatsListener;
-import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.api.ops.impl.indexaccum.IMax;
@@ -86,34 +83,34 @@ public class BasicRNNExample
 
         //Neural net configuration
         MultiLayerConfiguration config = new NeuralNetConfiguration.Builder()
-            .seed(123)
-            .updater(new RmsProp(0.001))
-            .weightInit(WeightInit.XAVIER)
-            .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-            .miniBatch(false)
-            .list()
-            .layer(0, new LSTM.Builder()
-                .nIn(LEARNSTRING_CHARS_LIST.size())
-                .nOut(150)
-                .activation(Activation.TANH)
-                .build())
-            .layer(1, new LSTM.Builder()
-                .nIn(150)
-                .nOut(100)
-                .activation(Activation.TANH)
-                .build())
-            .layer(2, new LSTM.Builder()
-                .nIn(100)
-                .nOut(50)
-                .activation(Activation.TANH)
-                .build())
-            .layer(3, new RnnOutputLayer.Builder()
-                .nIn(50)
-                .nOut(LEARNSTRING_CHARS_LIST.size())
-                .lossFunction(LossFunction.MCXENT)
-                .activation(Activation.SOFTMAX)
-                .build())
-            .build();
+                .seed(123)
+                .updater(new RmsProp(0.001))
+                .weightInit(WeightInit.XAVIER)
+                .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
+                .miniBatch(false)
+                .list()
+                .layer(0, new LSTM.Builder()
+                        .nIn(LEARNSTRING_CHARS_LIST.size())
+                        .nOut(150)
+                        .activation(Activation.TANH)
+                        .build())
+                .layer(1, new LSTM.Builder()
+                        .nIn(150)
+                        .nOut(100)
+                        .activation(Activation.TANH)
+                        .build())
+                .layer(2, new LSTM.Builder()
+                        .nIn(100)
+                        .nOut(50)
+                        .activation(Activation.TANH)
+                        .build())
+                .layer(3, new RnnOutputLayer.Builder()
+                        .nIn(50)
+                        .nOut(LEARNSTRING_CHARS_LIST.size())
+                        .lossFunction(LossFunction.MCXENT)
+                        .activation(Activation.SOFTMAX)
+                        .build())
+                .build();
 
         MultiLayerNetwork network = new MultiLayerNetwork(config);
         network.init();

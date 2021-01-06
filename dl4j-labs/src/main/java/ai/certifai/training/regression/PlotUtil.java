@@ -1,7 +1,6 @@
 package ai.certifai.training.regression;/*
  *
  *  * ******************************************************************************
- *  *  * Copyright (c) 2019 Skymind AI Bhd.
  *  *  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *  *  *
  *  *  * This program and the accompanying materials are made available under the

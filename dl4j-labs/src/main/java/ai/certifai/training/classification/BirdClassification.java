@@ -8,7 +8,7 @@ import org.datavec.api.transform.TransformProcess;
 import org.datavec.api.transform.schema.Schema;
 import org.datavec.api.writable.Writable;
 import org.datavec.local.transforms.LocalTransformExecutor;
-import org.deeplearning4j.api.storage.StatsStorage;
+import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -17,8 +17,8 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.ui.api.UIServer;
-import org.deeplearning4j.ui.stats.StatsListener;
-import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
+import org.deeplearning4j.ui.model.stats.StatsListener;
+import org.deeplearning4j.ui.model.storage.InMemoryStatsStorage;
 import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.dataset.DataSet;
@@ -27,7 +27,7 @@ import org.nd4j.linalg.dataset.ViewIterator;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.NormalizerMinMaxScaler;
-import org.nd4j.linalg.io.ClassPathResource;
+import org.nd4j.common.io.ClassPathResource;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
@@ -114,11 +114,11 @@ public class BirdClassification {
         DataSet trainData = null;
         DataSet testData = null ;
 
-        //printout size
-        System.out.println("Training vector : ");
-        System.out.println(Arrays.toString(trainData.getFeatures().shape()));
-        System.out.println("Test vector : ");
-        System.out.println(Arrays.toString(testData.getFeatures().shape()));
+        //printout size ( uncomment these lines )
+//        System.out.println("Training vector : ");
+//        System.out.println(Arrays.toString(trainData.getFeatures().shape()));
+//        System.out.println("Test vector : ");
+//        System.out.println(Arrays.toString(testData.getFeatures().shape()));
 
 //========================================================================
         //  Step 4 : DataNormalization
@@ -131,12 +131,12 @@ public class BirdClassification {
         //  Step 5 : Network Configuration
 //========================================================================
 
-        //Get network configuration
-        MultiLayerConfiguration config = getConfig(numInput, numClass, learningRate);
+        //Get network configuration ( uncomment these lines )
+//        MultiLayerConfiguration config = getConfig(numInput, numClass, learningRate);
 
-        //Define network
-        MultiLayerNetwork model = new MultiLayerNetwork(config);
-        model.init();
+        //Define network ( uncomment these lines )
+//        MultiLayerNetwork model = new MultiLayerNetwork(config);
+//        model.init();
 
 //========================================================================
         //  Step 6 : Setup UI , listeners
@@ -147,8 +147,8 @@ public class BirdClassification {
         UIServer server = UIServer.getInstance();
         server.attach(storage);
 
-        //Set model listeners
-        model.setListeners(new StatsListener(storage, 10));
+        //Set model listeners ( uncomment these lines )
+//        model.setListeners(new StatsListener(storage, 10));
 
 //========================================================================
         //  Step 7 : Training

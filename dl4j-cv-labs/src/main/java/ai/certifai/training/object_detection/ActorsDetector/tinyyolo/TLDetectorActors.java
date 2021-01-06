@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Skymind AI Bhd.
+ * Copyright (c) 2019 Skymind Holdings Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
@@ -41,12 +41,12 @@ import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.util.ModelSerializer;
+import org.nd4j.common.io.ClassPathResource;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.io.ClassPathResource;
 import org.nd4j.linalg.learning.config.Adam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
