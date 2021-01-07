@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Skymind AI Bhd.
+ * Copyright (c) 2019 Skymind Holdings Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
@@ -31,7 +31,7 @@
 //import org.bytedeco.opencv.opencv_core.Rect;
 //import org.bytedeco.opencv.opencv_core.Scalar;
 //import org.bytedeco.opencv.opencv_videoio.VideoCapture;
-//import org.nd4j.linalg.io.ClassPathResource;
+//import org.nd4j.common.io.ClassPathResource;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 //

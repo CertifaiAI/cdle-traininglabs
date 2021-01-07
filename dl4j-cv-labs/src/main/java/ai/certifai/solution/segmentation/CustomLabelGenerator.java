@@ -1,5 +1,4 @@
 /*
- * Copyright (c) 2019 Skymind AI Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +20,7 @@ import org.datavec.api.io.labels.PathLabelGenerator;
 import org.datavec.api.writable.NDArrayWritable;
 import org.datavec.api.writable.Writable;
 import org.datavec.image.loader.NativeImageLoader;
+import org.nd4j.common.primitives.Pair;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class CustomLabelGenerator implements PathLabelGenerator{
     private final int width;
     private final int channels;
     private final NativeImageLoader imageLoader;
-    private static List<org.nd4j.linalg.primitives.Pair<String, String>> replacement;
+    private static List<Pair<String, String>> replacement;
 
 
     //DIRECTORY STRUCTURE:

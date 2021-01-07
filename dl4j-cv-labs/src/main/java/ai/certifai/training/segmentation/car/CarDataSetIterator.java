@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Skymind AI Bhd.
+ * Copyright (c) 2019 Skymind Holdings Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
@@ -26,6 +26,7 @@ import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.InputSplit;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
+import org.nd4j.common.primitives.Pair;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
 import ai.certifai.training.segmentation.CustomLabelGenerator;
@@ -51,9 +52,9 @@ public class CarDataSetIterator {
     private static InputSplit trainData, valData;
     private static int batchSize;
 
-    private static List<org.nd4j.linalg.primitives.Pair<String, String>> replacement = Arrays.asList(
-            new org.nd4j.linalg.primitives.Pair<>("inputs", "masks_png"),
-            new org.nd4j.linalg.primitives.Pair<>(".jpg", "_mask.png")
+    private static List<Pair<String, String>> replacement = Arrays.asList(
+            new Pair<>("inputs", "masks_png"),
+            new Pair<>(".jpg", "_mask.png")
     );
     private static CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, channels, replacement);
 
