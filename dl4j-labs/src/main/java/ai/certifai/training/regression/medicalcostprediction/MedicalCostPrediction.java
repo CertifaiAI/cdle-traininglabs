@@ -1,5 +1,4 @@
 /*
- * Copyright (c) 2019 Skymind AI Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +16,10 @@
 
 package ai.certifai.training.regression.medicalcostprediction;
 
-import org.deeplearning4j.api.storage.StatsStorage;
+import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.ui.api.UIServer;
-import org.deeplearning4j.ui.storage.InMemoryStatsStorage;
-import org.nd4j.linalg.io.ClassPathResource;
+import org.deeplearning4j.ui.model.storage.InMemoryStatsStorage;
+import org.nd4j.common.io.ClassPathResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

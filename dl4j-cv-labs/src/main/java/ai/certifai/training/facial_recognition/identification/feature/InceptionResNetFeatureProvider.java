@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Skymind AI Bhd.
+ * Copyright (c) 2019 Skymind Holdings Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
@@ -17,9 +17,9 @@
 
 package ai.certifai.training.facial_recognition.identification.feature;
 
-import ai.certifai.solution.facial_recognition.detection.FaceLocalization;
-import ai.certifai.solution.facial_recognition.detection.OpenCV_DeepLearningFaceDetector;
-import ai.certifai.solution.facial_recognition.identification.Prediction;
+import ai.certifai.training.facial_recognition.detection.FaceLocalization;
+import ai.certifai.training.facial_recognition.detection.OpenCV_DeepLearningFaceDetector;
+import ai.certifai.training.facial_recognition.identification.Prediction;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.bytedeco.opencv.opencv_core.Rect;
 import org.bytedeco.opencv.opencv_core.Size;
@@ -30,8 +30,8 @@ import org.deeplearning4j.nn.graph.vertex.GraphVertex;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.workspace.LayerWorkspaceMgr;
 import org.deeplearning4j.util.ModelSerializer;
+import org.nd4j.common.io.ClassPathResource;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.io.ClassPathResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

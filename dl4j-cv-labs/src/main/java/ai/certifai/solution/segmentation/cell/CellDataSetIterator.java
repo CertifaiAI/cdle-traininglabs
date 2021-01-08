@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Skymind AI Bhd.
+ * Copyright (c) 2019 Skymind Holdings Bhd.
  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
@@ -27,15 +27,17 @@ import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
 import org.datavec.image.transform.ImageTransform;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
+import org.nd4j.common.primitives.Pair;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
-import org.nd4j.linalg.primitives.Pair;
+
 import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
+
 import java.util.List;
 import java.util.Random;
 
@@ -50,7 +52,7 @@ public class CellDataSetIterator {
     private static String inputDir;
     private static String downloadLink;
     private static List<Pair<String, String>> replacement = Arrays.asList(
-            new org.nd4j.linalg.primitives.Pair<>("inputs", "masks")
+            new Pair<>("inputs", "masks")
     );
     private static CustomLabelGenerator labelMaker = new CustomLabelGenerator(height, width, channels, replacement);
     private static InputSplit trainData, valData;
