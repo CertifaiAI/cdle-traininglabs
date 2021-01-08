@@ -1,19 +1,23 @@
 package ai.certifai.training.classification;
 
-import ai.certifai.solution.classification.WeatherDataSetIterator;
-import org.deeplearning4j.api.storage.StatsStorage;
+
+import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.nn.conf.layers.*;
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
+import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.api.InvocationType;
 import org.deeplearning4j.optimize.listeners.EvaluativeListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.api.UIServer;
-import org.deeplearning4j.ui.stats.StatsListener;
-import org.deeplearning4j.ui.storage.FileStatsStorage;
+import org.deeplearning4j.ui.model.stats.StatsListener;
+import org.deeplearning4j.ui.model.storage.InMemoryStatsStorage;
+
 import org.deeplearning4j.zoo.ZooModel;
 import org.deeplearning4j.zoo.model.SqueezeNet;
+import org.deeplearning4j.zoo.model.VGG16;
+import org.deeplearning4j.zoo.model.VGG19;
 import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -23,7 +27,6 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-
 
 /*
 This exercise allows you to build a CNN classifier from a multi-class weather image dataset by using transfer learning.

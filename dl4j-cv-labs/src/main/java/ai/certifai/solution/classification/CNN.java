@@ -1,6 +1,7 @@
 package ai.certifai.solution.classification;
 
-import org.deeplearning4j.api.storage.StatsStorage;
+
+import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.nn.conf.layers.*;
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
@@ -10,15 +11,15 @@ import org.deeplearning4j.optimize.api.InvocationType;
 import org.deeplearning4j.optimize.listeners.EvaluativeListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.api.UIServer;
-import org.deeplearning4j.ui.stats.StatsListener;
-import org.deeplearning4j.ui.storage.FileStatsStorage;
+import org.deeplearning4j.ui.model.stats.StatsListener;
+import org.deeplearning4j.ui.model.storage.InMemoryStatsStorage;
+
 import org.deeplearning4j.zoo.ZooModel;
 import org.deeplearning4j.zoo.model.SqueezeNet;
 import org.deeplearning4j.zoo.model.VGG16;
 import org.deeplearning4j.zoo.model.VGG19;
 import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.linalg.activations.Activation;
-import org.nd4j.linalg.dataset.ViewIterator;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
@@ -64,9 +65,8 @@ public class CNN {
         // =================================================================================
         // Weather image classifier built with VGG16 pre-trained model
         // =================================================================================
+/**
 
-
-        /**
         // STEP 1: Load VGG16 model from ZooModel. View the summary.
         ZooModel zooModel = VGG16.builder().build();
         ComputationGraph vgg16 = (ComputationGraph) zooModel.initPretrained();
@@ -86,9 +86,9 @@ public class CNN {
                 .removeVertexKeepConnections("predictions")
                 .addLayer("predictions",
                         new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        .nIn(4096).nOut(outputNum)
-                        .weightInit(WeightInit.XAVIER)
-                        .activation(Activation.SOFTMAX).build(),
+                                .nIn(4096).nOut(outputNum)
+                                .weightInit(WeightInit.XAVIER)
+                                .activation(Activation.SOFTMAX).build(),
                         "fc2")
                 .build();
         log.info(vgg16Transfer.summary());
@@ -100,23 +100,23 @@ public class CNN {
         DataSetIterator testIter = WeatherDataSetIterator.testIterator();
 
         // STEP 5: Visualize network training using dashboard and set up listener to capture information during training.
-         UIServer uiServer = UIServer.getInstance();
-         StatsStorage statsStorage = new FileStatsStorage(new File(System.getProperty("java.io.tmpdir"), "ui-stats.dl4j"));
-         uiServer.attach(statsStorage);
-         vgg16Transfer.setListeners(
-         new StatsListener( statsStorage),
-         new ScoreIterationListener(1),
-         new EvaluativeListener(trainIter, 1, InvocationType.EPOCH_END),
-         new EvaluativeListener(testIter, 1, InvocationType.EPOCH_END));
+        StatsStorage storage = new InMemoryStatsStorage();
+        UIServer server = UIServer.getInstance();
+        server.attach(storage);
+        vgg16Transfer.setListeners(
+                new StatsListener(storage),
+                new ScoreIterationListener(1),
+                new EvaluativeListener(trainIter, 1,InvocationType.EPOCH_END),
+                new EvaluativeListener(testIter, 1,InvocationType.EPOCH_END));
 
         // STEP 6: Train and evaluate the model
         int iter = 0;
-        while(trainIter.hasNext()) {
+        while (trainIter.hasNext()) {
             vgg16Transfer.fit(trainIter.next());
             Evaluation evalTrain = vgg16Transfer.evaluate(trainIter);
             System.out.print("Training evaluation:");
             log.info(evalTrain.stats());
-            if (iter% 10 ==0) {
+            if (iter % 10 == 0) {
                 log.info("Evaluate model at iter" + iter + "...");
                 Evaluation eval = vgg16Transfer.evaluate(testIter);
                 log.info(eval.stats());
@@ -127,16 +127,15 @@ public class CNN {
 
         log.info("Model build complete");
 
+**/
 
-
-         **/
 
         // ==============================================================================
         // Weather image classifier built with VGG19 pre-trained model
         // ==============================================================================
 
         // REPEAT STEP 1 - STEP 6 for VGG19
-        /**
+
         ZooModel zooModel2 = VGG19.builder().build();
         ComputationGraph vgg19 = (ComputationGraph) zooModel2.initPretrained();
         log.info(vgg19.summary());
@@ -164,12 +163,11 @@ public class CNN {
         WeatherDataSetIterator.setup(batchSize, trainPerc);
         DataSetIterator trainIter = WeatherDataSetIterator.trainIterator();
         DataSetIterator testIter = WeatherDataSetIterator.testIterator();
-
-         UIServer uiServer = UIServer.getInstance();
-         StatsStorage statsStorage = new FileStatsStorage(new File(System.getProperty("java.io.tmpdir"), "ui-stats.dl4j"));
-         uiServer.attach(statsStorage);
+         StatsStorage storage = new InMemoryStatsStorage();
+         UIServer server = UIServer.getInstance();
+         server.attach(storage);
          vgg19Transfer.setListeners(
-         new StatsListener( statsStorage),
+         new StatsListener(storage),
          new ScoreIterationListener(1),
          new EvaluativeListener(trainIter, 1, InvocationType.EPOCH_END),
          new EvaluativeListener(testIter, 1, InvocationType.EPOCH_END));
@@ -187,13 +185,13 @@ public class CNN {
         }
         log.info("Model build complete");
 
-         **/
+
 
         // ===========================================================================
         // Weather image classifier built with SqueezeNet pre-trained model
         // ===========================================================================
 
-
+/**
         ZooModel zooModel3 = SqueezeNet.builder().build();
         ComputationGraph squeezeNet = (ComputationGraph) zooModel3.initPretrained();
         log.info(squeezeNet.summary());
@@ -228,11 +226,12 @@ public class CNN {
         DataSetIterator trainIter = WeatherDataSetIterator.trainIterator();
         DataSetIterator testIter = WeatherDataSetIterator.testIterator();
 
-        UIServer uiServer = UIServer.getInstance();
-        StatsStorage statsStorage = new FileStatsStorage(new File(System.getProperty("java.io.tmpdir"), "ui-stats.dl4j"));
-        uiServer.attach(statsStorage);
+        StatsStorage storage = new InMemoryStatsStorage();
+        UIServer server = UIServer.getInstance();
+        server.attach(storage);
+
         squeezeNetTransfer.setListeners(
-                new StatsListener( statsStorage),
+                new StatsListener(storage),
                 new ScoreIterationListener(1),
                 new EvaluativeListener(trainIter, 1, InvocationType.EPOCH_END),
                 new EvaluativeListener(testIter, 1, InvocationType.EPOCH_END));
@@ -252,7 +251,7 @@ public class CNN {
 
 
         log.info("Model build complete");
-
+**/
 
     }
 

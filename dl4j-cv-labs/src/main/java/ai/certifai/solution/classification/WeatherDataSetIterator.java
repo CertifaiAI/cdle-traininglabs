@@ -9,12 +9,10 @@ import org.datavec.api.split.InputSplit;
 import org.datavec.image.loader.BaseImageLoader;
 import org.datavec.image.recordreader.ImageRecordReader;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
+import org.nd4j.common.util.ArchiveUtils;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.VGG16ImagePreProcessor;
-import org.nd4j.linalg.io.ClassPathResource;
-import org.nd4j.util.ArchiveUtils;
 import org.slf4j.Logger;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
