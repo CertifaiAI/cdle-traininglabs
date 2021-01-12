@@ -60,12 +60,13 @@ public class CNN {
     private static final int batchSize = 16;
     private static final String featureExtractionLayer = "fc2";
 
+
     public static void main(String[] args) throws IOException, IllegalAccessException {
 
         // =================================================================================
         // Weather image classifier built with VGG16 pre-trained model
         // =================================================================================
-/**
+
 
         // STEP 1: Load VGG16 model from ZooModel. View the summary.
         ZooModel zooModel = VGG16.builder().build();
@@ -106,16 +107,13 @@ public class CNN {
         vgg16Transfer.setListeners(
                 new StatsListener(storage),
                 new ScoreIterationListener(1),
-                new EvaluativeListener(trainIter, 1,InvocationType.EPOCH_END),
-                new EvaluativeListener(testIter, 1,InvocationType.EPOCH_END));
+                new EvaluativeListener(trainIter, 1, InvocationType.EPOCH_END),
+                new EvaluativeListener(testIter, 1, InvocationType.EPOCH_END));
 
         // STEP 6: Train and evaluate the model
         int iter = 0;
         while (trainIter.hasNext()) {
             vgg16Transfer.fit(trainIter.next());
-            Evaluation evalTrain = vgg16Transfer.evaluate(trainIter);
-            System.out.print("Training evaluation:");
-            log.info(evalTrain.stats());
             if (iter % 10 == 0) {
                 log.info("Evaluate model at iter" + iter + "...");
                 Evaluation eval = vgg16Transfer.evaluate(testIter);
@@ -127,7 +125,7 @@ public class CNN {
 
         log.info("Model build complete");
 
-**/
+
 
 
         // ==============================================================================
@@ -135,7 +133,7 @@ public class CNN {
         // ==============================================================================
 
         // REPEAT STEP 1 - STEP 6 for VGG19
-
+/**
         ZooModel zooModel2 = VGG19.builder().build();
         ComputationGraph vgg19 = (ComputationGraph) zooModel2.initPretrained();
         log.info(vgg19.summary());
@@ -185,7 +183,7 @@ public class CNN {
         }
         log.info("Model build complete");
 
-
+**/
 
         // ===========================================================================
         // Weather image classifier built with SqueezeNet pre-trained model
