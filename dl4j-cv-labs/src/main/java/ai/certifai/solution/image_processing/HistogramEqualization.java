@@ -15,7 +15,7 @@
  */
 package ai.certifai.solution.image_processing;
 
-import global.skymind.solution.image_processing.utils.histogram.Histogram1DJava;
+import ai.certifai.solution.image_processing.utils.histogram.Histogram1DJava;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.nd4j.common.io.ClassPathResource;
 
@@ -45,6 +45,7 @@ public class HistogramEqualization {
         String imgpath = new ClassPathResource("image_processing/x-ray.jpeg").getFile().getAbsolutePath();
 
         Mat src = imread(imgpath, IMREAD_GRAYSCALE);
+
         Mat dest = new Mat();
         Histogram1DJava h = new Histogram1DJava();
 
