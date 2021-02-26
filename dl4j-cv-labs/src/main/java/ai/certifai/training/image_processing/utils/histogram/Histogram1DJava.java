@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package global.skymind.solution.image_processing.utils.histogram;
+package ai.certifai.training.image_processing.utils.histogram;
 
 import org.bytedeco.javacpp.FloatPointer;
 import org.bytedeco.javacpp.IntPointer;
@@ -33,7 +33,7 @@ import static org.bytedeco.opencv.global.opencv_imgproc.calcHist;
  */
 public class Histogram1DJava {
     private int numberOfBins = 256;
-    private IntPointer channels = new IntPointer(3);
+    private IntPointer channels = new IntPointer(new int[]{0, 1, 2});
     private Float _minRange = 0.0f;
     private Float _maxRange = 255.0f;
 

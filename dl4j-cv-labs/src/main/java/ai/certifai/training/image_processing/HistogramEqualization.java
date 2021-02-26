@@ -30,7 +30,7 @@ import java.io.IOException;
  * */
 
 public class HistogramEqualization {
-    public static void main () throws IOException {
+    public static void main (String[] args) throws IOException {
 
         /*
         *
