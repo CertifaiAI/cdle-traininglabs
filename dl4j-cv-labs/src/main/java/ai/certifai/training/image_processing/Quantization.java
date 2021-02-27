@@ -1,4 +1,4 @@
-package ai.certifai.training.image_processing;/*
+/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2020 CertifAI Sdn. Bhd.
@@ -19,6 +19,7 @@ package ai.certifai.training.image_processing;/*
  *
  */
 
+package ai.certifai.training.image_processing;
 
 import java.io.IOException;
 
