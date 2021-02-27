@@ -1,4 +1,4 @@
-package ai.certifai.solution.regression;/*
+/*
  *
  *  * ******************************************************************************
  *  *  * Copyright (c) 2020 CertifAI Sdn. Bhd.
@@ -19,6 +19,7 @@ package ai.certifai.solution.regression;/*
  *
  */
 
+package ai.certifai.solution.regression;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
