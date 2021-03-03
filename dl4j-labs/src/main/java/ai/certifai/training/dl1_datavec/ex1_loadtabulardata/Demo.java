@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl1_datavec.ex1_loadcsv;
+package ai.certifai.training.dl1_datavec.ex1_loadtabulardata;
 
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;

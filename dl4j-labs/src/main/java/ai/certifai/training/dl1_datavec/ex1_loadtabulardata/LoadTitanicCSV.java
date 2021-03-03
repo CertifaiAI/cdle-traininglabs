@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl1_datavec.ex1_loadcsv;
+package ai.certifai.training.dl1_datavec.ex1_loadtabulardata;
 
 import org.apache.commons.io.FileUtils;
 import org.datavec.api.records.writer.RecordWriter;
@@ -30,7 +30,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.List;
 
-public class LoadTitanic {
+public class LoadTitanicCSV {
     private static File inputFile;
     public static void main(String[] args) throws Exception {
         inputFile = new ClassPathResource("datavec/titanic/train.csv").getFile();
