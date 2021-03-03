@@ -44,7 +44,7 @@ public class VocLabelProvider implements ImageObjectLabelProvider {
         } else {
             String xmlContent;
             try {
-                xmlContent = FileUtils.readFileToString(xmlFile);
+                xmlContent = FileUtils.readFileToString(xmlFile, "UTF-8");
             } catch (IOException var17) {
                 throw new RuntimeException(var17);
             }
