@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.image_processing;
+package ai.certifai.training.cv1_image_processing;
 
 
 import org.bytedeco.javacv.CanvasFrame;

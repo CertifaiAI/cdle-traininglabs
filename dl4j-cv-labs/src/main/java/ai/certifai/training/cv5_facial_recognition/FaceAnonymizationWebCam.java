@@ -14,12 +14,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.facial_recognition;
+package ai.certifai.training.cv5_facial_recognition;
 
-import ai.certifai.training.facial_recognition.detection.FaceDetector;
-import ai.certifai.training.facial_recognition.detection.FaceLocalization;
-import ai.certifai.training.facial_recognition.detection.OpenCV_DeepLearningFaceDetector;
-import ai.certifai.training.facial_recognition.detection.OpenCV_HaarCascadeFaceDetector;
+import ai.certifai.training.cv5_facial_recognition.detection.FaceDetector;
+import ai.certifai.training.cv5_facial_recognition.detection.FaceLocalization;
+import ai.certifai.training.cv5_facial_recognition.detection.OpenCV_DeepLearningFaceDetector;
+import ai.certifai.training.cv5_facial_recognition.detection.OpenCV_HaarCascadeFaceDetector;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.bytedeco.opencv.opencv_core.Point;
 import org.bytedeco.opencv.opencv_core.Rect;
@@ -31,8 +31,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
-import static ai.certifai.training.facial_recognition.detection.FaceDetector.OPENCV_DL_FACEDETECTOR;
-import static ai.certifai.training.facial_recognition.detection.FaceDetector.OPENCV_HAAR_CASCADE_FACEDETECTOR;
+import static ai.certifai.training.cv5_facial_recognition.detection.FaceDetector.OPENCV_DL_FACEDETECTOR;
+import static ai.certifai.training.cv5_facial_recognition.detection.FaceDetector.OPENCV_HAAR_CASCADE_FACEDETECTOR;
 import static org.bytedeco.opencv.global.opencv_core.flip;
 import static org.bytedeco.opencv.global.opencv_highgui.*;
 import static org.bytedeco.opencv.global.opencv_highgui.destroyAllWindows;

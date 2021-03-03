@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.cv3_object_detection.ActorsDetector.vgg16.dataHelpers;
+package ai.certifai.training.cv3_object_detection.celebritydetection.vgg16.dataHelpers;
 
 import org.datavec.api.io.filters.BalancedPathFilter;
 import org.datavec.api.io.labels.ParentPathLabelGenerator;

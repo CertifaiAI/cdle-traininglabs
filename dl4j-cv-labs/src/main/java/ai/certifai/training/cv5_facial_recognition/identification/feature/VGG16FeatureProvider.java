@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.facial_recognition.identification.feature;
+package ai.certifai.training.cv5_facial_recognition.identification.feature;
 
 import ai.certifai.solution.facial_recognition.detection.FaceLocalization;
 import ai.certifai.solution.facial_recognition.detection.OpenCV_DeepLearningFaceDetector;

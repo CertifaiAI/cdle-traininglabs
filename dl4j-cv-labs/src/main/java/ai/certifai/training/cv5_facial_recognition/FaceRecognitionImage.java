@@ -14,17 +14,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.facial_recognition;
+package ai.certifai.training.cv5_facial_recognition;
 
-import ai.certifai.training.facial_recognition.detection.FaceDetector;
-import ai.certifai.training.facial_recognition.detection.FaceLocalization;
-import ai.certifai.training.facial_recognition.detection.OpenCV_DeepLearningFaceDetector;
-import ai.certifai.training.facial_recognition.detection.OpenCV_HaarCascadeFaceDetector;
-import ai.certifai.training.facial_recognition.identification.DistanceFaceIdentifier;
-import ai.certifai.training.facial_recognition.identification.FaceIdentifier;
-import ai.certifai.training.facial_recognition.identification.Prediction;
-import ai.certifai.training.facial_recognition.identification.feature.InceptionResNetFeatureProvider;
-import ai.certifai.training.facial_recognition.identification.feature.VGG16FeatureProvider;
+import ai.certifai.training.cv5_facial_recognition.detection.FaceDetector;
+import ai.certifai.training.cv5_facial_recognition.detection.FaceLocalization;
+import ai.certifai.training.cv5_facial_recognition.detection.OpenCV_DeepLearningFaceDetector;
+import ai.certifai.training.cv5_facial_recognition.detection.OpenCV_HaarCascadeFaceDetector;
+import ai.certifai.training.cv5_facial_recognition.identification.DistanceFaceIdentifier;
+import ai.certifai.training.cv5_facial_recognition.identification.FaceIdentifier;
+import ai.certifai.training.cv5_facial_recognition.identification.Prediction;
+import ai.certifai.training.cv5_facial_recognition.identification.feature.InceptionResNetFeatureProvider;
+import ai.certifai.training.cv5_facial_recognition.identification.feature.VGG16FeatureProvider;
 import org.bytedeco.opencv.opencv_core.Mat;
 import org.bytedeco.opencv.opencv_core.Point;
 import org.bytedeco.opencv.opencv_core.Rect;
@@ -80,8 +80,8 @@ public class FaceRecognitionImage {
         //  Loading all files in the directory folder
         //  STEP 3 : ENTER YOUR CODE HERE
 
-        FaceDetector FaceDetector = getFaceDetector(ai.certifai.training.facial_recognition.detection.FaceDetector.OPENCV_DL_FACEDETECTOR);
-        FaceIdentifier FaceIdentifier = getFaceIdentifier(ai.certifai.training.facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_VGG16_PREBUILT);
+        FaceDetector FaceDetector = getFaceDetector(ai.certifai.training.cv5_facial_recognition.detection.FaceDetector.OPENCV_DL_FACEDETECTOR);
+        FaceIdentifier FaceIdentifier = getFaceIdentifier(ai.certifai.training.cv5_facial_recognition.identification.FaceIdentifier.FEATURE_DISTANCE_VGG16_PREBUILT);
 
         //  Using List to store a list of image
         //  STEP 4 :  ENTER YOUR CODE HERE

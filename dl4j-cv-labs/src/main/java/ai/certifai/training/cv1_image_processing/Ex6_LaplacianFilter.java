@@ -27,7 +27,7 @@ import java.io.IOException;
  *
  * */
 
-public class LaplacianFilter {
+public class Ex6_LaplacianFilter {
     public static void main () throws IOException {
 
         /*

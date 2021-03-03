@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.segmentation.car;
+package ai.certifai.training.cv4_segmentation.car;
 
 import org.datavec.image.transform.*;
 

@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.segmentation.cell;
+package ai.certifai.training.cv4_segmentation.cell;
 
 import ai.certifai.Helper;
 import ai.certifai.utilities.Visualization;

@@ -44,7 +44,7 @@ import java.io.IOException;
  *
  * */
 
-public class LoadImages {
+public class Ex1_LoadImages {
     public static void main(String[] args) throws IOException {
 
         /*

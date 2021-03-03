@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.image_processing.utils.histogram;
+package ai.certifai.training.cv1_image_processing.utils.histogram;
 
 import org.bytedeco.javacpp.FloatPointer;
 import org.bytedeco.javacpp.IntPointer;

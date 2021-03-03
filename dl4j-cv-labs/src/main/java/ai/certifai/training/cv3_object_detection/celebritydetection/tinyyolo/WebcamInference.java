@@ -15,9 +15,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.cv3_object_detection.ActorsDetector.tinyyolo;
+package ai.certifai.training.cv3_object_detection.celebritydetection.tinyyolo;
 
-import ai.certifai.training.cv3_object_detection.ActorsDetector.tinyyolo.dataHelpers.NonMaxSuppression;
+import ai.certifai.training.cv3_object_detection.celebritydetection.tinyyolo.dataHelpers.NonMaxSuppression;
 import org.bytedeco.opencv.opencv_core.*;
 import org.bytedeco.opencv.opencv_videoio.*;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;

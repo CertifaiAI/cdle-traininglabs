@@ -19,7 +19,7 @@ package ai.certifai.training.cv1_image_processing;
 import java.io.IOException;
 
 /*
- * Using code from LoadImages.java, read an image from the resources folder, and apply:
+ * Using code from Ex1_LoadImages.java, read an image from the resources folder, and apply:
  *   1. Gaussian Blur
  *   2. Median Blur,
  *   and display both the original and blurred images.
@@ -29,7 +29,7 @@ import java.io.IOException;
  * */
 
 
-public class ImageBlur {
+public class Ex2_ImageBlur {
     public static void main(String[] args) throws IOException {
 
     /*

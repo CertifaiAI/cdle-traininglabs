@@ -29,7 +29,7 @@ package ai.certifai.training.cv1_image_processing;
 
 import java.io.IOException;
 
-public class ErosionAndDilation {
+public class Ex10_ErosionAndDilation {
     public static void main(String[] args) throws IOException {
 
         /*

@@ -29,7 +29,7 @@ import java.io.IOException;
  *
  * */
 
-public class HistogramEqualization {
+public class Ex8_HistogramEqualization {
     public static void main (String[] args) throws IOException {
 
         /*

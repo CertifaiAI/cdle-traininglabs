@@ -31,7 +31,7 @@ import java.io.IOException;
  *
  * */
 
-public class ImageSharpening {
+public class Ex3_ImageSharpening {
     public static void main () throws IOException {
 
         /*

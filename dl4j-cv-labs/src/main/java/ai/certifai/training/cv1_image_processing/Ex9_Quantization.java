@@ -24,7 +24,7 @@ package ai.certifai.training.cv1_image_processing;
 import java.io.IOException;
 
 /**
- * Quantization is the discretization of the image pixel value.
+ * Ex9_Quantization is the discretization of the image pixel value.
  * The equation of quantization is given as follows:
  * floor (pixel_value / bin) * bin
  *
@@ -38,7 +38,7 @@ import java.io.IOException;
  * 4. Display the final image
  */
 
-public class Quantization {
+public class Ex9_Quantization {
     public static void main(String[] args) throws IOException{
 
     }

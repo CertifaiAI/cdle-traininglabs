@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.facial_recognition.detection;
+package ai.certifai.training.cv5_facial_recognition.detection;
 
 import org.bytedeco.javacpp.indexer.FloatIndexer;
 import org.bytedeco.opencv.opencv_core.Mat;

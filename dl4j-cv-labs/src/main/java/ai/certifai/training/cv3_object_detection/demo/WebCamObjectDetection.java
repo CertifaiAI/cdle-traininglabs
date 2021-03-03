@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.cv3_object_detection;
+package ai.certifai.training.cv3_object_detection.demo;
 
 import org.bytedeco.opencv.opencv_core.*;
 import static org.bytedeco.opencv.global.opencv_core.flip;

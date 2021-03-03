@@ -28,7 +28,7 @@ package ai.certifai.training.cv1_image_processing;
 *
 * */
 
-public class UnsharpMasking {
+public class Ex4_UnsharpMasking {
     public static void main(String[] args){
         /*
          *

@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.cv2_classification;
+package ai.certifai.training.cv2_classification.dogbreedclassification;
 
 import ai.certifai.Helper;
 import org.apache.commons.io.FileUtils;

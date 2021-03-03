@@ -15,10 +15,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.cv3_object_detection.ActorsDetector.tinyyolo;
+package ai.certifai.training.cv3_object_detection.celebritydetection.tinyyolo;
 
-import ai.certifai.training.cv3_object_detection.ActorsDetector.tinyyolo.dataHelpers.LabelImgXmlLabelProvider;
-import ai.certifai.training.cv3_object_detection.ActorsDetector.tinyyolo.dataHelpers.NonMaxSuppression;
+import ai.certifai.training.cv3_object_detection.celebritydetection.tinyyolo.dataHelpers.LabelImgXmlLabelProvider;
+import ai.certifai.training.cv3_object_detection.celebritydetection.tinyyolo.dataHelpers.NonMaxSuppression;
 import org.bytedeco.opencv.opencv_core.*;
 import static org.bytedeco.opencv.global.opencv_imgproc.*;
 import static org.bytedeco.opencv.global.opencv_core.CV_8U;

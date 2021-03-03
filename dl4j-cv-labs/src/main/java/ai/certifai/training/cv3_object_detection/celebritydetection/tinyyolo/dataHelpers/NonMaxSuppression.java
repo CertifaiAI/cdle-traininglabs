@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.cv3_object_detection.ActorsDetector.tinyyolo.dataHelpers;
+package ai.certifai.training.cv3_object_detection.celebritydetection.tinyyolo.dataHelpers;
 
 import org.deeplearning4j.nn.layers.objdetect.DetectedObject;
 

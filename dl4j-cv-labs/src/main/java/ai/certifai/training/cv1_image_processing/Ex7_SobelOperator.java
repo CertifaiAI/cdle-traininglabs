@@ -32,7 +32,7 @@ import java.io.IOException;
  *
  * */
 
-public class SobelOperator {
+public class Ex7_SobelOperator {
     public static void main(String[] args) throws IOException {
 
         /*

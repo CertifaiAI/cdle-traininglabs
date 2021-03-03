@@ -15,9 +15,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.segmentation.cell;
+package ai.certifai.training.cv4_segmentation.cell;
 
-import ai.certifai.training.segmentation.CustomLabelGenerator;
+import ai.certifai.training.cv4_segmentation.CustomLabelGenerator;
 import ai.certifai.Helper;
 import ai.certifai.utilities.DataUtilities;
 import org.datavec.api.io.filters.BalancedPathFilter;

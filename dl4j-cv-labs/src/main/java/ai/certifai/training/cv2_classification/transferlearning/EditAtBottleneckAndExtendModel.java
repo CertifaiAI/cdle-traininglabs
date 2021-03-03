@@ -15,9 +15,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.classification.transferlearning;
+package ai.certifai.training.cv2_classification.transferlearning;
 
-import ai.certifai.training.classification.DogBreedDataSetIterator;
+import ai.certifai.training.cv2_classification.dogbreedclassification.DogBreedDataSetIterator;
 import org.datavec.image.transform.*;
 import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
@@ -31,7 +31,6 @@ import org.deeplearning4j.optimize.listeners.EvaluativeListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.ui.api.UIServer;
 import org.deeplearning4j.ui.model.stats.StatsListener;
-import org.deeplearning4j.ui.model.storage.FileStatsStorage;
 import org.deeplearning4j.ui.model.storage.InMemoryStatsStorage;
 import org.deeplearning4j.zoo.ZooModel;
 import org.deeplearning4j.zoo.model.VGG16;
@@ -42,7 +41,6 @@ import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;

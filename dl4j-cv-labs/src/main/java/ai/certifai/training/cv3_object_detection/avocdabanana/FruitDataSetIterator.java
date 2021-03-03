@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.cv3_object_detection.AvocadoBananaDetector;
+package ai.certifai.training.cv3_object_detection.avocdabanana;
 
 import ai.certifai.Helper;
 import org.apache.commons.io.FileUtils;

@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.facial_recognition.detection;
+package ai.certifai.training.cv5_facial_recognition.detection;
 
 public class FaceLocalization {
     float left_x;

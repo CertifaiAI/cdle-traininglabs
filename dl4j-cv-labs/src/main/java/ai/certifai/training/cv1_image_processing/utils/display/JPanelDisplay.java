@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.image_processing.utils.display;
+package ai.certifai.training.cv1_image_processing.utils.display;
 
 import org.nd4j.linalg.api.ndarray.INDArray;
 

@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.object_detection.MetalDefectsDetector;
+package ai.certifai.training.cv3_object_detection.metaldefectsdetector;
 
 import ai.certifai.Helper;
 import org.apache.commons.io.FileUtils;

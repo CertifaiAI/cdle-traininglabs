@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.segmentation;
+package ai.certifai.training.cv4_segmentation;
 
 import org.datavec.api.io.labels.PathLabelGenerator;
 import org.datavec.api.writable.NDArrayWritable;

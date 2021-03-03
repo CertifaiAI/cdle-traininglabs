@@ -15,9 +15,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.cv3_object_detection.ActorsDetector.vgg16;
+package ai.certifai.training.cv3_object_detection.celebritydetection.vgg16;
 
-import ai.certifai.training.cv3_object_detection.ActorsDetector.vgg16.dataHelpers.ActorsDatasetIterator;
+import ai.certifai.training.cv3_object_detection.celebritydetection.vgg16.dataHelpers.ActorsDatasetIterator;
 import com.google.common.primitives.Ints;
 import org.datavec.api.records.metadata.RecordMetaDataURI;
 import org.deeplearning4j.core.storage.StatsStorage;

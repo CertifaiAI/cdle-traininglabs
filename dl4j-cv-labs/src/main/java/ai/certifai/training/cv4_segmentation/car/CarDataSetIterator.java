@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.segmentation.car;
+package ai.certifai.training.cv4_segmentation.car;
 
 import ai.certifai.Helper;
 import ai.certifai.utilities.DataUtilities;
@@ -29,7 +29,7 @@ import org.datavec.image.recordreader.ImageRecordReader;
 import org.nd4j.common.primitives.Pair;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
-import ai.certifai.training.segmentation.CustomLabelGenerator;
+import ai.certifai.training.cv4_segmentation.CustomLabelGenerator;
 import org.slf4j.Logger;
 
 import java.io.File;
