@@ -23,47 +23,12 @@ Running examples strategically structured to enhance understanding of building m
 This repo contains codes for hands-on purpose during training session. All codes had been tested using CPU.
 
 ## Contents
+| Lab  | Description |
+| ------------- | ------------- |
+| dl4j-labs  | Tutorials covering the basics of DL4J and building Deep Learning models to solve simple classification and regression problems.  |
+| dl4j-cv-labs  | Tutorials covering image processing topics and solving simple Computer Vision problems with Deep Learning models using DL4J.  |
 
-#### DL4J-Lab
-- [classification](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/classification):
-  This folder contains various binary and multiple classification task exercises for learners to practice and solutions to refer to.
-- [convolution](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/convolution):
-  This folder contains MNIST classification and object detection using transfer learning of TinyYOLO and VGG16.
-- [dataexamples](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/dataexamples):
-  This folder contains model that train neural network to learn drawing.
-- [datavec](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/datavec):
-  This folder contains K-Fold cross-validation tutorial, load and transform CSV and Image files using DataVec.
-- [feedforward](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/feedforward):
-  This folder contains simplest neural network to approximate a function that can map input to an output, and model that can detect the gender of a person based on his/her name.
-- [generative](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/generative):
-  This folder contains a GAN model that can generate MNIST digits. 
-- [humanactivity](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/humanactivity):
-  This folder contains a LSTM model and a hybrid CNN-LSTM neural network to perform human activity classification.
-- [modelsaveload](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/modelsaveload):
-  This folder contains step-by-step on how to save and load a model.
-- [nd4j](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/nd4j):
-  This folder contains ND4J tutorial and exercise.
-- [recurrent](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/recurrent):
-  This folder contains a basic RNN network that learn to create a string, a LSTM model to generate texts, and a LSTM model for mortality prediction.
-- [regression](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/regression):
-  This folder contains neural network that predict ridership demand.
-- [VAE](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution/VAE):
-  This folder contains a VAE model for bank transaction anomaly detection.
-#### DL4J-cv-labs
-- [classification](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-cv-labs/src/main/java/ai/certifai/solution/classification):
-  This folder contains a custom model and a VGG16 model for dog breed classification, and a ResNet-50 model for food classification.
-- [facial_recognition](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-cv-labs/src/main/java/ai/certifai/solution/facial_recognition):
-  This folder contains facial recognition with a pipeline of video streaming, face detection and face recognition.
-- [image processing](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-cv-labs/src/main/java/ai/certifai/solution/image_processing): 
-  This folder contains step-by-step on image processing.
-- [object_detection](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-cv-labs/src/main/java/ai/certifai/solution/object_detection): 
-  This folder contains a TinyYOLO model and a YOLOv2 model for Avocado and Banana Object Detection, and a pre-trained YOLOv2 model for metal surface defects detection.
-- [segmentation](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-cv-labs/src/main/java/ai/certifai/solution/segmentation): 
-  This folder contains semantic segmentation on the car images and the cell nucleus images from Data Science Bowl 2018 using a pre-trained U-Net.
 
-#### Spark-Lab
-- [HelloWorldSpark](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-spark-labs/src/main/java/global/skymind): 
-  This folder contains an example that reads in MNIST data, perform training using Spark, and output the data.
 
 ## Built with
 - deeplearning4j beta 7.0
