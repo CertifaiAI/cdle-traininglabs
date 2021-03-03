@@ -13,30 +13,20 @@ import org.datavec.image.recordreader.objdetect.ImageObject;
 import org.datavec.image.recordreader.objdetect.ImageObjectLabelProvider;
 
 public class VocLabelProvider implements ImageObjectLabelProvider {
-    private static final String OBJECT_START_TAG = "<object>";
-    private static final String OBJECT_END_TAG = "</object>";
-    private static final String NAME_TAG = "<name>";
-    private static final String XMIN_TAG = "<xmin>";
-    private static final String YMIN_TAG = "<ymin>";
-    private static final String XMAX_TAG = "<xmax>";
-    private static final String YMAX_TAG = "<ymax>";
     private String annotationsDir;
 
     public VocLabelProvider(@NonNull String baseDirectory) {
-        if (baseDirectory == null) {
-            throw new NullPointerException("baseDirectory is marked non-null but is null");
-        } else {
-            this.annotationsDir = FilenameUtils.concat(baseDirectory, "Annotations");
-            if (!(new File(this.annotationsDir)).exists()) {
-                throw new IllegalStateException("Annotations directory does not exist. Annotation files should be present at baseDirectory/Annotations/nnnnnn.xml. Expected location: " + this.annotationsDir);
-            }
+        this.annotationsDir = FilenameUtils.concat(baseDirectory, "Annotations");
+        if (!(new File(this.annotationsDir)).exists())
+        {
+            throw new IllegalStateException("Annotations directory does not exist. Annotation files should be present at baseDirectory/Annotations/nnnnnn.xml. Expected location: " + this.annotationsDir);
         }
     }
 
     public List<ImageObject> getImageObjectsForPath(String path) {
-        int idx = path.lastIndexOf(47);
-        idx = Math.max(idx, path.lastIndexOf(92));
-        String filename = path.substring(idx + 1, path.lastIndexOf(46));
+        int idx = path.lastIndexOf('/');
+        idx = Math.max(idx, path.lastIndexOf('\\'));
+        String filename = path.substring(idx + 1, path.lastIndexOf('.'));
         String xmlPath = FilenameUtils.concat(this.annotationsDir, filename + ".xml");
         File xmlFile = new File(xmlPath);
         if (!xmlFile.exists()) {
@@ -103,8 +93,8 @@ public class VocLabelProvider implements ImageObjectLabelProvider {
     }
 
     private int extractAndParse(String line) {
-        int idxStartName = line.indexOf(62) + 1;
-        int idxEndName = line.lastIndexOf(60);
+        int idxStartName = line.indexOf('>') + 1;
+        int idxEndName = line.lastIndexOf('<');
         String substring = line.substring(idxStartName, idxEndName);
         return Integer.parseInt(substring);
     }
