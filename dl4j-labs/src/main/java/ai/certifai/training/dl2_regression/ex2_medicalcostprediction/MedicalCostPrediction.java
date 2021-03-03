@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl2_regression.medicalcostprediction;
+package ai.certifai.training.dl2_regression.ex2_medicalcostprediction;
 
 import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.ui.api.UIServer;

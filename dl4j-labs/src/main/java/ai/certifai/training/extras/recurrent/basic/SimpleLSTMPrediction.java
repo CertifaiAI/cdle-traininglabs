@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.recurrent.basic;
+package ai.certifai.training.extras.recurrent.basic;
 
 import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.ui.api.UIServer;

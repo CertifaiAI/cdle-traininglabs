@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl1_datavec.ex1_loadcsv;
+package ai.certifai.training.dl1_datavec.ex4_datatransformation;
 
 import org.apache.commons.io.FileUtils;
 import org.datavec.api.records.reader.RecordReader;
@@ -49,7 +49,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-public class LoadTransaction {
+public class Ex2_Transaction {
     public static  void main(String[] args) throws Exception {
 
         //=====================================================================

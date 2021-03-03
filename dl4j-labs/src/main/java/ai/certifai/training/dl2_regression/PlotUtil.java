@@ -19,7 +19,7 @@
  *
  */
 
-package ai.certifai.training.regression;
+package ai.certifai.training.dl2_regression;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;

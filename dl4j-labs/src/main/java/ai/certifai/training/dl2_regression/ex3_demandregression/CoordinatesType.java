@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl2_regression.demandregression;
+package ai.certifai.training.dl2_regression.ex3_demandregression;
 
 
 public enum CoordinatesType {

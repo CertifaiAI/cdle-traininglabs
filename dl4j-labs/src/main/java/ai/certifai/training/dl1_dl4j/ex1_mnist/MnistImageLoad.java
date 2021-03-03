@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl1_dl4j.modelsaveload;
+package ai.certifai.training.dl1_dl4j.ex1_mnist;
 
 import org.nd4j.common.io.ClassPathResource;
 import org.datavec.image.loader.NativeImageLoader;

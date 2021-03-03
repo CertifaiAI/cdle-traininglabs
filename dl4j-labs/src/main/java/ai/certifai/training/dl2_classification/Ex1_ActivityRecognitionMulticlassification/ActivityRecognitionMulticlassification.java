@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl2_classification;
+package ai.certifai.training.dl2_classification.Ex1_ActivityRecognitionMulticlassification;
 
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.collection.CollectionRecordReader;
@@ -46,7 +46,7 @@ import java.util.List;
  *
  * @author devenyantis
  */
-public class Multiclass {
+public class ActivityRecognitionMulticlassification {
 
     private static final int totalData = 42151;
     private static final double ratioTrainTestSplit = 0.8;

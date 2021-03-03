@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl2_regression.demandregression;
+package ai.certifai.training.dl2_regression.ex3_demandregression;
 
 
 import com.github.davidmoten.geo.GeoHash;
@@ -27,8 +27,8 @@ import org.datavec.api.transform.schema.Schema;
 import org.datavec.api.writable.DoubleWritable;
 import org.datavec.api.writable.Writable;
 import org.nd4j.shade.jackson.annotation.JsonProperty;
-import static ai.certifai.training.dl2_regression.demandregression.CoordinatesType.LAT;
-import static ai.certifai.training.dl2_regression.demandregression.CoordinatesType.LON;
+import static ai.certifai.training.dl2_regression.ex3_demandregression.CoordinatesType.LAT;
+import static ai.certifai.training.dl2_regression.ex3_demandregression.CoordinatesType.LON;
 
 import java.io.Serializable;
 import java.util.ArrayList;

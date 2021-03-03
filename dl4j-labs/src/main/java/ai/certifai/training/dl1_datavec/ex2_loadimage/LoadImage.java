@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl1_datavec.loadimage;
+package ai.certifai.training.dl1_datavec.ex2_loadimage;
 
 import org.datavec.api.io.filters.BalancedPathFilter;
 import org.datavec.api.io.labels.ParentPathLabelGenerator;
@@ -35,7 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class LoadImage1 {
+public class LoadImage {
     //Images are of format given by allowedExtension
     private static final String [] allowedExtensions = BaseImageLoader.ALLOWED_FORMATS;
 

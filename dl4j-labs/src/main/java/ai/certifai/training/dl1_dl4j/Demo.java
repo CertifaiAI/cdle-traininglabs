@@ -33,9 +33,9 @@ import org.slf4j.LoggerFactory;
  * 5. Tune the network
  */
 
-public class SimplestNetwork
+public class Demo
 {
-    private static Logger log = LoggerFactory.getLogger(SimplestNetwork.class);
+    private static Logger log = LoggerFactory.getLogger(Demo.class);
 
     public static void main(String[] args) throws Exception
     {

@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl1_datavec.loadimage;
+package ai.certifai.training.dl1_datavec.ex2_loadimage;
 
 import ai.certifai.Helper;
 import org.apache.commons.io.FileUtils;

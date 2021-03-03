@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl2_regression.bostonhousepriceprediction;
+package ai.certifai.training.dl2_regression.ex1_bostonhousepriceprediction;
 
 import java.io.IOException;
 

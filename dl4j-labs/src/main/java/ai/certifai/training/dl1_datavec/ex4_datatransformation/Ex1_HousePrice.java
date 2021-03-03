@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl1_datavec.ex1_loadcsv;
+package ai.certifai.training.dl1_datavec.ex4_datatransformation;
 
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
@@ -47,7 +47,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoadHousePrice {
+public class Ex1_HousePrice {
     private static final int NUMLINESTOSKIP = 1;
     private static final int EPOCHS = 200;
     private static final int SEED = 100;

@@ -43,7 +43,7 @@ import java.util.List;
  * @author BoonKhai Yeoh
  */
 
-public class BirdClassification {
+public class Demo {
     static int seed = 123;
     static int numInput = 10;
     static int numClass = 6;

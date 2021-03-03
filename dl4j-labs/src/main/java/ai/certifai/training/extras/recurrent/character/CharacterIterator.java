@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.recurrent.character;
+package ai.certifai.training.extras.recurrent.character;
 
 
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;

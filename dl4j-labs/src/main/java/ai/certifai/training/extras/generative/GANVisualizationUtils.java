@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.generative;
+package ai.certifai.training.extras.generative;
 
 import org.nd4j.linalg.api.ndarray.INDArray;
 

@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl1_datavec.ex1_loadcsv;
+package ai.certifai.training.dl1_datavec.ex4_datatransformation;
 
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
@@ -46,9 +46,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 
-public class LoadChessPlayer {
+public class Ex3_WomenChessPlayer {
 
-    private static Logger log = LoggerFactory.getLogger(LoadChessPlayer.class);
+    private static Logger log = LoggerFactory.getLogger(Ex3_WomenChessPlayer.class);
 
     private static int batchSize = 64;
     private static int label = 13;

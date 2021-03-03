@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.generative;
+package ai.certifai.training.extras.generative;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;

@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl1_dl4j.mnist;
+package ai.certifai.training.dl1_dl4j.ex1_mnist;
 
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;

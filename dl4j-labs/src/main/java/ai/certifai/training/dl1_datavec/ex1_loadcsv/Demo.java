@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl1_datavec.loadcsv;
+package ai.certifai.training.dl1_datavec.ex1_loadcsv;
 
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
@@ -32,7 +32,7 @@ import org.nd4j.common.io.ClassPathResource;
 import java.io.File;
 import java.util.Arrays;
 
-public class LoadCSV1 {
+public class Demo {
     private static int numLinesToSkip = 0;
     private static char delimiter = ',';
 

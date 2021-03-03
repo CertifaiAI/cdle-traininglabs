@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package ai.certifai.training.dl1_dl4j.detectgender;
+package ai.certifai.training.dl1_dl4j.ex2_detectgender;
 
 import org.datavec.api.conf.Configuration;
 import org.datavec.api.records.reader.impl.LineRecordReader;
