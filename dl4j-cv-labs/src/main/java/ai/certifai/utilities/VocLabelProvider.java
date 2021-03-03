@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.NonNull;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.datavec.image.recordreader.objdetect.ImageObject;
@@ -32,9 +34,10 @@ public class VocLabelProvider implements ImageObjectLabelProvider {
     }
 
     public List<ImageObject> getImageObjectsForPath(String path) {
+        path = path.replaceAll("%20"," ");
         int idx = path.lastIndexOf(47);
         idx = Math.max(idx, path.lastIndexOf(92));
-        String filename = path.substring(idx + 1, path.length() - 4);
+        String filename = path.substring(idx + 1, path.lastIndexOf(46));
         String xmlPath = FilenameUtils.concat(this.annotationsDir, filename + ".xml");
         File xmlFile = new File(xmlPath);
         if (!xmlFile.exists()) {

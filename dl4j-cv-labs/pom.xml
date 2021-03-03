@@ -84,6 +84,11 @@
             <version>${nd4j.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
         <!--Uncomment to enable cudnn-->
         <!--<dependency>
             <groupId>org.deeplearning4j</groupId>
