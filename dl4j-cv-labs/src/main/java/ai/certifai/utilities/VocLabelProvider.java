@@ -34,7 +34,6 @@ public class VocLabelProvider implements ImageObjectLabelProvider {
     }
 
     public List<ImageObject> getImageObjectsForPath(String path) {
-        path = path.replaceAll("%20"," ");
         int idx = path.lastIndexOf(47);
         idx = Math.max(idx, path.lastIndexOf(92));
         String filename = path.substring(idx + 1, path.lastIndexOf(46));
