@@ -18,12 +18,12 @@
 package ai.certifai.training.object_detection.AvocadoBananaDetector;
 
 import ai.certifai.Helper;
+import ai.certifai.utilities.VocLabelProvider;
 import org.apache.commons.io.FileUtils;
 import org.datavec.api.split.FileSplit;
 import org.datavec.api.split.InputSplit;
 import org.datavec.image.loader.NativeImageLoader;
 import org.datavec.image.recordreader.objdetect.ObjectDetectionRecordReader;
-import org.datavec.image.recordreader.objdetect.impl.VocLabelProvider;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.nd4j.common.util.ArchiveUtils;
 import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
