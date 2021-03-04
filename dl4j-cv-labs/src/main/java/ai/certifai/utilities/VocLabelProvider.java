@@ -38,7 +38,7 @@ public class VocLabelProvider implements ImageObjectLabelProvider {
         int idx = path.lastIndexOf('/');
         idx = Math.max(idx, path.lastIndexOf('\\'));
 
-        String filename = path.substring(idx+1, path.lastIndexOf('.'));   //-4: ".jpg"
+        String filename = path.substring(idx+1, path.lastIndexOf('.'));   // e.g. ".folder/folder/folder/image1.jpeg" -> "image1"
         String xmlPath = FilenameUtils.concat(annotationsDir, filename + ".xml");
         File xmlFile = new File(xmlPath);
         if(!xmlFile.exists()){
