@@ -1,6 +1,7 @@
-/*
+package ai.certifai.training.cv2_classification;/*
  *
  *  * ******************************************************************************
+ *  *  * Copyright (c) 2019 Skymind AI Bhd.
  *  *  * Copyright (c) 2020 CertifAI Sdn. Bhd.
  *  *  *
  *  *  * This program and the accompanying materials are made available under the
@@ -19,27 +20,5 @@
  *
  */
 
-package ai.certifai.training.image_processing;
-
-import java.io.IOException;
-
-/**
- * Quantization is the discretization of the image pixel value.
- * The equation of quantization is given as follows:
- * floor (pixel_value / bin) * bin
- *
- * In this example, we will reduce the intensity of an image from 256 bits to 2 bits.
- *
- * TASKS:
- * -----
- * 1. Load and display lena.png from the resources/image_processing folder
- * 2. Read the image to a mat file
- * 3. Perform depth reduction algorithm using ND4J
- * 4. Display the final image
- */
-
-public class Quantization {
-    public static void main(String[] args) throws IOException{
-
-    }
+public class Demo {
 }

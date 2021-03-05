@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package global.skymind.training.image_processing.utils.display;
+package ai.certifai.solution.image_processing.utils.display;
 
 import org.nd4j.linalg.api.ndarray.INDArray;
 
