@@ -36,7 +36,6 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.slf4j.Logger;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -91,7 +90,7 @@ public class CompareCNN {
             testIter.reset();
         }
     }
-    private static void getListeners(ComputationGraph model){git
+    private static void getListeners(ComputationGraph model){
         StatsStorage storage = new InMemoryStatsStorage();
         UIServer server = UIServer.getInstance();
         server.attach(storage);
