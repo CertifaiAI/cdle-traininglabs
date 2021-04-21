@@ -59,9 +59,6 @@ This repo contains codes for hands-on purpose during training session. All codes
 - [segmentation](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-cv-labs/src/main/java/ai/certifai/solution/segmentation): 
   This folder contains semantic segmentation on the car images and the cell nucleus images from Data Science Bowl 2018 using a pre-trained U-Net.
 
-#### Spark-Lab
-- [HelloWorldSpark](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-spark-labs/src/main/java/global/skymind): 
-  This folder contains an example that reads in MNIST data, perform training using Spark, and output the data.
 
 ## Built with
 - deeplearning4j beta 7.0
