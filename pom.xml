@@ -216,6 +216,30 @@
                 </plugins>
             </build>
         </profile>
+
+
+        <!-- Adding profile for downloading JavaFX as Java 11 does not contain JavaFX (This is for the sake running the code test in GitHub Action) -->
+        <profile>
+            <id>javafx</id>
+            <dependencies>
+                <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
+                <dependency>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-swing</artifactId>
+                    <version>16</version>
+                </dependency> 
+            
+                <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
+                <dependency>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-controls</artifactId>
+                    <version>16</version>
+                </dependency> 
+            </dependencies>
+        </profile>
+
     </profiles>
+
+    
 
 </project>
