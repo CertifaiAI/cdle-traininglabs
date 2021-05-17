@@ -8,6 +8,7 @@ Fixes # (issue)
 
 Please delete options that are not relevant.
 
+- [ ] New Exercise
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] This change requires a documentation update
@@ -31,4 +32,3 @@ Please delete options that are not relevant.
 - [ ] New and existing unit tests pass locally with my changes
 - [ ] Any dependent changes have been merged
 
-Assign a reviewer to review your code.
