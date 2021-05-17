@@ -59,6 +59,14 @@
         <maven.minimum.version>3.3.1</maven.minimum.version>
         <javafx.version>2.2.3</javafx.version>
         <lombok.version>1.18.16</lombok.version>
+
+        <!-- Adding Sonar properties for Sonar Cloud code scan -->
+        <sonar.projectKey>CertifaiAI_TrainingLabs</sonar.projectKey>
+        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+        <sonar.organization>certifaiai</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+         
+
     </properties>
 
     <modules>
@@ -208,6 +216,30 @@
                 </plugins>
             </build>
         </profile>
+
+
+        <!-- Adding profile for downloading JavaFX as Java 11 does not contain JavaFX (This is for the sake running the code test in GitHub Action) -->
+        <profile>
+            <id>javafx</id>
+            <dependencies>
+                <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
+                <dependency>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-swing</artifactId>
+                    <version>16</version>
+                </dependency> 
+            
+                <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
+                <dependency>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-controls</artifactId>
+                    <version>16</version>
+                </dependency> 
+            </dependencies>
+        </profile>
+
     </profiles>
+
+    
 
 </project>
