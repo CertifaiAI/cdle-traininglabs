@@ -4,7 +4,7 @@ name: Build & Sonar Test
 on:
   push:
     branches:
-      - faris_automated_codetest
+      - main
   pull_request:
     types: [assigned, edited, synchronize, reopened, review_requested]
 jobs:
