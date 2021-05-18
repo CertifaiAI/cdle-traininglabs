@@ -2,6 +2,13 @@
 
 <p>
   <p align="center">
+    <a href="https://sonarcloud.io/dashboard?id=CertifaiAI_TrainingLabs">
+        <img alt="Sonar Cloud" src="https://sonarcloud.io/images/project_badges/sonarcloud-white.svg">
+    </a>
+</p>
+
+<p>
+  <p align="center">
     <a href="https://github.com/CertifaiAI/TrainingLabs/blob/master/LICENSE">
         <img alt="GitHub" src="https://img.shields.io/github/license/CertifaiAI/TrainingLabs.svg">
     </a>
@@ -13,6 +20,9 @@
     </a>
     <a href="https://github.com/CertifaiAI/TrainingLabs/releases">
         <img alt="GitHub release" src="https://img.shields.io/github/release/CertifaiAI/TrainingLabs.svg">
+    </a>
+    <a href="https://sonarcloud.io/dashboard?id=CertifaiAI_TrainingLabs">
+        <img alt="Sonar Cloud" src="https://sonarcloud.io/api/project_badges/measure?project=CertifaiAI_TrainingLabs&metric=alert_status">
     </a>
 </p>
 
