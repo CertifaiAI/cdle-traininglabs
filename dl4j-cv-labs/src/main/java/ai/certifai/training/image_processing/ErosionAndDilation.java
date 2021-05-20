@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 CertifAI Sdn. Bhd.
+ * Copyright (c) 2020-2021 CertifAI Sdn. Bhd.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Apache License, Version 2.0 which is available at
@@ -12,6 +12,7 @@
  * under the License.
  *
  * SPDX-License-Identifier: Apache-2.0
+ *
  */
 
 package ai.certifai.training.image_processing;
