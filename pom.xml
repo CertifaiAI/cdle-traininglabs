@@ -54,6 +54,9 @@
         <javafx.version>2.2.3</javafx.version>
         <lombok.version>1.18.16</lombok.version>
 
+        <!-- Declare javafx version for javafx profile -->
+        <javafx16.version>16</javafx16.version>
+
         <!-- Adding Sonar properties for Sonar Cloud code scan -->
         <sonar.projectKey>CertifaiAI_TrainingLabs</sonar.projectKey>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
@@ -220,14 +223,14 @@
                 <dependency>
                     <groupId>org.openjfx</groupId>
                     <artifactId>javafx-swing</artifactId>
-                    <version>16</version>
+                    <version>${javafx16.version}</version>
                 </dependency> 
             
                 <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
                 <dependency>
                     <groupId>org.openjfx</groupId>
                     <artifactId>javafx-controls</artifactId>
-                    <version>16</version>
+                    <version>${javafx16.version}</version>
                 </dependency> 
             </dependencies>
         </profile>
