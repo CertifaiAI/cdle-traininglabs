@@ -25,11 +25,12 @@
 
     <parent>
         <groupId>ai.certifai</groupId>
-        <artifactId>traininglabs</artifactId>
+        <artifactId>cdle-traininglabs</artifactId>
         <version>1.0.0-alpha</version>
     </parent>
 
     <name>DeepLearning4j Training Labs</name>
+    <url>https://certifai.ai/</url>
 
     <repositories>
         <repository>

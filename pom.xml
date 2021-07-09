@@ -20,13 +20,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <groupId>ai.certifai</groupId>
-    <artifactId>traininglabs</artifactId>
+    <artifactId>cdle-traininglabs</artifactId>
     <packaging>pom</packaging>
     <modelVersion>4.0.0</modelVersion>
     <version>1.0.0-alpha</version>
 
     <name>Training Labs Parent</name>
     <description>Hands on labs training</description>
+    <url>https://certifai.ai/</url>
 
     <properties>
         <!-- Change the nd4j.backend property to nd4j-cuda-*.*-platform example: nd4j-cuda-10.0-platform to use CUDA GPUs -->

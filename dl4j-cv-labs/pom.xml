@@ -25,14 +25,13 @@
 
     <parent>
         <groupId>ai.certifai</groupId>
-        <artifactId>traininglabs</artifactId>
+        <artifactId>cdle-traininglabs</artifactId>
         <version>1.0.0-alpha</version>
     </parent>
 
     <name>dl4j-cv-labs</name>
     <description>A simple dl4j-cv-labs.</description>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
+    <url>https://certifai.ai/</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
