@@ -25,7 +25,7 @@
 
     <parent>
         <groupId>ai.certifai</groupId>
-        <artifactId>traininglabs</artifactId>
+        <artifactId>cdle-traininglabs</artifactId>
         <version>1.0.0-alpha</version>
     </parent>
 
