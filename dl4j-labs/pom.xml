@@ -30,6 +30,7 @@
     </parent>
 
     <name>DeepLearning4j Training Labs</name>
+    <url>https://certifai.ai/</url>
 
     <repositories>
         <repository>
