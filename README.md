@@ -12,7 +12,7 @@
     <a href="https://github.com/CertifaiAI/TrainingLabs/blob/master/LICENSE">
         <img alt="GitHub" src="https://img.shields.io/github/license/CertifaiAI/TrainingLabs.svg">
     </a>
-    <a href="Discord">
+    <a href="https://discord.com/invite/WsBFgNP">
         <img alt="Discord" src="https://img.shields.io/discord/699181979316387842?color=red">
     </a>
     <a href="https://certifai.ai">
