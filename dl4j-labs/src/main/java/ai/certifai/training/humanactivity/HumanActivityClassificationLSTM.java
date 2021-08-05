@@ -187,6 +187,7 @@ public class HumanActivityClassificationLSTM {
                                 .build(),
                         "trainFeatures")
                 .addLayer("predictActivity", new RnnOutputLayer.Builder()
+                                .dataFormat(RNNFormat.NCW)
                                 .nIn(100)
                                 .nOut(numClassLabel)
                                 .lossFunction(LossFunctions.LossFunction.MCXENT)

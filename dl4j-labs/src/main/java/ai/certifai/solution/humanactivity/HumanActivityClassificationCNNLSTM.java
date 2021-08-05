@@ -26,6 +26,7 @@ import org.deeplearning4j.datasets.datavec.SequenceRecordReaderDataSetIterator;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.ComputationGraphConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.RNNFormat;
 import org.deeplearning4j.nn.conf.WorkspaceMode;
 import org.deeplearning4j.nn.conf.layers.*;
 import org.deeplearning4j.nn.graph.ComputationGraph;
@@ -137,6 +138,7 @@ public class HumanActivityClassificationCNNLSTM {
                                 .build(),
                         "CNN")
                 .addLayer("predictActivity", new RnnOutputLayer.Builder()
+                                .dataFormat(RNNFormat.NCW)
                                 .nIn(100)
                                 .nOut(numClassLabel)
                                 .lossFunction(LossFunctions.LossFunction.MCXENT)
