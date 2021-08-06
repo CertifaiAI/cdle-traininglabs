@@ -145,6 +145,7 @@ public class HumanActivityClassificationCNNLSTM {
                                 .build(),
                         "CNN")
                 .addLayer("predictActivity", new RnnOutputLayer.Builder()
+                                .dataFormat(RNNFormat.NCW)
                                 .nIn(100)
                                 .nOut(numClassLabel)
                                 .lossFunction(LossFunctions.LossFunction.MCXENT)
