@@ -127,6 +127,10 @@ jnind4jcpu.dll: Can't find dependent libraries
 ```
 <b>Solution</b>: <br /> Install latest CUDA (version 7.6 works)
 
+<b>Problem</b>: <br /> Bad internet connection and unable to perform task smoothly.
+
+<b>Solution</b>: <br /> Go to <b>src\main\resources\config.properties</b> and download necessary dataset before the sessions.
+
 ## Contributor's Guide
 For contributors or someone who wishes to contribute, please take a look at the guideline [here](https://github.com/CertifaiAI/TrainingLabs/wiki/Contributor's-Guide) to help you in your journey.
 
