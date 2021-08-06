@@ -83,11 +83,11 @@
             <version>${lombok.version}</version>
         </dependency>
         <!--Uncomment to enable cudnn-->
-        <dependency>
+        <!--<dependency>
             <groupId>org.deeplearning4j</groupId>
             <artifactId>${dl4j.cuda.backend}</artifactId>
             <version>${dl4j.version}</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>org.deeplearning4j</groupId>
