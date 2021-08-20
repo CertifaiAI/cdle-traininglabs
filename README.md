@@ -113,7 +113,7 @@ All examples are separated into [training](https://github.com/CertifaiAI/Trainin
 
 All codes in <b>training</b> folder have few lines commented out so that they can be taught and demonstrated in the class. The <b>solution</b> folder contains the un-commented version for every line of codes.
 
-
+For bad internet connection and unable to perform task smoothly, you can go to <b>src\main\resources\config.properties</b> and download necessary dataset before the sessions.
 ## Known Issues
 <b>Problem</b>: 
 ```sh
