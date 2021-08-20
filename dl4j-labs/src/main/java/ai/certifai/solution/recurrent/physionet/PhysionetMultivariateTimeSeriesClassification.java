@@ -153,6 +153,7 @@ public class PhysionetMultivariateTimeSeriesClassification
                                 .build(),
                         "trainFeatures")
                 .addLayer("predictMortality", new RnnOutputLayer.Builder()
+                                .dataFormat(RNNFormat.NCW)
                                 .nIn(100)
                                 .nOut(numClasses)
                                 .lossFunction(LossFunctions.LossFunction.XENT)

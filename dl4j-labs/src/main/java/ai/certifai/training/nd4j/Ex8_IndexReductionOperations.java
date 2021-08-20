@@ -18,7 +18,7 @@
 package ai.certifai.training.nd4j;
 
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.api.ops.impl.indexaccum.IMin;
+import org.nd4j.linalg.api.ops.impl.indexaccum.custom.ArgMin;
 import org.nd4j.linalg.factory.Nd4j;
 
 public class Ex8_IndexReductionOperations {
@@ -53,7 +53,7 @@ public class Ex8_IndexReductionOperations {
         System.out.println(maxIndexHor);
 
         //Index of the min value, along dimension 0
-        INDArray minIndexAlongDim0 = Nd4j.getExecutioner().exec(new IMin(myArray, 0));
+        INDArray minIndexAlongDim0 = Nd4j.getExecutioner().exec(new ArgMin(myArray, 0))[0];
         System.out.println(BLACK_BOLD + "\nGet the index of minimum value along dimension 0:" + ANSI_RESET);
         System.out.println(BLUE_BOLD + "Nd4j.getExecutioner().exec(new IMin(myArray, 0))" + ANSI_RESET);
         System.out.println(minIndexAlongDim0);
