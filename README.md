@@ -113,7 +113,7 @@ All examples are separated into [training](https://github.com/CertifaiAI/Trainin
 
 All codes in <b>training</b> folder have few lines commented out so that they can be taught and demonstrated in the class. The <b>solution</b> folder contains the un-commented version for every line of codes.
 
-
+For bad internet connection and unable to perform task smoothly, you can go to <b>src\main\resources\config.properties</b> and download necessary dataset before the sessions.
 ## Known Issues
 <b>Problem</b>: 
 ```sh
@@ -126,10 +126,6 @@ jnind4jcpu.dll: Can't find dependent libraries
 "C:\Users\LohJZ\.javacpp\cache\cuda-10.0-7.3-1.4.3-windows-x86_64.jar\org\bytedeco\javacpp\windows-x86_64\jnicudnn.dll": Can't find procedure
 ```
 <b>Solution</b>: <br /> Install latest CUDA (version 7.6 works)
-
-<b>Problem</b>: <br /> Bad internet connection and unable to perform task smoothly.
-
-<b>Solution</b>: <br /> Go to <b>src\main\resources\config.properties</b> and download necessary dataset before the sessions.
 
 ## Contributor's Guide
 For contributors or someone who wishes to contribute, please take a look at the guideline [here](https://github.com/CertifaiAI/TrainingLabs/wiki/Contributor's-Guide) to help you in your journey.
