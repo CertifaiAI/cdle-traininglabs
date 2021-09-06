@@ -39,36 +39,6 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.nd4j</groupId>
-                <artifactId>nd4j-native-platform</artifactId>
-                <version>${nd4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.nd4j</groupId>
-                <artifactId>nd4j-cuda-9.0-platform</artifactId>
-                <version>${nd4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.nd4j</groupId>
-                <artifactId>nd4j-cuda-10.0-platform</artifactId>
-                <version>${nd4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.nd4j</groupId>
-                <artifactId>nd4j-cuda-10.1-platform</artifactId>
-                <version>${nd4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.nd4j</groupId>
-                <artifactId>nd4j-cuda-10.2-platform</artifactId>
-                <version>${nd4j.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
         <!-- ND4J backend. You need one in every DL4J project. Normally define artifactId as either "nd4j-native-platform" or "nd4j-cuda-9.2-platform" -->
         <dependency>
@@ -82,6 +52,7 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
         </dependency>
+
         <!--Uncomment to enable cudnn-->
         <!--<dependency>
             <groupId>org.deeplearning4j</groupId>
