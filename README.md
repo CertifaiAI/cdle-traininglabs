@@ -71,9 +71,9 @@ This repo contains codes for hands-on purpose during training session. All codes
 
 
 ## Built with
-- deeplearning4j beta 7.0
-- CUDA 10.1 (Note: Optional if you are using CPU)
-- cuDNN 7.6 (Note: Optional if you are using CPU)
+- deeplearning4j 1.0.0-M1.1
+- CUDA 11.2 (Note: Optional if you are using CPU)
+- cuDNN 8.1.1 (Note: Optional if you are using CPU)
 
 ## Getting Started
 
@@ -99,14 +99,14 @@ IntelliJ provides a default Maven that is bundled with the installer. Follow the
 Follow the instructions below if you plan to use GPU setup.
 1. Install CUDA and cuDNN
     Requirements:
-   -  CUDA 10.1
-   -  cuDNN 7.6
+   -  CUDA 11.2
+   -  cuDNN 8.1.1
   
-CUDA and cuDNN can be downloaded from [here](https://developer.nvidia.com/cuda-10.1-download-archive-base) and [here](https://developer.nvidia.com/rdp/cudnn-archive). Step by step installation guides can be found [here](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html).
+CUDA and cuDNN can be downloaded from [here](https://developer.nvidia.com/cuda-11.2.0-download-archive) and [here](https://developer.nvidia.com/rdp/cudnn-archive). Step by step installation guides can be found [here](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html).
 
 2. Dependencies are needed to be included into Maven project if we wish to use GPU for training. Follow the links below for instructions in details.
-   - [ND4J backends for GPUs](https://deeplearning4j.konduit.ai/config/backends#nd-4-j-backends-for-gpus-and-cpus)
-   - [Using Deeplearning4J with cuDNN](https://deeplearning4j.konduit.ai/config/backends/config-cudnn#using-deeplearning-4-j-with-cudnn)
+   - [ND4J backends for GPUs](https://deeplearning4j.konduit.ai/multi-project/explanation/configuration/backends#nd-4-j-backends-for-gpus-and-cpus)
+   - [Using Deeplearning4J with cuDNN](https://deeplearning4j.konduit.ai/multi-project/explanation/configuration/backends/cudnn#using-cudnn-via-deeplearning-4-j)
 
 ## Usage
 All examples are separated into [training](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/training) and [solution](https://github.com/CertifaiAI/TrainingLabs/tree/master/dl4j-labs/src/main/java/ai/certifai/solution) folders. The download will take some time to download dependencies from maven when you first run these examples.
@@ -114,6 +114,7 @@ All examples are separated into [training](https://github.com/CertifaiAI/Trainin
 All codes in <b>training</b> folder have few lines commented out so that they can be taught and demonstrated in the class. The <b>solution</b> folder contains the un-commented version for every line of codes.
 
 For bad internet connection and unable to perform task smoothly, you can go to <b>src\main\resources\config.properties</b> and download necessary dataset before the sessions.
+
 ## Known Issues
 <b>Problem</b>: 
 ```sh
