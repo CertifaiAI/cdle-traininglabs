@@ -20,6 +20,7 @@ package ai.certifai;
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
 import org.datavec.api.split.FileSplit;
+import org.deeplearning4j.core.storage.StatsStorage;
 import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -28,6 +29,9 @@ import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.deeplearning4j.ui.api.UIServer;
+import org.deeplearning4j.ui.model.stats.StatsListener;
+import org.deeplearning4j.ui.model.storage.InMemoryStatsStorage;
 import org.nd4j.common.io.ClassPathResource;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -86,7 +90,12 @@ public class MyFirstDL4JProject
         MultiLayerNetwork network = new MultiLayerNetwork(config);
 
         network.init();
-        network.setListeners(new ScoreIterationListener(1));
+
+        // Setup UI and listeners
+        UIServer server = UIServer.getInstance();
+        StatsStorage storage = new InMemoryStatsStorage();
+        server.attach(storage);
+        network.setListeners(new ScoreIterationListener(1), new StatsListener(storage));
 
         network.fit(iterator, 10);
 
